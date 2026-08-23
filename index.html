@@ -364,7 +364,7 @@
       font-size: 20px;
     }
 
-    /* ====== MODAL (ورود) ====== */
+    /* ====== MODAL (ورود / ویرایش) ====== */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -726,7 +726,11 @@
       </div>
       <div class="header-actions">
         <span class="delivery-badge"><i class="fas fa-map-pin"></i> ارسال به الیگودرز</span>
-        <a id="loginBtn"><i class="far fa-user"></i> <span id="userDisplay">ورود</span></a>
+        <a id="loginBtn">
+          <i class="far fa-user"></i>
+          <span id="userDisplay">ورود</span>
+          <i id="editIcon" style="display:none; margin-right:4px; cursor:pointer; color:#e63946;" class="fas fa-pen"></i>
+        </a>
         <button class="cart-btn" onclick="toggleCart()"><i class="fas fa-shopping-bag"></i> سبد (<span id="cartCount">0</span>)</button>
       </div>
     </div>
@@ -814,32 +818,32 @@
     </div>
   </footer>
 
-  <!-- ===== MODAL (ورود) ===== -->
+  <!-- ===== MODAL (ورود / ویرایش) ===== -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-box">
       <button class="close-modal" onclick="closeLoginModal()">&times;</button>
-      <h2><i class="fas fa-user-circle"></i> ورود / ثبت‌نام</h2>
+      <h2 id="modalTitle"><i class="fas fa-user-circle"></i> ورود / ثبت‌نام</h2>
       <p style="color:#5f6b80; margin-bottom:8px;">لطفاً اطلاعات خود را وارد کنید تا سفارش شما ثبت شود.</p>
 
       <label>شماره تلفن همراه</label>
-      <input type="tel" id="phoneInput" placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹" value="09123456789">
+      <input type="tel" id="phoneInput" placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹">
 
       <label>آدرس تحویل سفارش</label>
-      <input type="text" id="streetInput" placeholder="خیابان" value="خیابان امام">
+      <input type="text" id="streetInput" placeholder="خیابان">
 
       <div class="row-2">
         <div style="flex:1;">
           <label>کوچه</label>
-          <input type="text" id="alleyInput" placeholder="کوچه" value="کوچه ۱۲">
+          <input type="text" id="alleyInput" placeholder="کوچه">
         </div>
         <div style="flex:1;">
           <label>پلاک</label>
-          <input type="text" id="plaqueInput" placeholder="پلاک" value="۴۵">
+          <input type="text" id="plaqueInput" placeholder="پلاک">
         </div>
       </div>
 
       <div class="error-msg" id="loginError">لطفاً همه فیلدها را پر کنید.</div>
-      <button class="submit-btn" onclick="handleLogin()">ذخیره اطلاعات</button>
+      <button class="submit-btn" id="modalSubmitBtn" onclick="handleLogin()">ذخیره اطلاعات</button>
       <p style="font-size:13px; color:#7a7f93; margin-top:12px;">با ذخیره، اطلاعات شما برای ارسال سفارش استفاده می‌شود.</p>
     </div>
   </div>
@@ -887,6 +891,7 @@
     let currentUser = null; // { phone, street, alley, plaque }
     let currentCategory = 'all';
     let searchQuery = '';
+    let editMode = false; // برای تشخیص حالت ویرایش در مودال
 
     // ============================
     // 3. DOM REFS
@@ -897,7 +902,10 @@
     const cartCountEl = document.getElementById('cartCount');
     const minWarningEl = document.getElementById('minWarning');
     const userDisplay = document.getElementById('userDisplay');
+    const editIcon = document.getElementById('editIcon');
     const loginModal = document.getElementById('loginModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubmitBtn = document.getElementById('modalSubmitBtn');
     const cartPanel = document.getElementById('cartPanel');
     const cartOverlay = document.getElementById('cartOverlay');
     const productCount = document.getElementById('productCount');
@@ -908,18 +916,15 @@
     function renderProducts() {
       let filtered = products;
 
-      // category filter
       if (currentCategory !== 'all') {
         filtered = filtered.filter(p => p.category.includes(currentCategory));
       }
 
-      // search filter
       if (searchQuery.trim()) {
         const q = searchQuery.trim().toLowerCase();
         filtered = filtered.filter(p => p.name.includes(q));
       }
 
-      // update count
       productCount.textContent = filtered.length + ' محصول';
 
       if (filtered.length === 0) {
@@ -941,12 +946,9 @@
     // 5. CART FUNCTIONS
     // ============================
     function addToCart(productId) {
-      // اگر کاربر وارد نشده، اول مودال ورود باز شود
       if (!currentUser) {
-        openLoginModal();
-        // بعد از ورود، دوباره تلاش می‌کنیم (از داخل handleLogin صدا می‌زنیم)
-        // ولی برای اینکه تجربه بهتری داشته باشیم، productId را ذخیره می‌کنیم تا بعد از ورود اضافه شود
         window._pendingAdd = productId;
+        openLoginModal(false);
         return;
       }
 
@@ -980,11 +982,9 @@
     }
 
     function updateCartUI() {
-      // count
       const count = cart.reduce((sum, item) => sum + item.qty, 0);
       cartCountEl.textContent = count;
 
-      // render items
       if (cart.length === 0) {
         cartItemsEl.innerHTML = `<div class="empty-cart"><i class="fas fa-shopping-bag"></i><p>سبد خرید خالی است</p></div>`;
       } else {
@@ -1000,7 +1000,6 @@
         `).join('');
       }
 
-      // total with minimum 100,000
       let total = getTotal();
       const minOrder = 100000;
       let displayTotal = total;
@@ -1026,7 +1025,7 @@
     // ============================
     function checkout() {
       if (!currentUser) {
-        openLoginModal();
+        openLoginModal(false);
         return;
       }
       if (cart.length === 0) {
@@ -1036,22 +1035,42 @@
       const total = getTotal();
       const finalTotal = total < 100000 ? 100000 : total;
       alert(`✅ سفارش شما با موفقیت ثبت شد!\n\nآدرس ارسال:\n${currentUser.street}، کوچه ${currentUser.alley}، پلاک ${currentUser.plaque}\nتلفن: ${currentUser.phone}\n\nمبلغ قابل پرداخت: ${finalTotal.toLocaleString()} تومان`);
-      // optionally clear cart after purchase
       cart = [];
       updateCartUI();
       toggleCart(false);
     }
 
     // ============================
-    // 7. LOGIN / MODAL
+    // 7. LOGIN / MODAL (با پشتیبانی از ویرایش)
     // ============================
-    function openLoginModal() {
-      loginModal.classList.add('active');
-      document.getElementById('loginError').style.display = 'none';
+    function openLoginModal(edit = false) {
+      editMode = edit;
+      const modal = document.getElementById('loginModal');
+      const error = document.getElementById('loginError');
+      error.style.display = 'none';
+
+      if (edit && currentUser) {
+        modalTitle.innerHTML = '<i class="fas fa-edit"></i> ویرایش اطلاعات';
+        modalSubmitBtn.textContent = 'ذخیره تغییرات';
+        document.getElementById('phoneInput').value = currentUser.phone;
+        document.getElementById('streetInput').value = currentUser.street;
+        document.getElementById('alleyInput').value = currentUser.alley;
+        document.getElementById('plaqueInput').value = currentUser.plaque;
+      } else {
+        modalTitle.innerHTML = '<i class="fas fa-user-circle"></i> ورود / ثبت‌نام';
+        modalSubmitBtn.textContent = 'ذخیره اطلاعات';
+        // در حالت ورود جدید، فیلدها را خالی می‌کنیم (مگر اینکه مقدار پیش‌فرضی داشته باشیم)
+        document.getElementById('phoneInput').value = '';
+        document.getElementById('streetInput').value = '';
+        document.getElementById('alleyInput').value = '';
+        document.getElementById('plaqueInput').value = '';
+      }
+      modal.classList.add('active');
     }
 
     function closeLoginModal() {
-      loginModal.classList.remove('active');
+      document.getElementById('loginModal').classList.remove('active');
+      editMode = false;
     }
 
     function handleLogin() {
@@ -1066,14 +1085,17 @@
       }
 
       currentUser = { phone, street, alley, plaque };
-      userDisplay.textContent = phone.slice(0, 4) + '***' + phone.slice(-4);
+      // نمایش شماره به صورت خلاصه
+      const displayPhone = phone.length >= 4 ? phone.slice(0, 4) + '***' + phone.slice(-4) : phone;
+      userDisplay.textContent = displayPhone;
+      editIcon.style.display = 'inline';
+
       closeLoginModal();
 
-      // اگر در حین افزودن به سبد، لاگین کرده بودیم، محصول را اضافه کن
+      // اگر در حین افزودن به سبد لاگین کرده بودیم، محصول را اضافه کن
       if (window._pendingAdd) {
         const pid = window._pendingAdd;
         window._pendingAdd = null;
-        // دوباره تلاش برای افزودن
         const product = products.find(p => p.id === pid);
         if (product) {
           const existing = cart.find(item => item.id === pid);
@@ -1085,7 +1107,6 @@
           updateCartUI();
         }
       }
-      // به‌روزرسانی دکمه‌های افزودن (ظاهر)
       renderProducts();
     }
 
@@ -1109,11 +1130,9 @@
     // ============================
     function setCategory(cat) {
       currentCategory = cat;
-      // highlight active in nav
       document.querySelectorAll('#categoryList a').forEach(el => {
         el.classList.toggle('active', el.dataset.cat === cat);
       });
-      // also highlight category cards (optional)
       document.querySelectorAll('.cat-card').forEach(el => {
         el.style.borderColor = (el.dataset.cat === cat) ? '#e63946' : '#f0f2f7';
       });
@@ -1133,7 +1152,7 @@
     // 11. EVENT LISTENERS
     // ============================
     document.addEventListener('DOMContentLoaded', function() {
-      // category nav clicks
+      // category nav
       document.querySelectorAll('#categoryList a').forEach(el => {
         el.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1141,43 +1160,39 @@
         });
       });
 
-      // category cards clicks
+      // category cards
       document.querySelectorAll('.cat-card').forEach(el => {
         el.addEventListener('click', function() {
           setCategory(this.dataset.cat);
-          // scroll to products
           document.getElementById('productGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
 
-      // login button
+      // login button (با قابلیت ویرایش)
       document.getElementById('loginBtn').addEventListener('click', function(e) {
         e.preventDefault();
         if (currentUser) {
-          alert(`شما با شماره ${currentUser.phone} وارد شده‌اید.\nآدرس: ${currentUser.street}، کوچه ${currentUser.alley}، پلاک ${currentUser.plaque}`);
+          openLoginModal(true); // ویرایش اطلاعات
         } else {
-          openLoginModal();
+          openLoginModal(false);
         }
       });
 
-      // close modal on overlay click
+      // بستن مودال با کلیک روی پس‌زمینه
       loginModal.addEventListener('click', function(e) {
         if (e.target === this) closeLoginModal();
       });
 
-      // initial render
+      // بستن با کلید ESC
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeLoginModal();
+          toggleCart(false);
+        }
+      });
+
       renderProducts();
       updateCartUI();
-    });
-
-    // ============================
-    // 12. EXTRA: keyboard shortcuts
-    // ============================
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeLoginModal();
-        toggleCart(false);
-      }
     });
   </script>
 
