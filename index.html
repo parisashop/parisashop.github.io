@@ -6,7 +6,6 @@
     <title>الیگودرز کالا | سوپرمارکت آنلاین</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* ====== RESET & BASE ====== */
         * {
             margin: 0;
             padding: 0;
@@ -341,7 +340,6 @@
         .fast-delivery-sticky i {
             font-size: 20px;
         }
-        /* ====== MODALS ====== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -454,7 +452,6 @@
             margin-top: 8px;
             display: none;
         }
-        /* ====== CART ====== */
         .cart-overlay {
             display: none;
             position: fixed;
@@ -850,19 +847,19 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ===== JAVASCRIPT با تنظیمات Supabase ===== -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ============================
-        // 0. CONFIG SUPABASE
-        // ============================
-        const SUPABASE_URL = 'https://your-project.supabase.co'; // <-- جایگزین کنید
-        const SUPABASE_ANON_KEY = 'your-anon-key'; // <-- جایگزین کنید
+        // ============================================================
+        //  تنظیمات Supabase (با کلیدهای ارائه شده)
+        // ============================================================
+        const SUPABASE_URL = 'https://mqohsmxpvqwqgmwubfyr.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xb2hzbXhwdnF3cWdtd3ViZnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzE1OTMsImV4cCI6MjA5NzAwNzU5M30.6a_Bdvhb-ZbDDkxDNuIPxTHS4JvBjxkqOiHfNSgBUC4';
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ============================
-        // 1. PRODUCT DATA
-        // ============================
+        // ============================================================
+        //  ۱. داده محصولات
+        // ============================================================
         const products = [
             { id: 1, name: 'تک تک', price: 30000, category: 'تنقلات', img: 'تک تک.webp' },
             { id: 2, name: 'کرانچی تند و آتشین', price: 60000, category: 'تنقلات,چیپس و پفک', img: 'کرانچی تند و آتشین.webp' },
@@ -875,9 +872,9 @@
             { id: 9, name: 'کیت کت', price: 100000, category: 'تنقلات,شکلات', img: 'کیت کت.webp' }
         ];
 
-        // ============================
-        // 2. STATE
-        // ============================
+        // ============================================================
+        //  ۲. وضعیت (State)
+        // ============================================================
         let cart = [];
         let currentUser = null;
         let currentCategory = 'all';
@@ -885,9 +882,9 @@
         let editMode = false;
         let orders = [];
 
-        // ============================
-        // 3. DOM REFS
-        // ============================
+        // ============================================================
+        //  ۳. ارجاع‌های DOM
+        // ============================================================
         const grid = document.getElementById('productGrid');
         const cartItemsEl = document.getElementById('cartItems');
         const totalAmountEl = document.getElementById('totalAmount');
@@ -903,9 +900,9 @@
         const cartOverlay = document.getElementById('cartOverlay');
         const productCount = document.getElementById('productCount');
 
-        // ============================
-        // 4. LOAD FROM LOCALSTORAGE
-        // ============================
+        // ============================================================
+        //  ۴. بارگذاری از localStorage
+        // ============================================================
         function loadState() {
             const savedUser = localStorage.getItem('aligoodarz_user');
             if (savedUser) {
@@ -929,7 +926,7 @@
                 try { orders = JSON.parse(savedOrders); } catch (e) {}
             }
 
-            // تایمرهای سفارشات
+            // راه‌اندازی مجدد تایمرها برای سفارشات موجود
             orders.forEach(order => {
                 if (order.status === 'pending') {
                     const elapsed = Date.now() - order.createdAt;
@@ -969,9 +966,9 @@
             localStorage.setItem('aligoodarz_orders', JSON.stringify(orders));
         }
 
-        // ============================
-        // 5. RENDER PRODUCTS
-        // ============================
+        // ============================================================
+        //  ۵. رندر محصولات
+        // ============================================================
         function renderProducts() {
             let filtered = products;
             if (currentCategory !== 'all') {
@@ -997,9 +994,9 @@
           `).join('');
         }
 
-        // ============================
-        // 6. CART FUNCTIONS
-        // ============================
+        // ============================================================
+        //  ۶. توابع سبد خرید
+        // ============================================================
         function addToCart(productId) {
             if (!currentUser) {
                 window._pendingAdd = productId;
@@ -1074,9 +1071,9 @@
             }
         }
 
-        // ============================
-        // 7. PAYMENT & ORDER
-        // ============================
+        // ============================================================
+        //  ۷. پرداخت و ثبت سفارش (با Supabase)
+        // ============================================================
         function proceedToPayment() {
             if (!currentUser) {
                 alert('لطفاً ابتدا اطلاعات خود را وارد کنید.');
@@ -1101,7 +1098,7 @@
             const total = getTotal();
             const finalTotal = total < 100000 ? 100000 : total;
 
-            // ۱. ذخیره کاربر در Supabase (یا پیدا کردن)
+            // ۱. پیدا کردن یا ایجاد کاربر
             let userId = null;
             if (currentUser) {
                 const { data: existingUser, error: findError } = await supabase
@@ -1135,7 +1132,7 @@
                 }
             }
 
-            // ۲. ثبت سفارش
+            // ۲. ثبت سفارش در Supabase
             const orderData = {
                 user_id: userId,
                 items: cart.map(item => ({ name: item.name, price: item.price, qty: item.qty })),
@@ -1178,7 +1175,7 @@
 
             alert('✅ سفارش شما با موفقیت ثبت شد!\nشماره پیگیری: ' + order.id);
 
-            // برنامه‌ریزی برای تأیید بعد از ۱۵ دقیقه
+            // تایمر ۱۵ دقیقه برای تأیید
             setTimeout(() => {
                 confirmOrder(order.id);
             }, 15 * 60 * 1000);
@@ -1201,6 +1198,7 @@
 
             console.log('✅ سفارش تأیید شد:', orderId);
 
+            // تایمر ۵۰ دقیقه برای تحویل
             setTimeout(() => {
                 deliverOrder(orderId);
             }, 50 * 60 * 1000);
@@ -1224,9 +1222,9 @@
             console.log('🚚 سفارش تحویل داده شد:', orderId);
         }
 
-        // ============================
-        // 8. LOGIN / MODAL
-        // ============================
+        // ============================================================
+        //  ۸. ورود / مودال
+        // ============================================================
         function openLoginModal(edit = false) {
             editMode = edit;
             const error = document.getElementById('loginError');
@@ -1305,9 +1303,9 @@
             renderProducts();
         }
 
-        // ============================
-        // 9. TOGGLE CART
-        // ============================
+        // ============================================================
+        //  ۹. باز/بستن سبد
+        // ============================================================
         function toggleCart(forceState) {
             const open = typeof forceState === 'boolean' ? forceState : !cartPanel.classList.contains('open');
             if (open) {
@@ -1320,9 +1318,9 @@
             }
         }
 
-        // ============================
-        // 10. CATEGORY & SEARCH
-        // ============================
+        // ============================================================
+        //  ۱۰. دسته‌بندی و جستجو
+        // ============================================================
         function setCategory(cat) {
             currentCategory = cat;
             document.querySelectorAll('#categoryList a').forEach(el => {
@@ -1340,9 +1338,9 @@
             renderProducts();
         }
 
-        // ============================
-        // 11. EVENT LISTENERS
-        // ============================
+        // ============================================================
+        //  ۱۱. رویدادها
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('#categoryList a').forEach(el => {
                 el.addEventListener('click', function(e) {
