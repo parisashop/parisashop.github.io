@@ -2,9 +2,8 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>الیگودرز کالا | سوپرمارکت آنلاین</title>
-  <!-- Font Awesome (آیکون‌ها) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
@@ -22,8 +21,7 @@
       margin: 0 auto;
       padding: 0 16px;
     }
-
-    /* ----- هدر ----- */
+    /* هدر */
     .header {
       background: #ffffff;
       box-shadow: 0 4px 12px rgba(0,0,0,0.04);
@@ -61,9 +59,7 @@
       font-weight: 700;
       color: #1e2a41;
     }
-    .logo-text span {
-      color: #e63946;
-    }
+    .logo-text span { color: #e63946; }
     .search-box {
       flex: 1;
       max-width: 480px;
@@ -83,10 +79,7 @@
       font-size: 15px;
       outline: none;
     }
-    .search-box i {
-      color: #7a7f93;
-      font-size: 16px;
-    }
+    .search-box i { color: #7a7f93; }
     .header-actions {
       display: flex;
       align-items: center;
@@ -109,9 +102,6 @@
       border-radius: 30px;
       font-weight: 600;
     }
-    .header-actions .cart i {
-      font-size: 16px;
-    }
     .delivery-badge {
       background: #eaf7e9;
       padding: 4px 14px;
@@ -121,8 +111,7 @@
       border: 1px solid #b7dfb7;
       white-space: nowrap;
     }
-
-    /* ----- نوار دسته‌بندی (اسکرول افقی) ----- */
+    /* نوار دسته‌بندی */
     .category-nav {
       background: #fff;
       border-bottom: 1px solid #eaeef3;
@@ -131,14 +120,8 @@
       white-space: nowrap;
       scrollbar-width: thin;
     }
-    .category-nav::-webkit-scrollbar {
-      height: 3px;
-      background: #eaeef3;
-    }
-    .category-nav::-webkit-scrollbar-thumb {
-      background: #cbd5e0;
-      border-radius: 10px;
-    }
+    .category-nav::-webkit-scrollbar { height: 3px; background: #eaeef3; }
+    .category-nav::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
     .category-list {
       display: flex;
       gap: 22px;
@@ -154,15 +137,9 @@
       gap: 6px;
       transition: 0.2s;
     }
-    .category-list a i {
-      font-size: 15px;
-      color: #e63946;
-    }
-    .category-list a:hover {
-      color: #e63946;
-    }
-
-    /* ----- بنر بزرگ ----- */
+    .category-list a i { color: #e63946; }
+    .category-list a:hover { color: #e63946; }
+    /* بنر */
     .hero-banner {
       background: linear-gradient(135deg, #ff8a5c, #e63946);
       border-radius: 28px;
@@ -175,16 +152,8 @@
       flex-wrap: wrap;
       box-shadow: 0 8px 20px rgba(230, 57, 70, 0.25);
     }
-    .hero-banner h2 {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-    .hero-banner p {
-      font-size: 16px;
-      opacity: 0.9;
-      margin: 6px 0 12px;
-    }
+    .hero-banner h2 { font-size: 28px; font-weight: 700; }
+    .hero-banner p { opacity: 0.9; margin: 6px 0 12px; }
     .hero-btn {
       background: #fff;
       border: none;
@@ -197,10 +166,8 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       transition: 0.2s;
     }
-    .hero-btn:hover {
-      transform: scale(1.02);
-    }
-    .hero-banner .badge-fire {
+    .hero-btn:hover { transform: scale(1.02); }
+    .badge-fire {
       background: #ffd966;
       color: #a23b1c;
       padding: 4px 16px;
@@ -210,8 +177,7 @@
       display: inline-block;
       margin-top: 6px;
     }
-
-    /* ----- بخش‌های عمومی ----- */
+    /* بخش‌ها */
     .section-title {
       display: flex;
       justify-content: space-between;
@@ -231,8 +197,7 @@
       font-size: 14px;
       text-decoration: none;
     }
-
-    /* کارت‌های محصول */
+    /* کارت محصول */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -275,23 +240,10 @@
       gap: 8px;
       flex-wrap: wrap;
     }
-    .price-old {
-      font-size: 13px;
-      color: #8c95a8;
-      text-decoration: line-through;
-    }
     .price-new {
       font-weight: 700;
       color: #1e2a41;
       font-size: 16px;
-    }
-    .discount-badge {
-      background: #e63946;
-      color: #fff;
-      padding: 2px 8px;
-      border-radius: 30px;
-      font-size: 11px;
-      font-weight: 700;
     }
     .add-btn {
       background: #e63946;
@@ -306,11 +258,8 @@
       transition: 0.15s;
       width: 100%;
     }
-    .add-btn:hover {
-      background: #c62836;
-    }
-
-    /* کارت‌های دسته‌بندی محبوب */
+    .add-btn:hover { background: #c62836; }
+    /* کارت‌های دسته‌بندی */
     .category-cards {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px,1fr));
@@ -322,23 +271,14 @@
       border-radius: 28px;
       padding: 16px 8px;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
       border: 1px solid #f0f2f7;
       transition: 0.2s;
       font-weight: 500;
       font-size: 15px;
     }
-    .cat-card i {
-      font-size: 34px;
-      color: #e63946;
-      display: block;
-      margin-bottom: 8px;
-    }
-    .cat-card:hover {
-      border-color: #e63946;
-    }
-
-    /* بنر ارسال سریع (ثابت در صفحه) */
+    .cat-card i { font-size: 34px; color: #e63946; display: block; margin-bottom: 8px; }
+    .cat-card:hover { border-color: #e63946; }
+    /* پیام ارسال سریع */
     .fast-delivery-sticky {
       background: #1e2a41;
       color: #fff;
@@ -352,10 +292,7 @@
       margin: 14px 0 8px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.1);
     }
-    .fast-delivery-sticky i {
-      font-size: 20px;
-    }
-
+    .fast-delivery-sticky i { font-size: 20px; }
     /* فوتر */
     .footer {
       background: #fff;
@@ -369,11 +306,7 @@
       gap: 30px;
       margin-bottom: 30px;
     }
-    .footer-grid h4 {
-      font-size: 16px;
-      margin-bottom: 14px;
-      color: #1e2a41;
-    }
+    .footer-grid h4 { font-size: 16px; margin-bottom: 14px; color: #1e2a41; }
     .footer-grid a {
       display: block;
       color: #5f6b80;
@@ -381,51 +314,20 @@
       font-size: 14px;
       margin-bottom: 8px;
     }
-    .footer-grid a:hover {
-      color: #e63946;
-    }
-    .social-icons {
-      display: flex;
-      gap: 18px;
-      font-size: 22px;
-    }
-    .social-icons a {
-      color: #5f6b80;
-    }
-    .social-icons a:hover {
-      color: #e63946;
-    }
-    .copy {
-      text-align: center;
-      color: #7a7f93;
-      font-size: 14px;
-      border-top: 1px solid #eaeef3;
-      padding-top: 24px;
-      margin-top: 10px;
-    }
-
-    /* ریسپانسیو */
+    .footer-grid a:hover { color: #e63946; }
+    .social-icons { display: flex; gap: 18px; font-size: 22px; }
+    .social-icons a { color: #5f6b80; }
+    .social-icons a:hover { color: #e63946; }
+    .copy { text-align: center; color: #7a7f93; font-size: 14px; border-top: 1px solid #eaeef3; padding-top: 24px; margin-top: 10px; }
     @media (max-width: 700px) {
-      .header .container {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .search-box {
-        max-width: 100%;
-      }
-      .hero-banner {
-        padding: 28px 20px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .hero-banner h2 {
-        font-size: 22px;
-      }
+      .header .container { flex-direction: column; align-items: stretch; }
+      .search-box { max-width: 100%; }
+      .hero-banner { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+      .hero-banner h2 { font-size: 22px; }
     }
   </style>
 </head>
 <body>
-
 <!-- هدر -->
 <header class="header">
   <div class="container">
@@ -463,7 +365,6 @@
 </nav>
 
 <main class="container">
-
   <!-- بنر بزرگ -->
   <div class="hero-banner">
     <div>
@@ -475,7 +376,7 @@
     <div style="font-size: 60px; opacity: 0.3;">🛍️</div>
   </div>
 
-  <!-- پیام ارسال سریع (ثابت در صفحه) -->
+  <!-- پیام ارسال سریع -->
   <div class="fast-delivery-sticky">
     <i class="fas fa-truck"></i> سفارش بده، درب منزل تحویل بگیر 🚚
   </div>
@@ -489,41 +390,25 @@
     <div class="product-card">
       <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍪%3C/text%3E%3C/svg%3E" alt="prod">
       <div class="product-name">بیسکویت پتی بور</div>
-      <div class="price-row">
-        <span class="price-old">۳۵,۰۰۰</span>
-        <span class="price-new">۲۵,۰۰۰</span>
-        <span class="discount-badge">۲۸٪</span>
-      </div>
+      <div class="price-row"><span class="price-new">۲۵,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <div class="product-card">
       <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🥤%3C/text%3E%3C/svg%3E" alt="prod">
       <div class="product-name">نوشابه ۱.۵ لیتری</div>
-      <div class="price-row">
-        <span class="price-old">۲۸,۰۰۰</span>
-        <span class="price-new">۱۹,۰۰۰</span>
-        <span class="discount-badge">۳۲٪</span>
-      </div>
+      <div class="price-row"><span class="price-new">۱۹,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <div class="product-card">
       <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍫%3C/text%3E%3C/svg%3E" alt="prod">
       <div class="product-name">شکلات شیری</div>
-      <div class="price-row">
-        <span class="price-old">۴۲,۰۰۰</span>
-        <span class="price-new">۳۰,۰۰۰</span>
-        <span class="discount-badge">۲۸٪</span>
-      </div>
+      <div class="price-row"><span class="price-new">۳۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <div class="product-card">
       <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍟%3C/text%3E%3C/svg%3E" alt="prod">
       <div class="product-name">چیپس نمکی</div>
-      <div class="price-row">
-        <span class="price-old">۱۸,۰۰۰</span>
-        <span class="price-new">۱۲,۰۰۰</span>
-        <span class="discount-badge">۳۳٪</span>
-      </div>
+      <div class="price-row"><span class="price-new">۱۲,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
   </div>
@@ -539,41 +424,111 @@
     <div class="cat-card"><i class="fas fa-seedling"></i> حبوبات</div>
   </div>
 
-  <!-- پرفروش‌ترین‌ها -->
+  <!-- پرفروش‌ترین‌ها + محصولات جدید با قیمت‌های داده شده -->
   <div class="section-title"><h3>🔥 پرفروش‌ترین‌ها</h3></div>
   <div class="product-grid">
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🥤%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">نوشابه</div><div class="price-row"><span class="price-new">۲۲,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍟%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">چیپس</div><div class="price-row"><span class="price-new">۱۸,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍫%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">شکلات</div><div class="price-row"><span class="price-new">۳۵,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍪%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">بیسکویت</div><div class="price-row"><span class="price-new">۲۵,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🧂%3C/text%3E%3C/svg%3E" alt="تک تک">
+      <div class="product-name">تک تک</div>
+      <div class="price-row"><span class="price-new">۳۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🔥%3C/text%3E%3C/svg%3E" alt="کرانچی تند و آتشین">
+      <div class="product-name">کرانچی تند و آتشین</div>
+      <div class="price-row"><span class="price-new">۶۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🧅%3C/text%3E%3C/svg%3E" alt="چیپس پیاز جعفری">
+      <div class="product-name">چیپس پیاز جعفری</div>
+      <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🧂%3C/text%3E%3C/svg%3E" alt="چیپس نمکی">
+      <div class="product-name">چیپس نمکی</div>
+      <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
   </div>
 
-  <!-- خرید اقتصادی -->
+  <!-- خرید اقتصادی + ادامه محصولات -->
   <div class="section-title"><h3>💰 خرید اقتصادی</h3></div>
   <div class="product-grid">
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🧴%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">مایع ظرفشویی</div><div class="price-row"><span class="price-new">۴۵,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🥫%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">تن ماهی</div><div class="price-row"><span class="price-new">۳۹,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍝%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">ماکارونی</div><div class="price-row"><span class="price-new">۲۸,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍟%3C/text%3E%3C/svg%3E" alt="چیپس سرکه ای">
+      <div class="product-name">چیپس سرکه ای</div>
+      <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍿%3C/text%3E%3C/svg%3E" alt="پفک طلایی">
+      <div class="product-name">پفک طلایی</div>
+      <div class="price-row"><span class="price-new">۱۰۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🧀%3C/text%3E%3C/svg%3E" alt="کرانچی پنیری">
+      <div class="product-name">کرانچی پنیری</div>
+      <div class="price-row"><span class="price-new">۶۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
   </div>
 
   <!-- تازه‌واردها -->
   <div class="section-title"><h3>🆕 تازه‌واردها</h3></div>
   <div class="product-grid">
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🧀%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">پنیر پیتزا</div><div class="price-row"><span class="price-new">۵۵,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E☕%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">قهوه اسپرسو</div><div class="price-row"><span class="price-new">۸۹,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🧂%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">ادویه کاری</div><div class="price-row"><span class="price-new">۳۲,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍘%3C/text%3E%3C/svg%3E" alt="پچ پچ">
+      <div class="product-name">پچ پچ</div>
+      <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍫%3C/text%3E%3C/svg%3E" alt="کیت کت">
+      <div class="product-name">کیت کت</div>
+      <div class="price-row"><span class="price-new">۱۰۰,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍫%3C/text%3E%3C/svg%3E" alt="شکلات">
+      <div class="product-name">شکلات شیری</div>
+      <div class="price-row"><span class="price-new">۳۵,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
   </div>
 
-  <!-- پیشنهاد مخصوص شما + آخرین بازدیدها (نمادین) -->
+  <!-- پیشنهاد مخصوص شما + آخرین بازدیدها -->
   <div class="section-title"><h3>❤️ پیشنهاد مخصوص شما</h3></div>
   <div class="product-grid">
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍬%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">آبنبات نعناعی</div><div class="price-row"><span class="price-new">۱۵,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🥛%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">شیر کاکائو</div><div class="price-row"><span class="price-new">۲۳,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍬%3C/text%3E%3C/svg%3E" alt="آبنبات">
+      <div class="product-name">آبنبات نعناعی</div>
+      <div class="price-row"><span class="price-new">۱۵,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🥛%3C/text%3E%3C/svg%3E" alt="شیر کاکائو">
+      <div class="product-name">شیر کاکائو</div>
+      <div class="price-row"><span class="price-new">۲۳,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
   </div>
   <div class="section-title"><h3>👀 آخرین بازدیدهای شما</h3></div>
   <div class="product-grid">
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍿%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">پاپ کورن</div><div class="price-row"><span class="price-new">۱۲,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
-    <div class="product-card"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍯%3C/text%3E%3C/svg%3E" alt=""><div class="product-name">عسل طبیعی</div><div class="price-row"><span class="price-new">۶۵,۰۰۰</span></div><button class="add-btn">افزودن</button></div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍿%3C/text%3E%3C/svg%3E" alt="پاپ کورن">
+      <div class="product-name">پاپ کورن</div>
+      <div class="price-row"><span class="price-new">۱۲,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
+    <div class="product-card">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%23e63946'%3E%3Crect width='24' height='24' rx='12' fill='%23fce4e4'/%3E%3Ctext x='6' y='17' font-size='14' fill='%23b71c1c'%3E🍯%3C/text%3E%3C/svg%3E" alt="عسل">
+      <div class="product-name">عسل طبیعی</div>
+      <div class="price-row"><span class="price-new">۶۵,۰۰۰ تومان</span></div>
+      <button class="add-btn">افزودن</button>
+    </div>
   </div>
 
   <!-- چرا الیگودرز کالا -->
@@ -588,7 +543,6 @@
       <div><i class="fas fa-headset" style="color:#e63946; font-size: 28px;"></i><p>پشتیبانی</p></div>
     </div>
   </div>
-
 </main>
 
 <!-- فوتر -->
