@@ -6,21 +6,9 @@
   <title>الیگودرز کالا | سوپرمارکت آنلاین</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background: #f5f7fa;
-      color: #1e2a41;
-    }
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 0 16px;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: #f5f7fa; color: #1e2a41; }
+    .container { max-width: 1300px; margin: 0 auto; padding: 0 16px; }
     /* هدر */
     .header {
       background: #ffffff;
@@ -37,11 +25,7 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .logo-area { display: flex; align-items: center; gap: 6px; }
     .logo-icon {
       background: #e63946;
       color: #fff;
@@ -54,11 +38,7 @@
       font-size: 20px;
       font-weight: 700;
     }
-    .logo-text {
-      font-size: 22px;
-      font-weight: 700;
-      color: #1e2a41;
-    }
+    .logo-text { font-size: 22px; font-weight: 700; color: #1e2a41; }
     .logo-text span { color: #e63946; }
     .search-box {
       flex: 1;
@@ -73,10 +53,7 @@
       transition: 0.2s;
       border: 2px solid transparent;
     }
-    .search-box:focus-within {
-      border-color: #e63946;
-      background: #fff;
-    }
+    .search-box:focus-within { border-color: #e63946; background: #fff; }
     .search-box input {
       border: none;
       background: transparent;
@@ -223,13 +200,13 @@
       border-color: #e6394640;
       box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
-    .product-card .emoji-box {
-      font-size: 48px;
-      line-height: 1;
-      margin-bottom: 6px;
+    .product-card img {
+      width: 100%;
+      max-height: 140px;
+      object-fit: contain;
       background: #fafbfd;
       border-radius: 14px;
-      padding: 10px 0;
+      margin-bottom: 8px;
     }
     .product-name {
       font-weight: 600;
@@ -331,10 +308,7 @@
       .hero-banner { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
       .hero-banner h2 { font-size: 22px; }
     }
-    /* کلاس مخفی‌سازی برای جستجو */
-    .hidden-product {
-      display: none !important;
-    }
+    .hidden-product { display: none !important; }
   </style>
 </head>
 <body>
@@ -391,7 +365,7 @@
     <i class="fas fa-truck"></i> سفارش بده، درب منزل تحویل بگیر 🚚
   </div>
 
-  <!-- ========== بخش ویژه: تمام محصولات (بر اساس عکس‌ها و قیمت‌ها) ========== -->
+  <!-- ========== بخش تمام محصولات (۹ محصول با تصاویر واقعی، در کنار فایل HTML) ========== -->
   <div class="section-title">
     <h3><i class="fas fa-box" style="color:#e63946;"></i> تمام محصولات</h3>
     <span style="font-size:14px; color:#7a7f93;">۹ محصول</span>
@@ -399,63 +373,63 @@
   <div class="product-grid" id="productGrid">
     <!-- ۱. تک تک -->
     <div class="product-card">
-      <div class="emoji-box">🥨</div>
+      <img src="تک تک.webp" alt="تک تک" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🥨%3C/text%3E%3C/svg%3E'">
       <div class="product-name">تک تک</div>
       <div class="price-row"><span class="price-new">۳۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۲. کرانچی تند و آتشین -->
     <div class="product-card">
-      <div class="emoji-box">🌶️</div>
+      <img src="کرانچی تند و آتشین.webp" alt="کرانچی تند و آتشین" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🌶️%3C/text%3E%3C/svg%3E'">
       <div class="product-name">کرانچی تند و آتشین</div>
       <div class="price-row"><span class="price-new">۶۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۳. چیپس پیاز جعفری -->
     <div class="product-card">
-      <div class="emoji-box">🧅</div>
+      <img src="چیپس پیاز جعفری.webp" alt="چیپس پیاز جعفری" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🧅%3C/text%3E%3C/svg%3E'">
       <div class="product-name">چیپس پیاز جعفری</div>
       <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۴. چیپس نمکی -->
     <div class="product-card">
-      <div class="emoji-box">🧂</div>
+      <img src="چیپس نمکی.webp" alt="چیپس نمکی" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🧂%3C/text%3E%3C/svg%3E'">
       <div class="product-name">چیپس نمکی</div>
       <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۵. چیپس سرکه ای -->
     <div class="product-card">
-      <div class="emoji-box">🍟</div>
+      <img src="چیپس سرکه ای.webp" alt="چیپس سرکه ای" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🍟%3C/text%3E%3C/svg%3E'">
       <div class="product-name">چیپس سرکه ای</div>
       <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۶. پفک طلایی -->
     <div class="product-card">
-      <div class="emoji-box">🍿</div>
+      <img src="پفک طلایی.webp" alt="پفک طلایی" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🍿%3C/text%3E%3C/svg%3E'">
       <div class="product-name">پفک طلایی</div>
       <div class="price-row"><span class="price-new">۱۰۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۷. کرانچی پنیری -->
     <div class="product-card">
-      <div class="emoji-box">🧀</div>
+      <img src="کرانچی پنیری.webp" alt="کرانچی پنیری" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🧀%3C/text%3E%3C/svg%3E'">
       <div class="product-name">کرانچی پنیری</div>
       <div class="price-row"><span class="price-new">۶۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۸. پچ پچ -->
     <div class="product-card">
-      <div class="emoji-box">🍘</div>
+      <img src="پچ پچ.webp" alt="پچ پچ" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🍘%3C/text%3E%3C/svg%3E'">
       <div class="product-name">پچ پچ</div>
       <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
     </div>
     <!-- ۹. کیت کت -->
     <div class="product-card">
-      <div class="emoji-box">🍫</div>
+      <img src="کیت کت.webp" alt="کیت کت" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🍫%3C/text%3E%3C/svg%3E'">
       <div class="product-name">کیت کت</div>
       <div class="price-row"><span class="price-new">۱۰۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن به سبد</button>
@@ -473,29 +447,29 @@
     <div class="cat-card"><i class="fas fa-seedling"></i> حبوبات</div>
   </div>
 
-  <!-- پرفروش‌ترین‌ها (برخی از محصولات اصلی) -->
+  <!-- پرفروش‌ترین‌ها (از میان ۹ محصول) -->
   <div class="section-title"><h3>🔥 پرفروش‌ترین‌ها</h3></div>
   <div class="product-grid">
     <div class="product-card">
-      <div class="emoji-box">🧂</div>
+      <img src="چیپس نمکی.webp" alt="چیپس نمکی" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🧂%3C/text%3E%3C/svg%3E'">
       <div class="product-name">چیپس نمکی</div>
       <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
     </div>
     <div class="product-card">
-      <div class="emoji-box">🌶️</div>
+      <img src="کرانچی تند و آتشین.webp" alt="کرانچی تند و آتشین" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🌶️%3C/text%3E%3C/svg%3E'">
       <div class="product-name">کرانچی تند و آتشین</div>
       <div class="price-row"><span class="price-new">۶۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
     </div>
     <div class="product-card">
-      <div class="emoji-box">🍫</div>
+      <img src="کیت کت.webp" alt="کیت کت" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🍫%3C/text%3E%3C/svg%3E'">
       <div class="product-name">کیت کت</div>
       <div class="price-row"><span class="price-new">۱۰۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
     </div>
     <div class="product-card">
-      <div class="emoji-box">🧀</div>
+      <img src="کرانچی پنیری.webp" alt="کرانچی پنیری" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🧀%3C/text%3E%3C/svg%3E'">
       <div class="product-name">کرانچی پنیری</div>
       <div class="price-row"><span class="price-new">۶۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
@@ -506,13 +480,13 @@
   <div class="section-title"><h3>💰 خرید اقتصادی</h3></div>
   <div class="product-grid">
     <div class="product-card">
-      <div class="emoji-box">🥨</div>
+      <img src="تک تک.webp" alt="تک تک" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🥨%3C/text%3E%3C/svg%3E'">
       <div class="product-name">تک تک</div>
       <div class="price-row"><span class="price-new">۳۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
     </div>
     <div class="product-card">
-      <div class="emoji-box">🍿</div>
+      <img src="پفک طلایی.webp" alt="پفک طلایی" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🍿%3C/text%3E%3C/svg%3E'">
       <div class="product-name">پفک طلایی</div>
       <div class="price-row"><span class="price-new">۱۰۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
@@ -523,13 +497,13 @@
   <div class="section-title"><h3>🆕 تازه‌واردها</h3></div>
   <div class="product-grid">
     <div class="product-card">
-      <div class="emoji-box">🍘</div>
+      <img src="پچ پچ.webp" alt="پچ پچ" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🍘%3C/text%3E%3C/svg%3E'">
       <div class="product-name">پچ پچ</div>
       <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
     </div>
     <div class="product-card">
-      <div class="emoji-box">🧅</div>
+      <img src="چیپس پیاز جعفری.webp" alt="چیپس پیاز جعفری" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 24 24%22 fill=%22%23e63946%22%3E%3Crect width=%2224%22 height=%2224%22 rx=%2212%22 fill=%22%23fce4e4%22/%3E%3Ctext x=%226%22 y=%2217%22 font-size=%2214%22 fill=%22%23b71c1c%22%3E🧅%3C/text%3E%3C/svg%3E'">
       <div class="product-name">چیپس پیاز جعفری</div>
       <div class="price-row"><span class="price-new">۷۰,۰۰۰ تومان</span></div>
       <button class="add-btn">افزودن</button>
@@ -562,32 +536,24 @@
   </div>
 </footer>
 
-<!-- اسکریپت جستجوی هوشمند -->
 <script>
   function searchProducts() {
     const input = document.getElementById('searchInput');
     const filter = input.value.trim().toLowerCase();
-    // دریافت تمام کارت‌های محصول در کل صفحه
     const allCards = document.querySelectorAll('.product-card');
-    
     allCards.forEach(card => {
-      const nameElement = card.querySelector('.product-name');
-      if (nameElement) {
-        const productName = nameElement.textContent.trim().toLowerCase();
-        // اگر عبارت جستجو در نام محصول وجود داشت، نمایش بده، در غیر این صورت مخفی کن
-        if (productName.includes(filter)) {
+      const nameEl = card.querySelector('.product-name');
+      if (nameEl) {
+        const name = nameEl.textContent.trim().toLowerCase();
+        if (name.includes(filter)) {
           card.classList.remove('hidden-product');
         } else {
           card.classList.add('hidden-product');
         }
       }
     });
-
-    // اگر جستجو خالی بود، همه را دوباره نمایش بده (اختیاری)
     if (filter === '') {
-      allCards.forEach(card => {
-        card.classList.remove('hidden-product');
-      });
+      allCards.forEach(c => c.classList.remove('hidden-product'));
     }
   }
 </script>
