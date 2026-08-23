@@ -2,400 +2,199 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>پنل مدیریت | الیگودرز کالا</title>
-
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
-    font-family:
-    "Segoe UI",
-    Tahoma,
-    Arial,
-    sans-serif;
+    font-family:Tahoma,Arial,sans-serif;
 }
 
 body{
     background:#f4f6f9;
-    color:#172033;
+    color:#1e2a41;
 }
 
-/* ================= HEADER ================= */
-
-.header{
+header{
     background:#fff;
-    padding:16px 20px;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+    padding:18px 20px;
+    box-shadow:0 3px 15px rgba(0,0,0,.07);
+    position:sticky;
+    top:0;
+    z-index:20;
+}
 
+.header-inner{
+    max-width:1400px;
+    margin:auto;
     display:flex;
     justify-content:space-between;
     align-items:center;
-
-    position:sticky;
-    top:0;
-    z-index:100;
+    gap:15px;
 }
 
 .logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-
-    font-size:21px;
-    font-weight:800;
+    font-size:22px;
+    font-weight:bold;
 }
 
-.logo-icon{
-    width:40px;
-    height:40px;
-
-    border-radius:12px;
-
-    background:#e63946;
-    color:white;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.logout{
-    background:#f0f2f6;
-    border:0;
-
-    padding:10px 16px;
-    border-radius:30px;
-
-    cursor:pointer;
-    font-weight:700;
-}
-
-/* ================= LOGIN ================= */
-
-.login-page{
-    min-height:100vh;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-}
-
-.login-box{
-    width:100%;
-    max-width:420px;
-
-    background:white;
-
-    border-radius:25px;
-
-    padding:30px;
-
-    box-shadow:
-    0 15px 50px rgba(0,0,0,.08);
-}
-
-.login-box h1{
-    margin-bottom:10px;
-}
-
-.login-box p{
-    color:#697386;
-    margin-bottom:25px;
-}
-
-.input{
-    width:100%;
-
-    padding:14px 16px;
-
-    border:2px solid #e8ebf0;
-
-    border-radius:15px;
-
-    outline:none;
-
-    margin-top:8px;
-    margin-bottom:15px;
-
-    font-size:15px;
-}
-
-.input:focus{
-    border-color:#e63946;
-}
-
-.login-btn{
-    width:100%;
-
-    padding:14px;
-
-    background:#e63946;
-    color:white;
-
-    border:0;
-
-    border-radius:40px;
-
-    font-size:16px;
-    font-weight:800;
-
-    cursor:pointer;
-}
-
-.error{
+.logo span{
     color:#e63946;
-    margin-top:12px;
-    font-size:14px;
 }
 
-/* ================= MAIN ================= */
+.refresh-btn{
+    border:0;
+    background:#1e2a41;
+    color:white;
+    padding:10px 18px;
+    border-radius:30px;
+    cursor:pointer;
+}
 
-.main{
+.container{
     max-width:1400px;
-
     margin:auto;
-
-    padding:25px 18px;
+    padding:25px 15px;
 }
-
-/* ================= STATS ================= */
 
 .stats{
     display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(180px,1fr));
-
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
     gap:15px;
-
     margin-bottom:25px;
 }
 
 .stat{
     background:#fff;
-
-    border-radius:20px;
-
     padding:20px;
-
-    box-shadow:0 5px 18px rgba(0,0,0,.04);
-}
-
-.stat-icon{
-    font-size:27px;
-    color:#e63946;
-
-    margin-bottom:10px;
+    border-radius:18px;
+    box-shadow:0 3px 12px rgba(0,0,0,.04);
 }
 
 .stat-title{
-    color:#697386;
+    color:#777;
     font-size:14px;
 }
 
 .stat-number{
-    font-size:27px;
-    font-weight:800;
-
-    margin-top:5px;
+    font-size:28px;
+    font-weight:bold;
+    margin-top:8px;
 }
-
-/* ================= TOOLBAR ================= */
-
-.toolbar{
-    background:#fff;
-
-    padding:15px;
-
-    border-radius:20px;
-
-    margin-bottom:18px;
-
-    display:flex;
-
-    gap:10px;
-
-    flex-wrap:wrap;
-}
-
-.search{
-    flex:1;
-
-    min-width:200px;
-
-    padding:12px 15px;
-
-    border:2px solid #edf0f4;
-
-    border-radius:30px;
-
-    outline:none;
-}
-
-.filter{
-    padding:12px 16px;
-
-    border:2px solid #edf0f4;
-
-    border-radius:30px;
-
-    background:#fff;
-
-    cursor:pointer;
-}
-
-/* ================= ORDERS ================= */
 
 .orders{
     display:grid;
-
-    grid-template-columns:
-    repeat(auto-fill,minmax(330px,1fr));
-
     gap:18px;
 }
 
 .order{
     background:#fff;
-
-    border-radius:23px;
-
+    border-radius:22px;
     padding:20px;
-
-    box-shadow:
-    0 6px 20px rgba(0,0,0,.05);
-
+    box-shadow:0 4px 18px rgba(0,0,0,.05);
     border:1px solid #edf0f4;
 }
 
 .order-top{
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     gap:10px;
-
-    margin-bottom:15px;
-}
-
-.order-id{
-    font-weight:800;
+    flex-wrap:wrap;
+    padding-bottom:15px;
+    border-bottom:1px solid #eee;
 }
 
 .tracking{
-    background:#f2f4f8;
+    font-weight:bold;
+    font-size:18px;
+}
 
-    padding:6px 10px;
-
-    border-radius:20px;
-
-    font-size:12px;
-
-    direction:ltr;
+.date{
+    color:#777;
+    font-size:13px;
 }
 
 .status{
-    display:inline-block;
-
     padding:7px 13px;
-
     border-radius:30px;
-
     font-size:13px;
-
-    font-weight:800;
-
-    margin-bottom:15px;
+    font-weight:bold;
 }
 
-.pending{
+.status.pending{
     background:#fff3cd;
     color:#856404;
 }
 
-.confirmed{
-    background:#dff6e5;
-    color:#176b35;
+.status.confirmed{
+    background:#dbeafe;
+    color:#1d4ed8;
 }
 
-.delivered{
-    background:#dcecff;
-    color:#12529b;
+.status.preparing{
+    background:#e0e7ff;
+    color:#4338ca;
 }
 
-.rejected{
-    background:#ffe0e0;
-    color:#a71919;
+.status.ready{
+    background:#dcfce7;
+    color:#166534;
 }
 
-/* ================= CUSTOMER ================= */
+.status.delivered{
+    background:#d1fae5;
+    color:#065f46;
+}
 
-.customer{
-    background:#f7f8fa;
+.status.rejected{
+    background:#fee2e2;
+    color:#991b1b;
+}
 
-    border-radius:17px;
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin:18px 0;
+}
 
+.info{
+    background:#f8fafc;
+    border-radius:14px;
     padding:14px;
-
-    margin-bottom:15px;
 }
 
-.customer-row{
-    display:flex;
-
-    gap:8px;
-
-    margin-bottom:8px;
-
-    font-size:14px;
+.info-title{
+    color:#777;
+    font-size:12px;
+    margin-bottom:6px;
 }
 
-.customer-row:last-child{
-    margin-bottom:0;
+.info-value{
+    font-weight:bold;
+    line-height:1.8;
 }
-
-.customer-row i{
-    color:#e63946;
-
-    width:20px;
-}
-
-/* ================= ITEMS ================= */
 
 .items{
-    margin-bottom:15px;
+    background:#fafafa;
+    border-radius:15px;
+    padding:15px;
+    margin-top:10px;
 }
 
 .item{
     display:flex;
-
     justify-content:space-between;
-
     gap:10px;
-
-    padding:8px 0;
-
-    border-bottom:1px solid #edf0f4;
-
-    font-size:14px;
+    padding:9px 0;
+    border-bottom:1px solid #eee;
 }
 
 .item:last-child{
@@ -404,928 +203,661 @@ body{
 
 .total{
     display:flex;
-
     justify-content:space-between;
-
-    font-size:18px;
-
-    font-weight:900;
-
-    padding-top:10px;
-}
-
-/* ================= BUTTONS ================= */
-
-.actions{
-    display:grid;
-
-    grid-template-columns:
-    repeat(2,1fr);
-
-    gap:8px;
-
-    margin-top:18px;
-}
-
-.action{
-    border:0;
-
-    padding:11px 8px;
-
-    border-radius:13px;
-
-    cursor:pointer;
-
-    font-weight:800;
-
-    transition:.2s;
-}
-
-.action:hover{
-    transform:translateY(-2px);
-}
-
-.confirm{
-    background:#20a35a;
-    color:white;
-}
-
-.reject{
-    background:#e63946;
-    color:white;
-}
-
-.deliver{
-    background:#1769aa;
-    color:white;
-}
-
-.refresh{
-    background:#172033;
-    color:white;
-}
-
-.action:disabled{
-    opacity:.4;
-    cursor:not-allowed;
-    transform:none;
-}
-
-/* ================= PROGRESS ================= */
-
-.progress-box{
     margin-top:15px;
+    padding-top:15px;
+    border-top:2px solid #eee;
+    font-size:18px;
+    font-weight:bold;
 }
 
 .progress{
-    height:9px;
+    margin:20px 0;
+}
 
-    background:#e9edf2;
-
+.progress-line{
+    height:8px;
+    background:#e5e7eb;
     border-radius:20px;
-
     overflow:hidden;
 }
 
-.progress-bar{
+.progress-fill{
     height:100%;
-
     border-radius:20px;
-
-    background:#e63946;
-
-    transition:width .4s;
+    transition:.4s;
 }
 
-.progress-text{
+.progress-labels{
     display:flex;
-
     justify-content:space-between;
-
-    margin-top:7px;
-
-    font-size:12px;
-
-    color:#697386;
+    margin-top:8px;
+    font-size:11px;
+    color:#777;
 }
 
-/* ================= EMPTY ================= */
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:9px;
+    margin-top:20px;
+}
+
+.btn{
+    border:0;
+    padding:11px 17px;
+    border-radius:30px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-confirm{
+    background:#2563eb;
+    color:#fff;
+}
+
+.btn-preparing{
+    background:#6366f1;
+    color:#fff;
+}
+
+.btn-ready{
+    background:#16a34a;
+    color:#fff;
+}
+
+.btn-delivered{
+    background:#059669;
+    color:#fff;
+}
+
+.btn-reject{
+    background:#dc2626;
+    color:#fff;
+}
+
+.btn:hover{
+    opacity:.85;
+}
 
 .empty{
-    background:white;
-
-    border-radius:22px;
-
-    padding:50px 20px;
-
     text-align:center;
-
-    color:#7b8495;
+    background:#fff;
+    border-radius:20px;
+    padding:50px;
+    color:#777;
 }
 
-.empty i{
-    font-size:50px;
-
-    opacity:.35;
-
-    margin-bottom:15px;
+.loading{
+    text-align:center;
+    padding:40px;
 }
 
-/* ================= MOBILE ================= */
+.error{
+    background:#fee2e2;
+    color:#991b1b;
+    padding:18px;
+    border-radius:15px;
+    margin-bottom:20px;
+    display:none;
+    white-space:pre-wrap;
+}
+
+.search-box{
+    background:#fff;
+    border-radius:18px;
+    padding:15px;
+    margin-bottom:20px;
+    display:flex;
+    gap:10px;
+}
+
+.search-box input,
+.search-box select{
+    border:2px solid #eee;
+    border-radius:12px;
+    padding:12px;
+    outline:none;
+    flex:1;
+}
+
+.search-box input:focus,
+.search-box select:focus{
+    border-color:#e63946;
+}
 
 @media(max-width:600px){
-
-    .header{
-        padding:12px;
-    }
-
-    .logo{
-        font-size:17px;
-    }
-
-    .main{
-        padding:15px 10px;
-    }
-
-    .orders{
-        grid-template-columns:1fr;
+    .header-inner{
+        flex-direction:column;
+        align-items:stretch;
     }
 
     .order{
-        padding:16px;
+        padding:15px;
     }
 
-    .actions{
-        grid-template-columns:1fr 1fr;
+    .actions .btn{
+        flex:1;
+        min-width:130px;
     }
-
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- =========================================================
-LOGIN
-========================================================= -->
+<header>
+<div class="header-inner">
 
-<div id="loginPage" class="login-page">
-
-    <div class="login-box">
-
-        <h1>
-            <i class="fas fa-user-shield"
-               style="color:#e63946"></i>
-
-            پنل مدیریت
-        </h1>
-
-        <p>
-            الیگودرز کالا
-        </p>
-
-        <label>
-            ایمیل مدیر
-        </label>
-
-        <input
-            id="email"
-            class="input"
-            type="email"
-            placeholder="admin@example.com">
-
-        <label>
-            رمز عبور
-        </label>
-
-        <input
-            id="password"
-            class="input"
-            type="password"
-            placeholder="رمز عبور">
-
-        <button
-            class="login-btn"
-            onclick="login()">
-
-            <i class="fas fa-sign-in-alt"></i>
-            ورود به پنل
-
-        </button>
-
-        <div id="loginError"
-             class="error">
-        </div>
-
-    </div>
-
+<div class="logo">
+پنل مدیریت <span>الیگودرز کالا</span>
 </div>
 
+<button class="refresh-btn" onclick="loadOrders()">
+<i>↻</i> بروزرسانی
+</button>
 
-<!-- =========================================================
-ADMIN
-========================================================= -->
-
-<div id="adminPage" style="display:none">
-
-<header class="header">
-
-    <div class="logo">
-
-        <div class="logo-icon">
-            ک
-        </div>
-
-        الیگودرز کالا
-        <span style="color:#e63946">
-            | مدیریت
-        </span>
-
-    </div>
-
-    <button
-        class="logout"
-        onclick="logout()">
-
-        <i class="fas fa-sign-out-alt"></i>
-        خروج
-
-    </button>
-
+</div>
 </header>
 
 
-<main class="main">
+<main class="container">
 
-    <!-- ================= STATS ================= -->
+<div id="errorBox" class="error"></div>
 
-    <div class="stats">
+<div class="stats">
 
-        <div class="stat">
+<div class="stat">
+<div class="stat-title">کل سفارش‌ها</div>
+<div class="stat-number" id="totalOrders">۰</div>
+</div>
 
-            <div class="stat-icon">
-                <i class="fas fa-shopping-bag"></i>
-            </div>
+<div class="stat">
+<div class="stat-title">در انتظار تأیید</div>
+<div class="stat-number" id="pendingOrders">۰</div>
+</div>
 
-            <div class="stat-title">
-                کل سفارش‌ها
-            </div>
+<div class="stat">
+<div class="stat-title">در حال آماده‌سازی</div>
+<div class="stat-number" id="preparingOrders">۰</div>
+</div>
 
-            <div
-                id="statAll"
-                class="stat-number">
-                ۰
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                <i class="fas fa-clock"></i>
-            </div>
-
-            <div class="stat-title">
-                در انتظار تأیید
-            </div>
-
-            <div
-                id="statPending"
-                class="stat-number">
-                ۰
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                <i class="fas fa-box"></i>
-            </div>
-
-            <div class="stat-title">
-                در حال آماده‌سازی
-            </div>
-
-            <div
-                id="statConfirmed"
-                class="stat-number">
-                ۰
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                <i class="fas fa-truck"></i>
-            </div>
-
-            <div class="stat-title">
-                تحویل داده شده
-            </div>
-
-            <div
-                id="statDelivered"
-                class="stat-number">
-                ۰
-            </div>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-icon">
-                <i class="fas fa-ban"></i>
-            </div>
-
-            <div class="stat-title">
-                رد شده
-            </div>
-
-            <div
-                id="statRejected"
-                class="stat-number">
-                ۰
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ================= TOOLBAR ================= -->
-
-    <div class="toolbar">
-
-        <input
-            id="search"
-            class="search"
-            placeholder="جستجو با کد پیگیری، شماره تلفن یا شماره سفارش..."
-            oninput="renderOrders()">
-
-        <select
-            id="filter"
-            class="filter"
-            onchange="renderOrders()">
-
-            <option value="all">
-                همه سفارش‌ها
-            </option>
-
-            <option value="pending">
-                در انتظار تأیید
-            </option>
-
-            <option value="confirmed">
-                در حال آماده‌سازی
-            </option>
-
-            <option value="delivered">
-                تحویل شده
-            </option>
-
-            <option value="rejected">
-                رد شده
-            </option>
-
-        </select>
-
-        <button
-            class="action refresh"
-            onclick="loadOrders()">
-
-            <i class="fas fa-sync"></i>
-            بروزرسانی
-
-        </button>
-
-    </div>
-
-
-    <!-- ================= ORDERS ================= -->
-
-    <div
-        id="orders"
-        class="orders">
-
-    </div>
-
-</main>
+<div class="stat">
+<div class="stat-title">تحویل داده شده</div>
+<div class="stat-number" id="deliveredOrders">۰</div>
+</div>
 
 </div>
+
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchInput"
+placeholder="جستجوی کد پیگیری، شماره تلفن..."
+oninput="renderOrders()"
+>
+
+<select id="statusFilter" onchange="renderOrders()">
+
+<option value="all">همه سفارش‌ها</option>
+<option value="pending">در انتظار تأیید</option>
+<option value="confirmed">تأیید شده</option>
+<option value="preparing">در حال آماده‌سازی</option>
+<option value="ready">آماده ارسال</option>
+<option value="delivered">تحویل داده شده</option>
+<option value="rejected">رد شده</option>
+
+</select>
+
+</div>
+
+
+<div id="ordersContainer">
+
+<div class="loading">
+در حال دریافت سفارش‌ها...
+</div>
+
+</div>
+
+</main>
 
 
 <script>
 
-/* ============================================================
-SUPABASE
-============================================================ */
+/* =========================================================
+   SUPABASE
+========================================================= */
 
 const SUPABASE_URL =
 'https://mqohsmxpvqwqgmwubfyr.supabase.co';
 
-const SUPABASE_ANON_KEY =
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFjZSIsInJlZiI6Im1xb2hzbXhwdnF3cWdtd2ViZnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzE1OTMsImV4cCI6MjA5NzAwNzU5M30.6a_Bdvhb-ZbDDkxDNuIPxTHS4JvBjxkqOiHfNSgBUC4';
+/*
+   ANON / PUBLISHABLE KEY
+*/
 
-const client =
-window.supabase.createClient(
+const SUPABASE_ANON_KEY =
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xb2hzbXhwdnF3cWdtd3ViZnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzE1OTMsImV4cCI6MjA5NzAwNzU5M30.6a_Bdvhb-ZbDDkxDNuIPxTHS4JvBjxkqOiHfNSgBUC4';
+
+
+/*
+   مهم:
+   از window.supabase استفاده شده تا با نام متغیر
+   تداخل ایجاد نشود.
+*/
+
+const db = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
 
 
-/* ============================================================
-STATE
-============================================================ */
+/* =========================================================
+   STATE
+========================================================= */
 
 let orders = [];
 
 
-/* ============================================================
-LOGIN
-============================================================ */
+/* =========================================================
+   نمایش خطا
+========================================================= */
 
-async function login(){
+function showError(message){
 
-    const email =
-        document.getElementById('email')
-        .value.trim();
+    const box = document.getElementById('errorBox');
 
-    const password =
-        document.getElementById('password')
-        .value;
+    box.style.display = 'block';
 
-    const error =
-        document.getElementById('loginError');
+    box.textContent =
+        'خطا:\n' + message;
 
-    error.textContent = '';
+}
 
-    if(!email || !password){
+function hideError(){
 
-        error.textContent =
-        'ایمیل و رمز عبور را وارد کنید.';
+    document.getElementById('errorBox').style.display = 'none';
 
-        return;
+}
+
+
+/* =========================================================
+   وضعیت فارسی
+========================================================= */
+
+function statusText(status){
+
+    const map = {
+
+        pending:
+        'در انتظار تأیید',
+
+        confirmed:
+        'تأیید شده',
+
+        preparing:
+        'در حال آماده‌سازی',
+
+        ready:
+        'آماده ارسال',
+
+        delivered:
+        'تحویل داده شده',
+
+        rejected:
+        'رد شده'
+
+    };
+
+    return map[status] || status;
+
+}
+
+
+/* =========================================================
+   درصد پیشرفت
+========================================================= */
+
+function getProgress(status){
+
+    switch(status){
+
+        case 'pending':
+            return 15;
+
+        case 'confirmed':
+            return 35;
+
+        case 'preparing':
+            return 60;
+
+        case 'ready':
+            return 80;
+
+        case 'delivered':
+            return 100;
+
+        case 'rejected':
+            return 0;
+
+        default:
+            return 10;
     }
 
-    const {data,error:loginError} =
-        await client.auth.signInWithPassword({
-
-            email:email,
-
-            password:password
-
-        });
-
-    if(loginError){
-
-        error.textContent =
-        'ورود ناموفق: ' +
-        loginError.message;
-
-        return;
-    }
-
-    showAdmin();
-
-    await loadOrders();
-
 }
 
 
-/* ============================================================
-CHECK SESSION
-============================================================ */
+/* =========================================================
+   تاریخ
+========================================================= */
 
-async function checkSession(){
+function formatDate(date){
 
-    const {
-        data
-    } = await client.auth.getSession();
+    if(!date) return '-';
 
-    if(data.session){
+    try{
 
-        showAdmin();
+        return new Date(date).toLocaleString(
+            'fa-IR',
+            {
+                dateStyle:'short',
+                timeStyle:'short'
+            }
+        );
 
-        loadOrders();
+    }catch(e){
+
+        return date;
 
     }
 
 }
 
 
-/* ============================================================
-SHOW ADMIN
-============================================================ */
-
-function showAdmin(){
-
-    document.getElementById('loginPage')
-        .style.display='none';
-
-    document.getElementById('adminPage')
-        .style.display='block';
-
-}
-
-
-/* ============================================================
-LOGOUT
-============================================================ */
-
-async function logout(){
-
-    await client.auth.signOut();
-
-    location.reload();
-
-}
-
-
-/* ============================================================
-LOAD ORDERS
-============================================================ */
+/* =========================================================
+   دریافت سفارش‌ها
+========================================================= */
 
 async function loadOrders(){
 
-    const container =
-        document.getElementById('orders');
+    hideError();
 
-    container.innerHTML = `
-        <div class="empty">
-            <i class="fas fa-spinner fa-spin"></i>
-            <p>در حال دریافت سفارش‌ها...</p>
-        </div>
-    `;
+    document.getElementById('ordersContainer').innerHTML =
+        '<div class="loading">در حال دریافت سفارش‌ها...</div>';
 
-    const {
-        data,
-        error
-    } = await client
+    try{
 
-        .from('orders')
+        /*
+           سفارش‌ها را می‌گیریم
+        */
 
-        .select('*')
-
-        .order('created_at',{
-            ascending:false
-        });
+        const {
+            data,
+            error
+        } = await db
+            .from('orders')
+            .select('*')
+            .order('created_at',{
+                ascending:false
+            });
 
 
-    if(error){
+        if(error){
+
+            console.error(error);
+
+            throw new Error(
+                error.message +
+                '\nکد خطا: ' +
+                error.code
+            );
+
+        }
+
+
+        orders = data || [];
+
+
+        /*
+           گرفتن کاربران
+        */
+
+        if(orders.length > 0){
+
+            const userIds = [
+                ...new Set(
+                    orders
+                    .map(o => o.user_id)
+                    .filter(Boolean)
+                )
+            ];
+
+
+            if(userIds.length > 0){
+
+                const {
+                    data: users,
+                    error: userError
+                } = await db
+                    .from('users')
+                    .select(
+                        'id,phone,street,alley,plaque'
+                    )
+                    .in('id',userIds);
+
+
+                if(!userError && users){
+
+                    orders = orders.map(order => {
+
+                        order.user =
+                            users.find(
+                                u => String(u.id) === String(order.user_id)
+                            ) || null;
+
+                        return order;
+
+                    });
+
+                }
+
+            }
+
+        }
+
+
+        updateStats();
+
+        renderOrders();
+
+    }catch(error){
 
         console.error(error);
 
-        container.innerHTML = `
-            <div class="empty">
+        showError(error.message);
 
-                <i class="fas fa-triangle-exclamation"></i>
+        document.getElementById('ordersContainer').innerHTML =
+            '<div class="empty">دریافت سفارش‌ها ناموفق بود.</div>';
 
-                <p>
-                    خطا در دریافت سفارش‌ها
-                </p>
-
-                <small>
-                    ${escapeHtml(error.message)}
-                </small>
-
-            </div>
-        `;
-
-        return;
     }
-
-    orders = data || [];
-
-    await attachUsers();
-
-    updateStats();
-
-    renderOrders();
 
 }
 
 
-/* ============================================================
-GET USERS
-============================================================ */
-
-async function attachUsers(){
-
-    if(!orders.length)
-        return;
-
-    const ids =
-        [...new Set(
-            orders
-            .map(o => o.user_id)
-            .filter(Boolean)
-        )];
-
-    if(!ids.length)
-        return;
-
-    const {
-        data,
-        error
-    } = await client
-
-        .from('users')
-
-        .select('*')
-
-        .in('id',ids);
-
-    if(error){
-
-        console.error(
-            'خطای دریافت کاربران:',
-            error
-        );
-
-        return;
-    }
-
-    const users = {};
-
-    (data || []).forEach(user => {
-
-        users[String(user.id)] = user;
-
-    });
-
-    orders.forEach(order => {
-
-        order.customer =
-            users[String(order.user_id)] || null;
-
-    });
-
-}
-
-
-/* ============================================================
-STATS
-============================================================ */
+/* =========================================================
+   آمار
+========================================================= */
 
 function updateStats(){
 
-    const all =
-        orders.length;
+    document.getElementById('totalOrders').textContent =
+        orders.length.toLocaleString('fa-IR');
 
-    const pending =
-        orders.filter(o =>
-            o.status === 'pending'
-        ).length;
 
-    const confirmed =
-        orders.filter(o =>
-            o.status === 'confirmed'
-        ).length;
+    document.getElementById('pendingOrders').textContent =
+        orders.filter(
+            o => o.status === 'pending'
+        ).length.toLocaleString('fa-IR');
 
-    const delivered =
-        orders.filter(o =>
-            o.status === 'delivered'
-        ).length;
 
-    const rejected =
-        orders.filter(o =>
-            o.status === 'rejected'
-        ).length;
+    document.getElementById('preparingOrders').textContent =
+        orders.filter(
+            o =>
+                o.status === 'confirmed' ||
+                o.status === 'preparing'
+        ).length.toLocaleString('fa-IR');
 
-    document.getElementById('statAll')
-        .textContent =
-        all.toLocaleString('fa-IR');
 
-    document.getElementById('statPending')
-        .textContent =
-        pending.toLocaleString('fa-IR');
-
-    document.getElementById('statConfirmed')
-        .textContent =
-        confirmed.toLocaleString('fa-IR');
-
-    document.getElementById('statDelivered')
-        .textContent =
-        delivered.toLocaleString('fa-IR');
-
-    document.getElementById('statRejected')
-        .textContent =
-        rejected.toLocaleString('fa-IR');
+    document.getElementById('deliveredOrders').textContent =
+        orders.filter(
+            o => o.status === 'delivered'
+        ).length.toLocaleString('fa-IR');
 
 }
 
 
-/* ============================================================
-RENDER
-============================================================ */
+/* =========================================================
+   نمایش سفارش‌ها
+========================================================= */
 
 function renderOrders(){
 
     const container =
-        document.getElementById('orders');
+        document.getElementById('ordersContainer');
 
     const search =
-        document.getElementById('search')
+        document
+        .getElementById('searchInput')
         .value
         .trim()
         .toLowerCase();
 
-    const filter =
-        document.getElementById('filter')
+
+    const status =
+        document
+        .getElementById('statusFilter')
         .value;
 
-    let list =
-        orders.filter(order => {
 
-            if(
-                filter !== 'all' &&
-                order.status !== filter
-            ){
-                return false;
-            }
+    let filtered = orders.filter(order => {
 
-            if(!search)
-                return true;
+        const user = order.user;
 
-            const customer =
-                order.customer || {};
-
-            const text = [
-
-                order.id,
-
-                order.tracking_code,
-
-                customer.phone,
-
-                customer.street,
-
-                customer.alley,
-
-                customer.plaque
-
-            ]
-            .filter(Boolean)
-            .join(' ')
+        const tracking =
+            String(order.tracking_code || '')
             .toLowerCase();
 
-            return text.includes(search);
+        const phone =
+            String(user?.phone || '')
+            .toLowerCase();
 
-        });
+        const matchesSearch =
+            !search ||
+            tracking.includes(search) ||
+            phone.includes(search);
 
 
-    if(!list.length){
+        const matchesStatus =
+            status === 'all' ||
+            order.status === status;
 
-        container.innerHTML = `
-            <div class="empty">
 
-                <i class="fas fa-box-open"></i>
+        return matchesSearch && matchesStatus;
 
-                <p>
-                    سفارشی پیدا نشد.
-                </p>
+    });
 
-            </div>
-        `;
+
+    if(filtered.length === 0){
+
+        container.innerHTML =
+            '<div class="empty">سفارشی پیدا نشد.</div>';
 
         return;
+
     }
 
 
     container.innerHTML =
-        list.map(order =>
-            orderHTML(order)
-        ).join('');
+        filtered.map(order => createOrderHTML(order)).join('');
 
 }
 
 
-/* ============================================================
-ORDER HTML
-============================================================ */
+/* =========================================================
+   ساخت HTML سفارش
+========================================================= */
 
-function orderHTML(order){
+function createOrderHTML(order){
 
-    const customer =
-        order.customer || {};
+    const user = order.user || {};
 
-    let statusText =
-        'نامشخص';
-
-    let statusClass =
-        '';
-
-    if(order.status === 'pending'){
-
-        statusText =
-        'در انتظار تأیید';
-
-        statusClass =
-        'pending';
-
-    }
-
-    else if(order.status === 'confirmed'){
-
-        statusText =
-        'در حال آماده‌سازی';
-
-        statusClass =
-        'confirmed';
-
-    }
-
-    else if(order.status === 'delivered'){
-
-        statusText =
-        'تحویل داده شده';
-
-        statusClass =
-        'delivered';
-
-    }
-
-    else if(order.status === 'rejected'){
-
-        statusText =
-        'رد شده';
-
-        statusClass =
-        'rejected';
-
-    }
-
-
-    let progress = 0;
-
-    if(order.status === 'pending')
-        progress = 25;
-
-    if(order.status === 'confirmed')
-        progress = 65;
-
-    if(order.status === 'delivered')
-        progress = 100;
-
-    if(order.status === 'rejected')
-        progress = 100;
+    const progress =
+        getProgress(order.status);
 
 
     let items = [];
 
     try{
 
-        items =
-        typeof order.items === 'string'
-        ? JSON.parse(order.items)
-        : (order.items || []);
+        if(Array.isArray(order.items)){
+
+            items = order.items;
+
+        }else if(typeof order.items === 'string'){
+
+            items = JSON.parse(order.items);
+
+        }
 
     }catch(e){
 
-        items=[];
+        items = [];
 
     }
 
 
     const itemsHTML =
+        items.length
+        ?
         items.map(item => `
 
             <div class="item">
 
                 <span>
-                    ${escapeHtml(item.name || 'محصول')}
+                    ${escapeHTML(item.name || 'محصول')}
                     × ${item.qty || 1}
                 </span>
 
-                <b>
+                <strong>
                     ${Number(
                         (item.price || 0) *
                         (item.qty || 1)
                     ).toLocaleString('fa-IR')}
                     تومان
-                </b>
+                </strong>
 
             </div>
 
-        `).join('');
+        `).join('')
+        :
+        '<div>اطلاعات محصولات موجود نیست</div>';
 
 
-    const created =
-        order.created_at
-        ? new Date(order.created_at)
-            .toLocaleString('fa-IR')
-        : '---';
+    const address = [
 
+        user.street,
+        user.alley
+            ? 'کوچه ' + user.alley
+            : '',
+        user.plaque
+            ? 'پلاک ' + user.plaque
+            : ''
 
-    const tracking =
-        order.tracking_code || '---';
+    ]
+    .filter(Boolean)
+    .join('، ');
 
 
     return `
@@ -1334,103 +866,95 @@ function orderHTML(order){
 
         <div class="order-top">
 
-            <div class="order-id">
+            <div>
 
-                سفارش #${escapeHtml(
-                    String(order.id)
-                    .slice(0,8)
-                )}
+                <div class="tracking">
 
-            </div>
-
-            <div class="tracking">
-
-                ${escapeHtml(tracking)}
-
-            </div>
-
-        </div>
-
-
-        <div class="status ${statusClass}">
-
-            <i class="fas fa-circle"
-               style="font-size:8px"></i>
-
-            ${statusText}
-
-        </div>
-
-
-        <!-- مشتری -->
-
-        <div class="customer">
-
-            <div class="customer-row">
-
-                <i class="fas fa-phone"></i>
-
-                <span>
-                    ${escapeHtml(
-                        customer.phone || 'ثبت نشده'
-                    )}
-                </span>
-
-            </div>
-
-
-            <div class="customer-row">
-
-                <i class="fas fa-location-dot"></i>
-
-                <span>
-
-                    ${escapeHtml(
-                        customer.street || ''
+                    کد پیگیری:
+                    ${escapeHTML(
+                        order.tracking_code || order.id || '-'
                     )}
 
-                    ${customer.alley
-                        ? '، کوچه ' +
-                          escapeHtml(customer.alley)
-                        : ''}
+                </div>
 
-                    ${customer.plaque
-                        ? '، پلاک ' +
-                          escapeHtml(customer.plaque)
-                        : ''}
+                <div class="date">
 
-                </span>
+                    ثبت:
+                    ${formatDate(order.created_at)}
+
+                </div>
 
             </div>
 
 
-            <div class="customer-row">
+            <span class="status ${escapeHTML(order.status)}">
 
-                <i class="fas fa-calendar"></i>
+                ${statusText(order.status)}
 
-                <span>
-                    ${created}
-                </span>
+            </span>
+
+        </div>
+
+
+        <div class="info-grid">
+
+            <div class="info">
+
+                <div class="info-title">
+                    مشتری
+                </div>
+
+                <div class="info-value">
+                    ${escapeHTML(user.phone || 'نامشخص')}
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-title">
+                    آدرس
+                </div>
+
+                <div class="info-value">
+                    ${escapeHTML(address || 'ثبت نشده')}
+                </div>
+
+            </div>
+
+
+            <div class="info">
+
+                <div class="info-title">
+                    وضعیت
+                </div>
+
+                <div class="info-value">
+
+                    ${statusText(order.status)}
+
+                </div>
 
             </div>
 
         </div>
 
-
-        <!-- محصولات -->
 
         <div class="items">
 
-            ${itemsHTML || `
-                <div class="item">
-                    اطلاعات محصول موجود نیست
-                </div>
-            `}
+            <strong>
+                محصولات سفارش
+            </strong>
+
+            <div style="margin-top:10px">
+
+                ${itemsHTML}
+
+            </div>
 
         </div>
 
-
-        <!-- مبلغ -->
 
         <div class="total">
 
@@ -1448,89 +972,131 @@ function orderHTML(order){
         </div>
 
 
-        <!-- پیشرفت -->
-
-        <div class="progress-box">
+        ${
+            order.status !== 'rejected'
+            ?
+            `
 
             <div class="progress">
 
-                <div
-                    class="progress-bar"
-                    style="width:${progress}%">
+                <div class="progress-line">
+
+                    <div
+                        class="progress-fill"
+                        style="
+                            width:${progress}%;
+                            background:#e63946;
+                        "
+                    ></div>
+
+                </div>
+
+
+                <div class="progress-labels">
+
+                    <span>ثبت</span>
+                    <span>تأیید</span>
+                    <span>آماده‌سازی</span>
+                    <span>ارسال</span>
+                    <span>تحویل</span>
+
                 </div>
 
             </div>
 
-            <div class="progress-text">
+            `
+            :
+            ''
+        }
 
-                <span>
-                    ثبت سفارش
-                </span>
-
-                <span>
-                    ${statusText}
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- عملیات -->
 
         <div class="actions">
 
-            <button
-                class="action confirm"
-                onclick="confirmOrder('${order.id}')"
-                ${order.status !== 'pending'
-                    ? 'disabled'
-                    : ''}>
+            ${
+                order.status === 'pending'
+                ?
+                `
+                <button
+                    class="btn btn-confirm"
+                    onclick="changeStatus('${order.id}','confirmed')"
+                >
+                    ✓ تأیید سفارش
+                </button>
 
-                <i class="fas fa-check"></i>
-
-                تأیید سفارش
-
-            </button>
-
-
-            <button
-                class="action reject"
-                onclick="rejectOrder('${order.id}')"
-                ${order.status !== 'pending'
-                    ? 'disabled'
-                    : ''}>
-
-                <i class="fas fa-xmark"></i>
-
-                رد سفارش
-
-            </button>
+                <button
+                    class="btn btn-reject"
+                    onclick="changeStatus('${order.id}','rejected')"
+                >
+                    ✕ رد سفارش
+                </button>
+                `
+                :
+                ''
+            }
 
 
-            <button
-                class="action deliver"
-                onclick="deliverOrder('${order.id}')"
-                ${order.status !== 'confirmed'
-                    ? 'disabled'
-                    : ''}>
+            ${
+                order.status === 'confirmed'
+                ?
+                `
+                <button
+                    class="btn btn-preparing"
+                    onclick="changeStatus('${order.id}','preparing')"
+                >
+                    🔧 شروع آماده‌سازی
+                </button>
+                `
+                :
+                ''
+            }
 
-                <i class="fas fa-truck"></i>
 
-                تحویل داده شد
+            ${
+                order.status === 'preparing'
+                ?
+                `
+                <button
+                    class="btn btn-ready"
+                    onclick="changeStatus('${order.id}','ready')"
+                >
+                    ✓ آماده ارسال
+                </button>
+                `
+                :
+                ''
+            }
 
-            </button>
+
+            ${
+                order.status === 'ready'
+                ?
+                `
+                <button
+                    class="btn btn-delivered"
+                    onclick="changeStatus('${order.id}','delivered')"
+                >
+                    🚚 تحویل داده شد
+                </button>
+                `
+                :
+                ''
+            }
 
 
-            <button
-                class="action refresh"
-                onclick="loadOrders()">
-
-                <i class="fas fa-sync"></i>
-
-                بروزرسانی
-
-            </button>
+            ${
+                order.status === 'rejected'
+                ?
+                `
+                <button
+                    class="btn btn-confirm"
+                    onclick="changeStatus('${order.id}','confirmed')"
+                >
+                    ↻ تأیید مجدد
+                </button>
+                `
+                :
+                ''
+            }
 
         </div>
 
@@ -1541,166 +1107,163 @@ function orderHTML(order){
 }
 
 
-/* ============================================================
-CONFIRM
-============================================================ */
+/* =========================================================
+   تغییر وضعیت سفارش
+========================================================= */
 
-async function confirmOrder(id){
+async function changeStatus(orderId,newStatus){
 
-    if(!confirm(
-        'آیا این سفارش را تأیید می‌کنید؟'
-    )) return;
-
-
-    const {
-        error
-    } = await client
-
-        .from('orders')
-
-        .update({
-
-            status:'confirmed',
-
-            confirmed_at:
-                new Date().toISOString(),
-
-            rejected_at:null
-
-        })
-
-        .eq('id',id);
-
-
-    if(error){
-
-        alert(
-            'خطا در تأیید سفارش:\n' +
-            error.message
+    const order =
+        orders.find(
+            o => String(o.id) === String(orderId)
         );
 
+
+    if(!order) return;
+
+
+    const names = {
+
+        confirmed:'تأیید سفارش',
+        preparing:'شروع آماده‌سازی',
+        ready:'آماده ارسال',
+        delivered:'تحویل داده شد',
+        rejected:'رد سفارش'
+
+    };
+
+
+    const confirmMessage =
+        'آیا مطمئن هستید که سفارش را «' +
+        (names[newStatus] || newStatus) +
+        '» می‌کنید؟';
+
+
+    if(!confirm(confirmMessage)){
+
         return;
+
     }
 
 
-    alert(
-        '✅ سفارش تأیید شد.'
-    );
+    hideError();
 
-    await loadOrders();
+
+    try{
+
+        const updateData = {
+
+            status:newStatus
+
+        };
+
+
+        /*
+           اگر ستون‌های زمانی در جدول وجود داشته باشند
+           این زمان‌ها هم ثبت می‌شوند.
+        */
+
+        if(newStatus === 'confirmed'){
+
+            updateData.confirmed_at =
+                new Date().toISOString();
+
+        }
+
+
+        if(newStatus === 'delivered'){
+
+            updateData.delivered_at =
+                new Date().toISOString();
+
+        }
+
+
+        const {
+            data,
+            error
+        } = await db
+            .from('orders')
+            .update(updateData)
+            .eq('id',orderId)
+            .select()
+            .single();
+
+
+        if(error){
+
+            console.error(error);
+
+            throw new Error(
+                error.message +
+                '\nکد: ' +
+                error.code
+            );
+
+        }
+
+
+        /*
+           آپدیت محلی
+        */
+
+        order.status = newStatus;
+
+
+        if(newStatus === 'confirmed'){
+
+            order.confirmed_at =
+                updateData.confirmed_at;
+
+        }
+
+
+        if(newStatus === 'delivered'){
+
+            order.delivered_at =
+                updateData.delivered_at;
+
+        }
+
+
+        updateStats();
+
+        renderOrders();
+
+
+        alert(
+            '✅ وضعیت سفارش با موفقیت تغییر کرد.'
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showError(
+            'تغییر وضعیت انجام نشد:\n' +
+            error.message
+        );
+
+    }
 
 }
 
 
-/* ============================================================
-REJECT
-============================================================ */
+/* =========================================================
+   جلوگیری از HTML Injection
+========================================================= */
 
-async function rejectOrder(id){
+function escapeHTML(value){
 
-    const reason =
-        prompt(
-            'دلیل رد سفارش را وارد کنید:'
-        );
+    if(value === null || value === undefined){
 
-    if(reason === null)
-        return;
+        return '';
 
-
-    const {
-        error
-    } = await client
-
-        .from('orders')
-
-        .update({
-
-            status:'rejected',
-
-            rejected_at:
-                new Date().toISOString()
-
-        })
-
-        .eq('id',id);
-
-
-    if(error){
-
-        alert(
-            'خطا در رد سفارش:\n' +
-            error.message
-        );
-
-        return;
     }
 
 
-    alert(
-        '❌ سفارش رد شد.'
-    );
-
-    await loadOrders();
-
-}
-
-
-/* ============================================================
-DELIVER
-============================================================ */
-
-async function deliverOrder(id){
-
-    if(!confirm(
-        'آیا این سفارش تحویل داده شده است؟'
-    )) return;
-
-
-    const {
-        error
-    } = await client
-
-        .from('orders')
-
-        .update({
-
-            status:'delivered',
-
-            delivered_at:
-                new Date().toISOString()
-
-        })
-
-        .eq('id',id);
-
-
-    if(error){
-
-        alert(
-            'خطا در ثبت تحویل:\n' +
-            error.message
-        );
-
-        return;
-    }
-
-
-    alert(
-        '🚚 سفارش به عنوان تحویل‌شده ثبت شد.'
-    );
-
-    await loadOrders();
-
-}
-
-
-/* ============================================================
-ESCAPE HTML
-============================================================ */
-
-function escapeHtml(value){
-
-    return String(value ?? '')
+    return String(value)
         .replace(/&/g,'&amp;')
         .replace(/</g,'&lt;')
         .replace(/>/g,'&gt;')
@@ -1710,42 +1273,51 @@ function escapeHtml(value){
 }
 
 
-/* ============================================================
-REALTIME
-============================================================ */
+/* =========================================================
+   REALTIME
+========================================================= */
 
-function enableRealtime(){
+const channel =
+    db
+    .channel('admin-orders')
+    .on(
+        'postgres_changes',
+        {
+            event:'*',
+            schema:'public',
+            table:'orders'
+        },
+        function(){
 
-    client
+            loadOrders();
 
-        .channel('admin-orders')
-
-        .on(
-            'postgres_changes',
-            {
-                event:'*',
-                schema:'public',
-                table:'orders'
-            },
-            function(){
-
-                loadOrders();
-
-            }
-        )
-
-        .subscribe();
-
-}
+        }
+    )
+    .subscribe();
 
 
-/* ============================================================
-START
-============================================================ */
+/* =========================================================
+   شروع
+========================================================= */
 
-checkSession();
+document.addEventListener(
+    'DOMContentLoaded',
+    function(){
 
-enableRealtime();
+        loadOrders();
+
+    }
+);
+
+
+/*
+   هر 30 ثانیه هم سفارش‌ها دوباره بررسی می‌شوند.
+*/
+
+setInterval(
+    loadOrders,
+    30000
+);
 
 </script>
 
