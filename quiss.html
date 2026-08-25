@@ -4,317 +4,261 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-<title>کاپ کوییز | مسابقه آنلاین</title>
+<title>Quiz Cup Online</title>
 
 <style>
+
 *{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent
 }
 
 body{
-    margin:0;
-    min-height:100vh;
-    font-family:Tahoma,Arial,sans-serif;
-    color:#fff;
-    background:
-        radial-gradient(circle at top,#263d83 0,#11182f 45%,#070b18 100%);
+margin:0;
+font-family:Tahoma,Arial,sans-serif;
+background:
+radial-gradient(circle at top,#263d83,#11182f 48%,#060914);
+color:white;
+min-height:100vh
 }
 
 .container{
-    width:min(700px,94%);
-    margin:auto;
-    padding:18px 0 40px;
+width:min(700px,94%);
+margin:auto;
+padding:15px 0 40px
 }
 
 .card{
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.13);
-    border-radius:26px;
-    padding:22px;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
-    backdrop-filter:blur(18px);
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.12);
+border-radius:25px;
+padding:20px;
+backdrop-filter:blur(18px);
+box-shadow:0 20px 60px #0006;
+margin-bottom:15px
 }
 
 .hidden{
-    display:none!important;
+display:none!important
 }
 
 .center{
-    text-align:center;
+text-align:center
 }
 
 .logo{
-    font-size:65px;
+font-size:65px
 }
 
 h1{
-    margin:5px 0 12px;
-    font-size:28px;
-}
-
-h2{
-    line-height:1.9;
-}
-
-p{
-    line-height:1.9;
-    opacity:.8;
-}
-
-input{
-    width:100%;
-    padding:16px;
-    margin:8px 0;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.15);
-    outline:none;
-    background:rgba(0,0,0,.25);
-    color:white;
-    font-size:16px;
-}
-
-input::placeholder{
-    color:#aaa;
+font-size:27px
 }
 
 button{
-    width:100%;
-    border:0;
-    border-radius:16px;
-    padding:15px;
-    margin-top:10px;
-    background:#2563eb;
-    color:#fff;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
+width:100%;
+border:0;
+border-radius:16px;
+padding:15px;
+margin-top:10px;
+background:#2563eb;
+color:white;
+font-weight:bold;
+font-size:16px
 }
 
-button:active{
-    transform:scale(.98);
+button.secondary{
+background:#ffffff15
 }
 
-.secondary{
-    background:rgba(255,255,255,.1);
+input{
+width:100%;
+padding:15px;
+border-radius:15px;
+border:1px solid #ffffff20;
+background:#0004;
+color:white;
+font-size:16px;
+outline:none
 }
 
-.category-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-    margin-top:20px;
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin-bottom:15px
 }
 
-.category{
-    min-height:135px;
-    border-radius:20px;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.07);
-    padding:16px;
-    cursor:pointer;
-    text-align:center;
-    transition:.2s;
+.wallet{
+display:flex;
+gap:8px;
+flex-wrap:wrap
 }
 
-.category:hover{
-    transform:translateY(-3px);
-    background:rgba(255,255,255,.13);
+.wallet span{
+background:#0005;
+padding:10px 13px;
+border-radius:14px
 }
 
-.category-icon{
-    font-size:45px;
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px
 }
 
-.category-title{
-    font-weight:bold;
-    margin-top:8px;
+.cat{
+padding:18px 8px;
+border-radius:20px;
+background:#ffffff0c;
+border:1px solid #ffffff15;
+text-align:center;
+cursor:pointer
 }
 
-.category-desc{
-    font-size:11px;
-    opacity:.65;
-    margin-top:5px;
+.cat-icon{
+font-size:40px
+}
+
+.cat-title{
+font-weight:bold;
+margin-top:8px
 }
 
 .cup{
-    font-size:75px;
-    text-align:center;
-    filter:drop-shadow(0 5px 15px rgba(255,210,0,.3));
-}
-
-.topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:12px;
-}
-
-.question-count{
-    font-size:14px;
-    opacity:.8;
+font-size:70px
 }
 
 .timer{
-    min-width:72px;
-    text-align:center;
-    padding:11px 12px;
-    border-radius:14px;
-    background:#dc2626;
-    font-size:20px;
-    font-weight:bold;
+font-size:23px;
+background:#dc2626;
+padding:10px 15px;
+border-radius:14px
+}
+
+.timer.safe{
+background:#16a34a
 }
 
 .timer.warning{
-    animation:pulse .5s infinite alternate;
-    background:#991b1b;
+animation:pulse .5s infinite alternate
 }
 
 @keyframes pulse{
-    from{transform:scale(1)}
-    to{transform:scale(1.08)}
+to{transform:scale(1.08)}
 }
 
 .progress{
-    height:8px;
-    border-radius:10px;
-    background:rgba(255,255,255,.1);
-    overflow:hidden;
-    margin:12px 0 20px;
+height:7px;
+background:#ffffff15;
+border-radius:10px;
+overflow:hidden;
+margin-bottom:20px
 }
 
-.progress-bar{
-    height:100%;
-    width:0;
-    background:#22c55e;
-    transition:.3s;
+.progress div{
+height:100%;
+background:#22c55e;
+width:0;
+transition:.3s
 }
 
 .question{
-    font-size:20px;
-    line-height:1.9;
-    margin:15px 0;
+font-size:20px;
+font-weight:bold;
+line-height:2;
+margin-bottom:15px
 }
 
 .option{
-    padding:16px;
-    margin:10px 0;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.07);
-    cursor:pointer;
-    transition:.15s;
-}
-
-.option:hover{
-    background:rgba(255,255,255,.13);
+padding:15px;
+margin:9px 0;
+border-radius:15px;
+background:#ffffff0c;
+border:1px solid #ffffff15;
+cursor:pointer
 }
 
 .option.selected{
-    background:#2563eb;
-    border-color:#60a5fa;
+background:#2563eb;
+border-color:#60a5fa
 }
 
-.score{
-    font-size:55px;
-    font-weight:bold;
-    margin:15px;
+.option.disabled{
+opacity:.35;
+pointer-events:none
 }
 
-.rank{
-    font-size:22px;
-    margin:15px;
+.opponent{
+display:flex;
+justify-content:space-between;
+background:#0003;
+padding:12px;
+border-radius:14px;
+margin-bottom:12px
 }
 
-.result-row{
-    display:flex;
-    justify-content:space-around;
-    gap:8px;
-    margin:20px 0;
+.shop{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px
 }
 
-.result-box{
-    flex:1;
-    padding:15px 8px;
-    border-radius:16px;
-    background:rgba(255,255,255,.07);
+.item{
+background:#ffffff0b;
+border:1px solid #ffffff15;
+border-radius:15px;
+padding:12px 5px;
+text-align:center;
+cursor:pointer
 }
 
-.result-number{
-    font-size:25px;
-    font-weight:bold;
+.item b{
+display:block;
+margin:5px
 }
 
-.result-label{
-    font-size:12px;
-    opacity:.7;
+.players{
+margin-top:15px
 }
 
 .player{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:15px;
-    margin:8px 0;
-    border-radius:16px;
-    background:rgba(255,255,255,.07);
-}
-
-.player:nth-child(1){
-    border:1px solid #facc15;
-}
-
-.player:nth-child(2){
-    border:1px solid #cbd5e1;
-}
-
-.player:nth-child(3){
-    border:1px solid #d97706;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px;
+background:#ffffff0b;
+border-radius:15px;
+margin:7px 0
 }
 
 .medal{
-    font-size:24px;
+font-size:22px
 }
 
-.score-small{
-    font-weight:bold;
-    color:#60a5fa;
+.bigscore{
+font-size:55px;
+font-weight:bold
 }
 
-.badge{
-    display:inline-block;
-    padding:7px 12px;
-    border-radius:30px;
-    background:rgba(255,255,255,.1);
-    font-size:12px;
+.wait{
+font-size:18px;
+padding:20px;
+text-align:center
 }
 
-.error{
-    color:#fca5a5;
+.notice{
+background:#f59e0b22;
+border:1px solid #f59e0b55;
+padding:12px;
+border-radius:14px;
+line-height:1.8;
+font-size:13px
 }
 
 @media(max-width:450px){
-    .category-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .category{
-        min-height:125px;
-        padding:12px 8px;
-    }
-
-    .category-icon{
-        font-size:38px;
-    }
-
-    .question{
-        font-size:18px;
-    }
-
-    h1{
-        font-size:24px;
-    }
+.question{font-size:18px}
+.shop{grid-template-columns:1fr 1fr 1fr}
 }
 </style>
 </head>
@@ -323,221 +267,222 @@ button:active{
 
 <div class="container">
 
-<!-- ================= HOME ================= -->
+<!-- HOME -->
 
 <div id="home" class="card">
 
-    <div class="center">
+<div class="top">
 
-        <div class="logo">🏆</div>
+<div>
+<strong>🏆 Quiz Cup</strong>
+</div>
 
-        <h1>کاپ کوییز</h1>
+<div class="wallet">
 
-        <p>
-            دسته مورد علاقه‌ات را انتخاب کن،
-            با دیگران رقابت کن و قهرمان شو!
-        </p>
+<span>🏆 <b id="points">0</b></span>
 
-    </div>
+<span>🪙 <b id="coins">0</b></span>
 
-    <input
-        id="username"
-        type="text"
-        maxlength="25"
-        placeholder="نام بازیکن را وارد کنید">
+</div>
 
-    <h3>انتخاب مسابقه</h3>
+</div>
 
-    <div id="categories" class="category-grid"></div>
+<div class="center">
+
+<div class="logo">🏆</div>
+
+<h1>کاپ کوییز آنلاین</h1>
+
+<p>
+با بازیکنان واقعی رقابت کن
+</p>
+
+</div>
+
+<input
+id="username"
+maxlength="25"
+placeholder="نام بازیکن">
+
+<br><br>
+
+<div class="notice">
+هر مسابقه <b>۱۰۰ سکه</b> ورودی دارد.
+برنده <b>۲۰۰ سکه</b> دریافت می‌کند.
+</div>
+
+<h3>انتخاب دسته</h3>
+
+<div id="categories" class="grid"></div>
+
+<br>
+
+<button onclick="showLeaderboard()">
+🏆 جدول قهرمانان
+</button>
 
 </div>
 
 
-<!-- ================= QUIZ ================= -->
+<!-- WAITING -->
 
-<div id="quizScreen" class="card hidden">
+<div id="waiting" class="card hidden">
 
-    <div class="topbar">
+<div class="center">
 
-        <div>
+<div class="cup">🎮</div>
 
-            <span id="categoryBadge" class="badge"></span>
+<h2>در جستجوی حریف...</h2>
 
-            <br>
+<div class="wait">
 
-            <span id="questionCount"
-                  class="question-count"></span>
+در حال پیدا کردن بازیکن واقعی برای شما
 
-        </div>
+<br><br>
 
-        <div id="timer"
-             class="timer">
+<span id="matchId"></span>
 
-            10
+</div>
 
-        </div>
+</div>
 
-    </div>
+<button
+class="secondary"
+onclick="cancelWaiting()">
 
-    <div class="progress">
+لغو
 
-        <div id="progressBar"
-             class="progress-bar">
-        </div>
-
-    </div>
-
-    <div id="questionText"
-         class="question">
-    </div>
-
-    <div id="options"></div>
-
-    <button id="nextButton"
-            onclick="nextQuestion()">
-
-        تأیید پاسخ
-
-    </button>
+</button>
 
 </div>
 
 
-<!-- ================= RESULT ================= -->
+<!-- QUIZ -->
 
-<div id="resultScreen"
-     class="card hidden">
+<div id="quiz" class="card hidden">
 
-    <div id="resultCup"
-         class="cup">
+<div class="top">
 
-        🏆
+<div class="wallet">
 
-    </div>
+<span>🏆 <b id="gamePoints">0</b></span>
 
-    <div class="center">
+<span>🪙 <b id="gameCoins">0</b></span>
 
-        <div id="resultCategory"
-             class="badge">
-        </div>
+</div>
 
-        <h1>
-            نتیجه مسابقه
-        </h1>
+<div id="timer" class="timer">
+10
+</div>
 
-        <div id="score"
-             class="score">
+</div>
 
-            0
+<div class="opponent">
 
-        </div>
+<span>
+👤 حریف:
+<b id="opponentName">---</b>
+</span>
 
-        <div id="rank"
-             class="rank">
+<span>
+🏆 <b id="opponentScore">0</b>
+</span>
 
-            رتبه شما: -
+</div>
 
-        </div>
+<div class="progress">
+<div id="progress"></div>
+</div>
 
-    </div>
+<div id="questionNumber"></div>
 
-    <div class="result-row">
+<div id="question" class="question"></div>
 
-        <div class="result-box center">
+<div id="options"></div>
 
-            <div id="correctCount"
-                 class="result-number">
+<div class="shop">
 
-                0
+<div class="item" onclick="useItem('remove')">
+❌
+<b>حذف گزینه</b>
+30 🪙
+</div>
 
-            </div>
+<div class="item" onclick="useItem('retry')">
+🔄
+<b>شانس مجدد</b>
+50 🪙
+</div>
 
-            <div class="result-label">
-                درست
-            </div>
+<div class="item" onclick="useItem('gold')">
+⭐
+<b>جواب طلایی</b>
+80 🪙
+</div>
 
-        </div>
+</div>
 
-        <div class="result-box center">
-
-            <div id="wrongCount"
-                 class="result-number">
-
-                0
-
-            </div>
-
-            <div class="result-label">
-                غلط
-            </div>
-
-        </div>
-
-        <div class="result-box center">
-
-            <div id="totalCount"
-                 class="result-number">
-
-                0
-
-            </div>
-
-            <div class="result-label">
-                کل
-            </div>
-
-        </div>
-
-    </div>
-
-    <button onclick="showLeaderboard()">
-        🏆 جدول امتیازات
-    </button>
-
-    <button class="secondary"
-            onclick="backHome()">
-
-        🏠 انتخاب دسته دیگر
-
-    </button>
+<button onclick="submitAnswer()">
+تأیید پاسخ
+</button>
 
 </div>
 
 
-<!-- ================= LEADERBOARD ================= -->
+<!-- RESULT -->
 
-<div id="leaderboardScreen"
-     class="card hidden">
+<div id="result" class="card hidden center">
 
-    <div class="center">
+<div id="resultCup" class="cup">
+🏆
+</div>
 
-        <div id="leaderCup"
-             class="cup">
+<h1 id="resultTitle">
+نتیجه
+</h1>
 
-            🏆
+<div id="finalScore" class="bigscore">
+0
+</div>
 
-        </div>
+<p id="resultText"></p>
 
-        <h1>
-            جدول قهرمانان
-        </h1>
+<button onclick="backHome()">
+🏠 خانه
+</button>
 
-        <p id="leaderTitle"></p>
+<button onclick="showLeaderboard()">
+🏆 جدول قهرمانان
+</button>
 
-    </div>
+</div>
 
-    <div id="players">
 
-        در حال دریافت رتبه‌ها...
+<!-- LEADERBOARD -->
 
-    </div>
+<div id="leaderboard" class="card hidden">
 
-    <button class="secondary"
-            onclick="backResult()">
+<div class="center">
 
-        ↩️ بازگشت
+<div class="cup">
+🏆
+</div>
 
-    </button>
+<h1>جدول قهرمانان</h1>
+
+</div>
+
+<div id="leaderList">
+در حال دریافت...
+</div>
+
+<button
+class="secondary"
+onclick="backHome()">
+
+بازگشت
+
+</button>
 
 </div>
 
@@ -547,1463 +492,1065 @@ button:active{
 <script>
 
 /* =====================================================
-   SUPABASE
+SUPABASE
 ===================================================== */
 
 const SUPABASE_URL =
-    "https://swlfrhyhzexghwjzyypv.supabase.co";
+"https://swlfrhyhzexghwjzyypv.supabase.co";
 
 const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3bGZyaHloemV4Z2h3anp5eXB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NTQ5NzQsImV4cCI6MjEwMzIzMDk3NH0.P5gbnPtgCAqu4V--duPJeaIgxxYxDcN0OLwum1Pm4eE";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmxlIiwicmVmIjoic3dsZnJoeWh6ZXhnIiwicm9sZSI6ImFjY29uIiwiZXhwIjoyMTAzMjMwOTc0fQ.P5gbnPtgCAqu4V--duPJeaIgxxYxDcN0OLwum1Pm4eE";
+
+/*
+اگر کلید بالا به دلیل کپی ناقص کار نکرد،
+همان anon key واقعی پروژه خودت را اینجا قرار بده.
+*/
+
+let player=null;
+let match=null;
+
+let questions=[];
+let currentQuestion=0;
+
+let selectedAnswer=null;
+
+let timer=null;
+let seconds=10;
+
+let gold=false;
+let retryUsed=false;
 
 
 /* =====================================================
-   ۸ دسته × ۱۰ سؤال
+API
 ===================================================== */
 
-const QUIZZES = [
-
-{
-    id:"religion",
-    title:"کوییز مذهبی",
-    icon:"🕌",
-    cup:"🏆",
-    description:"جام دانستنی‌های مذهبی",
-
-    questions:[
-
-        {
-            q:"نماز صبح چند رکعت است؟",
-            o:["۱","۲","۳","۴"],
-            a:1
-        },
-
-        {
-            q:"ماه روزه‌داری مسلمانان کدام است؟",
-            o:["محرم","رمضان","شوال","رجب"],
-            a:1
-        },
-
-        {
-            q:"نماز مغرب چند رکعت است؟",
-            o:["۲","۳","۴","۵"],
-            a:1
-        },
-
-        {
-            q:"قبله مسلمانان کدام است؟",
-            o:["مسجدالنبی","کعبه","مسجدالاقصی","عرفات"],
-            a:1
-        },
-
-        {
-            q:"قرآن چند سوره دارد؟",
-            o:["۱۱۰","۱۱۲","۱۱۴","۱۲۰"],
-            a:2
-        },
-
-        {
-            q:"اولین ماه تقویم هجری قمری کدام است؟",
-            o:["رمضان","محرم","رجب","شوال"],
-            a:1
-        },
-
-        {
-            q:"عید فطر پس از پایان کدام ماه فرا می‌رسد؟",
-            o:["محرم","رمضان","رجب","صفر"],
-            a:1
-        },
-
-        {
-            q:"سوره حمد در نماز چه جایگاهی دارد؟",
-            o:[
-                "در نماز خوانده می‌شود",
-                "فقط در نماز صبح",
-                "فقط در نماز مغرب",
-                "هیچ‌کدام"
-            ],
-            a:0
-        },
-
-        {
-            q:"اذان برای چه کاری خوانده می‌شود؟",
-            o:[
-                "اعلام وقت نماز",
-                "اعلام ماه رمضان",
-                "اعلام عید",
-                "اعلام سفر"
-            ],
-            a:0
-        },
-
-        {
-            q:"کدام مورد یکی از عبادات مهم در اسلام است؟",
-            o:[
-                "نماز",
-                "ورزش",
-                "سفر",
-                "تجارت"
-            ],
-            a:0
-        }
-
-    ]
-},
-
-
-{
-    id:"nature",
-    title:"کوییز طبیعت",
-    icon:"🌳",
-    cup:"🌿",
-    description:"جام شگفتی‌های طبیعت",
-
-    questions:[
-
-        {
-            q:"بزرگ‌ترین پستاندار جهان کدام است؟",
-            o:["فیل","نهنگ آبی","زرافه","کوسه"],
-            a:1
-        },
-
-        {
-            q:"کدام حیوان به سلطان جنگل معروف است؟",
-            o:["ببر","پلنگ","شیر","گرگ"],
-            a:2
-        },
-
-        {
-            q:"گیاهان در فتوسنتز بیشتر کدام گاز را مصرف می‌کنند؟",
-            o:["اکسیژن","نیتروژن","دی‌اکسید کربن","هیدروژن"],
-            a:2
-        },
-
-        {
-            q:"بلندترین حیوان جهان کدام است؟",
-            o:["فیل","زرافه","شتر","کرگدن"],
-            a:1
-        },
-
-        {
-            q:"کدام حیوان توانایی تغییر رنگ برای استتار دارد؟",
-            o:["آفتاب‌پرست","اسب","فیل","خرگوش"],
-            a:0
-        },
-
-        {
-            q:"بزرگ‌ترین اقیانوس جهان کدام است؟",
-            o:["اطلس","هند","آرام","منجمد شمالی"],
-            a:2
-        },
-
-        {
-            q:"کدام حیوان بیشتر در قطب جنوب زندگی می‌کند؟",
-            o:["پنگوئن","شتر","کانگورو","ببر"],
-            a:0
-        },
-
-        {
-            q:"باران از چه چیزی تشکیل می‌شود؟",
-            o:["سنگ","قطرات آب","گردوغبار","نمک"],
-            a:1
-        },
-
-        {
-            q:"کدام حیوان گیاه‌خوار است؟",
-            o:["شیر","ببر","گاو","گرگ"],
-            a:2
-        },
-
-        {
-            q:"جنگل‌های آمازون بیشتر در کدام قاره قرار دارند؟",
-            o:["آفریقا","آمریکای جنوبی","اروپا","آسیا"],
-            a:1
-        }
-
-    ]
-},
-
-
-{
-    id:"food",
-    title:"کوییز غذا",
-    icon:"🍔",
-    cup:"🍕",
-    description:"جام خوشمزه‌های جهان",
-
-    questions:[
-
-        {
-            q:"پیتزا اصالتاً متعلق به کدام کشور است؟",
-            o:["ایتالیا","فرانسه","آلمان","اسپانیا"],
-            a:0
-        },
-
-        {
-            q:"سوشی غذای معروف کدام کشور است؟",
-            o:["چین","ژاپن","کره جنوبی","تایلند"],
-            a:1
-        },
-
-        {
-            q:"ماده اصلی نان چیست؟",
-            o:["برنج","آرد","سیب‌زمینی","شکر"],
-            a:1
-        },
-
-        {
-            q:"کدام مورد یک میوه است؟",
-            o:["هویج","سیب","کرفس","کاهو"],
-            a:1
-        },
-
-        {
-            q:"زعفران بیشتر به چه دلیل ارزشمند است؟",
-            o:["رنگ و عطر","اندازه","وزن زیاد","آب فراوان"],
-            a:0
-        },
-
-        {
-            q:"کدام نوشیدنی از دانه قهوه تهیه می‌شود؟",
-            o:["چای","قهوه","دوغ","لیموناد"],
-            a:1
-        },
-
-        {
-            q:"برنج غذای اصلی بسیاری از مردم کدام قاره است؟",
-            o:["آسیا","اروپا","آمریکا","قطب جنوب"],
-            a:0
-        },
-
-        {
-            q:"کدام مورد یک غذای ایرانی است؟",
-            o:["قرمه‌سبزی","سوشی","پاستا","تاکو"],
-            a:0
-        },
-
-        {
-            q:"شکلات بیشتر از چه دانه‌ای تهیه می‌شود؟",
-            o:["کاکائو","قهوه","گندم","ذرت"],
-            a:0
-        },
-
-        {
-            q:"کدام مورد لبنیات است؟",
-            o:["پنیر","نان","برنج","سیب"],
-            a:0
-        }
-
-    ]
-},
-
-
-{
-    id:"science",
-    title:"کوییز علم",
-    icon:"🔬",
-    cup:"🧪",
-    description:"جام دانش و علم",
-
-    questions:[
-
-        {
-            q:"سیاره سرخ کدام است؟",
-            o:["زهره","مریخ","مشتری","عطارد"],
-            a:1
-        },
-
-        {
-            q:"آب در فشار معمولی در چند درجه سانتی‌گراد می‌جوشد؟",
-            o:["۵۰","۷۵","۱۰۰","۱۵۰"],
-            a:2
-        },
-
-        {
-            q:"نماد شیمیایی اکسیژن چیست؟",
-            o:["O","C","H","N"],
-            a:0
-        },
-
-        {
-            q:"بزرگ‌ترین سیاره منظومه شمسی کدام است؟",
-            o:["زمین","مریخ","مشتری","زحل"],
-            a:2
-        },
-
-        {
-            q:"زمین به دور چه چیزی می‌چرخد؟",
-            o:["ماه","خورشید","مریخ","مشتری"],
-            a:1
-        },
-
-        {
-            q:"واحد اندازه‌گیری جریان الکتریکی چیست؟",
-            o:["ولت","آمپر","وات","اهم"],
-            a:1
-        },
-
-        {
-            q:"بدن انسان چند قلب دارد؟",
-            o:["۱","۲","۳","۴"],
-            a:0
-        },
-
-        {
-            q:"DNA بیشتر در کدام بخش سلول قرار دارد؟",
-            o:["هسته","دیواره","غشا","سیتوپلاسم"],
-            a:0
-        },
-
-        {
-            q:"نور با چه سرعتی تقریباً حرکت می‌کند؟",
-            o:[
-                "۳۰۰ کیلومتر بر ثانیه",
-                "۳۰۰ هزار کیلومتر بر ثانیه",
-                "۳۰ هزار کیلومتر بر ثانیه",
-                "۳ میلیون کیلومتر بر ثانیه"
-            ],
-            a:1
-        },
-
-        {
-            q:"کدام نیرو ما را روی زمین نگه می‌دارد؟",
-            o:["اصطکاک","گرانش","مغناطیس","الکتریسیته"],
-            a:1
-        }
-
-    ]
-},
-
-
-{
-    id:"celebrity",
-    title:"کوییز سلبریتی",
-    icon:"⭐",
-    cup:"🌟",
-    description:"جام ستاره‌های مشهور",
-
-    questions:[
-
-        {
-            q:"لئوناردو دی‌کاپریو بیشتر به عنوان چه چیزی شناخته می‌شود؟",
-            o:["بازیگر","خواننده","ورزشکار","دانشمند"],
-            a:0
-        },
-
-        {
-            q:"تام کروز بیشتر به عنوان چه چیزی شناخته می‌شود؟",
-            o:["خواننده","بازیگر","بازیکن فوتبال","نویسنده"],
-            a:1
-        },
-
-        {
-            q:"اد شیرن بیشتر در چه حوزه‌ای فعالیت دارد؟",
-            o:["موسیقی","فوتبال","سینما","کشتی"],
-            a:0
-        },
-
-        {
-            q:"کریستیانو رونالدو در چه ورزشی مشهور است؟",
-            o:["بسکتبال","تنیس","فوتبال","بوکس"],
-            a:2
-        },
-
-        {
-            q:"لیونل مسی در چه ورزشی مشهور است؟",
-            o:["فوتبال","شنا","بوکس","تنیس"],
-            a:0
-        },
-
-        {
-            q:"جکی چان بیشتر با کدام صنعت شناخته می‌شود؟",
-            o:["سینما","آشپزی","فوتبال","علم"],
-            a:0
-        },
-
-        {
-            q:"برد پیت بازیگر است؟",
-            o:["بله","خیر","فقط خواننده است","فقط ورزشکار است"],
-            a:0
-        },
-
-        {
-            q:"آریانا گرانده بیشتر به عنوان چه چیزی شناخته می‌شود؟",
-            o:["خواننده","بازیکن","دانشمند","کارگردان"],
-            a:0
-        },
-
-        {
-            q:"دواین جانسون با چه نامی نیز شناخته می‌شود؟",
-            o:["The Rock","The King","The Boss","The Lion"],
-            a:0
-        },
-
-        {
-            q:"مایکل جکسون بیشتر در چه زمینه‌ای مشهور بود؟",
-            o:["موسیقی","فوتبال","فیزیک","کشتی"],
-            a:0
-        }
-
-    ]
-},
-
-
-{
-    id:"iran_tv",
-    title:"تلویزیون ایران",
-    icon:"📺",
-    cup:"📡",
-    description:"جام تلویزیون ایران",
-
-    questions:[
-
-        {
-            q:"مجری معمولاً چه کاری انجام می‌دهد؟",
-            o:["اجرای برنامه","ساخت خودرو","پرواز هواپیما","پخت نان"],
-            a:0
-        },
-
-        {
-            q:"سریال چند قسمتی چیست؟",
-            o:[
-                "برنامه‌ای دارای قسمت‌های متعدد",
-                "یک عکس",
-                "یک آهنگ کوتاه",
-                "یک تبلیغ"
-            ],
-            a:0
-        },
-
-        {
-            q:"کدام مورد یک ژانر تلویزیونی است؟",
-            o:["طنز","برنج","کامپیوتر","رودخانه"],
-            a:0
-        },
-
-        {
-            q:"کدام مورد معمولاً در برنامه‌های تلویزیونی وجود دارد؟",
-            o:["دوربین","تراکتور","دوچرخه","ماشین لباسشویی"],
-            a:0
-        },
-
-        {
-            q:"کارگردان تلویزیونی مسئول چیست؟",
-            o:[
-                "هدایت تولید برنامه",
-                "فروش بلیت هواپیما",
-                "ساخت موبایل",
-                "کشاورزی"
-            ],
-            a:0
-        },
-
-        {
-            q:"اخبار تلویزیونی معمولاً چه چیزی ارائه می‌کند؟",
-            o:[
-                "خبر و اطلاعات روز",
-                "دستور غذا فقط",
-                "بازی کامپیوتری",
-                "موسیقی فقط"
-            ],
-            a:0
-        },
-
-        {
-            q:"نوروز بیشتر با چه برنامه‌هایی همراه است؟",
-            o:[
-                "ویژه‌برنامه‌های نوروزی",
-                "فقط اخبار",
-                "فقط ورزش",
-                "هیچ برنامه‌ای"
-            ],
-            a:0
-        },
-
-        {
-            q:"تلویزیون برای نمایش تصویر به چه چیزی نیاز دارد؟",
-            o:["سیگنال تصویری","آب","سوخت","هوا"],
-            a:0
-        },
-
-        {
-            q:"برنامه مسابقه‌ای تلویزیون معمولاً چه چیزی دارد؟",
-            o:["شرکت‌کننده","تراکتور","هواپیما","آزمایشگاه"],
-            a:0
-        },
-
-        {
-            q:"دوربین تلویزیونی برای چه کاری استفاده می‌شود؟",
-            o:["ضبط تصویر","پخت غذا","اتصال اینترنت","شارژ موبایل"],
-            a:0
-        }
-
-    ]
-},
-
-
-{
-    id:"world_cinema",
-    title:"سینمای جهان",
-    icon:"🎬",
-    cup:"🎥",
-    description:"جام بزرگ سینمای جهان",
-
-    questions:[
-
-        {
-            q:"فیلم Titanic توسط کدام کارگردان ساخته شد؟",
-            o:[
-                "جیمز کامرون",
-                "کریستوفر نولان",
-                "استیون اسپیلبرگ",
-                "پیتر جکسون"
-            ],
-            a:0
-        },
-
-        {
-            q:"Harry Potter متعلق به کدام مجموعه فیلم است؟",
-            o:["Harry Potter","Star Wars","Matrix","Avatar"],
-            a:0
-        },
-
-        {
-            q:"کارگردان The Dark Knight چه کسی است؟",
-            o:[
-                "کریستوفر نولان",
-                "جیمز کامرون",
-                "کوئنتین تارانتینو",
-                "جورج لوکاس"
-            ],
-            a:0
-        },
-
-        {
-            q:"Avatar بیشتر به خاطر چه چیزی مشهور شد؟",
-            o:[
-                "جلوه‌های ویژه",
-                "فوتبال",
-                "آشپزی",
-                "مستند ورزشی"
-            ],
-            a:0
-        },
-
-        {
-            q:"Star Wars در چه ژانری قرار می‌گیرد؟",
-            o:[
-                "علمی تخیلی",
-                "آشپزی",
-                "مستند طبیعت",
-                "ورزش"
-            ],
-            a:0
-        },
-
-        {
-            q:"The Lord of the Rings بر اساس آثار چه نویسنده‌ای است؟",
-            o:[
-                "J. R. R. Tolkien",
-                "George Orwell",
-                "Stephen King",
-                "Dan Brown"
-            ],
-            a:0
-        },
-
-        {
-            q:"Iron Man متعلق به کدام جهان داستانی است؟",
-            o:["Marvel","DC","Pixar","Nintendo"],
-            a:0
-        },
-
-        {
-            q:"Batman متعلق به کدام شرکت کمیک است؟",
-            o:["DC","Marvel","Disney","Nintendo"],
-            a:0
-        },
-
-        {
-            q:"Toy Story توسط کدام استودیو ساخته شده است؟",
-            o:["Pixar","Marvel","DC","Warner"],
-            a:0
-        },
-
-        {
-            q:"فیلم‌های سینمایی معمولاً با چه وسیله‌ای ضبط می‌شوند؟",
-            o:["دوربین","پرینتر","مودم","ماشین حساب"],
-            a:0
-        }
-
-    ]
-},
-
-
-{
-    id:"gamers",
-    title:"کوییز گیمرها",
-    icon:"🎮",
-    cup:"👾",
-    description:"جام مخصوص گیمرهای حرفه‌ای",
-
-    questions:[
-
-        {
-            q:"Minecraft توسط کدام شرکت توسعه داده شده است؟",
-            o:["Mojang","Valve","Nintendo","Ubisoft"],
-            a:0
-        },
-
-        {
-            q:"Fortnite توسط کدام شرکت ساخته شده است؟",
-            o:["Epic Games","Mojang","Valve","Sony"],
-            a:0
-        },
-
-        {
-            q:"Roblox چیست؟",
-            o:[
-                "پلتفرم بازی و ساخت تجربه‌ها",
-                "سیستم‌عامل",
-                "مرورگر",
-                "کنسول"
-            ],
-            a:0
-        },
-
-        {
-            q:"PlayStation متعلق به کدام شرکت است؟",
-            o:["Sony","Microsoft","Nintendo","Valve"],
-            a:0
-        },
-
-        {
-            q:"Xbox متعلق به کدام شرکت است؟",
-            o:["Microsoft","Sony","Nintendo","Apple"],
-            a:0
-        },
-
-        {
-            q:"Nintendo Switch متعلق به کدام شرکت است؟",
-            o:["Nintendo","Sony","Microsoft","EA"],
-            a:0
-        },
-
-        {
-            q:"Steam بیشتر برای چه کاری استفاده می‌شود؟",
-            o:[
-                "خرید و اجرای بازی‌های کامپیوتری",
-                "ویرایش عکس",
-                "تماشای تلویزیون",
-                "برنامه‌نویسی موبایل"
-            ],
-            a:0
-        },
-
-        {
-            q:"در Minecraft کدام موجود معمولاً در شب ظاهر می‌شود؟",
-            o:["Creeper","Cow","Horse","Villager"],
-            a:0
-        },
-
-        {
-            q:"در بازی‌های آنلاین Ping پایین بهتر است یا بالا؟",
-            o:["پایین","بالا","فرقی ندارد","هر دو"],
-            a:0
-        },
-
-        {
-            q:"FPS در بازی‌ها معمولاً به چه چیزی اشاره دارد؟",
-            o:[
-                "تعداد فریم در ثانیه",
-                "قدرت اینترنت",
-                "حجم بازی",
-                "تعداد بازیکنان"
-            ],
-            a:0
-        }
-
-    ]
+async function api(
+path,
+method="GET",
+body=null,
+prefer=null
+){
+
+const headers={
+apikey:SUPABASE_ANON_KEY,
+Authorization:"Bearer "+SUPABASE_ANON_KEY
+};
+
+if(body!==null){
+headers["Content-Type"]="application/json";
 }
 
+if(prefer){
+headers["Prefer"]=prefer;
+}
+
+const r=await fetch(
+SUPABASE_URL+path,
+{
+method,
+headers,
+body:body?
+JSON.stringify(body):
+undefined
+}
+);
+
+if(!r.ok){
+
+const text=await r.text();
+
+throw new Error(text);
+}
+
+const txt=await r.text();
+
+return txt?JSON.parse(txt):null;
+}
+
+
+/* =====================================================
+RPC
+===================================================== */
+
+async function rpc(name,args){
+
+return api(
+"/rest/v1/rpc/"+name,
+"POST",
+args
+);
+
+}
+
+
+/* =====================================================
+PLAYER
+===================================================== */
+
+async function login(){
+
+let name=
+document
+.getElementById("username")
+.value
+.trim();
+
+if(name.length<2){
+
+alert("نام را وارد کنید");
+
+return false;
+}
+
+try{
+
+const data=
+await rpc(
+"create_player",
+{
+p_username:name
+}
+);
+
+player=data;
+
+updateWallet();
+
+return true;
+
+}catch(e){
+
+alert("خطا: "+e.message);
+
+return false;
+
+}
+
+}
+
+
+/* =====================================================
+WALLET
+===================================================== */
+
+function updateWallet(){
+
+if(!player)return;
+
+document.getElementById("coins").innerText=
+player.coins;
+
+document.getElementById("points").innerText=
+player.points;
+
+document.getElementById("gameCoins").innerText=
+player.coins;
+
+document.getElementById("gamePoints").innerText=
+player.points;
+
+}
+
+
+/* =====================================================
+CATEGORIES
+===================================================== */
+
+const categories=[
+["religion","🕌","مذهبی"],
+["nature","🌳","طبیعت"],
+["food","🍔","غذا"],
+["science","🔬","علم"],
+["celebrity","⭐","سلبریتی"],
+["iran_tv","📺","تلویزیون ایران"],
+["world_cinema","🎬","سینمای جهان"],
+["gamers","🎮","گیمرها"]
 ];
 
 
-/* =====================================================
-   VARIABLES
-===================================================== */
-
-let selectedQuiz=null;
-let currentQuestion=0;
-let selectedAnswer=null;
-
-let score=0;
-let correctCount=0;
-let wrongCount=0;
-
-let timeLeft=10;
-let timerInterval=null;
-
-let username="";
-
-
-/* =====================================================
-   SUPABASE REQUEST
-===================================================== */
-
-async function supabaseRequest(url,options={}){
-
-    const response =
-        await fetch(
-            SUPABASE_URL+url,
-            {
-                ...options,
-
-                headers:{
-                    "apikey":
-                        SUPABASE_ANON_KEY,
-
-                    "Authorization":
-                        "Bearer "+
-                        SUPABASE_ANON_KEY,
-
-                    "Content-Type":
-                        "application/json",
-
-                    ...(options.headers||{})
-                }
-            }
-        );
-
-    if(!response.ok){
-
-        const text =
-            await response.text();
-
-        throw new Error(
-            text || "Supabase Error"
-        );
-    }
-
-    return response.json();
-}
-
-
-/* =====================================================
-   RENDER CATEGORIES
-===================================================== */
-
 function renderCategories(){
 
-    const box =
-        document.getElementById(
-            "categories"
-        );
+let box=
+document.getElementById(
+"categories"
+);
 
-    box.innerHTML="";
+box.innerHTML="";
 
-    QUIZZES.forEach(quiz=>{
+categories.forEach(c=>{
 
-        const div =
-            document.createElement("div");
+let div=
+document.createElement("div");
 
-        div.className="category";
+div.className="cat";
 
-        div.innerHTML=`
+div.innerHTML=`
 
-            <div class="category-icon">
-                ${quiz.icon}
-            </div>
+<div class="cat-icon">${c[1]}</div>
 
-            <div class="category-title">
-                ${escapeHtml(quiz.title)}
-            </div>
+<div class="cat-title">
+${c[2]}
+</div>
 
-            <div class="category-desc">
-                ${escapeHtml(quiz.description)}
-            </div>
+<div>
+🎟️ 100 🪙
+</div>
 
-        `;
+`;
 
-        div.onclick=()=>{
-            startQuiz(quiz.id);
-        };
+div.onclick=()=>{
+findMatch(c[0],c[2]);
+};
 
-        box.appendChild(div);
-    });
+box.appendChild(div);
+
+});
+
 }
 
 
 /* =====================================================
-   START QUIZ
+FIND MATCH
 ===================================================== */
 
-function startQuiz(id){
+async function findMatch(
+category,
+title
+){
 
-    username =
-        document
-        .getElementById("username")
-        .value
-        .trim();
+if(!await login())
+return;
 
-    if(!username){
+if(player.coins<100){
 
-        alert(
-            "ابتدا نام بازیکن را وارد کنید."
-        );
+alert(
+"برای ورود حداقل ۱۰۰ سکه لازم داری."
+);
 
-        document
-        .getElementById("username")
-        .focus();
+return;
 
-        return;
-    }
+}
 
-    selectedQuiz =
-        QUIZZES.find(
-            q=>q.id===id
-        );
+show("waiting");
 
-    if(!selectedQuiz)
-        return;
+try{
 
-    currentQuestion=0;
-    selectedAnswer=null;
+match=
+await rpc(
+"find_match",
+{
+p_player:player.id,
+p_category:category
+}
+);
 
-    score=0;
-    correctCount=0;
-    wrongCount=0;
+document.getElementById(
+"matchId"
+).innerText=
+"مسابقه: "+
+match;
 
-    document
-    .getElementById("home")
-    .classList.add("hidden");
+await refreshPlayer();
 
-    document
-    .getElementById("resultScreen")
-    .classList.add("hidden");
+listenMatch();
 
-    document
-    .getElementById("leaderboardScreen")
-    .classList.add("hidden");
+await waitForOpponent();
 
-    document
-    .getElementById("quizScreen")
-    .classList.remove("hidden");
+}catch(e){
 
-    document
-    .getElementById("categoryBadge")
-    .innerText =
-        selectedQuiz.icon+
-        " "+
-        selectedQuiz.title;
+alert("خطا: "+e.message);
 
-    showQuestion();
+backHome();
+
+}
+
 }
 
 
 /* =====================================================
-   SHOW QUESTION
+REFRESH PLAYER
+===================================================== */
+
+async function refreshPlayer(){
+
+const data=
+await api(
+"/rest/v1/profiles"+
+"?select=*"+
+"&id=eq."+
+encodeURIComponent(player.id)+
+"&limit=1"
+);
+
+if(data.length){
+
+player=data[0];
+
+updateWallet();
+
+}
+
+}
+
+
+/* =====================================================
+WAIT FOR OPPONENT
+===================================================== */
+
+async function waitForOpponent(){
+
+let tries=0;
+
+while(tries<60){
+
+const data=
+await api(
+"/rest/v1/matches"+
+"?select=*"+
+"&id=eq."+
+encodeURIComponent(match)+
+"&limit=1"
+);
+
+if(data.length){
+
+const m=data[0];
+
+if(
+m.status==="playing" &&
+m.player1 &&
+m.player2
+){
+
+await prepareMatch();
+
+return;
+
+}
+
+}
+
+await sleep(1000);
+
+tries++;
+
+}
+
+alert("حریفی پیدا نشد.");
+
+backHome();
+
+}
+
+
+/* =====================================================
+PREPARE MATCH
+===================================================== */
+
+async function prepareMatch(){
+
+try{
+
+await rpc(
+"prepare_match",
+{
+p_match:match
+}
+);
+
+}catch(e){
+
+/*
+اگر بازیکن دوم prepare را هم‌زمان انجام دهد،
+ممکن است مسابقه دوبار prepare شود.
+در این حالت ادامه می‌دهیم.
+*/
+
+}
+
+await loadMatch();
+
+}
+
+
+/* =====================================================
+LOAD MATCH
+===================================================== */
+
+async function loadMatch(){
+
+const data=
+await api(
+"/rest/v1/matches"+
+"?select=*"+
+"&id=eq."+
+encodeURIComponent(match)+
+"&limit=1"
+);
+
+if(!data.length)return;
+
+const m=data[0];
+
+let opponentId;
+
+if(m.player1===player.id)
+opponentId=m.player2;
+else
+opponentId=m.player1;
+
+if(opponentId){
+
+const p=
+await api(
+"/rest/v1/profiles"+
+"?select=username"+
+"&id=eq."+
+opponentId+
+"&limit=1"
+);
+
+if(p.length){
+
+document.getElementById(
+"opponentName"
+).innerText=
+p[0].username;
+
+}
+
+}
+
+await loadQuestions();
+
+}
+
+
+/* =====================================================
+LOAD QUESTIONS
+===================================================== */
+
+async function loadQuestions(){
+
+const data=
+await api(
+"/rest/v1/match_questions"+
+"?select=question_number,quiz_questions(*)"+
+"&match_id=eq."+
+encodeURIComponent(match)+
+"&order=question_number.asc"
+);
+
+questions=
+data.map(x=>x.quiz_questions);
+
+if(questions.length<10){
+
+await sleep(1000);
+
+return loadQuestions();
+
+}
+
+currentQuestion=0;
+
+show("quiz");
+
+showQuestion();
+
+}
+
+
+/* =====================================================
+SHOW QUESTION
 ===================================================== */
 
 function showQuestion(){
 
-    clearInterval(timerInterval);
+clearInterval(timer);
 
-    selectedAnswer=null;
-    timeLeft=10;
+selectedAnswer=null;
 
-    const q =
-        selectedQuiz
-        .questions[currentQuestion];
+seconds=10;
 
-    document
-    .getElementById("questionCount")
-    .innerText =
-        `سؤال ${currentQuestion+1} از ${selectedQuiz.questions.length}`;
+document.getElementById(
+"timer"
+).innerText=
+seconds;
 
-    document
-    .getElementById("questionText")
-    .innerText =
-        q.q;
+document.getElementById(
+"questionNumber"
+).innerText=
+`سؤال ${currentQuestion+1} از 10`;
 
-    document
-    .getElementById("timer")
-    .innerText =
-        timeLeft;
+document.getElementById(
+"progress"
+).style.width=
+((currentQuestion)/10*100)+"%";
 
-    document
-    .getElementById("timer")
-    .classList.remove("warning");
+const q=
+questions[currentQuestion];
 
-    document
-    .getElementById("progressBar")
-    .style.width =
-        (
-            currentQuestion /
-            selectedQuiz.questions.length *
-            100
-        )+"%";
+document.getElementById(
+"question"
+).innerText=
+q.question;
 
-    const options =
-        document.getElementById(
-            "options"
-        );
+const box=
+document.getElementById(
+"options"
+);
 
-    options.innerHTML="";
+box.innerHTML="";
 
-    q.o.forEach(
-        (option,index)=>{
+[
+q.option_a,
+q.option_b,
+q.option_c,
+q.option_d
+].forEach((x,i)=>{
 
-            const div =
-                document.createElement(
-                    "div"
-                );
+let div=
+document.createElement("div");
 
-            div.className="option";
+div.className="option";
 
-            div.innerText=
-                option;
+div.innerText=x;
 
-            div.onclick=()=>{
-                selectAnswer(
-                    index,
-                    div
-                );
-            };
+div.onclick=()=>{
+selectAnswer(i,div);
+};
 
-            options.appendChild(div);
+box.appendChild(div);
 
-        }
-    );
+});
 
-    document
-    .getElementById("nextButton")
-    .innerText =
-        currentQuestion===
-        selectedQuiz.questions.length-1
-        ?
-        "پایان مسابقه 🏆"
-        :
-        "تأیید پاسخ ➜";
+startTimer();
 
-    startTimer();
 }
 
 
 /* =====================================================
-   SELECT ANSWER
+SELECT
 ===================================================== */
 
-function selectAnswer(
-    index,
-    element
-){
+function selectAnswer(i,el){
 
-    selectedAnswer=index;
+selectedAnswer=i;
 
-    document
-    .querySelectorAll(".option")
-    .forEach(el=>{
-        el.classList.remove(
-            "selected"
-        );
-    });
+document
+.querySelectorAll(".option")
+.forEach(x=>{
+x.classList.remove("selected");
+});
 
-    element.classList.add(
-        "selected"
-    );
+el.classList.add("selected");
+
 }
 
 
 /* =====================================================
-   TIMER
+TIMER
 ===================================================== */
 
 function startTimer(){
 
-    timerInterval =
-        setInterval(()=>{
+clearInterval(timer);
 
-            timeLeft--;
+timer=
+setInterval(()=>{
 
-            document
-            .getElementById("timer")
-            .innerText=
-                timeLeft;
+seconds--;
 
-            if(timeLeft<=3){
+document.getElementById(
+"timer"
+).innerText=
+seconds;
 
-                document
-                .getElementById("timer")
-                .classList.add(
-                    "warning"
-                );
-            }
+if(seconds<=3){
 
-            if(timeLeft<=0){
+document.getElementById(
+"timer"
+).classList.add("warning");
 
-                clearInterval(
-                    timerInterval
-                );
+}
 
-                timeUp();
-            }
+if(seconds<=0){
 
-        },1000);
+clearInterval(timer);
+
+submitAnswer(true);
+
+}
+
+},1000);
+
 }
 
 
 /* =====================================================
-   TIME UP
+SUBMIT
 ===================================================== */
 
-function timeUp(){
+async function submitAnswer(timeout=false){
 
-    wrongCount++;
+if(selectedAnswer===null && !timeout){
 
-    goNext();
+alert("یک گزینه را انتخاب کن.");
+
+return;
+
+}
+
+clearInterval(timer);
+
+if(timeout)
+selectedAnswer=-1;
+
+try{
+
+const result=
+await rpc(
+"submit_answer",
+{
+p_match:match,
+p_player:player.id,
+p_question:currentQuestion,
+p_answer:selectedAnswer
+}
+);
+
+if(result.correct){
+
+let earned=
+result.points;
+
+if(gold){
+
+earned*=2;
+
+}
+
+}
+
+await waitNext();
+
+}catch(e){
+
+console.log(e);
+
+}
+
 }
 
 
 /* =====================================================
-   NEXT QUESTION
+WAIT NEXT
 ===================================================== */
 
-function nextQuestion(){
+async function waitNext(){
 
-    if(
-        selectedAnswer===null
-    ){
+let tries=0;
 
-        alert(
-            "لطفاً یک گزینه را انتخاب کنید."
-        );
+while(tries<20){
 
-        return;
-    }
+const data=
+await api(
+"/rest/v1/matches"+
+"?select=*"+
+"&id=eq."+
+encodeURIComponent(match)+
+"&limit=1"
+);
 
-    clearInterval(
-        timerInterval
-    );
+if(data.length){
 
-    const q =
-        selectedQuiz
-        .questions[currentQuestion];
+const m=data[0];
 
-    if(
-        selectedAnswer===q.a
-    ){
+document.getElementById(
+"opponentScore"
+).innerText=
+player.id===m.player1
+?
+m.player2_score
+:
+m.player1_score;
 
-        correctCount++;
+if(
+m.player1_answered &&
+m.player2_answered
+){
 
-        score+=10;
+if(currentQuestion<9){
 
-    }else{
+await rpc(
+"next_question",
+{
+p_match:match
+}
+);
 
-        wrongCount++;
-    }
+currentQuestion++;
 
-    goNext();
+gold=false;
+
+showQuestion();
+
+return;
+
+}else{
+
+await finishMatch();
+
+return;
+
+}
+
+}
+
+}
+
+await sleep(700);
+
+tries++;
+
+}
+
 }
 
 
 /* =====================================================
-   GO NEXT
+ITEMS
 ===================================================== */
 
-function goNext(){
+async function useItem(item){
 
-    clearInterval(
-        timerInterval
-    );
+try{
 
-    currentQuestion++;
+await rpc(
+"buy_item",
+{
+p_player:player.id,
+p_item:item
+}
+);
 
-    if(
-        currentQuestion >=
-        selectedQuiz.questions.length
-    ){
+await refreshPlayer();
 
-        finishQuiz();
+if(item==="remove"){
 
-        return;
-    }
+removeOptions();
 
-    showQuestion();
+}
+
+if(item==="retry"){
+
+retryUsed=true;
+
+seconds=10;
+
+startTimer();
+
+}
+
+if(item==="gold"){
+
+gold=true;
+
+alert(
+"⭐ جواب طلایی فعال شد!"
+);
+
+}
+
+}catch(e){
+
+alert(
+e.message.includes("سکه")
+?
+"سکه کافی نیست"
+:
+"امکان خرید این آیتم نیست"
+);
+
+}
+
 }
 
 
 /* =====================================================
-   FINISH QUIZ
+REMOVE OPTIONS
 ===================================================== */
 
-async function finishQuiz(){
+function removeOptions(){
 
-    clearInterval(
-        timerInterval
-    );
+let options=
+[
+...document.querySelectorAll(".option")
+];
 
-    document
-    .getElementById("quizScreen")
-    .classList.add("hidden");
+options
+.slice(0,2)
+.forEach(x=>{
+x.classList.add("disabled");
+});
 
-    document
-    .getElementById("resultScreen")
-    .classList.remove("hidden");
-
-    const total =
-        selectedQuiz.questions.length;
-
-    document
-    .getElementById("score")
-    .innerText=
-        score;
-
-    document
-    .getElementById("correctCount")
-    .innerText=
-        correctCount;
-
-    document
-    .getElementById("wrongCount")
-    .innerText=
-        wrongCount;
-
-    document
-    .getElementById("totalCount")
-    .innerText=
-        total;
-
-    document
-    .getElementById("resultCategory")
-    .innerText=
-        selectedQuiz.icon+
-        " "+
-        selectedQuiz.title;
-
-    document
-    .getElementById("resultCup")
-    .innerText=
-        selectedQuiz.cup;
-
-    document
-    .getElementById("rank")
-    .innerText=
-        "در حال ثبت نتیجه...";
-
-    try{
-
-        await supabaseRequest(
-            "/rest/v1/quiz_results",
-            {
-                method:"POST",
-
-                headers:{
-                    "Prefer":
-                        "return=minimal"
-                },
-
-                body:
-                    JSON.stringify({
-
-                        quiz_id:
-                            selectedQuiz.id,
-
-                        username:
-                            username,
-
-                        score:
-                            score,
-
-                        total_points:
-                            total*10,
-
-                        correct_count:
-                            correctCount,
-
-                        wrong_count:
-                            wrongCount
-
-                    })
-            }
-        );
-
-        await calculateRank();
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        document
-        .getElementById("rank")
-        .innerText=
-            "امتیاز شما: "+
-            score;
-
-        console.log(
-            "Supabase error:",
-            error
-        );
-    }
 }
 
 
 /* =====================================================
-   CALCULATE RANK
+FINISH
 ===================================================== */
 
-async function calculateRank(){
+async function finishMatch(){
 
-    try{
+try{
 
-        const players =
-            await supabaseRequest(
+const result=
+await rpc(
+"finish_match",
+{
+p_match:match
+}
+);
 
-                "/rest/v1/quiz_results"+
-                "?select=score"+
-                "&quiz_id=eq."+
-                encodeURIComponent(
-                    selectedQuiz.id
-                )+
-                "&order=score.desc"
+await refreshPlayer();
 
-            );
+show("result");
 
-        let rank=1;
+let winner=
+result.winner;
 
-        for(
-            const player
-            of players
-        ){
+if(winner===player.id){
 
-            if(
-                player.score>score
-            ){
+document.getElementById(
+"resultCup"
+).innerText="🏆";
 
-                rank++;
-            }
-        }
+document.getElementById(
+"resultTitle"
+).innerText=
+"بردی! 🎉";
 
-        let medal="";
+document.getElementById(
+"resultText"
+).innerText=
+"۲۰۰ سکه جایزه گرفتی!";
 
-        if(rank===1)
-            medal="🥇 ";
+}else if(winner===null){
 
-        else if(rank===2)
-            medal="🥈 ";
+document.getElementById(
+"resultCup"
+).innerText="🤝";
 
-        else if(rank===3)
-            medal="🥉 ";
+document.getElementById(
+"resultTitle"
+).innerText=
+"مساوی!";
 
-        document
-        .getElementById("rank")
-        .innerText=
-            medal+
-            "رتبه شما: "+
-            rank;
+document.getElementById(
+"resultText"
+).innerText=
+"ورودی هر دو بازیکن برگشت داده شد.";
 
-    }
-    catch(error){
+}else{
 
-        document
-        .getElementById("rank")
-        .innerText=
-            "رتبه محاسبه نشد";
-    }
+document.getElementById(
+"resultCup"
+).innerText="😔";
+
+document.getElementById(
+"resultTitle"
+).innerText=
+"این مسابقه را باختی";
+
+document.getElementById(
+"resultText"
+).innerText=
+"دفعه بعد قهرمان شو!";
+
+}
+
+document.getElementById(
+"finalScore"
+).innerText=
+player.points;
+
+}catch(e){
+
+console.log(e);
+
+}
+
 }
 
 
 /* =====================================================
-   LEADERBOARD
+REALTIME
+===================================================== */
+
+function listenMatch(){
+
+/*
+برای نسخه واقعی می‌توانی Supabase JS CDN
+را اضافه کنی.
+
+در این نسخه برای سازگاری با HTML ساده،
+هر ۱ ثانیه وضعیت مسابقه را بررسی می‌کنیم.
+*/
+
+}
+
+
+/* =====================================================
+LEADERBOARD
 ===================================================== */
 
 async function showLeaderboard(){
 
-    document
-    .getElementById("resultScreen")
-    .classList.add("hidden");
+show("leaderboard");
 
-    document
-    .getElementById("leaderboardScreen")
-    .classList.remove("hidden");
+const box=
+document.getElementById(
+"leaderList"
+);
 
-    document
-    .getElementById("leaderCup")
-    .innerText=
-        selectedQuiz.cup;
+box.innerHTML=
+"در حال دریافت...";
 
-    document
-    .getElementById("leaderTitle")
-    .innerText=
-        selectedQuiz.title;
+try{
 
-    const box =
-        document.getElementById(
-            "players"
-        );
+const data=
+await api(
+"/rest/v1/profiles"+
+"?select=username,points,wins,losses,coins"+
+"&order=points.desc"+
+"&limit=50"
+);
 
-    box.innerHTML=
-        "<p class='center'>در حال دریافت...</p>";
+box.innerHTML="";
 
-    try{
+data.forEach((p,i)=>{
 
-        const players =
-            await supabaseRequest(
+let medal=
+"#"+(i+1);
 
-                "/rest/v1/quiz_results"+
-                "?select=username,score,correct_count,created_at"+
-                "&quiz_id=eq."+
-                encodeURIComponent(
-                    selectedQuiz.id
-                )+
-                "&order=score.desc,created_at.asc"+
-                "&limit=50"
+if(i===0)medal="🥇";
+if(i===1)medal="🥈";
+if(i===2)medal="🥉";
 
-            );
+let div=
+document.createElement("div");
 
-        box.innerHTML="";
+div.className="player";
 
-        if(!players.length){
+div.innerHTML=`
 
-            box.innerHTML=
-                "<p class='center'>هنوز کسی شرکت نکرده است.</p>";
+<div>
+<span class="medal">${medal}</span>
+<b>${escapeHtml(p.username)}</b>
+</div>
 
-            return;
-        }
+<div>
+🏆 ${p.points}
+</div>
 
-        players.forEach(
-            (player,index)=>{
+`;
 
-                const div =
-                    document.createElement(
-                        "div"
-                    );
+box.appendChild(div);
 
-                div.className="player";
+});
 
-                let medal=
-                    "#"+(index+1);
+}catch(e){
 
-                if(index===0)
-                    medal="🥇";
+box.innerHTML=
+"خطا در دریافت جدول";
 
-                else if(index===1)
-                    medal="🥈";
+}
 
-                else if(index===2)
-                    medal="🥉";
-
-                div.innerHTML=`
-
-                    <div>
-
-                        <span class="medal">
-                            ${medal}
-                        </span>
-
-                        <strong>
-                            ${escapeHtml(
-                                player.username
-                            )}
-                        </strong>
-
-                    </div>
-
-                    <div class="score-small">
-                        ${player.score} امتیاز
-                    </div>
-
-                `;
-
-                box.appendChild(div);
-            }
-        );
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        box.innerHTML=
-            "<p class='center error'>خطا در دریافت جدول امتیازات.</p>";
-    }
 }
 
 
 /* =====================================================
-   BACK RESULT
+SHOW
 ===================================================== */
 
-function backResult(){
+function show(id){
 
-    document
-    .getElementById(
-        "leaderboardScreen"
-    )
-    .classList.add("hidden");
+[
+"home",
+"waiting",
+"quiz",
+"result",
+"leaderboard"
+].forEach(x=>{
 
-    document
-    .getElementById(
-        "resultScreen"
-    )
-    .classList.remove("hidden");
+document
+.getElementById(x)
+.classList.add("hidden");
+
+});
+
+document
+.getElementById(id)
+.classList.remove("hidden");
+
 }
 
 
 /* =====================================================
-   BACK HOME
+CANCEL
 ===================================================== */
 
-function backHome(){
+async function cancelWaiting(){
 
-    clearInterval(
-        timerInterval
-    );
+backHome();
 
-    document
-    .getElementById(
-        "resultScreen"
-    )
-    .classList.add("hidden");
-
-    document
-    .getElementById(
-        "leaderboardScreen"
-    )
-    .classList.add("hidden");
-
-    document
-    .getElementById(
-        "quizScreen"
-    )
-    .classList.add("hidden");
-
-    document
-    .getElementById(
-        "home"
-    )
-    .classList.remove("hidden");
 }
 
 
 /* =====================================================
-   ESCAPE HTML
+BACK HOME
 ===================================================== */
+
+async function backHome(){
+
+clearInterval(timer);
+
+await refreshPlayer();
+
+show("home");
+
+}
+
+
+/* =====================================================
+HELPERS
+===================================================== */
+
+function sleep(ms){
+
+return new Promise(
+resolve=>setTimeout(resolve,ms)
+);
+
+}
 
 function escapeHtml(text){
 
-    const div =
-        document.createElement("div");
+const div=
+document.createElement("div");
 
-    div.textContent=text;
+div.textContent=text;
 
-    return div.innerHTML;
+return div.innerHTML;
+
 }
 
 
 /* =====================================================
-   START
+START
 ===================================================== */
 
 renderCategories();
