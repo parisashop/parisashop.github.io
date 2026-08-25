@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>کاپ کوییز | مسابقه آنلاین</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    font-family:Tahoma,Arial,sans-serif;
+    color:#fff;
+    background:
+        radial-gradient(circle at top,#263d83 0,#11182f 45%,#070b18 100%);
+}
+
+.container{
+    width:min(700px,94%);
+    margin:auto;
+    padding:18px 0 40px;
+}
+
+.card{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:26px;
+    padding:22px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    backdrop-filter:blur(18px);
+}
+
+.hidden{
+    display:none!important;
+}
+
+.center{
+    text-align:center;
+}
+
+.logo{
+    font-size:65px;
+}
+
+h1{
+    margin:5px 0 12px;
+    font-size:28px;
+}
+
+h2{
+    line-height:1.9;
+}
+
+p{
+    line-height:1.9;
+    opacity:.8;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    margin:8px 0;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.15);
+    outline:none;
+    background:rgba(0,0,0,.25);
+    color:white;
+    font-size:16px;
+}
+
+input::placeholder{
+    color:#aaa;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:16px;
+    padding:15px;
+    margin-top:10px;
+    background:#2563eb;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+.secondary{
+    background:rgba(255,255,255,.1);
+}
+
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-top:20px;
+}
+
+.category{
+    min-height:135px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.07);
+    padding:16px;
+    cursor:pointer;
+    text-align:center;
+    transition:.2s;
+}
+
+.category:hover{
+    transform:translateY(-3px);
+    background:rgba(255,255,255,.13);
+}
+
+.category-icon{
+    font-size:45px;
+}
+
+.category-title{
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.category-desc{
+    font-size:11px;
+    opacity:.65;
+    margin-top:5px;
+}
+
+.cup{
+    font-size:75px;
+    text-align:center;
+    filter:drop-shadow(0 5px 15px rgba(255,210,0,.3));
+}
+
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.question-count{
+    font-size:14px;
+    opacity:.8;
+}
+
+.timer{
+    min-width:72px;
+    text-align:center;
+    padding:11px 12px;
+    border-radius:14px;
+    background:#dc2626;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.timer.warning{
+    animation:pulse .5s infinite alternate;
+    background:#991b1b;
+}
+
+@keyframes pulse{
+    from{transform:scale(1)}
+    to{transform:scale(1.08)}
+}
+
+.progress{
+    height:8px;
+    border-radius:10px;
+    background:rgba(255,255,255,.1);
+    overflow:hidden;
+    margin:12px 0 20px;
+}
+
+.progress-bar{
+    height:100%;
+    width:0;
+    background:#22c55e;
+    transition:.3s;
+}
+
+.question{
+    font-size:20px;
+    line-height:1.9;
+    margin:15px 0;
+}
+
+.option{
+    padding:16px;
+    margin:10px 0;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.07);
+    cursor:pointer;
+    transition:.15s;
+}
+
+.option:hover{
+    background:rgba(255,255,255,.13);
+}
+
+.option.selected{
+    background:#2563eb;
+    border-color:#60a5fa;
+}
+
+.score{
+    font-size:55px;
+    font-weight:bold;
+    margin:15px;
+}
+
+.rank{
+    font-size:22px;
+    margin:15px;
+}
+
+.result-row{
+    display:flex;
+    justify-content:space-around;
+    gap:8px;
+    margin:20px 0;
+}
+
+.result-box{
+    flex:1;
+    padding:15px 8px;
+    border-radius:16px;
+    background:rgba(255,255,255,.07);
+}
+
+.result-number{
+    font-size:25px;
+    font-weight:bold;
+}
+
+.result-label{
+    font-size:12px;
+    opacity:.7;
+}
+
+.player{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px;
+    margin:8px 0;
+    border-radius:16px;
+    background:rgba(255,255,255,.07);
+}
+
+.player:nth-child(1){
+    border:1px solid #facc15;
+}
+
+.player:nth-child(2){
+    border:1px solid #cbd5e1;
+}
+
+.player:nth-child(3){
+    border:1px solid #d97706;
+}
+
+.medal{
+    font-size:24px;
+}
+
+.score-small{
+    font-weight:bold;
+    color:#60a5fa;
+}
+
+.badge{
+    display:inline-block;
+    padding:7px 12px;
+    border-radius:30px;
+    background:rgba(255,255,255,.1);
+    font-size:12px;
+}
+
+.error{
+    color:#fca5a5;
+}
+
+@media(max-width:450px){
+    .category-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .category{
+        min-height:125px;
+        padding:12px 8px;
+    }
+
+    .category-icon{
+        font-size:38px;
+    }
+
+    .question{
+        font-size:18px;
+    }
+
+    h1{
+        font-size:24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ================= HOME ================= -->
+
+<div id="home" class="card">
+
+    <div class="center">
+
+        <div class="logo">🏆</div>
+
+        <h1>کاپ کوییز</h1>
+
+        <p>
+            دسته مورد علاقه‌ات را انتخاب کن،
+            با دیگران رقابت کن و قهرمان شو!
+        </p>
+
+    </div>
+
+    <input
+        id="username"
+        type="text"
+        maxlength="25"
+        placeholder="نام بازیکن را وارد کنید">
+
+    <h3>انتخاب مسابقه</h3>
+
+    <div id="categories" class="category-grid"></div>
+
+</div>
+
+
+<!-- ================= QUIZ ================= -->
+
+<div id="quizScreen" class="card hidden">
+
+    <div class="topbar">
+
+        <div>
+
+            <span id="categoryBadge" class="badge"></span>
+
+            <br>
+
+            <span id="questionCount"
+                  class="question-count"></span>
+
+        </div>
+
+        <div id="timer"
+             class="timer">
+
+            10
+
+        </div>
+
+    </div>
+
+    <div class="progress">
+
+        <div id="progressBar"
+             class="progress-bar">
+        </div>
+
+    </div>
+
+    <div id="questionText"
+         class="question">
+    </div>
+
+    <div id="options"></div>
+
+    <button id="nextButton"
+            onclick="nextQuestion()">
+
+        تأیید پاسخ
+
+    </button>
+
+</div>
+
+
+<!-- ================= RESULT ================= -->
+
+<div id="resultScreen"
+     class="card hidden">
+
+    <div id="resultCup"
+         class="cup">
+
+        🏆
+
+    </div>
+
+    <div class="center">
+
+        <div id="resultCategory"
+             class="badge">
+        </div>
+
+        <h1>
+            نتیجه مسابقه
+        </h1>
+
+        <div id="score"
+             class="score">
+
+            0
+
+        </div>
+
+        <div id="rank"
+             class="rank">
+
+            رتبه شما: -
+
+        </div>
+
+    </div>
+
+    <div class="result-row">
+
+        <div class="result-box center">
+
+            <div id="correctCount"
+                 class="result-number">
+
+                0
+
+            </div>
+
+            <div class="result-label">
+                درست
+            </div>
+
+        </div>
+
+        <div class="result-box center">
+
+            <div id="wrongCount"
+                 class="result-number">
+
+                0
+
+            </div>
+
+            <div class="result-label">
+                غلط
+            </div>
+
+        </div>
+
+        <div class="result-box center">
+
+            <div id="totalCount"
+                 class="result-number">
+
+                0
+
+            </div>
+
+            <div class="result-label">
+                کل
+            </div>
+
+        </div>
+
+    </div>
+
+    <button onclick="showLeaderboard()">
+        🏆 جدول امتیازات
+    </button>
+
+    <button class="secondary"
+            onclick="backHome()">
+
+        🏠 انتخاب دسته دیگر
+
+    </button>
+
+</div>
+
+
+<!-- ================= LEADERBOARD ================= -->
+
+<div id="leaderboardScreen"
+     class="card hidden">
+
+    <div class="center">
+
+        <div id="leaderCup"
+             class="cup">
+
+            🏆
+
+        </div>
+
+        <h1>
+            جدول قهرمانان
+        </h1>
+
+        <p id="leaderTitle"></p>
+
+    </div>
+
+    <div id="players">
+
+        در حال دریافت رتبه‌ها...
+
+    </div>
+
+    <button class="secondary"
+            onclick="backResult()">
+
+        ↩️ بازگشت
+
+    </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+    "https://swlfrhyhzexghwjzyypv.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3bGZyaHloemV4Z2h3anp5eXB2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2NTQ5NzQsImV4cCI6MjEwMzIzMDk3NH0.P5gbnPtgCAqu4V--duPJeaIgxxYxDcN0OLwum1Pm4eE";
+
+
+/* =====================================================
+   ۸ دسته × ۱۰ سؤال
+===================================================== */
+
+const QUIZZES = [
+
+{
+    id:"religion",
+    title:"کوییز مذهبی",
+    icon:"🕌",
+    cup:"🏆",
+    description:"جام دانستنی‌های مذهبی",
+
+    questions:[
+
+        {
+            q:"نماز صبح چند رکعت است؟",
+            o:["۱","۲","۳","۴"],
+            a:1
+        },
+
+        {
+            q:"ماه روزه‌داری مسلمانان کدام است؟",
+            o:["محرم","رمضان","شوال","رجب"],
+            a:1
+        },
+
+        {
+            q:"نماز مغرب چند رکعت است؟",
+            o:["۲","۳","۴","۵"],
+            a:1
+        },
+
+        {
+            q:"قبله مسلمانان کدام است؟",
+            o:["مسجدالنبی","کعبه","مسجدالاقصی","عرفات"],
+            a:1
+        },
+
+        {
+            q:"قرآن چند سوره دارد؟",
+            o:["۱۱۰","۱۱۲","۱۱۴","۱۲۰"],
+            a:2
+        },
+
+        {
+            q:"اولین ماه تقویم هجری قمری کدام است؟",
+            o:["رمضان","محرم","رجب","شوال"],
+            a:1
+        },
+
+        {
+            q:"عید فطر پس از پایان کدام ماه فرا می‌رسد؟",
+            o:["محرم","رمضان","رجب","صفر"],
+            a:1
+        },
+
+        {
+            q:"سوره حمد در نماز چه جایگاهی دارد؟",
+            o:[
+                "در نماز خوانده می‌شود",
+                "فقط در نماز صبح",
+                "فقط در نماز مغرب",
+                "هیچ‌کدام"
+            ],
+            a:0
+        },
+
+        {
+            q:"اذان برای چه کاری خوانده می‌شود؟",
+            o:[
+                "اعلام وقت نماز",
+                "اعلام ماه رمضان",
+                "اعلام عید",
+                "اعلام سفر"
+            ],
+            a:0
+        },
+
+        {
+            q:"کدام مورد یکی از عبادات مهم در اسلام است؟",
+            o:[
+                "نماز",
+                "ورزش",
+                "سفر",
+                "تجارت"
+            ],
+            a:0
+        }
+
+    ]
+},
+
+
+{
+    id:"nature",
+    title:"کوییز طبیعت",
+    icon:"🌳",
+    cup:"🌿",
+    description:"جام شگفتی‌های طبیعت",
+
+    questions:[
+
+        {
+            q:"بزرگ‌ترین پستاندار جهان کدام است؟",
+            o:["فیل","نهنگ آبی","زرافه","کوسه"],
+            a:1
+        },
+
+        {
+            q:"کدام حیوان به سلطان جنگل معروف است؟",
+            o:["ببر","پلنگ","شیر","گرگ"],
+            a:2
+        },
+
+        {
+            q:"گیاهان در فتوسنتز بیشتر کدام گاز را مصرف می‌کنند؟",
+            o:["اکسیژن","نیتروژن","دی‌اکسید کربن","هیدروژن"],
+            a:2
+        },
+
+        {
+            q:"بلندترین حیوان جهان کدام است؟",
+            o:["فیل","زرافه","شتر","کرگدن"],
+            a:1
+        },
+
+        {
+            q:"کدام حیوان توانایی تغییر رنگ برای استتار دارد؟",
+            o:["آفتاب‌پرست","اسب","فیل","خرگوش"],
+            a:0
+        },
+
+        {
+            q:"بزرگ‌ترین اقیانوس جهان کدام است؟",
+            o:["اطلس","هند","آرام","منجمد شمالی"],
+            a:2
+        },
+
+        {
+            q:"کدام حیوان بیشتر در قطب جنوب زندگی می‌کند؟",
+            o:["پنگوئن","شتر","کانگورو","ببر"],
+            a:0
+        },
+
+        {
+            q:"باران از چه چیزی تشکیل می‌شود؟",
+            o:["سنگ","قطرات آب","گردوغبار","نمک"],
+            a:1
+        },
+
+        {
+            q:"کدام حیوان گیاه‌خوار است؟",
+            o:["شیر","ببر","گاو","گرگ"],
+            a:2
+        },
+
+        {
+            q:"جنگل‌های آمازون بیشتر در کدام قاره قرار دارند؟",
+            o:["آفریقا","آمریکای جنوبی","اروپا","آسیا"],
+            a:1
+        }
+
+    ]
+},
+
+
+{
+    id:"food",
+    title:"کوییز غذا",
+    icon:"🍔",
+    cup:"🍕",
+    description:"جام خوشمزه‌های جهان",
+
+    questions:[
+
+        {
+            q:"پیتزا اصالتاً متعلق به کدام کشور است؟",
+            o:["ایتالیا","فرانسه","آلمان","اسپانیا"],
+            a:0
+        },
+
+        {
+            q:"سوشی غذای معروف کدام کشور است؟",
+            o:["چین","ژاپن","کره جنوبی","تایلند"],
+            a:1
+        },
+
+        {
+            q:"ماده اصلی نان چیست؟",
+            o:["برنج","آرد","سیب‌زمینی","شکر"],
+            a:1
+        },
+
+        {
+            q:"کدام مورد یک میوه است؟",
+            o:["هویج","سیب","کرفس","کاهو"],
+            a:1
+        },
+
+        {
+            q:"زعفران بیشتر به چه دلیل ارزشمند است؟",
+            o:["رنگ و عطر","اندازه","وزن زیاد","آب فراوان"],
+            a:0
+        },
+
+        {
+            q:"کدام نوشیدنی از دانه قهوه تهیه می‌شود؟",
+            o:["چای","قهوه","دوغ","لیموناد"],
+            a:1
+        },
+
+        {
+            q:"برنج غذای اصلی بسیاری از مردم کدام قاره است؟",
+            o:["آسیا","اروپا","آمریکا","قطب جنوب"],
+            a:0
+        },
+
+        {
+            q:"کدام مورد یک غذای ایرانی است؟",
+            o:["قرمه‌سبزی","سوشی","پاستا","تاکو"],
+            a:0
+        },
+
+        {
+            q:"شکلات بیشتر از چه دانه‌ای تهیه می‌شود؟",
+            o:["کاکائو","قهوه","گندم","ذرت"],
+            a:0
+        },
+
+        {
+            q:"کدام مورد لبنیات است؟",
+            o:["پنیر","نان","برنج","سیب"],
+            a:0
+        }
+
+    ]
+},
+
+
+{
+    id:"science",
+    title:"کوییز علم",
+    icon:"🔬",
+    cup:"🧪",
+    description:"جام دانش و علم",
+
+    questions:[
+
+        {
+            q:"سیاره سرخ کدام است؟",
+            o:["زهره","مریخ","مشتری","عطارد"],
+            a:1
+        },
+
+        {
+            q:"آب در فشار معمولی در چند درجه سانتی‌گراد می‌جوشد؟",
+            o:["۵۰","۷۵","۱۰۰","۱۵۰"],
+            a:2
+        },
+
+        {
+            q:"نماد شیمیایی اکسیژن چیست؟",
+            o:["O","C","H","N"],
+            a:0
+        },
+
+        {
+            q:"بزرگ‌ترین سیاره منظومه شمسی کدام است؟",
+            o:["زمین","مریخ","مشتری","زحل"],
+            a:2
+        },
+
+        {
+            q:"زمین به دور چه چیزی می‌چرخد؟",
+            o:["ماه","خورشید","مریخ","مشتری"],
+            a:1
+        },
+
+        {
+            q:"واحد اندازه‌گیری جریان الکتریکی چیست؟",
+            o:["ولت","آمپر","وات","اهم"],
+            a:1
+        },
+
+        {
+            q:"بدن انسان چند قلب دارد؟",
+            o:["۱","۲","۳","۴"],
+            a:0
+        },
+
+        {
+            q:"DNA بیشتر در کدام بخش سلول قرار دارد؟",
+            o:["هسته","دیواره","غشا","سیتوپلاسم"],
+            a:0
+        },
+
+        {
+            q:"نور با چه سرعتی تقریباً حرکت می‌کند؟",
+            o:[
+                "۳۰۰ کیلومتر بر ثانیه",
+                "۳۰۰ هزار کیلومتر بر ثانیه",
+                "۳۰ هزار کیلومتر بر ثانیه",
+                "۳ میلیون کیلومتر بر ثانیه"
+            ],
+            a:1
+        },
+
+        {
+            q:"کدام نیرو ما را روی زمین نگه می‌دارد؟",
+            o:["اصطکاک","گرانش","مغناطیس","الکتریسیته"],
+            a:1
+        }
+
+    ]
+},
+
+
+{
+    id:"celebrity",
+    title:"کوییز سلبریتی",
+    icon:"⭐",
+    cup:"🌟",
+    description:"جام ستاره‌های مشهور",
+
+    questions:[
+
+        {
+            q:"لئوناردو دی‌کاپریو بیشتر به عنوان چه چیزی شناخته می‌شود؟",
+            o:["بازیگر","خواننده","ورزشکار","دانشمند"],
+            a:0
+        },
+
+        {
+            q:"تام کروز بیشتر به عنوان چه چیزی شناخته می‌شود؟",
+            o:["خواننده","بازیگر","بازیکن فوتبال","نویسنده"],
+            a:1
+        },
+
+        {
+            q:"اد شیرن بیشتر در چه حوزه‌ای فعالیت دارد؟",
+            o:["موسیقی","فوتبال","سینما","کشتی"],
+            a:0
+        },
+
+        {
+            q:"کریستیانو رونالدو در چه ورزشی مشهور است؟",
+            o:["بسکتبال","تنیس","فوتبال","بوکس"],
+            a:2
+        },
+
+        {
+            q:"لیونل مسی در چه ورزشی مشهور است؟",
+            o:["فوتبال","شنا","بوکس","تنیس"],
+            a:0
+        },
+
+        {
+            q:"جکی چان بیشتر با کدام صنعت شناخته می‌شود؟",
+            o:["سینما","آشپزی","فوتبال","علم"],
+            a:0
+        },
+
+        {
+            q:"برد پیت بازیگر است؟",
+            o:["بله","خیر","فقط خواننده است","فقط ورزشکار است"],
+            a:0
+        },
+
+        {
+            q:"آریانا گرانده بیشتر به عنوان چه چیزی شناخته می‌شود؟",
+            o:["خواننده","بازیکن","دانشمند","کارگردان"],
+            a:0
+        },
+
+        {
+            q:"دواین جانسون با چه نامی نیز شناخته می‌شود؟",
+            o:["The Rock","The King","The Boss","The Lion"],
+            a:0
+        },
+
+        {
+            q:"مایکل جکسون بیشتر در چه زمینه‌ای مشهور بود؟",
+            o:["موسیقی","فوتبال","فیزیک","کشتی"],
+            a:0
+        }
+
+    ]
+},
+
+
+{
+    id:"iran_tv",
+    title:"تلویزیون ایران",
+    icon:"📺",
+    cup:"📡",
+    description:"جام تلویزیون ایران",
+
+    questions:[
+
+        {
+            q:"مجری معمولاً چه کاری انجام می‌دهد؟",
+            o:["اجرای برنامه","ساخت خودرو","پرواز هواپیما","پخت نان"],
+            a:0
+        },
+
+        {
+            q:"سریال چند قسمتی چیست؟",
+            o:[
+                "برنامه‌ای دارای قسمت‌های متعدد",
+                "یک عکس",
+                "یک آهنگ کوتاه",
+                "یک تبلیغ"
+            ],
+            a:0
+        },
+
+        {
+            q:"کدام مورد یک ژانر تلویزیونی است؟",
+            o:["طنز","برنج","کامپیوتر","رودخانه"],
+            a:0
+        },
+
+        {
+            q:"کدام مورد معمولاً در برنامه‌های تلویزیونی وجود دارد؟",
+            o:["دوربین","تراکتور","دوچرخه","ماشین لباسشویی"],
+            a:0
+        },
+
+        {
+            q:"کارگردان تلویزیونی مسئول چیست؟",
+            o:[
+                "هدایت تولید برنامه",
+                "فروش بلیت هواپیما",
+                "ساخت موبایل",
+                "کشاورزی"
+            ],
+            a:0
+        },
+
+        {
+            q:"اخبار تلویزیونی معمولاً چه چیزی ارائه می‌کند؟",
+            o:[
+                "خبر و اطلاعات روز",
+                "دستور غذا فقط",
+                "بازی کامپیوتری",
+                "موسیقی فقط"
+            ],
+            a:0
+        },
+
+        {
+            q:"نوروز بیشتر با چه برنامه‌هایی همراه است؟",
+            o:[
+                "ویژه‌برنامه‌های نوروزی",
+                "فقط اخبار",
+                "فقط ورزش",
+                "هیچ برنامه‌ای"
+            ],
+            a:0
+        },
+
+        {
+            q:"تلویزیون برای نمایش تصویر به چه چیزی نیاز دارد؟",
+            o:["سیگنال تصویری","آب","سوخت","هوا"],
+            a:0
+        },
+
+        {
+            q:"برنامه مسابقه‌ای تلویزیون معمولاً چه چیزی دارد؟",
+            o:["شرکت‌کننده","تراکتور","هواپیما","آزمایشگاه"],
+            a:0
+        },
+
+        {
+            q:"دوربین تلویزیونی برای چه کاری استفاده می‌شود؟",
+            o:["ضبط تصویر","پخت غذا","اتصال اینترنت","شارژ موبایل"],
+            a:0
+        }
+
+    ]
+},
+
+
+{
+    id:"world_cinema",
+    title:"سینمای جهان",
+    icon:"🎬",
+    cup:"🎥",
+    description:"جام بزرگ سینمای جهان",
+
+    questions:[
+
+        {
+            q:"فیلم Titanic توسط کدام کارگردان ساخته شد؟",
+            o:[
+                "جیمز کامرون",
+                "کریستوفر نولان",
+                "استیون اسپیلبرگ",
+                "پیتر جکسون"
+            ],
+            a:0
+        },
+
+        {
+            q:"Harry Potter متعلق به کدام مجموعه فیلم است؟",
+            o:["Harry Potter","Star Wars","Matrix","Avatar"],
+            a:0
+        },
+
+        {
+            q:"کارگردان The Dark Knight چه کسی است؟",
+            o:[
+                "کریستوفر نولان",
+                "جیمز کامرون",
+                "کوئنتین تارانتینو",
+                "جورج لوکاس"
+            ],
+            a:0
+        },
+
+        {
+            q:"Avatar بیشتر به خاطر چه چیزی مشهور شد؟",
+            o:[
+                "جلوه‌های ویژه",
+                "فوتبال",
+                "آشپزی",
+                "مستند ورزشی"
+            ],
+            a:0
+        },
+
+        {
+            q:"Star Wars در چه ژانری قرار می‌گیرد؟",
+            o:[
+                "علمی تخیلی",
+                "آشپزی",
+                "مستند طبیعت",
+                "ورزش"
+            ],
+            a:0
+        },
+
+        {
+            q:"The Lord of the Rings بر اساس آثار چه نویسنده‌ای است؟",
+            o:[
+                "J. R. R. Tolkien",
+                "George Orwell",
+                "Stephen King",
+                "Dan Brown"
+            ],
+            a:0
+        },
+
+        {
+            q:"Iron Man متعلق به کدام جهان داستانی است؟",
+            o:["Marvel","DC","Pixar","Nintendo"],
+            a:0
+        },
+
+        {
+            q:"Batman متعلق به کدام شرکت کمیک است؟",
+            o:["DC","Marvel","Disney","Nintendo"],
+            a:0
+        },
+
+        {
+            q:"Toy Story توسط کدام استودیو ساخته شده است؟",
+            o:["Pixar","Marvel","DC","Warner"],
+            a:0
+        },
+
+        {
+            q:"فیلم‌های سینمایی معمولاً با چه وسیله‌ای ضبط می‌شوند؟",
+            o:["دوربین","پرینتر","مودم","ماشین حساب"],
+            a:0
+        }
+
+    ]
+},
+
+
+{
+    id:"gamers",
+    title:"کوییز گیمرها",
+    icon:"🎮",
+    cup:"👾",
+    description:"جام مخصوص گیمرهای حرفه‌ای",
+
+    questions:[
+
+        {
+            q:"Minecraft توسط کدام شرکت توسعه داده شده است؟",
+            o:["Mojang","Valve","Nintendo","Ubisoft"],
+            a:0
+        },
+
+        {
+            q:"Fortnite توسط کدام شرکت ساخته شده است؟",
+            o:["Epic Games","Mojang","Valve","Sony"],
+            a:0
+        },
+
+        {
+            q:"Roblox چیست؟",
+            o:[
+                "پلتفرم بازی و ساخت تجربه‌ها",
+                "سیستم‌عامل",
+                "مرورگر",
+                "کنسول"
+            ],
+            a:0
+        },
+
+        {
+            q:"PlayStation متعلق به کدام شرکت است؟",
+            o:["Sony","Microsoft","Nintendo","Valve"],
+            a:0
+        },
+
+        {
+            q:"Xbox متعلق به کدام شرکت است؟",
+            o:["Microsoft","Sony","Nintendo","Apple"],
+            a:0
+        },
+
+        {
+            q:"Nintendo Switch متعلق به کدام شرکت است؟",
+            o:["Nintendo","Sony","Microsoft","EA"],
+            a:0
+        },
+
+        {
+            q:"Steam بیشتر برای چه کاری استفاده می‌شود؟",
+            o:[
+                "خرید و اجرای بازی‌های کامپیوتری",
+                "ویرایش عکس",
+                "تماشای تلویزیون",
+                "برنامه‌نویسی موبایل"
+            ],
+            a:0
+        },
+
+        {
+            q:"در Minecraft کدام موجود معمولاً در شب ظاهر می‌شود؟",
+            o:["Creeper","Cow","Horse","Villager"],
+            a:0
+        },
+
+        {
+            q:"در بازی‌های آنلاین Ping پایین بهتر است یا بالا؟",
+            o:["پایین","بالا","فرقی ندارد","هر دو"],
+            a:0
+        },
+
+        {
+            q:"FPS در بازی‌ها معمولاً به چه چیزی اشاره دارد؟",
+            o:[
+                "تعداد فریم در ثانیه",
+                "قدرت اینترنت",
+                "حجم بازی",
+                "تعداد بازیکنان"
+            ],
+            a:0
+        }
+
+    ]
+}
+
+];
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let selectedQuiz=null;
+let currentQuestion=0;
+let selectedAnswer=null;
+
+let score=0;
+let correctCount=0;
+let wrongCount=0;
+
+let timeLeft=10;
+let timerInterval=null;
+
+let username="";
+
+
+/* =====================================================
+   SUPABASE REQUEST
+===================================================== */
+
+async function supabaseRequest(url,options={}){
+
+    const response =
+        await fetch(
+            SUPABASE_URL+url,
+            {
+                ...options,
+
+                headers:{
+                    "apikey":
+                        SUPABASE_ANON_KEY,
+
+                    "Authorization":
+                        "Bearer "+
+                        SUPABASE_ANON_KEY,
+
+                    "Content-Type":
+                        "application/json",
+
+                    ...(options.headers||{})
+                }
+            }
+        );
+
+    if(!response.ok){
+
+        const text =
+            await response.text();
+
+        throw new Error(
+            text || "Supabase Error"
+        );
+    }
+
+    return response.json();
+}
+
+
+/* =====================================================
+   RENDER CATEGORIES
+===================================================== */
+
+function renderCategories(){
+
+    const box =
+        document.getElementById(
+            "categories"
+        );
+
+    box.innerHTML="";
+
+    QUIZZES.forEach(quiz=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className="category";
+
+        div.innerHTML=`
+
+            <div class="category-icon">
+                ${quiz.icon}
+            </div>
+
+            <div class="category-title">
+                ${escapeHtml(quiz.title)}
+            </div>
+
+            <div class="category-desc">
+                ${escapeHtml(quiz.description)}
+            </div>
+
+        `;
+
+        div.onclick=()=>{
+            startQuiz(quiz.id);
+        };
+
+        box.appendChild(div);
+    });
+}
+
+
+/* =====================================================
+   START QUIZ
+===================================================== */
+
+function startQuiz(id){
+
+    username =
+        document
+        .getElementById("username")
+        .value
+        .trim();
+
+    if(!username){
+
+        alert(
+            "ابتدا نام بازیکن را وارد کنید."
+        );
+
+        document
+        .getElementById("username")
+        .focus();
+
+        return;
+    }
+
+    selectedQuiz =
+        QUIZZES.find(
+            q=>q.id===id
+        );
+
+    if(!selectedQuiz)
+        return;
+
+    currentQuestion=0;
+    selectedAnswer=null;
+
+    score=0;
+    correctCount=0;
+    wrongCount=0;
+
+    document
+    .getElementById("home")
+    .classList.add("hidden");
+
+    document
+    .getElementById("resultScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("leaderboardScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("quizScreen")
+    .classList.remove("hidden");
+
+    document
+    .getElementById("categoryBadge")
+    .innerText =
+        selectedQuiz.icon+
+        " "+
+        selectedQuiz.title;
+
+    showQuestion();
+}
+
+
+/* =====================================================
+   SHOW QUESTION
+===================================================== */
+
+function showQuestion(){
+
+    clearInterval(timerInterval);
+
+    selectedAnswer=null;
+    timeLeft=10;
+
+    const q =
+        selectedQuiz
+        .questions[currentQuestion];
+
+    document
+    .getElementById("questionCount")
+    .innerText =
+        `سؤال ${currentQuestion+1} از ${selectedQuiz.questions.length}`;
+
+    document
+    .getElementById("questionText")
+    .innerText =
+        q.q;
+
+    document
+    .getElementById("timer")
+    .innerText =
+        timeLeft;
+
+    document
+    .getElementById("timer")
+    .classList.remove("warning");
+
+    document
+    .getElementById("progressBar")
+    .style.width =
+        (
+            currentQuestion /
+            selectedQuiz.questions.length *
+            100
+        )+"%";
+
+    const options =
+        document.getElementById(
+            "options"
+        );
+
+    options.innerHTML="";
+
+    q.o.forEach(
+        (option,index)=>{
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className="option";
+
+            div.innerText=
+                option;
+
+            div.onclick=()=>{
+                selectAnswer(
+                    index,
+                    div
+                );
+            };
+
+            options.appendChild(div);
+
+        }
+    );
+
+    document
+    .getElementById("nextButton")
+    .innerText =
+        currentQuestion===
+        selectedQuiz.questions.length-1
+        ?
+        "پایان مسابقه 🏆"
+        :
+        "تأیید پاسخ ➜";
+
+    startTimer();
+}
+
+
+/* =====================================================
+   SELECT ANSWER
+===================================================== */
+
+function selectAnswer(
+    index,
+    element
+){
+
+    selectedAnswer=index;
+
+    document
+    .querySelectorAll(".option")
+    .forEach(el=>{
+        el.classList.remove(
+            "selected"
+        );
+    });
+
+    element.classList.add(
+        "selected"
+    );
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+function startTimer(){
+
+    timerInterval =
+        setInterval(()=>{
+
+            timeLeft--;
+
+            document
+            .getElementById("timer")
+            .innerText=
+                timeLeft;
+
+            if(timeLeft<=3){
+
+                document
+                .getElementById("timer")
+                .classList.add(
+                    "warning"
+                );
+            }
+
+            if(timeLeft<=0){
+
+                clearInterval(
+                    timerInterval
+                );
+
+                timeUp();
+            }
+
+        },1000);
+}
+
+
+/* =====================================================
+   TIME UP
+===================================================== */
+
+function timeUp(){
+
+    wrongCount++;
+
+    goNext();
+}
+
+
+/* =====================================================
+   NEXT QUESTION
+===================================================== */
+
+function nextQuestion(){
+
+    if(
+        selectedAnswer===null
+    ){
+
+        alert(
+            "لطفاً یک گزینه را انتخاب کنید."
+        );
+
+        return;
+    }
+
+    clearInterval(
+        timerInterval
+    );
+
+    const q =
+        selectedQuiz
+        .questions[currentQuestion];
+
+    if(
+        selectedAnswer===q.a
+    ){
+
+        correctCount++;
+
+        score+=10;
+
+    }else{
+
+        wrongCount++;
+    }
+
+    goNext();
+}
+
+
+/* =====================================================
+   GO NEXT
+===================================================== */
+
+function goNext(){
+
+    clearInterval(
+        timerInterval
+    );
+
+    currentQuestion++;
+
+    if(
+        currentQuestion >=
+        selectedQuiz.questions.length
+    ){
+
+        finishQuiz();
+
+        return;
+    }
+
+    showQuestion();
+}
+
+
+/* =====================================================
+   FINISH QUIZ
+===================================================== */
+
+async function finishQuiz(){
+
+    clearInterval(
+        timerInterval
+    );
+
+    document
+    .getElementById("quizScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("resultScreen")
+    .classList.remove("hidden");
+
+    const total =
+        selectedQuiz.questions.length;
+
+    document
+    .getElementById("score")
+    .innerText=
+        score;
+
+    document
+    .getElementById("correctCount")
+    .innerText=
+        correctCount;
+
+    document
+    .getElementById("wrongCount")
+    .innerText=
+        wrongCount;
+
+    document
+    .getElementById("totalCount")
+    .innerText=
+        total;
+
+    document
+    .getElementById("resultCategory")
+    .innerText=
+        selectedQuiz.icon+
+        " "+
+        selectedQuiz.title;
+
+    document
+    .getElementById("resultCup")
+    .innerText=
+        selectedQuiz.cup;
+
+    document
+    .getElementById("rank")
+    .innerText=
+        "در حال ثبت نتیجه...";
+
+    try{
+
+        await supabaseRequest(
+            "/rest/v1/quiz_results",
+            {
+                method:"POST",
+
+                headers:{
+                    "Prefer":
+                        "return=minimal"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        quiz_id:
+                            selectedQuiz.id,
+
+                        username:
+                            username,
+
+                        score:
+                            score,
+
+                        total_points:
+                            total*10,
+
+                        correct_count:
+                            correctCount,
+
+                        wrong_count:
+                            wrongCount
+
+                    })
+            }
+        );
+
+        await calculateRank();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        document
+        .getElementById("rank")
+        .innerText=
+            "امتیاز شما: "+
+            score;
+
+        console.log(
+            "Supabase error:",
+            error
+        );
+    }
+}
+
+
+/* =====================================================
+   CALCULATE RANK
+===================================================== */
+
+async function calculateRank(){
+
+    try{
+
+        const players =
+            await supabaseRequest(
+
+                "/rest/v1/quiz_results"+
+                "?select=score"+
+                "&quiz_id=eq."+
+                encodeURIComponent(
+                    selectedQuiz.id
+                )+
+                "&order=score.desc"
+
+            );
+
+        let rank=1;
+
+        for(
+            const player
+            of players
+        ){
+
+            if(
+                player.score>score
+            ){
+
+                rank++;
+            }
+        }
+
+        let medal="";
+
+        if(rank===1)
+            medal="🥇 ";
+
+        else if(rank===2)
+            medal="🥈 ";
+
+        else if(rank===3)
+            medal="🥉 ";
+
+        document
+        .getElementById("rank")
+        .innerText=
+            medal+
+            "رتبه شما: "+
+            rank;
+
+    }
+    catch(error){
+
+        document
+        .getElementById("rank")
+        .innerText=
+            "رتبه محاسبه نشد";
+    }
+}
+
+
+/* =====================================================
+   LEADERBOARD
+===================================================== */
+
+async function showLeaderboard(){
+
+    document
+    .getElementById("resultScreen")
+    .classList.add("hidden");
+
+    document
+    .getElementById("leaderboardScreen")
+    .classList.remove("hidden");
+
+    document
+    .getElementById("leaderCup")
+    .innerText=
+        selectedQuiz.cup;
+
+    document
+    .getElementById("leaderTitle")
+    .innerText=
+        selectedQuiz.title;
+
+    const box =
+        document.getElementById(
+            "players"
+        );
+
+    box.innerHTML=
+        "<p class='center'>در حال دریافت...</p>";
+
+    try{
+
+        const players =
+            await supabaseRequest(
+
+                "/rest/v1/quiz_results"+
+                "?select=username,score,correct_count,created_at"+
+                "&quiz_id=eq."+
+                encodeURIComponent(
+                    selectedQuiz.id
+                )+
+                "&order=score.desc,created_at.asc"+
+                "&limit=50"
+
+            );
+
+        box.innerHTML="";
+
+        if(!players.length){
+
+            box.innerHTML=
+                "<p class='center'>هنوز کسی شرکت نکرده است.</p>";
+
+            return;
+        }
+
+        players.forEach(
+            (player,index)=>{
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+                div.className="player";
+
+                let medal=
+                    "#"+(index+1);
+
+                if(index===0)
+                    medal="🥇";
+
+                else if(index===1)
+                    medal="🥈";
+
+                else if(index===2)
+                    medal="🥉";
+
+                div.innerHTML=`
+
+                    <div>
+
+                        <span class="medal">
+                            ${medal}
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                                player.username
+                            )}
+                        </strong>
+
+                    </div>
+
+                    <div class="score-small">
+                        ${player.score} امتیاز
+                    </div>
+
+                `;
+
+                box.appendChild(div);
+            }
+        );
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        box.innerHTML=
+            "<p class='center error'>خطا در دریافت جدول امتیازات.</p>";
+    }
+}
+
+
+/* =====================================================
+   BACK RESULT
+===================================================== */
+
+function backResult(){
+
+    document
+    .getElementById(
+        "leaderboardScreen"
+    )
+    .classList.add("hidden");
+
+    document
+    .getElementById(
+        "resultScreen"
+    )
+    .classList.remove("hidden");
+}
+
+
+/* =====================================================
+   BACK HOME
+===================================================== */
+
+function backHome(){
+
+    clearInterval(
+        timerInterval
+    );
+
+    document
+    .getElementById(
+        "resultScreen"
+    )
+    .classList.add("hidden");
+
+    document
+    .getElementById(
+        "leaderboardScreen"
+    )
+    .classList.add("hidden");
+
+    document
+    .getElementById(
+        "quizScreen"
+    )
+    .classList.add("hidden");
+
+    document
+    .getElementById(
+        "home"
+    )
+    .classList.remove("hidden");
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(text){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent=text;
+
+    return div.innerHTML;
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+renderCategories();
+
+</script>
+
+</body>
+</html>
