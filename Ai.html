@@ -2,9 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
 <title>Ahoora AI</title>
 
@@ -15,329 +13,250 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.mi
 rel="stylesheet">
 
 <style>
-
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-font-family:Vazir,sans-serif;
-background:#080812;
-color:white;
-height:100vh;
-overflow:hidden;
-display:flex;
-justify-content:center;
-align-items:center;
-direction:rtl;
+    font-family:Vazir,sans-serif;
+    background:#080812;
+    color:white;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 .app{
-width:100%;
-max-width:480px;
-height:100vh;
-
-background:
-radial-gradient(
-ellipse at 50% 20%,
-#191934,
-#080812 80%
-);
-
-display:flex;
-flex-direction:column;
-align-items:center;
-
-padding:20px 16px;
-overflow:hidden;
+    width:100%;
+    max-width:480px;
+    height:100vh;
+    background:
+    radial-gradient(ellipse at 50% 20%,#191934,#080812 80%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px 16px;
 }
 
 .header{
-width:100%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:5px;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
 .title{
-font-size:24px;
-font-weight:900;
-
-background:
-linear-gradient(
-135deg,
-#00d4ff,
-#7b2ffc,
-#ff6fd8
-);
-
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
+    font-size:24px;
+    font-weight:900;
+    background:linear-gradient(135deg,#00d4ff,#7b2ffc,#ff6fd8);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
 .time{
-font-size:14px;
-color:#99aacc;
-background:rgba(255,255,255,.05);
-padding:7px 16px;
-border-radius:30px;
+    font-size:14px;
+    color:#99aacc;
+    background:rgba(255,255,255,.05);
+    padding:7px 16px;
+    border-radius:30px;
 }
 
 .orb-wrapper{
-width:220px;
-height:220px;
-margin:15px auto;
-
-position:relative;
-
-display:flex;
-justify-content:center;
-align-items:center;
+    width:220px;
+    height:220px;
+    margin:25px auto 10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 .orb{
-width:150px;
-height:150px;
-border-radius:50%;
-
-background:
-radial-gradient(
-circle at 35% 30%,
-#0088ff,
-#0033aa
-);
-
-box-shadow:
-0 0 60px rgba(0,100,255,.5),
-0 0 120px rgba(0,100,255,.2);
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-transition:.4s;
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#0088ff,#0033aa);
+    box-shadow:0 0 60px rgba(0,100,255,.5),
+               0 0 120px rgba(0,100,255,.2);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transition:.4s;
 }
 
 .inner-glow{
-width:70%;
-height:70%;
-border-radius:50%;
-
-background:
-radial-gradient(
-circle at 45% 35%,
-rgba(255,255,255,.6),
-transparent 70%
-);
+    width:70%;
+    height:70%;
+    border-radius:50%;
+    background:radial-gradient(circle at 45% 35%,
+    rgba(255,255,255,.6),transparent 70%);
 }
 
 .orb.pulse{
-animation:pulse 2s infinite;
+    animation:pulse 2s infinite;
 }
 
 .orb.listening{
-
-background:
-radial-gradient(
-circle at 35% 30%,
-#00ff99,
-#00aaff
-);
-
-box-shadow:
-0 0 80px rgba(0,255,150,.7);
-
-animation:listen 1s infinite;
+    background:radial-gradient(circle at 35% 30%,#00ff99,#00aaff);
+    box-shadow:0 0 80px rgba(0,255,150,.7);
+    animation:listen 1s infinite;
 }
 
 .orb.processing{
-
-background:
-radial-gradient(
-circle at 35% 30%,
-#ffcc00,
-#ff6600
-);
-
-animation:process .5s infinite;
+    background:radial-gradient(circle at 35% 30%,#ffcc00,#ff6600);
+    animation:process .5s infinite;
 }
 
 @keyframes pulse{
-0%,100%{transform:scale(1);}
-50%{transform:scale(1.04);}
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.04)}
 }
 
 @keyframes listen{
-0%,100%{transform:scale(1);}
-50%{transform:scale(1.08);}
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.08)}
 }
 
 @keyframes process{
-0%,100%{transform:scale(1);}
-50%{transform:scale(1.05);}
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.05)}
 }
 
 .mic-btn{
-
-width:76px;
-height:76px;
-
-border-radius:50%;
-border:none;
-
-background:
-linear-gradient(
-135deg,
-#0066ff,
-#4400cc
-);
-
-color:white;
-font-size:36px;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-box-shadow:
-0 10px 40px rgba(0,80,255,.5);
+    width:76px;
+    height:76px;
+    border-radius:50%;
+    border:0;
+    background:linear-gradient(135deg,#0066ff,#4400cc);
+    color:white;
+    font-size:34px;
+    box-shadow:0 10px 40px rgba(0,80,255,.5);
 }
 
 .mic-btn.listening{
-
-background:
-linear-gradient(
-135deg,
-#ff2266,
-#cc0066
-);
-
-animation:micpulse 1s infinite;
+    background:linear-gradient(135deg,#ff2266,#cc0066);
+    animation:micpulse 1s infinite;
 }
 
 @keyframes micpulse{
-
-0%,100%{
-box-shadow:0 0 40px rgba(255,0,100,.5);
-}
-
-50%{
-box-shadow:0 0 90px rgba(255,0,100,.9);
-}
-
+    0%,100%{box-shadow:0 0 40px rgba(255,0,100,.5)}
+    50%{box-shadow:0 0 90px rgba(255,0,100,.9)}
 }
 
 .status{
-
-margin:10px;
-padding:7px 20px;
-
-border-radius:30px;
-
-background:rgba(255,255,255,.05);
-
-color:#aac;
-
-display:flex;
-
-gap:10px;
-
-align-items:center;
+    margin:12px;
+    padding:7px 20px;
+    border-radius:30px;
+    background:rgba(255,255,255,.05);
+    color:#aac;
+    display:flex;
+    gap:10px;
+    align-items:center;
 }
 
 .dot{
-
-width:10px;
-height:10px;
-
-border-radius:50%;
-
-background:#555;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#555;
 }
 
 .dot.listening{
-
-background:#00ff88;
-
-box-shadow:0 0 15px #00ff88;
+    background:#00ff88;
+    box-shadow:0 0 15px #00ff88;
 }
 
 .dot.processing{
-
-background:#ffaa00;
-
-box-shadow:0 0 15px #ffaa00;
+    background:#ffaa00;
+    box-shadow:0 0 15px #ffaa00;
 }
 
 .user-text{
-
-width:100%;
-
-min-height:50px;
-
-padding:12px;
-
-border-radius:24px;
-
-background:rgba(255,255,255,.04);
-
-text-align:center;
-
-font-size:17px;
+    width:100%;
+    min-height:50px;
+    padding:12px;
+    border-radius:24px;
+    background:rgba(255,255,255,.04);
+    text-align:center;
+    font-size:17px;
 }
 
 .response-card{
-
-width:100%;
-
-max-height:200px;
-
-overflow:auto;
-
-margin-top:10px;
-
-padding:18px;
-
-border-radius:28px;
-
-background:rgba(255,255,255,.05);
-
-border:1px solid rgba(255,255,255,.07);
-
-text-align:center;
-
-font-size:17px;
-
-line-height:1.8;
+    width:100%;
+    max-height:210px;
+    overflow:auto;
+    margin-top:10px;
+    padding:18px;
+    border-radius:28px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.07);
+    text-align:center;
+    font-size:17px;
+    line-height:1.8;
 }
 
-.action-btn{
-
-border:0;
-
-padding:11px 25px;
-
-border-radius:25px;
-
-background:#00cc77;
-
-color:white;
-
-font-family:inherit;
-
-font-size:16px;
-
-margin:5px;
+/* دکمه فعال کردن حالت دستیار */
+.wake-btn{
+    margin-top:15px;
+    padding:12px 25px;
+    border:0;
+    border-radius:25px;
+    color:white;
+    background:linear-gradient(135deg,#7b2ffc,#00aaff);
+    font-family:inherit;
+    font-size:15px;
 }
 
-.cancel-btn{
-
-background:#cc3355;
+.wake-btn.active{
+    background:linear-gradient(135deg,#00aa66,#00dd99);
 }
 
+/* دکمه شناور داخل خود برنامه */
+.floating-btn{
+    position:fixed;
+    left:18px;
+    bottom:25px;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    border:0;
+    color:white;
+    background:linear-gradient(135deg,#0066ff,#7b2ffc);
+    box-shadow:0 5px 30px rgba(0,100,255,.6);
+    font-size:23px;
+    z-index:9999;
+}
+
+.floating-btn.active{
+    background:linear-gradient(135deg,#00cc77,#00aaff);
+    animation:floatpulse 1.5s infinite;
+}
+
+@keyframes floatpulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.1)}
+}
+
+@media(max-width:420px){
+    .orb-wrapper{
+        width:180px;
+        height:180px;
+    }
+
+    .orb{
+        width:125px;
+        height:125px;
+    }
+
+    .mic-btn{
+        width:65px;
+        height:65px;
+        font-size:30px;
+    }
+}
 </style>
 </head>
 
@@ -345,61 +264,50 @@ background:#cc3355;
 
 <div class="app">
 
-<div class="header">
+    <div class="header">
+        <div class="title">✨ Ahoora AI</div>
+        <div class="time" id="headerTime">--:--</div>
+    </div>
 
-<div class="title">
-✨ Ahoora AI
+    <div class="orb-wrapper">
+        <div class="orb pulse" id="orb">
+            <div class="inner-glow"></div>
+        </div>
+    </div>
+
+    <button class="mic-btn" id="micBtn">
+        <i class="fas fa-microphone" id="micIcon"></i>
+    </button>
+
+    <button class="wake-btn" id="wakeBtn">
+        🎙️ فعال کردن «سلام اهورا»
+    </button>
+
+    <div class="status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">آماده</span>
+    </div>
+
+    <div class="user-text" id="userText">
+        بگو «سلام اهورا»
+    </div>
+
+    <div class="response-card">
+        <div id="responseText">
+            👋 سلام! من اهورا هستم.
+            <br>
+            برای فعال شدن فرمان صوتی بگو:
+            <br>
+            <b>سلام اهورا</b>
+        </div>
+    </div>
+
 </div>
 
-<div class="time" id="headerTime">
---:--
-</div>
-
-</div>
-
-<div class="orb-wrapper">
-
-<div class="orb pulse" id="orb">
-
-<div class="inner-glow"></div>
-
-</div>
-
-</div>
-
-<button class="mic-btn" id="micBtn">
-
-<i class="fas fa-microphone" id="micIcon"></i>
-
+<!-- دکمه شناور -->
+<button class="floating-btn" id="floatingBtn">
+    <i class="fas fa-microphone"></i>
 </button>
-
-<div class="status">
-
-<span class="dot" id="statusDot"></span>
-
-<span id="statusText">
-آماده
-</span>
-
-</div>
-
-<div class="user-text" id="userText">
-
-برای صحبت دکمه میکروفون را بزنید
-
-</div>
-
-<div class="response-card">
-
-<div id="responseText">
-
-👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟
-
-</div>
-
-</div>
-
-</div>
 
 <script>
 
@@ -409,51 +317,26 @@ background:#cc3355;
    عناصر
 ========================= */
 
-const orb =
-document.getElementById("orb");
+const orb=document.getElementById("orb");
+const micBtn=document.getElementById("micBtn");
+const micIcon=document.getElementById("micIcon");
 
-const micBtn =
-document.getElementById("micBtn");
+const wakeBtn=document.getElementById("wakeBtn");
+const floatingBtn=document.getElementById("floatingBtn");
 
-const micIcon =
-document.getElementById("micIcon");
+const statusText=document.getElementById("statusText");
+const statusDot=document.getElementById("statusDot");
 
-const statusText =
-document.getElementById("statusText");
+const userText=document.getElementById("userText");
+const responseText=document.getElementById("responseText");
 
-const statusDot =
-document.getElementById("statusDot");
+const headerTime=document.getElementById("headerTime");
 
-const userText =
-document.getElementById("userText");
-
-const responseText =
-document.getElementById("responseText");
-
-const headerTime =
-document.getElementById("headerTime");
-
-
-let recognition = null;
-
-let listening = false;
-
-let processing = false;
-
-let pendingPhone = null;
-
-let pendingMessage = null;
-
-
-/* =========================
-   Android
-========================= */
-
-function androidAvailable(){
-
-return typeof window.Android !== "undefined";
-
-}
+let recognition=null;
+let listening=false;
+let wakeMode=false;
+let processing=false;
+let wakeRecognition=null;
 
 
 /* =========================
@@ -462,19 +345,15 @@ return typeof window.Android !== "undefined";
 
 function clock(){
 
-const d = new Date();
+    const d=new Date();
 
-headerTime.textContent =
-String(d.getHours()).padStart(2,"0")
-+
-":"
-+
-String(d.getMinutes()).padStart(2,"0");
-
+    headerTime.textContent=
+        String(d.getHours()).padStart(2,"0")
+        +":"+
+        String(d.getMinutes()).padStart(2,"0");
 }
 
 clock();
-
 setInterval(clock,10000);
 
 
@@ -482,128 +361,69 @@ setInterval(clock,10000);
    وضعیت
 ========================= */
 
-function status(text,type=""){
+function setStatus(text,type=""){
 
-statusText.textContent = text;
-
-statusDot.className =
-"dot " + type;
-
+    statusText.textContent=text;
+    statusDot.className="dot "+type;
 }
 
 
 /* =========================
-   پاسخ
+   پاسخ صوتی
 ========================= */
 
-function response(text){
+function playVoice(file){
 
-responseText.innerHTML = text;
+    try{
 
+        const audio=new Audio(file);
+
+        audio.preload="auto";
+
+        audio.play().catch(function(){});
+
+    }catch(e){}
+
+}
+
+
+/*
+ فایل‌های صوتی کنار ai.html:
+
+ a.mp3 = برنامه باز شد
+ b.mp3 = باز نشد
+ c.mp3 = تأیید تماس
+ d.mp3 = خطا
+ e.mp3 = سلام
+ f.mp3 = ساعت
+ g.mp3 = جستجوی گوگل
+*/
+
+function voice(type){
+
+    const files={
+        open:"a.mp3",
+        fail:"b.mp3",
+        call:"c.mp3",
+        error:"d.mp3",
+        hello:"e.mp3",
+        time:"f.mp3",
+        google:"g.mp3"
+    };
+
+    if(files[type]){
+        playVoice(files[type]);
+    }
 }
 
 
 /* =========================
-   نرمال سازی فارسی
+   Android Bridge
 ========================= */
 
-function normalize(text){
+function androidAvailable(){
 
-return text
-
-.replace(/[۰-۹]/g,function(d){
-
-return String(
-"۰۱۲۳۴۵۶۷۸۹".indexOf(d)
-);
-
-})
-
-.replace(/ي/g,"ی")
-.replace(/ك/g,"ک")
-
-.replace(/ۀ/g,"ه")
-
-.replace(/\s+/g," ")
-
-.trim()
-.toLowerCase();
-
-}
-
-
-/* =========================
-   پخش صدای پاسخ
-========================= */
-
-function playAnswer(file){
-
-try{
-
-const audio =
-new Audio(file);
-
-audio.preload="auto";
-
-audio.play().catch(function(e){
-
-console.log("Audio error:",e);
-
-});
-
-}catch(e){
-
-console.log(e);
-
-}
-
-}
-
-
-/* =========================
-   پاسخ‌های صوتی
-========================= */
-
-function voiceOK(){
-
-playAnswer("a.mp3");
-
-}
-
-function voiceError(){
-
-playAnswer("b.mp3");
-
-}
-
-function voiceConfirmCall(){
-
-playAnswer("c.mp3");
-
-}
-
-function voiceErrorCommand(){
-
-playAnswer("d.mp3");
-
-}
-
-function voiceHello(){
-
-playAnswer("e.mp3");
-
-}
-
-function voiceTime(){
-
-playAnswer("f.mp3");
-
-}
-
-function voiceGoogle(){
-
-playAnswer("g.mp3");
-
+    return typeof window.Android !== "undefined";
 }
 
 
@@ -611,44 +431,32 @@ playAnswer("g.mp3");
    باز کردن برنامه
 ========================= */
 
-function openApp(packageName,name,url){
+function openApp(packageName,name){
 
-if(androidAvailable()){
+    if(!androidAvailable()){
 
-try{
+        responseText.textContent=
+            "📱 اجرای برنامه فقط داخل APK فعال است.";
 
-Android.openApp(packageName);
+        voice("fail");
 
-response(
-"📱 در حال باز کردن "+name+" ..."
-);
+        return;
+    }
 
-voiceOK();
+    try{
 
-return;
+        Android.openApp(packageName);
 
-}catch(e){
+        responseText.textContent=
+            "📱 در حال باز کردن "+name+" ...";
 
-console.log(e);
+        voice("open");
 
-}
+    }catch(e){
 
-}
+        voice("fail");
 
-if(url){
-
-window.location.href=url;
-
-}else{
-
-voiceError();
-
-response(
-"❌ برنامه "+name+" باز نشد."
-);
-
-}
-
+    }
 }
 
 
@@ -658,437 +466,69 @@ response(
 
 function callNumber(number){
 
-number=normalize(number);
+    if(androidAvailable()){
 
-number=
-number.replace(/[^0-9+]/g,"");
+        try{
 
-if(!number){
+            Android.makeCall(number);
 
-voiceError();
+            responseText.textContent=
+                "📞 در حال تماس با "+number;
 
-return;
+            return;
 
-}
+        }catch(e){}
+    }
 
-if(androidAvailable()){
-
-try{
-
-Android.makeCall(number);
-
-response(
-"📞 در حال تماس با "+number
-);
-
-voiceOK();
-
-return;
-
-}catch(e){
-
-console.log(e);
-
-}
-
-}
-
-window.location.href=
-"tel:"+number;
-
+    window.location.href="tel:"+number;
 }
 
 
 /* =========================
-   جستجوی مخاطب
+   تماس مخاطب
 ========================= */
 
-function findContact(name,action){
+function callContact(name){
 
-if(!androidAvailable()){
+    if(androidAvailable()){
 
-voiceError();
+        try{
 
-response(
-"این قابلیت فقط داخل برنامه اندروید فعال است."
-);
+            Android.callContact(name);
 
-return;
+            responseText.textContent=
+                "📞 در حال تماس با "+name;
 
-}
+            return;
 
-try{
+        }catch(e){}
+    }
 
-Android.findContact(
-name,
-action
-);
-
-status(
-"در حال پیدا کردن مخاطب...",
-"processing"
-);
-
-}catch(e){
-
-console.log(e);
-
-voiceError();
-
-}
-
+    voice("fail");
 }
 
 
 /* =========================
-   پاسخ Java برای مخاطب
+   پیامک مخاطب
 ========================= */
 
-window.contactResult=function(
-found,
-name,
-number,
-action
-){
+function smsContact(name,message){
 
-if(!found){
+    if(androidAvailable()){
 
-status("مخاطب پیدا نشد","");
+        try{
 
-voiceError();
+            Android.sendContactSMS(name,message);
 
-response(
-"❌ مخاطب «"+
-name+
-"» در مخاطبین پیدا نشد."
-);
+            responseText.textContent=
+                "✉️ پیامک برای "+name+" آماده شد.";
 
-return;
+            return;
 
-}
+        }catch(e){}
+    }
 
-number =
-number || "";
-
-if(action==="call"){
-
-pendingPhone=number;
-
-status(
-"تأیید تماس",
-""
-);
-
-response(
-
-"📞 با «"+
-name+
-"» تماس بگیرم؟<br><br>"+
-
-"<button class='action-btn' onclick='confirmCall()'>"+
-"تماس"+
-"</button>"+
-
-"<button class='action-btn cancel-btn' onclick='cancelAction()'>"+
-"لغو"+
-"</button>"
-
-);
-
-voiceConfirmCall();
-
-return;
-
-}
-
-
-if(action==="sms"){
-
-pendingPhone=number;
-
-pendingMessage=
-"سلام، این پیام از طرف اهورا AI است.";
-
-status(
-"تأیید پیامک",
-""
-);
-
-response(
-
-"✉️ برای «"+
-name+
-"» پیام ارسال کنم؟<br><br>"+
-
-"<button class='action-btn' onclick='confirmSMS()'>"+
-"ارسال"+
-"</button>"+
-
-"<button class='action-btn cancel-btn' onclick='cancelAction()'>"+
-"لغو"+
-"</button>"
-
-);
-
-return;
-
-}
-
-
-if(action==="open"){
-
-if(androidAvailable()){
-
-Android.openContactMessages(number);
-
-response(
-"💬 در حال باز کردن پیام‌های «"+
-name+
-"»..."
-);
-
-voiceOK();
-
-}
-
-}
-
-};
-
-
-/* =========================
-   تأیید تماس
-========================= */
-
-window.confirmCall=function(){
-
-if(pendingPhone){
-
-callNumber(
-pendingPhone
-);
-
-pendingPhone=null;
-
-}
-
-};
-
-
-/* =========================
-   تأیید SMS
-========================= */
-
-window.confirmSMS=function(){
-
-if(!pendingPhone){
-
-return;
-
-}
-
-if(androidAvailable()){
-
-try{
-
-Android.sendSMS(
-pendingPhone,
-pendingMessage || ""
-);
-
-response(
-"✉️ پیامک ارسال شد."
-);
-
-voiceOK();
-
-}catch(e){
-
-voiceError();
-
-}
-
-}else{
-
-window.location.href=
-"sms:"+
-pendingPhone+
-"?body="+
-encodeURIComponent(
-pendingMessage || ""
-);
-
-}
-
-pendingPhone=null;
-
-pendingMessage=null;
-
-};
-
-
-/* =========================
-   لغو
-========================= */
-
-window.cancelAction=function(){
-
-pendingPhone=null;
-
-pendingMessage=null;
-
-status(
-"آماده",
-""
-);
-
-response(
-"باشه، لغو شد."
-);
-
-};
-
-
-/* =========================
-   دوربین
-========================= */
-
-function openCamera(){
-
-if(androidAvailable()){
-
-Android.openCamera();
-
-response(
-"📷 دوربین باز شد."
-);
-
-voiceOK();
-
-return;
-
-}
-
-const input =
-document.createElement("input");
-
-input.type="file";
-
-input.accept="image/*";
-
-input.capture="environment";
-
-input.click();
-
-}
-
-
-/* =========================
-   گالری
-========================= */
-
-function openGallery(){
-
-if(androidAvailable()){
-
-Android.openGallery();
-
-response(
-"🖼️ گالری باز شد."
-);
-
-voiceOK();
-
-return;
-
-}
-
-const input =
-document.createElement("input");
-
-input.type="file";
-
-input.accept="image/*,video/*";
-
-input.click();
-
-}
-
-
-/* =========================
-   صدا
-========================= */
-
-function volume(direction){
-
-if(androidAvailable()){
-
-Android.adjustVolume(direction);
-
-response(
-
-direction==="up"
-?
-"🔊 صدا زیاد شد."
-:
-"🔉 صدا کم شد."
-
-);
-
-voiceOK();
-
-return;
-
-}
-
-response(
-"این قابلیت فقط در APK فعال است."
-);
-
-}
-
-
-/* =========================
-   موسیقی
-========================= */
-
-function musicToggle(){
-
-if(androidAvailable()){
-
-Android.toggleMusic();
-
-response(
-"🎵 پخش موسیقی اجرا شد."
-);
-
-voiceOK();
-
-}else{
-
-response(
-"این قابلیت فقط در APK فعال است."
-);
-
-}
-
-}
-
-
-function musicStop(){
-
-if(androidAvailable()){
-
-Android.stopMusic();
-
-response(
-"⏹️ موسیقی متوقف شد."
-);
-
-voiceOK();
-
-}
-
+    voice("fail");
 }
 
 
@@ -1096,98 +536,97 @@ voiceOK();
    گوگل
 ========================= */
 
-function searchGoogle(query){
+function googleSearch(query){
 
-const url =
-"https://www.google.com/search?q="+
-encodeURIComponent(query);
+    const url=
+        "https://www.google.com/search?q="+
+        encodeURIComponent(query);
 
-voiceGoogle();
+    responseText.textContent=
+        "🔎 در حال جستجوی «"+query+"»...";
 
-if(androidAvailable()){
+    voice("google");
 
-Android.openUrl(url);
+    if(androidAvailable()){
 
-}else{
+        try{
+            Android.openUrl(url);
+            return;
+        }catch(e){}
+    }
 
-window.location.href=url;
-
-}
-
-response(
-"🔎 در حال جستجوی «"+
-query+
-"» در گوگل..."
-);
-
+    window.location.href=url;
 }
 
 
 /* =========================
-   باز کردن فایل صوتی
+   کنترل موسیقی
 ========================= */
 
-function playAudioFile(file){
+function musicPlay(){
 
-if(androidAvailable()){
+    if(androidAvailable()){
 
-Android.playMedia(file);
+        try{
+            Android.playMusic();
+            responseText.textContent="🎵 پخش موسیقی";
+            return;
+        }catch(e){}
+    }
 
-response(
-"🎵 در حال پخش فایل صوتی..."
-);
-
-return;
-
+    voice("fail");
 }
 
-const audio =
-new Audio(file);
 
-audio.play();
+function musicPause(){
 
+    if(androidAvailable()){
+
+        try{
+            Android.pauseMusic();
+            responseText.textContent="⏸️ موسیقی متوقف شد";
+            return;
+        }catch(e){}
+    }
+
+    voice("fail");
+}
+
+
+function musicNext(){
+
+    if(androidAvailable()){
+
+        try{
+            Android.nextMusic();
+            responseText.textContent="⏭️ آهنگ بعدی";
+            return;
+        }catch(e){}
+    }
+
+    voice("fail");
 }
 
 
 /* =========================
-   باز کردن ویدیو
+   صدا
 ========================= */
 
-function playVideo(file){
+function volumeUp(){
 
-if(androidAvailable()){
-
-Android.playMedia(file);
-
-response(
-"🎬 در حال پخش ویدیو..."
-);
-
-return;
-
-}
-
-window.open(file,"_blank");
-
+    if(androidAvailable()){
+        Android.adjustVolume("up");
+        responseText.textContent="🔊 صدا زیاد شد.";
+    }
 }
 
 
-/* =========================
-   URL
-========================= */
+function volumeDown(){
 
-function openURL(url){
-
-if(androidAvailable()){
-
-Android.openUrl(url);
-
-}else{
-
-window.location.href=url;
-
-}
-
+    if(androidAvailable()){
+        Android.adjustVolume("down");
+        responseText.textContent="🔉 صدا کم شد.";
+    }
 }
 
 
@@ -1195,175 +634,129 @@ window.location.href=url;
    تشخیص گفتار
 ========================= */
 
-function initRecognition(){
+function createRecognition(){
 
-const SpeechRecognition =
-window.SpeechRecognition ||
-window.webkitSpeechRecognition;
+    const SpeechRecognition=
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
 
-if(!SpeechRecognition){
+    if(!SpeechRecognition){
 
-response(
-"❌ تشخیص گفتار در این WebView پشتیبانی نمی‌شود."
-);
+        responseText.textContent=
+            "❌ تشخیص گفتار در این WebView در دسترس نیست.";
 
-voiceError();
+        voice("error");
 
-return false;
+        return null;
+    }
 
-}
+    const r=new SpeechRecognition();
 
-recognition =
-new SpeechRecognition();
+    r.lang="fa-IR";
+    r.continuous=false;
+    r.interimResults=false;
+    r.maxAlternatives=1;
 
-recognition.lang =
-"fa-IR";
+    r.onstart=function(){
 
-recognition.continuous =
-false;
+        listening=true;
 
-recognition.interimResults =
-false;
+        setStatus("در حال گوش دادن...","listening");
 
-recognition.maxAlternatives =
-1;
+        micBtn.classList.add("listening");
 
+        orb.className="orb listening";
 
-recognition.onstart=function(){
-
-listening=true;
-
-processing=false;
-
-status(
-"در حال گوش دادن...",
-"listening"
-);
-
-micBtn.classList.add(
-"listening"
-);
-
-orb.className =
-"orb listening";
-
-micIcon.className =
-"fas fa-circle-notch fa-spin";
-
-};
+        micIcon.className=
+            "fas fa-circle-notch fa-spin";
+    };
 
 
-recognition.onresult=function(event){
+    r.onresult=function(event){
 
-const text =
-event.results[0][0]
-.transcript
-.trim();
+        const text=
+            event.results[0][0].transcript.trim();
 
-userText.textContent =
-text;
+        userText.textContent=text;
 
-listening=false;
+        listening=false;
 
-processing=true;
+        micBtn.classList.remove("listening");
 
-micBtn.classList.remove(
-"listening"
-);
+        micIcon.className="fas fa-microphone";
 
-orb.className =
-"orb processing";
-
-micIcon.className =
-"fas fa-microphone";
-
-processCommand(text);
-
-};
+        processCommand(text);
+    };
 
 
-recognition.onerror=function(event){
+    r.onerror=function(){
 
-console.log(event.error);
+        listening=false;
 
-listening=false;
+        micBtn.classList.remove("listening");
 
-processing=false;
+        micIcon.className="fas fa-microphone";
 
-micBtn.classList.remove(
-"listening"
-);
+        orb.className="orb pulse";
 
-orb.className =
-"orb pulse";
+        setStatus("آماده");
 
-micIcon.className =
-"fas fa-microphone";
-
-status(
-"خطا در تشخیص صدا",
-""
-);
-
-voiceErrorCommand();
-
-response(
-"❌ نتوانستم صدای شما را تشخیص بدهم."
-);
-
-};
+        voice("error");
+    };
 
 
-recognition.onend=function(){
+    r.onend=function(){
 
-listening=false;
+        listening=false;
 
-micBtn.classList.remove(
-"listening"
-);
+        micBtn.classList.remove("listening");
 
-micIcon.className =
-"fas fa-microphone";
+        micIcon.className="fas fa-microphone";
 
-};
+        if(!processing){
+            orb.className="orb pulse";
+        }
+    };
 
-return true;
-
+    return r;
 }
 
 
 /* =========================
-   شروع گوش دادن
+   شروع فرمان
 ========================= */
 
-function startListening(){
+function startCommandListening(){
 
-if(!recognition){
+    if(listening)return;
 
-if(!initRecognition()){
+    recognition=createRecognition();
 
-return;
+    if(!recognition)return;
 
+    try{
+        recognition.start();
+    }catch(e){}
 }
 
-}
 
-if(listening){
+/* =========================
+   نرمال‌سازی فارسی
+========================= */
 
-return;
+function normalize(text){
 
-}
+    return text
 
-try{
+    .replace(/[۰-۹]/g,function(d){
+        return String("۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+    })
 
-recognition.start();
-
-}catch(e){
-
-console.log(e);
-
-}
-
+    .replace(/ي/g,"ی")
+    .replace(/ك/g,"ک")
+    .replace(/\s+/g," ")
+    .trim()
+    .toLowerCase();
 }
 
 
@@ -1373,564 +766,431 @@ console.log(e);
 
 function processCommand(original){
 
-const text =
-normalize(original);
+    processing=true;
 
-status(
-"در حال پردازش...",
-"processing"
-);
+    orb.className="orb processing";
 
+    setStatus("در حال پردازش...","processing");
 
-/* =========================
-   سلام
-========================= */
+    const text=normalize(original);
 
-if(
-/^(سلام|درود|هی|هلو)/.test(text)
-){
 
-response(
-"👋 سلام! من اهورا هستم."
-);
+    /* سلام اهورا */
 
-voiceHello();
+    if(
+        text.includes("سلام اهورا") ||
+        text==="اهورا"
+    ){
 
-finish();
+        responseText.textContent=
+            "👋 سلام! من اهورا هستم.";
 
-return;
+        voice("hello");
 
-}
+        finishCommand();
 
+        return;
+    }
 
-/* =========================
-   تماس با شماره
-========================= */
 
-let phone =
-text.match(
-/(?:با\s*)?(?:شماره\s*)?(\+?[0-9]{10,15})\s*(?:رو\s*)?(?:بگیر|تماس|زنگ)/
-);
+    /* واتساپ */
 
-if(phone){
+    if(
+        text.includes("واتساپ") &&
+        /باز|اجرا/.test(text)
+    ){
 
-pendingPhone =
-phone[1];
+        openApp(
+            "com.whatsapp",
+            "واتساپ"
+        );
 
-voiceConfirmCall();
+        finishCommand();
 
-response(
+        return;
+    }
 
-"📞 با شماره "+
-pendingPhone+
-" تماس بگیرم؟<br><br>"+
 
-"<button class='action-btn' onclick='confirmCall()'>"+
-"تماس"+
-"</button>"+
+    /* تلگرام */
 
-"<button class='action-btn cancel-btn' onclick='cancelAction()'>"+
-"لغو"+
-"</button>"
+    if(
+        text.includes("تلگرام") &&
+        /باز|اجرا/.test(text)
+    ){
 
-);
+        openApp(
+            "org.telegram.messenger",
+            "تلگرام"
+        );
 
-status(
-"تأیید تماس",
-""
-);
+        finishCommand();
 
-return;
+        return;
+    }
 
-}
 
+    /* اینستاگرام */
 
-/* =========================
-   تماس با مامان / مخاطب
-========================= */
+    if(
+        text.includes("اینستاگرام") &&
+        /باز|اجرا/.test(text)
+    ){
 
-if(
-/(?:با\s*)?(مامان|مادرم|مادر|بابام|پدرم|همسرم|برادرم|خواهرم).*(?:تماس|زنگ)/.test(text)
-){
+        openApp(
+            "com.instagram.android",
+            "اینستاگرام"
+        );
 
-let m =
-text.match(
-/(?:با\s*)?(مامان|مادرم|مادر|بابام|پدرم|همسرم|برادرم|خواهرم)/
-);
+        finishCommand();
 
-if(m){
+        return;
+    }
 
-findContact(
-m[1],
-"call"
-);
 
-return;
+    /* یوتیوب */
 
-}
+    if(
+        text.includes("یوتیوب") &&
+        /باز|اجرا/.test(text)
+    ){
 
-}
+        openApp(
+            "com.google.android.youtube",
+            "یوتیوب"
+        );
 
+        finishCommand();
 
-/* =========================
-   پیامک به مخاطب
-========================= */
+        return;
+    }
 
-if(
-/(?:به\s*)?(مامان|مادرم|مادر|بابام|پدرم|همسرم|برادرم|خواهرم).*(?:پیام|پیامک)/.test(text)
-){
 
-let m =
-text.match(
-/(?:به\s*)?(مامان|مادرم|مادر|بابام|پدرم|همسرم|برادرم|خواهرم)/
-);
+    /* کروم */
 
-if(m){
+    if(
+        text.includes("کروم") &&
+        /باز|اجرا/.test(text)
+    ){
 
-findContact(
-m[1],
-"sms"
-);
+        openApp(
+            "com.android.chrome",
+            "کروم"
+        );
 
-return;
+        finishCommand();
 
-}
+        return;
+    }
 
-}
 
+    /* دوربین */
 
-/* =========================
-   باز کردن پیام مخاطب
-========================= */
+    if(
+        text.includes("دوربین") &&
+        /باز|اجرا/.test(text)
+    ){
 
-if(
-/(?:پیام|پیامک).*(مامان|مادرم|مادر|بابام|پدرم|همسرم|برادرم|خواهرم).*(?:باز|بخون)/.test(text)
-){
+        if(androidAvailable()){
+            Android.openCamera();
+            responseText.textContent="📷 دوربین باز شد.";
+            voice("open");
+        }
 
-let m =
-text.match(
-/(?:مامان|مادرم|مادر|بابام|پدرم|همسرم|برادرم|خواهرم)/
-);
+        finishCommand();
 
-if(m){
+        return;
+    }
 
-findContact(
-m[0],
-"open"
-);
 
-return;
+    /* گالری */
 
-}
+    if(
+        text.includes("گالری") &&
+        /باز|اجرا/.test(text)
+    ){
 
-}
+        if(androidAvailable()){
+            Android.openGallery();
+            responseText.textContent="🖼️ گالری باز شد.";
+            voice("open");
+        }
 
+        finishCommand();
 
-/* =========================
-   واتساپ
-========================= */
+        return;
+    }
 
-if(
-/واتساپ.*(?:باز|اجرا)/.test(text)
-){
 
-openApp(
-"com.whatsapp",
-"واتساپ",
-"https://www.whatsapp.com/"
-);
+    /* تماس با شماره */
 
-return;
+    const phone=text.match(
+        /(?:با\s*)?(?:شماره\s*)?([0-9+]{10,13})\s*(?:رو\s*)?(?:بگیر|تماس|زنگ)/
+    );
 
-}
+    if(phone){
 
+        voice("call");
 
-/* =========================
-   تلگرام
-========================= */
+        responseText.innerHTML=
+            "📞 تماس با <b>"+
+            phone[1]+
+            "</b>";
 
-if(
-/تلگرام.*(?:باز|اجرا)/.test(text)
-){
+        callNumber(phone[1]);
 
-openApp(
-"org.telegram.messenger",
-"تلگرام",
-"https://telegram.org/"
-);
+        finishCommand();
 
-return;
+        return;
+    }
 
-}
 
+    /* تماس با مامان */
 
-/* =========================
-   اینستاگرام
-========================= */
+    if(
+        /مامان|مادر|مامانم/.test(text) &&
+        /تماس|زنگ|بگیر/.test(text)
+    ){
 
-if(
-/اینستاگرام.*(?:باز|اجرا)/.test(text)
-){
+        voice("call");
 
-openApp(
-"com.instagram.android",
-"اینستاگرام",
-"https://www.instagram.com/"
-);
+        responseText.textContent=
+            "📞 در حال تماس با مامان...";
 
-return;
+        callContact("مامان");
 
-}
+        finishCommand();
 
+        return;
+    }
 
-/* =========================
-   یوتیوب
-========================= */
 
-if(
-/یوتیوب.*(?:باز|اجرا)/.test(text)
-){
+    /* تماس با مخاطب */
 
-openApp(
-"com.google.android.youtube",
-"یوتیوب",
-"https://www.youtube.com/"
-);
+    if(
+        /تماس|زنگ/.test(text)
+    ){
 
-return;
+        const names=[
+            "بابا",
+            "پدر",
+            "مادر",
+            "مامان",
+            "برادر",
+            "خواهر",
+            "علی",
+            "محمد",
+            "رضا",
+            "احمد",
+            "سارا"
+        ];
 
-}
+        for(const name of names){
 
+            if(text.includes(name)){
 
-/* =========================
-   کروم
-========================= */
+                voice("call");
 
-if(
-/کروم.*(?:باز|اجرا)/.test(text)
-){
+                responseText.textContent=
+                    "📞 در حال تماس با "+name+"...";
 
-openApp(
-"com.android.chrome",
-"کروم",
-"https://www.google.com/chrome/"
-);
+                callContact(name);
 
-return;
+                finishCommand();
 
-}
+                return;
+            }
+        }
+    }
 
 
-/* =========================
-   تنظیمات
-========================= */
+    /* پیامک */
 
-if(
-/تنظیمات.*(?:باز|اجرا)/.test(text)
-){
+    if(
+        /پیامک|پیام/.test(text) &&
+        /بفرست|ارسال|بده/.test(text)
+    ){
 
-openApp(
-"com.android.settings",
-"تنظیمات",
-null
-);
+        let name=null;
 
-return;
+        if(text.includes("مامان")){
+            name="مامان";
+        }else if(text.includes("بابا")){
+            name="بابا";
+        }
 
-}
+        if(name){
 
+            const msg="سلام، این پیام از اهورا AI است.";
 
-/* =========================
-   دوربین
-========================= */
+            smsContact(name,msg);
 
-if(
-/دوربین.*باز/.test(text) ||
-/عکس بگیر/.test(text)
-){
+            finishCommand();
 
-openCamera();
+            return;
+        }
+    }
 
-return;
 
-}
+    /* صدای زیاد */
 
+    if(
+        /صدا/.test(text) &&
+        /زیاد|بالا/.test(text)
+    ){
 
-/* =========================
-   گالری
-========================= */
+        volumeUp();
 
-if(
-/گالری.*باز/.test(text) ||
-/عکس هام/.test(text) ||
-/عکسها/.test(text) ||
-/ویدیو هام/.test(text)
-){
+        finishCommand();
 
-openGallery();
+        return;
+    }
 
-return;
 
-}
+    /* صدای کم */
 
+    if(
+        /صدا/.test(text) &&
+        /کم|پایین/.test(text)
+    ){
 
-/* =========================
-   زیاد کردن صدا
-========================= */
+        volumeDown();
 
-if(
-/صدا.*(?:زیاد|بالا)/.test(text) ||
-/ولوم.*(?:زیاد|بالا)/.test(text)
-){
+        finishCommand();
 
-volume("up");
+        return;
+    }
 
-return;
 
-}
+    /* پخش موسیقی */
 
+    if(
+        /موسیقی|آهنگ/.test(text) &&
+        /پخش|اجرا|بزن/.test(text)
+    ){
 
-/* =========================
-   کم کردن صدا
-========================= */
+        musicPlay();
 
-if(
-/صدا.*(?:کم|پایین)/.test(text) ||
-/ولوم.*(?:کم|پایین)/.test(text)
-){
+        finishCommand();
 
-volume("down");
+        return;
+    }
 
-return;
 
-}
+    /* توقف موسیقی */
 
+    if(
+        /موسیقی|آهنگ/.test(text) &&
+        /توقف|قطع|متوقف/.test(text)
+    ){
 
-/* =========================
-   موسیقی پخش
-========================= */
+        musicPause();
 
-if(
-/(?:موسیقی|آهنگ).*(?:پخش|اجرا|ادامه)/.test(text)
-){
+        finishCommand();
 
-musicToggle();
+        return;
+    }
 
-return;
 
-}
+    /* آهنگ بعدی */
 
+    if(
+        /آهنگ|موسیقی/.test(text) &&
+        /بعدی|بعد/.test(text)
+    ){
 
-/* =========================
-   توقف موسیقی
-========================= */
+        musicNext();
 
-if(
-/(?:موسیقی|آهنگ).*(?:متوقف|قطع|استاپ)/.test(text)
-){
+        finishCommand();
 
-musicStop();
+        return;
+    }
 
-return;
 
-}
+    /* گوگل */
 
+    const google=text.match(
+        /(?:در\s*)?گوگل\s*(?:جستجو\s*)?(?:کن\s*)?(.+)/
+    );
 
-/* =========================
-   گوگل
-========================= */
+    if(google){
 
-let google =
-text.match(
-/(?:در\s*)?(?:گوگل|اینترنت)\s*(?:برای\s*)?(?:جستجو\s*)?(?:کن|کنه)?\s*(.+)/
-);
+        googleSearch(google[1]);
 
-if(google){
+        finishCommand();
 
-searchGoogle(
-google[1]
-);
+        return;
+    }
 
-return;
 
-}
+    /* ساعت */
 
+    if(
+        /ساعت/.test(text) &&
+        /چنده|چند|الان/.test(text)
+    ){
 
-/* =========================
-   URL
-========================= */
+        const d=new Date();
 
-let url =
-original.match(
-/https?:\/\/[^\s]+/
-);
+        responseText.textContent=
+            "🕐 ساعت "+
+            String(d.getHours()).padStart(2,"0")+
+            ":"+
+            String(d.getMinutes()).padStart(2,"0")+
+            " است.";
 
-if(url){
+        voice("time");
 
-openURL(url[0]);
+        finishCommand();
 
-response(
-"🌐 لینک باز شد."
-);
+        return;
+    }
 
-voiceOK();
 
-finish();
+    /* محاسبه */
 
-return;
+    const calc=text.match(
+        /([0-9]+)\s*([+\-*\/])\s*([0-9]+)/
+    );
 
-}
+    if(calc){
 
+        const a=parseFloat(calc[1]);
+        const b=parseFloat(calc[3]);
+        const op=calc[2];
 
-/* =========================
-   ساعت
-========================= */
+        let result=0;
 
-if(
-/ساعت.*(?:چنده|چند است|الان)/.test(text) ||
-/الان ساعت/.test(text)
-){
+        if(op==="+")result=a+b;
+        if(op==="-")result=a-b;
+        if(op==="*")result=a*b;
+        if(op==="/")result=a/b;
 
-const d =
-new Date();
+        responseText.textContent=
+            "🧮 نتیجه: "+result;
 
-const t =
-String(d.getHours())
-.padStart(2,"0")
-+
-":"+
-String(d.getMinutes())
-.padStart(2,"0");
+        finishCommand();
 
-response(
-"🕐 ساعت "+t+" است."
-);
+        return;
+    }
 
-voiceTime();
 
-finish();
+    /* فرمان ناشناخته */
 
-return;
+    responseText.innerHTML=
+        "🤔 فرمان را متوجه نشدم.<br><br>"+
+        "مثلاً بگو:<br>"+
+        "«سلام اهورا»<br>"+
+        "«واتساپ رو باز کن»<br>"+
+        "«با مامان تماس بگیر»<br>"+
+        "«به مامان پیام بده»<br>"+
+        "«موسیقی رو پخش کن»<br>"+
+        "«آهنگ بعدی»<br>"+
+        "«صدا رو زیاد کن»<br>"+
+        "«در گوگل ماینکرفت رو جستجو کن»";
 
-}
+    voice("error");
 
-
-/* =========================
-   پخش فایل صوتی
-========================= */
-
-if(
-/فایل صوتی|صوتی رو پخش|a\.mp3/.test(text)
-){
-
-playAudioFile("a.mp3");
-
-finish();
-
-return;
-
-}
-
-
-/* =========================
-   پخش ویدیو
-========================= */
-
-if(
-/ویدیو رو پخش|ویدیو را پخش/.test(text)
-){
-
-response(
-"🎬 در حال پخش ویدیو..."
-);
-
-if(androidAvailable()){
-
-Android.openGallery();
-
-}else{
-
-openGallery();
-
-}
-
-finish();
-
-return;
-
-}
-
-
-/* =========================
-   محاسبه
-========================= */
-
-let calc =
-text.match(
-/([0-9]+)\s*([+\-*\/])\s*([0-9]+)/
-);
-
-if(calc){
-
-const a =
-parseFloat(calc[1]);
-
-const op =
-calc[2];
-
-const b =
-parseFloat(calc[3]);
-
-let result=0;
-
-if(op==="+")
-result=a+b;
-
-if(op==="-")
-result=a-b;
-
-if(op==="*")
-result=a*b;
-
-if(op==="/")
-result=a/b;
-
-response(
-"🧮 نتیجه: "+result
-);
-
-finish();
-
-return;
-
-}
-
-
-/* =========================
-   فرمان ناشناخته
-========================= */
-
-response(
-
-"🤔 متوجه فرمان نشدم.<br><br>"+
-
-"مثلاً بگو:<br>"+
-
-"«با مامانم تماس بگیر»<br>"+
-"«به مامانم پیام بده»<br>"+
-"«پیام مامانم رو باز کن»<br>"+
-"«با 09123456789 تماس بگیر»<br>"+
-"«واتساپ رو باز کن»<br>"+
-"«صدا رو زیاد کن»<br>"+
-"«موسیقی رو متوقف کن»<br>"+
-"«در گوگل ماینکرفت رو جستجو کن»"
-
-);
-
-voiceErrorCommand();
-
-finish();
-
+    finishCommand();
 }
 
 
@@ -1938,44 +1198,198 @@ finish();
    پایان فرمان
 ========================= */
 
-function finish(){
+function finishCommand(){
 
-processing=false;
+    processing=false;
 
-status(
-"آماده",
-""
-);
+    setStatus("آماده");
 
-orb.className =
-"orb pulse";
-
+    orb.className="orb pulse";
 }
 
 
 /* =========================
-   میکروفون
+   حالت «سلام اهورا»
+========================= */
+
+function startWakeMode(){
+
+    const SpeechRecognition=
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if(!SpeechRecognition){
+
+        responseText.textContent=
+            "❌ تشخیص گفتار پشتیبانی نمی‌شود.";
+
+        voice("error");
+
+        return;
+    }
+
+
+    if(wakeMode)return;
+
+    wakeMode=true;
+
+    wakeBtn.classList.add("active");
+
+    wakeBtn.textContent=
+        "🟢 «سلام اهورا» فعال است";
+
+    floatingBtn.classList.add("active");
+
+    setStatus("منتظر «سلام اهورا»...","listening");
+
+
+    wakeRecognition=new SpeechRecognition();
+
+    wakeRecognition.lang="fa-IR";
+
+    wakeRecognition.continuous=true;
+
+    wakeRecognition.interimResults=false;
+
+
+    wakeRecognition.onresult=function(event){
+
+        const result=
+            event.results[event.results.length-1][0]
+            .transcript;
+
+        const text=normalize(result);
+
+        if(
+            text.includes("سلام اهورا") ||
+            text.includes("اهورا")
+        ){
+
+            userText.textContent=
+                "سلام اهورا";
+
+            voice("hello");
+
+            setStatus(
+                "اهورا فعال شد؛ فرمان را بگو",
+                "listening"
+            );
+
+            setTimeout(function(){
+
+                startCommandListening();
+
+            },500);
+        }
+    };
+
+
+    wakeRecognition.onerror=function(){
+
+        if(wakeMode){
+
+            setTimeout(function(){
+
+                try{
+                    wakeRecognition.start();
+                }catch(e){}
+
+            },1000);
+        }
+    };
+
+
+    wakeRecognition.onend=function(){
+
+        if(wakeMode){
+
+            setTimeout(function(){
+
+                try{
+                    wakeRecognition.start();
+                }catch(e){}
+
+            },300);
+        }
+    };
+
+
+    try{
+        wakeRecognition.start();
+    }catch(e){}
+}
+
+
+/* =========================
+   خاموش کردن حالت بیدارباش
+========================= */
+
+function stopWakeMode(){
+
+    wakeMode=false;
+
+    wakeBtn.classList.remove("active");
+
+    wakeBtn.textContent=
+        "🎙️ فعال کردن «سلام اهورا»";
+
+    floatingBtn.classList.remove("active");
+
+    setStatus("آماده");
+
+    try{
+
+        if(wakeRecognition){
+            wakeRecognition.stop();
+        }
+
+    }catch(e){}
+}
+
+
+/* =========================
+   دکمه فعال‌سازی
+========================= */
+
+wakeBtn.addEventListener(
+    "click",
+    function(){
+
+        if(wakeMode){
+            stopWakeMode();
+        }else{
+            startWakeMode();
+        }
+
+    }
+);
+
+
+/* =========================
+   دکمه میکروفون
 ========================= */
 
 micBtn.addEventListener(
-"click",
-function(){
+    "click",
+    function(){
 
-if(listening){
+        startCommandListening();
 
-try{
+    }
+);
 
-recognition.stop();
 
-}catch(e){}
+/* =========================
+   دکمه شناور
+========================= */
 
-}else{
+floatingBtn.addEventListener(
+    "click",
+    function(){
 
-startListening();
+        startCommandListening();
 
-}
-
-}
+    }
 );
 
 
@@ -1983,9 +1397,9 @@ startListening();
    شروع
 ========================= */
 
-response(
-"👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟"
-);
+responseText.innerHTML=
+    "👋 سلام! من اهورا هستم.<br>"+
+    "دکمه «فعال کردن سلام اهورا» را بزن.";
 
 </script>
 
