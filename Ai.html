@@ -465,7 +465,7 @@
 
         micBtn.addEventListener('click', toggleListening);
 
-        // ---------- سنتز گفتار ----------
+        // ---------- سنتز گفتار (با اطمینان از خواندن هر متنی) ----------
         function speak(text, callback) {
             if (!synth) {
                 if (callback) callback();
@@ -474,7 +474,9 @@
             if (synth.speaking) {
                 synth.cancel();
             }
-            const utterance = new SpeechSynthesisUtterance(text);
+            // حذف تگ‌های HTML برای خواندن صحیح
+            const cleanText = text.replace(/<[^>]*>/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
             utterance.lang = 'fa-IR';
             utterance.rate = 0.9;
             utterance.pitch = 1;
@@ -609,48 +611,62 @@
             }
         };
 
-        // ---------- جستجوی اینترنتی با DuckDuckGo API (خواندن خلاصه) ----------
+        // ---------- جستجوی اینترنتی با خواندن نتیجه (Wikipedia + DuckDuckGo) ----------
         async function searchAndRead(query) {
             setState(STATE.PROCESSING);
             statusEl.textContent = 'در حال جستجو...';
+            let resultText = '';
+            let source = '';
+
+            // 1. تلاش با Wikipedia فارسی
             try {
-                const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Network error');
-                const data = await response.json();
-
-                // استخراج خلاصه
-                let abstract = data.AbstractText || '';
-                let answer = data.Answer || '';
-                let definition = data.Definition || '';
-                let resultText = abstract || answer || definition;
-
-                if (resultText) {
-                    // خلاصه یافت شد
-                    const fullText = `نتیجه جستجو برای ${query}: ${resultText}`;
-                    speak(fullText);
-                    showResponse('نتیجه جستجو',
-                        `<strong>${query}</strong><br><br>${resultText}`,
-                        [
-                            { label: 'باز کردن در گوگل', className: 'btn-primary', action: () => {
-                                AndroidBridge.openUrl(`https://www.google.com/search?q=${encodeURIComponent(query)}`);
-                            }},
-                            { label: 'بستن', className: 'btn-cancel', action: hideResponse }
-                        ]
-                    );
-                } else {
-                    // نتیجه‌ای نبود -> باز کردن گوگل
-                    const msg = `نتیجه‌ای برای ${query} پیدا نشد. در گوگل جستجو می‌کنم.`;
-                    speak(msg);
-                    AndroidBridge.openUrl(`https://www.google.com/search?q=${encodeURIComponent(query)}`);
-                    showResponse('جستجو', msg, [
-                        { label: 'بستن', className: 'btn-cancel', action: hideResponse }
-                    ]);
+                const wikiUrl = `https://fa.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+                const response = await fetch(wikiUrl);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.extract) {
+                        resultText = data.extract;
+                        source = 'ویکی‌پدیا';
+                    }
                 }
-            } catch (error) {
-                console.error('Search error:', error);
-                // در صورت خطا، فقط گوگل را باز کن
-                const msg = `خطا در جستجو، اما لینک گوگل برای ${query} باز می‌شود.`;
+            } catch (e) {
+                console.warn('Wikipedia fetch failed:', e);
+            }
+
+            // 2. اگر نتیجه‌ای نبود، از DuckDuckGo استفاده کن
+            if (!resultText) {
+                try {
+                    const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`;
+                    const response = await fetch(ddgUrl);
+                    if (response.ok) {
+                        const data = await response.json();
+                        let abstract = data.AbstractText || '';
+                        let answer = data.Answer || '';
+                        let definition = data.Definition || '';
+                        resultText = abstract || answer || definition;
+                        if (resultText) source = 'DuckDuckGo';
+                    }
+                } catch (e) {
+                    console.warn('DuckDuckGo fetch failed:', e);
+                }
+            }
+
+            // 3. اگر نتیجه داشت، بخوان و نمایش بده
+            if (resultText) {
+                const fullText = `نتیجه جستجو برای ${query}: ${resultText}`;
+                speak(fullText);
+                showResponse('نتیجه جستجو',
+                    `<strong>${query}</strong><br><small>منبع: ${source}</small><br><br>${resultText}`,
+                    [
+                        { label: 'باز کردن در گوگل', className: 'btn-primary', action: () => {
+                            AndroidBridge.openUrl(`https://www.google.com/search?q=${encodeURIComponent(query)}`);
+                        }},
+                        { label: 'بستن', className: 'btn-cancel', action: hideResponse }
+                    ]
+                );
+            } else {
+                // 4. هیچ نتیجه‌ای پیدا نشد
+                const msg = `نتیجه‌ای برای "${query}" پیدا نشد. لینک گوگل را باز می‌کنم.`;
                 speak(msg);
                 AndroidBridge.openUrl(`https://www.google.com/search?q=${encodeURIComponent(query)}`);
                 showResponse('جستجو', msg, [
@@ -934,7 +950,7 @@
                 return;
             }
 
-            // 13. خواندن متن
+            // 13. خواندن متن (دستور "بخوان")
             const readMatch = command.match(/(?:بخوان|بگو|گفتن)\s*(.+)/);
             if (readMatch) {
                 const text = readMatch[1];
@@ -945,7 +961,7 @@
                 return;
             }
 
-            // 14. پاسخ پیش‌فرض
+            // 14. پاسخ پیش‌فرض (همیشه خوانده می‌شود)
             const fallback = 'متاسفم، متوجه نشدم. لطفاً دوباره بگویید.';
             speak(fallback);
             showResponse('متوجه نشدم', fallback, [
