@@ -23,8 +23,7 @@ body{
     overflow:hidden;
 }
 
-button,
-input{
+button,input{
     font-family:inherit;
 }
 
@@ -76,127 +75,6 @@ input{
     color:#9da8c5;
 }
 
-
-/* =========================
-   صفحه تست
-========================= */
-
-.testPage{
-    position:fixed;
-    inset:0;
-
-    display:none;
-
-    justify-content:center;
-    align-items:center;
-
-    padding:20px;
-
-    background:
-    radial-gradient(
-        circle at 50% 20%,
-        #20204b,
-        #080812 75%
-    );
-
-    z-index:1000;
-}
-
-.testBox{
-    width:100%;
-    max-width:430px;
-
-    background:#ffffff0b;
-
-    border:1px solid #ffffff12;
-
-    border-radius:30px;
-
-    padding:25px;
-
-    text-align:center;
-
-    box-shadow:
-    0 20px 80px #0008;
-}
-
-.testIcon{
-    width:90px;
-    height:90px;
-
-    margin:0 auto 20px;
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:42px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff,
-        #8b00ff
-    );
-
-    box-shadow:
-    0 0 60px #0066ff66;
-}
-
-.testTitle{
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:10px;
-}
-
-.testDescription{
-    color:#aeb7d0;
-    line-height:1.9;
-    margin-bottom:25px;
-}
-
-.testStep{
-    color:#8791ad;
-    font-size:14px;
-    margin-bottom:15px;
-}
-
-.testCommand{
-    background:#ffffff0a;
-    border:1px solid #ffffff10;
-
-    border-radius:20px;
-
-    padding:18px;
-
-    font-size:20px;
-    margin-bottom:20px;
-}
-
-.testButton{
-    width:100%;
-
-    border:0;
-
-    border-radius:18px;
-
-    padding:15px;
-
-    color:white;
-
-    font-size:17px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff,
-        #7200ff
-    );
-}
-
-
 /* =========================
    صفحه اصلی
 ========================= */
@@ -209,7 +87,6 @@ input{
     flex-direction:column;
     align-items:center;
 }
-
 
 /* =========================
    Orb
@@ -290,7 +167,6 @@ input{
 }
 
 @keyframes pulse{
-
     0%,100%{
         transform:scale(1);
     }
@@ -298,11 +174,9 @@ input{
     50%{
         transform:scale(1.05);
     }
-
 }
 
 @keyframes listen{
-
     0%,100%{
         transform:scale(1);
     }
@@ -310,11 +184,9 @@ input{
     50%{
         transform:scale(1.1);
     }
-
 }
 
 @keyframes process{
-
     0%,100%{
         transform:scale(1);
     }
@@ -322,9 +194,7 @@ input{
     50%{
         transform:scale(1.06);
     }
-
 }
-
 
 /* =========================
    Mic
@@ -364,7 +234,6 @@ input{
 }
 
 @keyframes mic{
-
     0%,100%{
         box-shadow:0 0 40px #ff006688;
     }
@@ -372,9 +241,7 @@ input{
     50%{
         box-shadow:0 0 90px #ff0066dd;
     }
-
 }
-
 
 /* =========================
    وضعیت
@@ -393,7 +260,6 @@ input{
 
     text-align:center;
 }
-
 
 /* =========================
    کاربر
@@ -414,7 +280,6 @@ input{
 
     overflow:hidden;
 }
-
 
 /* =========================
    پاسخ
@@ -449,7 +314,6 @@ input{
 
     margin-top:10px;
 }
-
 
 /* =========================
    پنل تنظیم مخاطبین
@@ -596,9 +460,8 @@ input{
     color:#ff6688;
 }
 
-
 /* =========================
-   تنظیمات برنامه
+   تنظیمات
 ========================= */
 
 .settingsBtn{
@@ -627,49 +490,6 @@ input{
 
 <body>
 
-
-<!-- =========================
-     تست اولیه
-========================= -->
-
-<div class="testPage" id="testPage">
-
-    <div class="testBox">
-
-        <div class="testIcon" id="testIcon">
-            🎙
-        </div>
-
-        <div class="testTitle">
-            تست اولیه Ahoora AI
-        </div>
-
-        <div class="testDescription">
-            برای اطمینان از عملکرد فرمان صوتی،
-            پنج فرمان را به ترتیب انجام بده.
-        </div>
-
-        <div class="testStep" id="testStep">
-            مرحله ۱ از ۵
-        </div>
-
-        <div class="testCommand" id="testCommand">
-            بگو:
-            <br>
-            <b>سلام اهورا</b>
-        </div>
-
-        <button
-            class="testButton"
-            id="testButton">
-            🎙️ شروع تست
-        </button>
-
-    </div>
-
-</div>
-
-
 <!-- =========================
      برنامه اصلی
 ========================= -->
@@ -690,7 +510,6 @@ input{
 
     </div>
 
-
     <div class="orb-wrapper">
 
         <div class="orb" id="orb">
@@ -701,13 +520,11 @@ input{
 
     </div>
 
-
     <button
         class="mic"
         id="mic">
         🎙️
     </button>
-
 
     <div
         class="status"
@@ -717,7 +534,6 @@ input{
 
     </div>
 
-
     <div
         class="user"
         id="user">
@@ -725,7 +541,6 @@ input{
         منتظر فرمان صوتی...
 
     </div>
-
 
     <div
         class="response"
@@ -743,7 +558,6 @@ input{
 
     </div>
 
-
     <div class="small">
         Ahoora AI
     </div>
@@ -751,7 +565,6 @@ input{
 </div>
 
 </div>
-
 
 <!-- =========================
      دکمه تنظیمات
@@ -763,9 +576,8 @@ input{
     ⚙
 </button>
 
-
 <!-- =========================
-     پنل اطلاعات
+     پنل مخاطبین
 ========================= -->
 
 <div
@@ -797,9 +609,7 @@ input{
 
         </button>
 
-
         <div id="contactsList"></div>
-
 
         <div class="privacy">
 
@@ -816,7 +626,6 @@ input{
 
         </div>
 
-
         <button
             class="close"
             id="closePanel">
@@ -829,11 +638,9 @@ input{
 
 </div>
 
-
 <script>
 
 "use strict";
-
 
 /* =====================================================
    عناصر
@@ -878,19 +685,6 @@ const saveContact =
 const contactsList =
     document.getElementById("contactsList");
 
-const testPage =
-    document.getElementById("testPage");
-
-const testButton =
-    document.getElementById("testButton");
-
-const testCommand =
-    document.getElementById("testCommand");
-
-const testStep =
-    document.getElementById("testStep");
-
-
 /* =====================================================
    Android Bridge
 ===================================================== */
@@ -900,7 +694,6 @@ function android(){
     return typeof window.Android !== "undefined";
 
 }
-
 
 /* =====================================================
    ساعت
@@ -922,7 +715,6 @@ clock();
 
 setInterval(clock,10000);
 
-
 /* =====================================================
    وضعیت
 ===================================================== */
@@ -943,7 +735,6 @@ function setStatus(text,type=""){
     }
 
 }
-
 
 /* =====================================================
    نرمال‌سازی فارسی
@@ -970,7 +761,6 @@ function normalize(text){
         .toLowerCase();
 
 }
-
 
 /* =====================================================
    صداهای قبلی
@@ -1017,7 +807,6 @@ function voiceG(){
     playVoice("g.mp3");
 }
 
-
 /* =====================================================
    پاسخ
 ===================================================== */
@@ -1034,7 +823,6 @@ function answer(text,voice=null){
     }
 
 }
-
 
 /* =====================================================
    مخاطبین
@@ -1058,7 +846,6 @@ function getContacts(){
 
 }
 
-
 function saveContacts(data){
 
     localStorage.setItem(
@@ -1068,18 +855,11 @@ function saveContacts(data){
 
 }
 
-
 function isPersianName(name){
-
-    /*
-       نام باید فارسی باشد.
-       حداقل یک حرف فارسی.
-    */
 
     return /[\u0600-\u06FF]/.test(name);
 
 }
-
 
 function addContact(){
 
@@ -1089,7 +869,6 @@ function addContact(){
     const number =
         normalize(contactNumber.value)
         .replace(/[^0-9+]/g,"");
-
 
     if(!name){
 
@@ -1101,7 +880,6 @@ function addContact(){
 
     }
 
-
     if(!isPersianName(name)){
 
         alert(
@@ -1111,7 +889,6 @@ function addContact(){
         return;
 
     }
-
 
     if(number.length < 10){
 
@@ -1123,15 +900,8 @@ function addContact(){
 
     }
 
-
     const contacts =
         getContacts();
-
-
-    /*
-       اگر قبلاً همین نام وجود داشته باشد،
-       شماره آن به‌روزرسانی می‌شود.
-    */
 
     const old =
         contacts.findIndex(
@@ -1139,7 +909,6 @@ function addContact(){
             normalize(c.name)
             === normalize(name)
         );
-
 
     if(old >= 0){
 
@@ -1154,7 +923,6 @@ function addContact(){
         });
 
     }
-
 
     saveContacts(contacts);
 
@@ -1171,14 +939,12 @@ function addContact(){
 
 }
 
-
 function renderContacts(){
 
     const contacts =
         getContacts();
 
     contactsList.innerHTML="";
-
 
     if(!contacts.length){
 
@@ -1190,7 +956,6 @@ function renderContacts(){
         return;
 
     }
-
 
     contacts.forEach(
         (contact,index)=>{
@@ -1223,7 +988,6 @@ function renderContacts(){
         }
     );
 
-
     document
     .querySelectorAll(".deleteContact")
     .forEach(btn=>{
@@ -1250,7 +1014,6 @@ function renderContacts(){
 
 }
 
-
 function escapeHTML(text){
 
     return String(text)
@@ -1262,12 +1025,10 @@ function escapeHTML(text){
 
 }
 
-
 saveContact.addEventListener(
     "click",
     addContact
 );
-
 
 settingsBtn.addEventListener(
     "click",
@@ -1280,7 +1041,6 @@ settingsBtn.addEventListener(
     }
 );
 
-
 closePanel.addEventListener(
     "click",
     function(){
@@ -1289,7 +1049,6 @@ closePanel.addEventListener(
 
     }
 );
-
 
 /* =====================================================
    پیدا کردن مخاطب
@@ -1314,7 +1073,6 @@ function findContact(name){
     );
 
 }
-
 
 /* =====================================================
    نام‌های خانوادگی
@@ -1349,8 +1107,8 @@ const relationAliases = {
 
     "خواهر":"خواهرم",
     "خواهرم":"خواهرم"
-};
 
+};
 
 function normalizeRelation(text){
 
@@ -1375,14 +1133,9 @@ function normalizeRelation(text){
 
 }
 
-
 /* =====================================================
    تماس
 ===================================================== */
-
-let pendingNumber=null;
-let pendingName=null;
-
 
 function callNumber(number){
 
@@ -1390,9 +1143,7 @@ function callNumber(number){
         normalize(number)
         .replace(/[^0-9+]/g,"");
 
-
     if(!number) return;
-
 
     if(android()){
 
@@ -1411,18 +1162,15 @@ function callNumber(number){
 
     }
 
-
     window.location.href =
         "tel:"+number;
 
 }
 
-
 function callContact(name){
 
     const contact =
         findContact(name);
-
 
     if(!contact){
 
@@ -1438,56 +1186,15 @@ function callContact(name){
 
     }
 
-
-    /*
-       بدون تأیید مستقیم تماس می‌گیرد.
-    */
-
     callNumber(
         contact.number
     );
 
 }
 
-
 /* =====================================================
    پیامک
 ===================================================== */
-
-function smsNumber(number,message){
-
-    number =
-        normalize(number)
-        .replace(/[^0-9+]/g,"");
-
-
-    if(android()){
-
-        try{
-
-            Android.sendSMS(
-                number,
-                message
-            );
-
-            answer(
-                "✉️ پیامک ارسال شد."
-            );
-
-            return;
-
-        }catch(e){}
-
-    }
-
-
-    window.location.href =
-        "sms:"+number+
-        "?body="+
-        encodeURIComponent(message);
-
-}
-
 
 function smsContact(
     name,
@@ -1496,7 +1203,6 @@ function smsContact(
 
     const contact =
         findContact(name);
-
 
     if(!contact){
 
@@ -1510,7 +1216,6 @@ function smsContact(
         return;
 
     }
-
 
     if(android()){
 
@@ -1533,7 +1238,6 @@ function smsContact(
 
     }
 
-
     window.location.href =
         "sms:"+contact.number+
         "?body="+
@@ -1541,6 +1245,91 @@ function smsContact(
 
 }
 
+/* =====================================================
+   استخراج متن پیام
+===================================================== */
+
+function extractMessage(text){
+
+    let result =
+        text;
+
+    result =
+        result
+        .replace(/به\s+/g,"")
+        .replace(/پیامک/g,"")
+        .replace(/پیام/g,"")
+        .replace(/بفرست/g,"")
+        .replace(/بده/g,"")
+        .replace(/ارسال کن/g,"")
+        .trim();
+
+    const contacts =
+        getContacts();
+
+    for(
+        const c of contacts
+    ){
+
+        const n =
+            normalize(c.name);
+
+        if(
+            result.includes(n)
+        ){
+
+            result =
+                result
+                .replace(n,"")
+                .trim();
+
+            break;
+
+        }
+
+    }
+
+    return result;
+
+}
+
+/* =====================================================
+   استخراج مخاطب
+===================================================== */
+
+function extractContactFromCommand(text){
+
+    const contacts =
+        getContacts();
+
+    for(
+        const c of contacts
+    ){
+
+        if(
+            text.includes(
+                normalize(c.name)
+            )
+        ){
+
+            return c.name;
+
+        }
+
+    }
+
+    const relation =
+        normalizeRelation(text);
+
+    if(relation){
+
+        return relation;
+
+    }
+
+    return null;
+
+}
 
 /* =====================================================
    برنامه‌ها
@@ -1548,64 +1337,35 @@ function smsContact(
 
 const apps = {
 
-    "واتساپ":{
-        package:"com.whatsapp"
-    },
+    "واتساپ":"com.whatsapp",
 
-    "تلگرام":{
-        package:"org.telegram.messenger"
-    },
+    "تلگرام":"org.telegram.messenger",
 
-    "اینستاگرام":{
-        package:"com.instagram.android"
-    },
+    "اینستاگرام":"com.instagram.android",
 
-    "یوتیوب":{
-        package:"com.google.android.youtube"
-    },
+    "یوتیوب":"com.google.android.youtube",
 
-    "کروم":{
-        package:"com.android.chrome"
-    },
+    "کروم":"com.android.chrome",
 
-    "فیسبوک":{
-        package:"com.facebook.katana"
-    },
+    "فیسبوک":"com.facebook.katana",
 
-    "ایکس":{
-        package:"com.twitter.android"
-    },
+    "ایکس":"com.twitter.android",
 
-    "تیک تاک":{
-        package:"com.zhiliaoapp.musically"
-    },
+    "تیک تاک":"com.zhiliaoapp.musically",
 
-    "اسنپ":{
-        package:"com.snapp.passenger"
-    },
+    "اسنپ":"com.snapp.passenger",
 
-    "دیوار":{
-        package:"ir.divar"
-    },
+    "دیوار":"ir.divar",
 
-    "روبیکا":{
-        package:"ir.resaneh1.iptv"
-    },
+    "روبیکا":"ir.resaneh1.iptv",
 
-    "مایکت":{
-        package:"ir.mservices.market"
-    },
+    "مایکت":"ir.mservices.market",
 
-    "بازار":{
-        package:"com.farsitel.bazaar"
-    },
+    "بازار":"com.farsitel.bazaar",
 
-    "تنظیمات":{
-        package:"com.android.settings"
-    }
+    "تنظیمات":"com.android.settings"
 
 };
-
 
 /* =====================================================
    باز کردن برنامه
@@ -1620,9 +1380,27 @@ function openApp(
 
         try{
 
-            Android.openApp(
-                packageName
-            );
+            /*
+             * Java باید متد openAppByName
+             * یا openApp داشته باشد.
+             */
+
+            if(
+                typeof Android.openApp ===
+                "function"
+            ){
+
+                Android.openApp(
+                    packageName
+                );
+
+            }else{
+
+                Android.openAppByName(
+                    name
+                );
+
+            }
 
             answer(
                 "👁️ چشم، "+
@@ -1633,10 +1411,13 @@ function openApp(
 
             return true;
 
-        }catch(e){}
+        }catch(e){
+
+            console.log(e);
+
+        }
 
     }
-
 
     answer(
         "❌ نتوانستم "+
@@ -1648,7 +1429,6 @@ function openApp(
     return false;
 
 }
-
 
 /* =====================================================
    جستجوی برنامه
@@ -1672,7 +1452,7 @@ function openNamedApp(text){
             ){
 
                 openApp(
-                    apps[name].package,
+                    apps[name],
                     name
                 );
 
@@ -1687,7 +1467,6 @@ function openNamedApp(text){
     return false;
 
 }
-
 
 /* =====================================================
    صدا
@@ -1711,7 +1490,6 @@ function volumeUp(){
 
 }
 
-
 function volumeDown(){
 
     if(android()){
@@ -1729,7 +1507,6 @@ function volumeDown(){
     );
 
 }
-
 
 /* =====================================================
    موسیقی
@@ -1759,7 +1536,6 @@ function musicPlay(){
 
 }
 
-
 function musicStop(){
 
     if(android()){
@@ -1783,7 +1559,6 @@ function musicStop(){
     );
 
 }
-
 
 /* =====================================================
    دوربین
@@ -1814,7 +1589,6 @@ function camera(){
 
 }
 
-
 /* =====================================================
    گالری
 ===================================================== */
@@ -1844,7 +1618,6 @@ function gallery(){
 
 }
 
-
 /* =====================================================
    ساعت
 ===================================================== */
@@ -1864,7 +1637,6 @@ function sayTime(){
             d.getMinutes()
         ).padStart(2,"0");
 
-
     answer(
         "🕐 الان ساعت "+
         h+
@@ -1876,7 +1648,6 @@ function sayTime(){
 
 }
 
-
 /* =====================================================
    گوگل
 ===================================================== */
@@ -1886,7 +1657,6 @@ function googleSearch(query){
     const url =
         "https://www.google.com/search?q="+
         encodeURIComponent(query);
-
 
     if(android()){
 
@@ -1907,12 +1677,10 @@ function googleSearch(query){
 
     }
 
-
     window.location.href =
         url;
 
 }
-
 
 /* =====================================================
    Speech Recognition
@@ -1924,13 +1692,11 @@ let listening=false;
 
 let commandMode=false;
 
-
 function initSpeech(){
 
     const Speech =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
-
 
     if(!Speech){
 
@@ -1943,10 +1709,8 @@ function initSpeech(){
 
     }
 
-
     recognition =
         new Speech();
-
 
     recognition.lang =
         "fa-IR";
@@ -1959,7 +1723,6 @@ function initSpeech(){
 
     recognition.maxAlternatives =
         3;
-
 
     recognition.onstart =
     function(){
@@ -1979,7 +1742,6 @@ function initSpeech(){
 
     };
 
-
     recognition.onresult =
     function(event){
 
@@ -1989,15 +1751,12 @@ function initSpeech(){
             .transcript
             .trim();
 
-
         userBox.textContent =
             text;
-
 
         processSpeech(text);
 
     };
-
 
     recognition.onerror =
     function(event){
@@ -2011,7 +1770,6 @@ function initSpeech(){
         mic.classList.remove(
             "active"
         );
-
 
         if(
             event.error !==
@@ -2031,7 +1789,6 @@ function initSpeech(){
 
     };
 
-
     recognition.onend =
     function(){
 
@@ -2048,11 +1805,9 @@ function initSpeech(){
 
     };
 
-
     return true;
 
 }
-
 
 /* =====================================================
    گوش دادن
@@ -2063,14 +1818,12 @@ function listen(){
     if(listening)
         return;
 
-
     if(!recognition){
 
         if(!initSpeech())
             return;
 
     }
-
 
     try{
 
@@ -2079,7 +1832,6 @@ function listen(){
     }catch(e){}
 
 }
-
 
 /* =====================================================
    Wake Word
@@ -2097,107 +1849,6 @@ function wakeWord(text){
 
 }
 
-
-/* =====================================================
-   استخراج متن پیام
-===================================================== */
-
-function extractMessage(text){
-
-    let result =
-        text;
-
-
-    result =
-        result
-        .replace(/به\s+/g,"")
-        .replace(/پیامک/g,"")
-        .replace(/پیام/g,"")
-        .replace(/بفرست/g,"")
-        .replace(/بده/g,"")
-        .replace(/ارسال کن/g,"")
-        .trim();
-
-
-    /*
-       پیدا کردن نام مخاطب
-    */
-
-    const contacts =
-        getContacts();
-
-
-    for(
-        const c of contacts
-    ){
-
-        const n =
-            normalize(c.name);
-
-        if(
-            result.includes(n)
-        ){
-
-            result =
-                result
-                .replace(n,"")
-                .trim();
-
-            break;
-
-        }
-
-    }
-
-
-    return result;
-
-}
-
-
-/* =====================================================
-   استخراج مخاطب از فرمان تماس
-===================================================== */
-
-function extractContactFromCommand(text){
-
-    const contacts =
-        getContacts();
-
-
-    for(
-        const c of contacts
-    ){
-
-        if(
-            text.includes(
-                normalize(c.name)
-            )
-        ){
-
-            return c.name;
-
-        }
-
-    }
-
-
-    const relation =
-        normalizeRelation(text);
-
-
-    if(relation){
-
-        return relation;
-
-    }
-
-
-    return null;
-
-}
-
-
 /* =====================================================
    پردازش فرمان
 ===================================================== */
@@ -2207,14 +1858,12 @@ function processSpeech(original){
     const text =
         normalize(original);
 
-
     listening=false;
 
     setStatus(
         "در حال پردازش...",
         "processing"
     );
-
 
     /* =====================
        Wake Word
@@ -2244,7 +1893,6 @@ function processSpeech(original){
 
         }
 
-
         setStatus(
             "برای فعال شدن بگو «سلام اهورا»"
         );
@@ -2252,7 +1900,6 @@ function processSpeech(original){
         return;
 
     }
-
 
     /* =====================
        لغو
@@ -2278,7 +1925,6 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        ساعت
     ===================== */
@@ -2298,7 +1944,6 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        دوربین
     ===================== */
@@ -2313,7 +1958,6 @@ function processSpeech(original){
         return;
 
     }
-
 
     /* =====================
        گالری
@@ -2330,7 +1974,6 @@ function processSpeech(original){
         return;
 
     }
-
 
     /* =====================
        افزایش صدا
@@ -2350,7 +1993,6 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        کاهش صدا
     ===================== */
@@ -2368,7 +2010,6 @@ function processSpeech(original){
         return;
 
     }
-
 
     /* =====================
        موسیقی
@@ -2392,7 +2033,6 @@ function processSpeech(original){
 
     }
 
-
     if(
         (
             text.includes("آهنگ") ||
@@ -2411,7 +2051,6 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        تماس
     ===================== */
@@ -2427,12 +2066,7 @@ function processSpeech(original){
                 text
             );
 
-
         if(contact){
-
-            /*
-               تماس مستقیم بدون تأیید
-            */
 
             callContact(
                 contact
@@ -2442,16 +2076,10 @@ function processSpeech(original){
 
         }
 
-
-        /*
-           شماره مستقیم
-        */
-
         const match =
             text.match(
                 /(\+?[0-9]{10,15})/
             );
-
 
         if(match){
 
@@ -2464,7 +2092,6 @@ function processSpeech(original){
         }
 
     }
-
 
     /* =====================
        پیام
@@ -2480,7 +2107,6 @@ function processSpeech(original){
                 text
             );
 
-
         if(contact){
 
             let message =
@@ -2488,18 +2114,12 @@ function processSpeech(original){
                     text
                 );
 
-
-            /*
-               اگر متن خالی بود
-            */
-
             if(!message){
 
                 message =
                     "سلام";
 
             }
-
 
             smsContact(
                 contact,
@@ -2512,13 +2132,11 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        جستجو گوگل
     ===================== */
 
     let searchText=null;
-
 
     if(
         text.startsWith("گوگل")
@@ -2532,7 +2150,6 @@ function processSpeech(original){
             .trim();
 
     }
-
 
     if(
         text.includes("در گوگل") ||
@@ -2549,7 +2166,6 @@ function processSpeech(original){
 
     }
 
-
     if(
         text.startsWith("جستجو کن")
     ){
@@ -2563,7 +2179,6 @@ function processSpeech(original){
 
     }
 
-
     if(searchText){
 
         googleSearch(
@@ -2573,7 +2188,6 @@ function processSpeech(original){
         return;
 
     }
-
 
     /* =====================
        باز کردن برنامه
@@ -2587,7 +2201,6 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        لینک
     ===================== */
@@ -2596,7 +2209,6 @@ function processSpeech(original){
         original.match(
             /https?:\/\/[^\s]+/i
         );
-
 
     if(url){
 
@@ -2621,7 +2233,6 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        سلام
     ===================== */
@@ -2639,7 +2250,6 @@ function processSpeech(original){
 
     }
 
-
     /* =====================
        نامفهوم
     ===================== */
@@ -2651,7 +2261,9 @@ function processSpeech(original){
         "مثلاً بگو:<br>"+
 
         "«واتساپ رو باز کن»<br>"+
+        "«روبیکا رو باز کن»<br>"+
         "«با پدرم تماس بگیر»<br>"+
+        "«با دایی تماس بگیر»<br>"+
         "«به پدرم پیام بده سلام»<br>"+
         "«به دایی پیام بده فردا بیا»<br>"+
         "«آهنگ رو پخش کن»<br>"+
@@ -2664,7 +2276,6 @@ function processSpeech(original){
     );
 
 }
-
 
 /* =====================================================
    دکمه میکروفون
@@ -2679,325 +2290,22 @@ mic.addEventListener(
     }
 );
 
-
-/* =====================================================
-   تست اولیه ۵ مرحله‌ای
-===================================================== */
-
-const testCommands = [
-
-    {
-        text:"سلام اهورا",
-        type:"wake"
-    },
-
-    {
-        text:"با پدرم تماس بگیر",
-        type:"call"
-    },
-
-    {
-        text:"به پدرم پیام بده سلام",
-        type:"sms"
-    },
-
-    {
-        text:"ساعت چنده",
-        type:"time"
-    },
-
-    {
-        text:"جستجو کن در گوگل ایران",
-        type:"google"
-    }
-
-];
-
-
-let testIndex=0;
-
-let testRecognition=null;
-
-let testListening=false;
-
-
-function showTestStep(){
-
-    testStep.textContent =
-        "مرحله "+
-        (testIndex+1)+
-        " از ۵";
-
-
-    testCommand.innerHTML =
-        "بگو:<br><b>"+
-        testCommands[testIndex].text+
-        "</b>";
-
-}
-
-
-function startTest(){
-
-    const Speech =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-
-    if(!Speech){
-
-        /*
-           اگر SpeechRecognition در WebView
-           موجود نبود، تست متوقف نمی‌شود.
-        */
-
-        completeTest();
-
-        return;
-
-    }
-
-
-    testRecognition =
-        new Speech();
-
-
-    testRecognition.lang =
-        "fa-IR";
-
-    testRecognition.continuous =
-        false;
-
-    testRecognition.interimResults =
-        false;
-
-    testRecognition.onstart =
-    function(){
-
-        testListening=true;
-
-        testButton.textContent =
-            "🎙️ گوش می‌دهم...";
-
-    };
-
-
-    testRecognition.onresult =
-    function(event){
-
-        const spoken =
-            normalize(
-                event
-                .results[0][0]
-                .transcript
-            );
-
-
-        const expected =
-            normalize(
-                testCommands[
-                    testIndex
-                ].text
-            );
-
-
-        testListening=false;
-
-
-        /*
-           برای تست، کافی است کلمات اصلی
-           فرمان وجود داشته باشند.
-        */
-
-        let success=false;
-
-
-        if(testIndex===0){
-
-            success =
-                spoken.includes("اهورا") ||
-                spoken.includes("سلام");
-
-        }
-
-
-        if(testIndex===1){
-
-            success =
-                spoken.includes("پدر") &&
-                (
-                    spoken.includes("تماس") ||
-                    spoken.includes("زنگ")
-                );
-
-        }
-
-
-        if(testIndex===2){
-
-            success =
-                spoken.includes("پدر") &&
-                spoken.includes("پیام");
-
-        }
-
-
-        if(testIndex===3){
-
-            success =
-                spoken.includes("ساعت");
-
-        }
-
-
-        if(testIndex===4){
-
-            success =
-                spoken.includes("گوگل") ||
-                spoken.includes("ایران");
-
-        }
-
-
-        if(success){
-
-            testIndex++;
-
-
-            if(testIndex>=5){
-
-                completeTest();
-
-                return;
-
-            }
-
-
-            showTestStep();
-
-            testButton.textContent =
-                "🎙️ مرحله بعد";
-
-        }else{
-
-            testButton.textContent =
-                "❌ دوباره تلاش کن";
-
-        }
-
-    };
-
-
-    testRecognition.onerror =
-    function(){
-
-        testListening=false;
-
-        testButton.textContent =
-            "🎙️ دوباره تلاش کن";
-
-    };
-
-
-    testRecognition.onend =
-    function(){
-
-        testListening=false;
-
-    };
-
-
-    try{
-
-        testRecognition.start();
-
-    }catch(e){}
-
-}
-
-
-/* =====================================================
-   تکمیل تست
-===================================================== */
-
-function completeTest(){
-
-    localStorage.setItem(
-        "ahoora_voice_test_done",
-        "1"
-    );
-
-
-    testPage.style.display =
-        "none";
-
-
-    answer(
-        "✅ تست اولیه با موفقیت انجام شد.<br><br>"+
-        "Ahoora AI آماده دریافت فرمان‌های صوتی است."
-    );
-
-
-    setStatus(
-        "آماده — بگو «سلام اهورا»"
-    );
-
-}
-
-
-/* =====================================================
-   دکمه تست
-===================================================== */
-
-testButton.addEventListener(
-    "click",
-    function(){
-
-        if(testListening)
-            return;
-
-        startTest();
-
-    }
-);
-
-
 /* =====================================================
    اجرای اولیه
+   بدون تست
 ===================================================== */
 
 renderContacts();
 
+answer(
+    "👋 سلام! من اهورا هستم.<br>"+
+    "برای فعال شدن فرمان صوتی بگو:<br>"+
+    "<b>سلام اهورا</b>"
+);
 
-const testDone =
-    localStorage.getItem(
-        "ahoora_voice_test_done"
-    );
-
-
-if(!testDone){
-
-    testPage.style.display =
-        "flex";
-
-    showTestStep();
-
-}else{
-
-    testPage.style.display =
-        "none";
-
-    answer(
-        "👋 سلام! من اهورا هستم.<br>"+
-        "برای فعال شدن فرمان صوتی بگو:<br>"+
-        "<b>سلام اهورا</b>"
-    );
-
-    setStatus(
-        "آماده — بگو «سلام اهورا»"
-    );
-
-}
+setStatus(
+    "آماده — بگو «سلام اهورا»"
+);
 
 </script>
 
