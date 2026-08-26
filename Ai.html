@@ -421,7 +421,6 @@
         let pendingPhoneNumber = null;
         let audioPlayer = new Audio();
         let searchTimeout = null;
-        let isMp3Ready = false;
 
         // ============================================================
         // ذرات پس‌زمینه
@@ -583,35 +582,48 @@
         }
 
         // ============================================================
-        // باز کردن برنامه‌ها (مرورگر موبایل + Android WebView)
+        // باز کردن برنامه‌ها (نسخه نهایی و دیباگ شده)
         // ============================================================
         function openAppUniversal(appName, packageName, fallbackUrl) {
-            // 1. اگر Bridge اندروید موجود باشد
-            if (window.Android && typeof Android.openApp === 'function') {
+            console.log('🔍 باز کردن برنامه:', appName, 'Package:', packageName);
+
+            // 1. اگر Bridge اندروید موجود باشد (اولویت اول)
+            if (window.Android && typeof window.Android.openApp === 'function') {
                 try {
-                    Android.openApp(packageName);
+                    console.log('✅ استفاده از Android Bridge');
+                    window.Android.openApp(packageName);
                     showResponse('چشم، ' + appName + ' را باز کردم.', 'a.mp3', '📱');
                     return true;
                 } catch (e) {
+                    console.error('❌ خطا در Bridge:', e);
                     showResponse('متأسفانه باز نشد.', 'b.mp3', '❌');
                     return false;
                 }
             }
 
-            // 2. در مرورگر موبایل با intent:// (اندروید)
+            // 2. در مرورگر اندروید با intent:// (روش اصلی)
             if (/Android/i.test(navigator.userAgent)) {
-                const intentUrl = 'intent://#' + packageName + '#Intent;package=' + packageName + ';end';
                 try {
+                    // intent:// برای باز کردن مستقیم برنامه
+                    const intentUrl = 'intent://#' + packageName + '#Intent;package=' + packageName + ';end';
+                    console.log('📱 باز کردن با intent:', intentUrl);
+
+                    // استفاده از location.href برای intent
                     window.location.href = intentUrl;
+
                     showResponse('در حال باز کردن ' + appName + ' ...', null, '📱');
-                    // تایمر برای بازگشت اگر برنامه نصب نبود
+
+                    // اگر برنامه نصب نبود، بعد از 2 ثانیه به fallback برو
                     setTimeout(() => {
                         if (fallbackUrl) {
+                            console.log('🌐 باز کردن fallback:', fallbackUrl);
                             window.open(fallbackUrl, '_blank');
                         }
                     }, 2000);
+
                     return true;
                 } catch (e) {
+                    console.error('❌ خطا در intent:', e);
                     if (fallbackUrl) {
                         window.open(fallbackUrl, '_blank');
                         showResponse('در حال باز کردن نسخه وب ' + appName, null, '🌐');
@@ -620,13 +632,16 @@
                 }
             }
 
-            // 3. در iOS یا دسکتاپ - لینک مستقیم
+            // 3. در iOS یا دسکتاپ - لینک مستقیم وب
             if (fallbackUrl) {
+                console.log('💻 باز کردن وب:', fallbackUrl);
                 window.open(fallbackUrl, '_blank');
                 showResponse('در حال باز کردن نسخه وب ' + appName, null, '🌐');
                 return true;
             }
 
+            // 4. هیچ روشی کار نکرد
+            console.error('❌ هیچ روشی برای باز کردن برنامه وجود ندارد');
             showResponse('امکان باز کردن ' + appName + ' در این مرورگر وجود ندارد.', 'b.mp3', '❌');
             return false;
         }
@@ -654,8 +669,8 @@
         };
 
         function makeCall(phoneNumber) {
-            if (window.Android && typeof Android.makeCall === 'function') {
-                try { Android.makeCall(phoneNumber); showResponse('در حال برقراری تماس با ' + phoneNumber, null, '📞'); return true; }
+            if (window.Android && typeof window.Android.makeCall === 'function') {
+                try { window.Android.makeCall(phoneNumber); showResponse('در حال برقراری تماس با ' + phoneNumber, null, '📞'); return true; }
                 catch (e) { showResponse('خطا در برقراری تماس.', 'd.mp3', '❌'); return false; }
             } else {
                 window.location.href = 'tel:' + phoneNumber;
@@ -665,8 +680,8 @@
         }
 
         function sendSMS(phoneNumber, message) {
-            if (window.Android && typeof Android.sendSMS === 'function') {
-                try { Android.sendSMS(phoneNumber, message || ''); showResponse('پیامک در حال ارسال ...', null, '✉️'); return true; }
+            if (window.Android && typeof window.Android.sendSMS === 'function') {
+                try { window.Android.sendSMS(phoneNumber, message || ''); showResponse('پیامک در حال ارسال ...', null, '✉️'); return true; }
                 catch (e) { showResponse('خطا در ارسال پیامک.', 'd.mp3', '❌'); return false; }
             } else {
                 window.location.href = 'sms:' + phoneNumber + '?body=' + encodeURIComponent(message || '');
@@ -676,8 +691,8 @@
         }
 
         function openGallery() {
-            if (window.Android && typeof Android.openGallery === 'function') {
-                try { Android.openGallery(); showResponse('گالری باز شد.', 'a.mp3', '🖼️'); return true; }
+            if (window.Android && typeof window.Android.openGallery === 'function') {
+                try { window.Android.openGallery(); showResponse('گالری باز شد.', 'a.mp3', '🖼️'); return true; }
                 catch (e) { showResponse('خطا در باز کردن گالری.', 'b.mp3', '❌'); return false; }
             } else {
                 const input = document.createElement('input');
@@ -691,8 +706,8 @@
         }
 
         function openCamera() {
-            if (window.Android && typeof Android.openCamera === 'function') {
-                try { Android.openCamera(); showResponse('دوربین باز شد.', 'a.mp3', '📷'); return true; }
+            if (window.Android && typeof window.Android.openCamera === 'function') {
+                try { window.Android.openCamera(); showResponse('دوربین باز شد.', 'a.mp3', '📷'); return true; }
                 catch (e) { showResponse('خطا در باز کردن دوربین.', 'b.mp3', '❌'); return false; }
             } else {
                 const input = document.createElement('input');
@@ -707,8 +722,8 @@
         }
 
         function recordVideo() {
-            if (window.Android && typeof Android.recordVideo === 'function') {
-                try { Android.recordVideo(); showResponse('در حال ضبط فیلم ...', null, '🎥'); return true; }
+            if (window.Android && typeof window.Android.recordVideo === 'function') {
+                try { window.Android.recordVideo(); showResponse('در حال ضبط فیلم ...', null, '🎥'); return true; }
                 catch (e) { showResponse('خطا در ضبط فیلم.', 'b.mp3', '❌'); return false; }
             } else {
                 const input = document.createElement('input');
@@ -723,8 +738,8 @@
         }
 
         function openUrl(url) {
-            if (window.Android && typeof Android.openUrl === 'function') {
-                try { Android.openUrl(url); showResponse('لینک باز شد.', 'g.mp3', '🌐'); return true; }
+            if (window.Android && typeof window.Android.openUrl === 'function') {
+                try { window.Android.openUrl(url); showResponse('لینک باز شد.', 'g.mp3', '🌐'); return true; }
                 catch (e) { showResponse('خطا در باز کردن لینک.', 'b.mp3', '❌'); return false; }
             } else {
                 window.open(url, '_blank');
@@ -734,8 +749,8 @@
         }
 
         function adjustVolume(direction) {
-            if (window.Android && typeof Android.adjustVolume === 'function') {
-                try { Android.adjustVolume(direction); showResponse('صدا ' + (direction === 'up' ? 'زیاد' : 'کم') + ' شد.', null, '🔊'); return true; }
+            if (window.Android && typeof window.Android.adjustVolume === 'function') {
+                try { window.Android.adjustVolume(direction); showResponse('صدا ' + (direction === 'up' ? 'زیاد' : 'کم') + ' شد.', null, '🔊'); return true; }
                 catch (e) { showResponse('خطا در کنترل صدا.', 'b.mp3', '❌'); return false; }
             } else {
                 showResponse('این قابلیت فقط در نسخه اندروید WebView پشتیبانی می‌شود.', 'b.mp3', '⚠️');
@@ -753,6 +768,7 @@
             hideSearch();
 
             const lower = text.toLowerCase().trim();
+            console.log('📝 فرمان:', lower);
 
             // --- 1. باز کردن برنامه ---
             const appMatch = lower.match(/(واتساپ|تلگرام|اینستاگرام|یوتیوب|کروم|گالری|دوربین|تنظیمات)\s*(?:رو\s*)?باز\s*کن/);
@@ -828,12 +844,12 @@
                 if (contacts[name]) {
                     const phone = contacts[name];
                     // باز کردن واتساپ با شماره
-                    if (window.Android && typeof Android.openApp === 'function') {
+                    if (window.Android && typeof window.Android.openApp === 'function') {
                         openAppUniversal('واتساپ', 'com.whatsapp', 'https://web.whatsapp.com/');
                         setTimeout(() => {
                             const waUrl = 'https://wa.me/' + phone;
-                            if (window.Android && typeof Android.openUrl === 'function') {
-                                Android.openUrl(waUrl);
+                            if (window.Android && typeof window.Android.openUrl === 'function') {
+                                window.Android.openUrl(waUrl);
                             } else { window.open(waUrl, '_blank'); }
                         }, 600);
                     } else {
@@ -971,16 +987,16 @@
         // ============================================================
         if (typeof window.Android === 'undefined') {
             window.Android = {
-                openApp: function() {},
-                makeCall: function() {},
-                openGallery: function() {},
-                openImage: function() {},
-                openVideo: function() {},
-                openCamera: function() {},
-                recordVideo: function() {},
-                sendSMS: function() {},
-                openUrl: function() {},
-                adjustVolume: function() {}
+                openApp: function() { console.warn('Android Bridge not available'); },
+                makeCall: function() { console.warn('Android Bridge not available'); },
+                openGallery: function() { console.warn('Android Bridge not available'); },
+                openImage: function() { console.warn('Android Bridge not available'); },
+                openVideo: function() { console.warn('Android Bridge not available'); },
+                openCamera: function() { console.warn('Android Bridge not available'); },
+                recordVideo: function() { console.warn('Android Bridge not available'); },
+                sendSMS: function() { console.warn('Android Bridge not available'); },
+                openUrl: function() { console.warn('Android Bridge not available'); },
+                adjustVolume: function() { console.warn('Android Bridge not available'); }
             };
         }
 
@@ -999,12 +1015,13 @@
         // ============================================================
         setStatus('آماده', 'idle');
 
-        // خوش‌آمدگویی با MP3
         setTimeout(() => {
             showResponse('👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟', 'e.mp3', '🤖');
         }, 500);
 
-        console.log('✨ Ahoora AI با MP3 آماده است!');
+        console.log('✨ Ahoora AI با MP3 و دیباگ کامل آماده است!');
+        console.log('📱 User Agent:', navigator.userAgent);
+        console.log('🔍 Android Bridge موجود؟', typeof window.Android !== 'undefined' && typeof window.Android.openApp === 'function');
     })();
 </script>
 </body>
