@@ -1,1028 +1,1487 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="fa">
+<html lang="fa" dir="rtl">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ahoora AI</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Vazir', sans-serif;
-            background: #0a0a12;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            overflow: hidden;
-            user-select: none;
-            direction: rtl;
-        }
 
-        .particles {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-        .particle {
-            position: absolute;
-            width: 4px; height: 4px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 50%;
-            animation: floatParticle linear infinite;
-        }
-        @keyframes floatParticle {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
+<meta charset="UTF-8">
 
-        .app {
-            width: 100%;
-            max-width: 480px;
-            height: 100vh;
-            max-height: 900px;
-            background: radial-gradient(ellipse at 50% 20%, #181830, #0a0a12 80%);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 16px 10px;
-            box-shadow: 0 0 80px rgba(0,100,255,0.08);
-            z-index: 1;
-        }
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-        .header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 2px 12px;
-            z-index: 10;
-        }
-        .header .title {
-            font-size: 24px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #00d4ff, #7b2ffc, #ff6fd8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-            text-shadow: 0 0 40px rgba(0,180,255,0.2);
-        }
-        .header .time {
-            font-size: 14px;
-            color: #99aacc;
-            background: rgba(255,255,255,0.05);
-            padding: 6px 16px;
-            border-radius: 30px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.06);
-            font-weight: 300;
-        }
+<title>Ahoora AI</title>
 
-        .orb-wrapper {
-            position: relative;
-            width: 220px; height: 220px;
-            margin: 8px auto 4px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .orb-glow {
-            position: absolute;
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 50% 50%, rgba(0,150,255,0.12), transparent 70%);
-            filter: blur(30px);
-            transition: all 0.6s ease;
-            pointer-events: none;
-        }
-        .orb-glow.active {
-            background: radial-gradient(circle at 50% 50%, rgba(0,255,200,0.25), transparent 70%);
-            filter: blur(40px);
-        }
-        .wave-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 1.5px solid rgba(0,180,255,0.06);
-            animation: ringPulse 3s ease-out infinite;
-            pointer-events: none;
-        }
-        .wave-ring:nth-child(2) { width: 140%; height: 140%; animation-delay: 0.6s; }
-        .wave-ring:nth-child(3) { width: 180%; height: 180%; animation-delay: 1.2s; }
-        .wave-ring:nth-child(4) { width: 220%; height: 220%; animation-delay: 1.8s; }
-        .wave-ring.active { border-color: rgba(0,220,255,0.2); }
-        @keyframes ringPulse {
-            0% { transform: scale(0.7); opacity: 0.8; }
-            100% { transform: scale(1.4); opacity: 0; }
-        }
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-        .orb {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #0088ff, #0033aa);
-            box-shadow: 0 0 60px rgba(0,100,255,0.5), 0 0 120px rgba(0,100,255,0.2);
-            position: relative;
-            z-index: 3;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: default;
-        }
-        .orb .inner-glow {
-            width: 70%; height: 70%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 45% 35%, rgba(255,255,255,0.5), transparent 70%);
-            opacity: 0.5;
-            transition: 0.4s;
-        }
-        .orb.pulse { animation: orbGlow 2.2s ease-in-out infinite; }
-        @keyframes orbGlow {
-            0% { box-shadow: 0 0 60px rgba(0,100,255,0.4), 0 0 120px rgba(0,100,255,0.15); transform: scale(1); }
-            50% { box-shadow: 0 0 100px rgba(0,180,255,0.7), 0 0 180px rgba(0,100,255,0.3); transform: scale(1.03); }
-            100% { box-shadow: 0 0 60px rgba(0,100,255,0.4), 0 0 120px rgba(0,100,255,0.15); transform: scale(1); }
-        }
-        .orb.listening {
-            background: radial-gradient(circle at 35% 30%, #00ff99, #00aaff);
-            box-shadow: 0 0 80px rgba(0,255,150,0.6), 0 0 160px rgba(0,200,255,0.3);
-            animation: orbListen 1s ease-in-out infinite;
-        }
-        @keyframes orbListen { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-        .orb.processing {
-            background: radial-gradient(circle at 35% 30%, #ffcc00, #ff6600);
-            box-shadow: 0 0 80px rgba(255,200,0,0.6), 0 0 160px rgba(255,100,0,0.3);
-            animation: orbProcess 0.5s ease-in-out infinite;
-        }
-        @keyframes orbProcess { 0%,100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.04) rotate(3deg); } }
-        .orb.responding {
-            background: radial-gradient(circle at 35% 30%, #00ff88, #00ccff);
-            box-shadow: 0 0 80px rgba(0,255,150,0.6), 0 0 160px rgba(0,200,255,0.3);
-            animation: orbRespond 0.8s ease-in-out infinite;
-        }
-        @keyframes orbRespond { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+<link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;700;900&display=swap"
+rel="stylesheet">
 
-        .mic-btn {
-            width: 76px; height: 76px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #0066ff, #4400cc);
-            border: none; outline: none;
-            color: #fff;
-            font-size: 38px;
-            box-shadow: 0 10px 40px rgba(0,80,255,0.5);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 6px;
-            z-index: 5;
-            position: relative;
-        }
-        .mic-btn:active { transform: scale(0.88); }
-        .mic-btn.listening {
-            background: linear-gradient(135deg, #ff2266, #cc0066);
-            box-shadow: 0 0 60px rgba(255,0,100,0.7);
-            animation: micBeat 1s ease-in-out infinite;
-        }
-        @keyframes micBeat { 0%,100% { box-shadow: 0 0 40px rgba(255,0,100,0.5); } 50% { box-shadow: 0 0 90px rgba(255,0,100,0.9); } }
+<style>
 
-        .status {
-            font-size: 15px;
-            color: #99aacc;
-            margin: 10px 0 4px;
-            background: rgba(255,255,255,0.04);
-            padding: 6px 22px;
-            border-radius: 40px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.05);
-            min-height: 34px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 300;
-        }
-        .status .dot {
-            display: inline-block;
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            background: #555;
-            transition: 0.3s;
-        }
-        .status .dot.idle { background: #555; }
-        .status .dot.listening { background: #00ff88; box-shadow: 0 0 16px #00ff88; animation: dotFlash 0.8s infinite; }
-        .status .dot.processing { background: #ffaa00; box-shadow: 0 0 16px #ffaa00; animation: dotFlash 0.4s infinite; }
-        .status .dot.responding { background: #00ccff; box-shadow: 0 0 16px #00ccff; animation: dotFlash 0.6s infinite; }
-        @keyframes dotFlash { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-        .user-text {
-            width: 100%;
-            max-height: 70px;
-            overflow-y: auto;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 300;
-            color: #ccd8ee;
-            padding: 10px 16px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 24px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.05);
-            margin: 4px 0 6px;
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            word-break: break-word;
-            transition: 0.3s;
-        }
-        .user-text.has-text { background: rgba(0,150,255,0.06); border-color: rgba(0,150,255,0.12); }
+body{
 
-        .response-card {
-            width: 100%;
-            max-height: 180px;
-            overflow-y: auto;
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 32px;
-            padding: 18px 22px;
-            margin: 4px 0 10px;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 8px 50px rgba(0,0,0,0.4);
-            min-height: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-size: 17px;
-            line-height: 1.8;
-            color: #eef;
-            opacity: 0;
-            transform: translateY(12px) scale(0.96);
-            pointer-events: none;
-        }
-        .response-card.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-        .response-card .response-text { width: 100%; }
-        .response-card .response-icon { font-size: 28px; margin-left: 12px; opacity: 0.7; }
+font-family:Vazir,sans-serif;
 
-        .search-container {
-            width: 100%;
-            max-height: 300px;
-            border-radius: 24px;
-            overflow: hidden;
-            margin: 4px 0 8px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            backdrop-filter: blur(8px);
-            display: none;
-            transition: 0.3s;
-        }
-        .search-container.show { display: block; }
-        .search-container iframe { width: 100%; height: 280px; border: none; border-radius: 24px; }
+background:#080812;
 
-        .confirm-card {
-            display: none;
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 28px;
-            padding: 18px 20px;
-            margin: 4px 0 8px;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-        }
-        .confirm-card.show { display: flex; }
-        .confirm-card .confirm-text { font-size: 16px; color: #ddd; font-weight: 300; }
-        .confirm-card .confirm-actions { display: flex; gap: 24px; }
-        .confirm-card .confirm-actions button {
-            padding: 10px 40px;
-            border-radius: 50px;
-            border: none;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.25s;
-            font-family: 'Vazir', sans-serif;
-        }
-        .confirm-card .confirm-actions .btn-call {
-            background: linear-gradient(135deg, #00c853, #00e676);
-            color: #000;
-            box-shadow: 0 4px 20px rgba(0,200,80,0.3);
-        }
-        .confirm-card .confirm-actions .btn-cancel {
-            background: rgba(255,255,255,0.08);
-            color: #ccc;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .confirm-card .confirm-actions button:active { transform: scale(0.92); }
+color:white;
 
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
+height:100vh;
 
-        @media (max-width: 420px) {
-            .orb-wrapper { width: 170px; height: 170px; }
-            .orb { width: 120px; height: 120px; }
-            .mic-btn { width: 64px; height: 64px; font-size: 30px; }
-            .header .title { font-size: 20px; }
-            .user-text { font-size: 16px; min-height: 40px; }
-            .response-card { font-size: 15px; padding: 14px 16px; }
-            .search-container iframe { height: 200px; }
-        }
-    </style>
+overflow:hidden;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+direction:rtl;
+
+}
+
+.app{
+
+width:100%;
+
+max-width:480px;
+
+height:100vh;
+
+background:
+radial-gradient(
+ellipse at 50% 20%,
+#191934,
+#080812 80%
+);
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+padding:20px 16px;
+
+overflow:hidden;
+
+}
+
+.header{
+
+width:100%;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:5px;
+
+}
+
+.title{
+
+font-size:24px;
+
+font-weight:900;
+
+background:
+linear-gradient(
+135deg,
+#00d4ff,
+#7b2ffc,
+#ff6fd8
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+.time{
+
+font-size:14px;
+
+color:#99aacc;
+
+background:rgba(255,255,255,.05);
+
+padding:7px 16px;
+
+border-radius:30px;
+
+}
+
+.orb-wrapper{
+
+width:220px;
+
+height:220px;
+
+margin:15px auto;
+
+position:relative;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+.orb{
+
+width:150px;
+
+height:150px;
+
+border-radius:50%;
+
+background:
+radial-gradient(
+circle at 35% 30%,
+#0088ff,
+#0033aa
+);
+
+box-shadow:
+
+0 0 60px rgba(0,100,255,.5),
+
+0 0 120px rgba(0,100,255,.2);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+transition:.4s;
+
+}
+
+.inner-glow{
+
+width:70%;
+
+height:70%;
+
+border-radius:50%;
+
+background:
+radial-gradient(
+circle at 45% 35%,
+rgba(255,255,255,.6),
+transparent 70%
+);
+
+}
+
+.orb.pulse{
+
+animation:pulse 2s infinite;
+
+}
+
+.orb.listening{
+
+background:
+radial-gradient(
+circle at 35% 30%,
+#00ff99,
+#00aaff
+);
+
+box-shadow:
+0 0 80px rgba(0,255,150,.7);
+
+animation:listen 1s infinite;
+
+}
+
+.orb.processing{
+
+background:
+radial-gradient(
+circle at 35% 30%,
+#ffcc00,
+#ff6600
+);
+
+animation:process .5s infinite;
+
+}
+
+@keyframes pulse{
+
+0%,100%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.04);
+
+}
+
+}
+
+@keyframes listen{
+
+0%,100%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.08);
+
+}
+
+}
+
+@keyframes process{
+
+0%,100%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.05);
+
+}
+
+}
+
+.mic-btn{
+
+width:76px;
+
+height:76px;
+
+border-radius:50%;
+
+border:none;
+
+background:
+linear-gradient(
+135deg,
+#0066ff,
+#4400cc
+);
+
+color:white;
+
+font-size:36px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+box-shadow:
+
+0 10px 40px rgba(0,80,255,.5);
+
+}
+
+.mic-btn.listening{
+
+background:
+linear-gradient(
+135deg,
+#ff2266,
+#cc0066
+);
+
+animation:micpulse 1s infinite;
+
+}
+
+@keyframes micpulse{
+
+0%,100%{
+
+box-shadow:0 0 40px rgba(255,0,100,.5);
+
+}
+
+50%{
+
+box-shadow:0 0 90px rgba(255,0,100,.9);
+
+}
+
+}
+
+.status{
+
+margin:10px;
+
+padding:7px 20px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.05);
+
+color:#aac;
+
+display:flex;
+
+gap:10px;
+
+align-items:center;
+
+}
+
+.dot{
+
+width:10px;
+
+height:10px;
+
+border-radius:50%;
+
+background:#555;
+
+}
+
+.dot.listening{
+
+background:#00ff88;
+
+box-shadow:0 0 15px #00ff88;
+
+}
+
+.dot.processing{
+
+background:#ffaa00;
+
+box-shadow:0 0 15px #ffaa00;
+
+}
+
+.user-text{
+
+width:100%;
+
+min-height:50px;
+
+padding:12px;
+
+border-radius:24px;
+
+background:rgba(255,255,255,.04);
+
+text-align:center;
+
+font-size:17px;
+
+}
+
+.response-card{
+
+width:100%;
+
+max-height:200px;
+
+overflow:auto;
+
+margin-top:10px;
+
+padding:18px;
+
+border-radius:28px;
+
+background:rgba(255,255,255,.05);
+
+border:1px solid rgba(255,255,255,.07);
+
+text-align:center;
+
+font-size:17px;
+
+line-height:1.8;
+
+}
+
+@media(max-width:420px){
+
+.orb-wrapper{
+
+width:180px;
+
+height:180px;
+
+}
+
+.orb{
+
+width:125px;
+
+height:125px;
+
+}
+
+.mic-btn{
+
+width:65px;
+
+height:65px;
+
+font-size:30px;
+
+}
+
+}
+
+</style>
+
 </head>
+
+
 <body>
 
-<div class="particles" id="particles"></div>
 
-<div class="app" id="app">
-    <div class="header">
-        <span class="title">✨ Ahoora AI</span>
-        <span class="time" id="headerTime">--:--</span>
-    </div>
+<div class="app">
 
-    <div class="orb-wrapper" id="orbWrapper">
-        <div class="orb-glow" id="orbGlow"></div>
-        <div class="wave-ring"></div><div class="wave-ring"></div>
-        <div class="wave-ring"></div><div class="wave-ring"></div>
-        <div class="orb pulse" id="orb"><div class="inner-glow"></div></div>
-    </div>
+<div class="header">
 
-    <button class="mic-btn" id="micBtn">
-        <i class="fas fa-microphone" id="micIcon"></i>
-    </button>
+<div class="title">
 
-    <div class="status" id="status">
-        <span class="dot idle" id="statusDot"></span>
-        <span id="statusText">آماده</span>
-    </div>
+✨ Ahoora AI
 
-    <div class="user-text" id="userText">...</div>
-
-    <div class="response-card" id="responseCard">
-        <div class="response-text" id="responseText">
-            <span class="response-icon">👋</span>
-            سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟
-        </div>
-    </div>
-
-    <div class="search-container" id="searchContainer">
-        <iframe id="searchIframe" src="about:blank"></iframe>
-    </div>
-
-    <div class="confirm-card" id="confirmCard">
-        <div class="confirm-text" id="confirmText">می‌خواهید با این شماره تماس بگیرید؟</div>
-        <div class="confirm-actions">
-            <button class="btn-call" id="confirmCall">📞 تماس</button>
-            <button class="btn-cancel" id="confirmCancel">لغو</button>
-        </div>
-    </div>
 </div>
 
+<div class="time" id="headerTime">
+
+--:--
+
+</div>
+
+</div>
+
+
+<div class="orb-wrapper">
+
+<div class="orb pulse" id="orb">
+
+<div class="inner-glow"></div>
+
+</div>
+
+</div>
+
+
+<button class="mic-btn" id="micBtn">
+
+<i class="fas fa-microphone" id="micIcon"></i>
+
+</button>
+
+
+<div class="status">
+
+<span class="dot" id="statusDot"></span>
+
+<span id="statusText">
+
+آماده
+
+</span>
+
+</div>
+
+
+<div class="user-text" id="userText">
+
+برای صحبت دکمه میکروفون را بزنید
+
+</div>
+
+
+<div class="response-card" id="responseCard">
+
+<div id="responseText">
+
+👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟
+
+</div>
+
+</div>
+
+</div>
+
+
 <script>
-    (function() {
-        'use strict';
 
-        // ============================================================
-        // المان‌ها
-        // ============================================================
-        const orb = document.getElementById('orb');
-        const orbGlow = document.getElementById('orbGlow');
-        const micBtn = document.getElementById('micBtn');
-        const micIcon = document.getElementById('micIcon');
-        const statusText = document.getElementById('statusText');
-        const statusDot = document.getElementById('statusDot');
-        const userText = document.getElementById('userText');
-        const responseCard = document.getElementById('responseCard');
-        const responseText = document.getElementById('responseText');
-        const confirmCard = document.getElementById('confirmCard');
-        const confirmText = document.getElementById('confirmText');
-        const confirmCall = document.getElementById('confirmCall');
-        const confirmCancel = document.getElementById('confirmCancel');
-        const headerTime = document.getElementById('headerTime');
-        const searchContainer = document.getElementById('searchContainer');
-        const searchIframe = document.getElementById('searchIframe');
+"use strict";
 
-        let isListening = false;
-        let isProcessing = false;
-        let recognition = null;
-        let pendingPhoneNumber = null;
-        let audioPlayer = new Audio();
-        let searchTimeout = null;
 
-        // ============================================================
-        // ذرات پس‌زمینه
-        // ============================================================
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 35; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.width = (2 + Math.random() * 4) + 'px';
-                p.style.height = p.style.width;
-                p.style.animationDuration = (15 + Math.random() * 25) + 's';
-                p.style.animationDelay = (Math.random() * 20) + 's';
-                p.style.opacity = 0.2 + Math.random() * 0.3;
-                container.appendChild(p);
-            }
-        }
-        createParticles();
+const orb =
+document.getElementById("orb");
 
-        // ============================================================
-        // ساعت
-        // ============================================================
-        function updateClock() {
-            const now = new Date();
-            headerTime.textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-        }
-        updateClock();
-        setInterval(updateClock, 10000);
+const micBtn =
+document.getElementById("micBtn");
 
-        // ============================================================
-        // تشخیص گفتار
-        // ============================================================
-        function initSpeech() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                setStatus('مرورگر پشتیبانی نمی‌کند.', 'idle');
-                return false;
-            }
-            recognition = new SpeechRecognition();
-            recognition.lang = 'fa-IR';
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
+const micIcon =
+document.getElementById("micIcon");
 
-            recognition.onstart = function() {
-                isListening = true;
-                setStatus('در حال گوش دادن ...', 'listening');
-                micBtn.classList.add('listening');
-                orb.className = 'orb listening';
-                orbGlow.classList.add('active');
-                micIcon.className = 'fas fa-circle-notch fa-spin';
-                userText.textContent = '...';
-                userText.classList.remove('has-text');
-                hideSearch();
-            };
+const statusText =
+document.getElementById("statusText");
 
-            recognition.onresult = function(event) {
-                const last = event.results.length - 1;
-                const transcript = event.results[last][0].transcript.trim();
-                if (transcript) {
-                    userText.textContent = transcript;
-                    userText.classList.add('has-text');
-                    stopListening();
-                    processCommand(transcript);
-                } else {
-                    stopListening();
-                    showResponse('متوجه نشدم، لطفاً دوباره بگویید.', 'd.mp3');
-                }
-            };
+const statusDot =
+document.getElementById("statusDot");
 
-            recognition.onerror = function(event) {
-                console.warn('Speech error:', event.error);
-                if (event.error === 'not-allowed') {
-                    setStatus('دسترسی به میکروفون مجاز نیست.', 'idle');
-                    showResponse('لطفاً دسترسی میکروفون را فعال کنید.', 'd.mp3');
-                } else {
-                    setStatus('خطا در تشخیص صدا', 'idle');
-                    showResponse('متأسفانه مشکلی پیش آمد، دوباره تلاش کنید.', 'd.mp3');
-                }
-                stopListening();
-            };
+const userText =
+document.getElementById("userText");
 
-            recognition.onend = function() {
-                if (isListening) stopListening();
-            };
+const responseText =
+document.getElementById("responseText");
 
-            return true;
-        }
+const headerTime =
+document.getElementById("headerTime");
 
-        function startListening() {
-            if (!recognition) { if (!initSpeech()) return; }
-            if (isListening) return;
-            try { recognition.start(); } catch (e) {}
-        }
 
-        function stopListening() {
-            if (recognition) { try { recognition.stop(); } catch (e) {} }
-            isListening = false;
-            micBtn.classList.remove('listening');
-            orb.className = 'orb pulse';
-            orbGlow.classList.remove('active');
-            micIcon.className = 'fas fa-microphone';
-            if (!isProcessing) setStatus('آماده', 'idle');
-        }
+let recognition=null;
 
-        // ============================================================
-        // پخش MP3
-        // ============================================================
-        function playMp3(file) {
-            return new Promise((resolve) => {
-                if (!file) return resolve();
-                audioPlayer.src = file;
-                audioPlayer.onended = function() { resolve(); };
-                audioPlayer.onerror = function() {
-                    console.warn('MP3 failed:', file);
-                    resolve();
-                };
-                audioPlayer.play().catch(() => resolve());
-            });
-        }
+let listening=false;
 
-        // ============================================================
-        // نمایش وضعیت و پاسخ
-        // ============================================================
-        function setStatus(text, type) {
-            statusText.textContent = text;
-            statusDot.className = 'dot ' + type;
-            if (type === 'listening') { isProcessing = false; }
-            else if (type === 'processing') { isProcessing = true; }
-            else { isProcessing = false; }
-        }
+let processing=false;
 
-        function showResponse(text, mp3File, icon) {
-            const iconHtml = icon ? `<span class="response-icon">${icon}</span>` : '';
-            responseText.innerHTML = iconHtml + text;
-            responseCard.classList.add('show');
-            if (mp3File) {
-                playMp3(mp3File);
-            }
-            if (isProcessing) {
-                setStatus('آماده', 'idle');
-                orb.className = 'orb pulse';
-            }
-        }
+let pendingPhone=null;
 
-        function hideSearch() {
-            searchContainer.classList.remove('show');
-            searchIframe.src = 'about:blank';
-            if (searchTimeout) { clearTimeout(searchTimeout); searchTimeout = null; }
-        }
 
-        function showSearch(query) {
-            const url = 'https://duckduckgo.com/?q=' + encodeURIComponent(query) + '&ia=web';
-            searchIframe.src = url;
-            searchContainer.classList.add('show');
-            if (searchTimeout) clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => { hideSearch(); }, 30000);
-        }
+function clock(){
 
-        // ============================================================
-        // باز کردن برنامه‌ها (نسخه نهایی و دیباگ شده)
-        // ============================================================
-        function openAppUniversal(appName, packageName, fallbackUrl) {
-            console.log('🔍 باز کردن برنامه:', appName, 'Package:', packageName);
+const d=new Date();
 
-            // 1. اگر Bridge اندروید موجود باشد (اولویت اول)
-            if (window.Android && typeof window.Android.openApp === 'function') {
-                try {
-                    console.log('✅ استفاده از Android Bridge');
-                    window.Android.openApp(packageName);
-                    showResponse('چشم، ' + appName + ' را باز کردم.', 'a.mp3', '📱');
-                    return true;
-                } catch (e) {
-                    console.error('❌ خطا در Bridge:', e);
-                    showResponse('متأسفانه باز نشد.', 'b.mp3', '❌');
-                    return false;
-                }
-            }
+headerTime.textContent=
 
-            // 2. در مرورگر اندروید با intent:// (روش اصلی)
-            if (/Android/i.test(navigator.userAgent)) {
-                try {
-                    // intent:// برای باز کردن مستقیم برنامه
-                    const intentUrl = 'intent://#' + packageName + '#Intent;package=' + packageName + ';end';
-                    console.log('📱 باز کردن با intent:', intentUrl);
+String(d.getHours()).padStart(2,"0")
++
+":"
++
+String(d.getMinutes()).padStart(2,"0");
 
-                    // استفاده از location.href برای intent
-                    window.location.href = intentUrl;
+}
 
-                    showResponse('در حال باز کردن ' + appName + ' ...', null, '📱');
+clock();
 
-                    // اگر برنامه نصب نبود، بعد از 2 ثانیه به fallback برو
-                    setTimeout(() => {
-                        if (fallbackUrl) {
-                            console.log('🌐 باز کردن fallback:', fallbackUrl);
-                            window.open(fallbackUrl, '_blank');
-                        }
-                    }, 2000);
+setInterval(clock,10000);
 
-                    return true;
-                } catch (e) {
-                    console.error('❌ خطا در intent:', e);
-                    if (fallbackUrl) {
-                        window.open(fallbackUrl, '_blank');
-                        showResponse('در حال باز کردن نسخه وب ' + appName, null, '🌐');
-                    }
-                    return true;
-                }
-            }
 
-            // 3. در iOS یا دسکتاپ - لینک مستقیم وب
-            if (fallbackUrl) {
-                console.log('💻 باز کردن وب:', fallbackUrl);
-                window.open(fallbackUrl, '_blank');
-                showResponse('در حال باز کردن نسخه وب ' + appName, null, '🌐');
-                return true;
-            }
+function status(text,type){
 
-            // 4. هیچ روشی کار نکرد
-            console.error('❌ هیچ روشی برای باز کردن برنامه وجود ندارد');
-            showResponse('امکان باز کردن ' + appName + ' در این مرورگر وجود ندارد.', 'b.mp3', '❌');
-            return false;
-        }
+statusText.textContent=text;
 
-        // ============================================================
-        // فرمان‌ها
-        // ============================================================
-        const appMap = {
-            'واتساپ': { pkg: 'com.whatsapp', fallback: 'https://web.whatsapp.com/' },
-            'تلگرام': { pkg: 'org.telegram.messenger', fallback: 'https://web.telegram.org/' },
-            'اینستاگرام': { pkg: 'com.instagram.android', fallback: 'https://www.instagram.com/' },
-            'یوتیوب': { pkg: 'com.google.android.youtube', fallback: 'https://www.youtube.com/' },
-            'کروم': { pkg: 'com.android.chrome', fallback: 'https://www.google.com/chrome/' },
-            'گالری': { pkg: 'com.android.gallery3d', fallback: null },
-            'دوربین': { pkg: 'com.android.camera', fallback: null },
-            'تنظیمات': { pkg: 'com.android.settings', fallback: null }
-        };
+statusDot.className="dot "+type;
 
-        const contacts = {
-            'علی': '09123456789',
-            'احمد': '09129876543',
-            'رضا': '09123456780',
-            'محمد': '09121234567',
-            'سارا': '09128765432'
-        };
+}
 
-        function makeCall(phoneNumber) {
-            if (window.Android && typeof window.Android.makeCall === 'function') {
-                try { window.Android.makeCall(phoneNumber); showResponse('در حال برقراری تماس با ' + phoneNumber, null, '📞'); return true; }
-                catch (e) { showResponse('خطا در برقراری تماس.', 'd.mp3', '❌'); return false; }
-            } else {
-                window.location.href = 'tel:' + phoneNumber;
-                showResponse('در حال انتقال به شماره‌گیر ...', null, '📞');
-                return true;
-            }
-        }
 
-        function sendSMS(phoneNumber, message) {
-            if (window.Android && typeof window.Android.sendSMS === 'function') {
-                try { window.Android.sendSMS(phoneNumber, message || ''); showResponse('پیامک در حال ارسال ...', null, '✉️'); return true; }
-                catch (e) { showResponse('خطا در ارسال پیامک.', 'd.mp3', '❌'); return false; }
-            } else {
-                window.location.href = 'sms:' + phoneNumber + '?body=' + encodeURIComponent(message || '');
-                showResponse('در حال باز کردن پیامک ...', null, '✉️');
-                return true;
-            }
-        }
+function response(text){
 
-        function openGallery() {
-            if (window.Android && typeof window.Android.openGallery === 'function') {
-                try { window.Android.openGallery(); showResponse('گالری باز شد.', 'a.mp3', '🖼️'); return true; }
-                catch (e) { showResponse('خطا در باز کردن گالری.', 'b.mp3', '❌'); return false; }
-            } else {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*,video/*';
-                input.onchange = function() { if (this.files && this.files[0]) showResponse('فایل انتخاب شد: ' + this.files[0].name, null, '✅'); };
-                input.click();
-                showResponse('لطفاً فایل مورد نظر را انتخاب کنید.', null, '📂');
-                return true;
-            }
-        }
+responseText.innerHTML=text;
 
-        function openCamera() {
-            if (window.Android && typeof window.Android.openCamera === 'function') {
-                try { window.Android.openCamera(); showResponse('دوربین باز شد.', 'a.mp3', '📷'); return true; }
-                catch (e) { showResponse('خطا در باز کردن دوربین.', 'b.mp3', '❌'); return false; }
-            } else {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.capture = 'environment';
-                input.onchange = function() { if (this.files && this.files[0]) showResponse('عکس گرفته شد.', null, '📷'); };
-                input.click();
-                showResponse('لطفاً عکس بگیرید.', null, '📷');
-                return true;
-            }
-        }
+}
 
-        function recordVideo() {
-            if (window.Android && typeof window.Android.recordVideo === 'function') {
-                try { window.Android.recordVideo(); showResponse('در حال ضبط فیلم ...', null, '🎥'); return true; }
-                catch (e) { showResponse('خطا در ضبط فیلم.', 'b.mp3', '❌'); return false; }
-            } else {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'video/*';
-                input.capture = 'environment';
-                input.onchange = function() { if (this.files && this.files[0]) showResponse('فیلم ضبط شد.', null, '🎥'); };
-                input.click();
-                showResponse('لطفاً فیلم بگیرید.', null, '🎥');
-                return true;
-            }
-        }
 
-        function openUrl(url) {
-            if (window.Android && typeof window.Android.openUrl === 'function') {
-                try { window.Android.openUrl(url); showResponse('لینک باز شد.', 'g.mp3', '🌐'); return true; }
-                catch (e) { showResponse('خطا در باز کردن لینک.', 'b.mp3', '❌'); return false; }
-            } else {
-                window.open(url, '_blank');
-                showResponse('لینک در مرورگر باز شد.', null, '🌐');
-                return true;
-            }
-        }
+function normalize(text){
 
-        function adjustVolume(direction) {
-            if (window.Android && typeof window.Android.adjustVolume === 'function') {
-                try { window.Android.adjustVolume(direction); showResponse('صدا ' + (direction === 'up' ? 'زیاد' : 'کم') + ' شد.', null, '🔊'); return true; }
-                catch (e) { showResponse('خطا در کنترل صدا.', 'b.mp3', '❌'); return false; }
-            } else {
-                showResponse('این قابلیت فقط در نسخه اندروید WebView پشتیبانی می‌شود.', 'b.mp3', '⚠️');
-                return false;
-            }
-        }
+return text
 
-        // ============================================================
-        // پردازش فرمان اصلی
-        // ============================================================
-        function processCommand(text) {
-            if (!text) return;
-            setStatus('در حال پردازش ...', 'processing');
-            orb.className = 'orb processing';
-            hideSearch();
+.replace(/[۰-۹]/g,function(d){
 
-            const lower = text.toLowerCase().trim();
-            console.log('📝 فرمان:', lower);
+return String(
+"۰۱۲۳۴۵۶۷۸۹".indexOf(d)
+);
 
-            // --- 1. باز کردن برنامه ---
-            const appMatch = lower.match(/(واتساپ|تلگرام|اینستاگرام|یوتیوب|کروم|گالری|دوربین|تنظیمات)\s*(?:رو\s*)?باز\s*کن/);
-            if (appMatch) {
-                const appName = appMatch[1];
-                const info = appMap[appName];
-                if (info) {
-                    openAppUniversal(appName, info.pkg, info.fallback);
-                } else {
-                    showResponse('برنامه مورد نظر شناخته نشد.', 'b.mp3', '❓');
-                }
-                return;
-            }
+})
 
-            // --- 2. تماس با شماره ---
-            const phoneMatch = lower.match(/(?:با\s*)?شماره\s*([\d۰-۹]+)\s*(?:رو\s*)?(?:بگیر|تماس\s*بگیر)/);
-            if (phoneMatch) {
-                let num = phoneMatch[1].replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
-                pendingPhoneNumber = num;
-                confirmText.textContent = '📞 می‌خواهید با شماره ' + num + ' تماس بگیرید؟';
-                confirmCard.classList.add('show');
-                playMp3('c.mp3');
-                setStatus('تأیید تماس', 'idle');
-                orb.className = 'orb pulse';
-                return;
-            }
+.replace(/ي/g,"ی")
 
-            // --- 3. تماس با نام ---
-            const nameMatch = lower.match(/با\s*([\u0600-\u06FF\s]+)\s*تماس\s*بگیر/);
-            if (nameMatch) {
-                const name = nameMatch[1].trim();
-                if (contacts[name]) {
-                    pendingPhoneNumber = contacts[name];
-                    confirmText.textContent = '📞 می‌خواهید با ' + name + ' (شماره ' + contacts[name] + ') تماس بگیرید؟';
-                    confirmCard.classList.add('show');
-                    playMp3('c.mp3');
-                    setStatus('تأیید تماس', 'idle');
-                    orb.className = 'orb pulse';
-                } else {
-                    showResponse('متأسفم، شماره ' + name + ' را در دفترچه ندارم.', 'b.mp3', '📕');
-                }
-                return;
-            }
+.replace(/ك/g,"ک")
 
-            // --- 4. گالری ---
-            if (/(گالری|عکس‌هام|فیلم‌هام)\s*(?:رو\s*)?باز\s*کن/.test(lower)) {
-                openGallery();
-                return;
-            }
+.replace(/\s+/g," ")
 
-            // --- 5. دوربین ---
-            if (/دوربین\s*(?:رو\s*)?باز\s*کن/.test(lower) || /عکس\s*بگیر/.test(lower)) {
-                openCamera();
-                return;
-            }
-            if (/فیلم\s*بگیر/.test(lower)) {
-                recordVideo();
-                return;
-            }
+.trim()
 
-            // --- 6. پیامک ---
-            const smsMatch = lower.match(/(?:به\s*)?([\d۰-۹]+)\s*پیام\s*(?:بده|بفرست)/);
-            if (smsMatch) {
-                let num = smsMatch[1].replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
-                sendSMS(num, 'سلام، این پیام از اهورا است.');
-                return;
-            }
+.toLowerCase();
 
-            // --- 7. واتساپ برای نام ---
-            const waMatch = lower.match(/واتساپ\s*(?:رو\s*)?برای\s*([\u0600-\u06FF\s]+)\s*باز\s*کن/);
-            if (waMatch) {
-                const name = waMatch[1].trim();
-                if (contacts[name]) {
-                    const phone = contacts[name];
-                    // باز کردن واتساپ با شماره
-                    if (window.Android && typeof window.Android.openApp === 'function') {
-                        openAppUniversal('واتساپ', 'com.whatsapp', 'https://web.whatsapp.com/');
-                        setTimeout(() => {
-                            const waUrl = 'https://wa.me/' + phone;
-                            if (window.Android && typeof window.Android.openUrl === 'function') {
-                                window.Android.openUrl(waUrl);
-                            } else { window.open(waUrl, '_blank'); }
-                        }, 600);
-                    } else {
-                        window.open('https://wa.me/' + phone, '_blank');
-                        showResponse('واتساپ برای ' + name + ' باز شد.', 'a.mp3', '💬');
-                    }
-                } else {
-                    showResponse('شماره ' + name + ' را در دفترچه ندارم.', 'b.mp3', '📕');
-                }
-                return;
-            }
+}
 
-            // --- 8. کنترل صدا ---
-            if (/صدا\s*(?:رو\s*)?زیاد\s*کن/.test(lower)) { adjustVolume('up'); return; }
-            if (/صدا\s*(?:رو\s*)?کم\s*کن/.test(lower)) { adjustVolume('down'); return; }
 
-            // --- 9. پخش موسیقی / ویدئو ---
-            if (/موسیقی\s*پخش\s*کن/.test(lower)) {
-                const music = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
-                music.play().catch(() => {});
-                showResponse('در حال پخش موسیقی ...', null, '🎵');
-                return;
-            }
-            if (/موسیقی\s*(?:رو\s*)?متوقف\s*کن/.test(lower)) {
-                const audios = document.getElementsByTagName('audio');
-                for (let a of audios) a.pause();
-                showResponse('موسیقی متوقف شد.', null, '⏹️');
-                return;
-            }
-            if (/ویدئو\s*پخش\s*کن/.test(lower)) {
-                window.open('https://www.w3schools.com/html/mov_bbb.mp4', '_blank');
-                showResponse('ویدئو در مرورگر باز شد.', null, '🎬');
-                return;
-            }
+function androidAvailable(){
 
-            // --- 10. ساعت ---
-            if (/(ساعت\s*(?:چنده|چند\s*است|رو\s*بگو)|ساعت\s*الان\s*چنده)/.test(lower)) {
-                const now = new Date();
-                const h = String(now.getHours()).padStart(2, '0');
-                const m = String(now.getMinutes()).padStart(2, '0');
-                showResponse('ساعت ' + h + ' و ' + m + ' دقیقه است.', 'f.mp3', '🕐');
-                return;
-            }
+return typeof window.Android !== "undefined";
 
-            // --- 11. تاریخ ---
-            if (/(تاریخ\s*(?:چنده|چند\s*است|رو\s*بگو)|تاریخ\s*امروز\s*چنده)/.test(lower)) {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                showResponse('امروز ' + year + '/' + month + '/' + day, null, '📅');
-                return;
-            }
+}
 
-            // --- 12. محاسبه ---
-            const calcMatch = lower.match(/(\d+)\s*([+\-*/])\s*(\d+)/);
-            if (calcMatch) {
-                try {
-                    const a = parseFloat(calcMatch[1]), op = calcMatch[2], b = parseFloat(calcMatch[3]);
-                    let result;
-                    switch (op) {
-                        case '+': result = a + b; break;
-                        case '-': result = a - b; break;
-                        case '*': result = a * b; break;
-                        case '/': result = a / b; break;
-                        default: result = 'نامشخص';
-                    }
-                    showResponse('نتیجه: ' + result, null, '🧮');
-                } catch (e) { showResponse('خطا در محاسبه.', 'd.mp3', '❌'); }
-                return;
-            }
 
-            // --- 13. جستجوی گوگل ---
-            const searchMatch = lower.match(/(?:در\s*)?گوگل\s*(?:جستجو\s*کن\s*)?(.+)/);
-            if (searchMatch) {
-                const query = searchMatch[1].trim();
-                if (query) {
-                    showResponse('در حال جستجوی «' + query + '» ...', null, '🔍');
-                    setTimeout(() => {
-                        showSearch(query);
-                        showResponse('نتایج جستجو در پایین نمایش داده شد.', null, '🌐');
-                    }, 800);
-                } else {
-                    showResponse('چیزی برای جستجو پیدا نکردم.', 'b.mp3', '❓');
-                }
-                return;
-            }
+function openApp(packageName,name,url){
 
-            // --- 14. باز کردن سایت ---
-            const siteMatch = lower.match(/(?:باز\s*کن\s*)?(https?:\/\/\S+)/);
-            if (siteMatch) {
-                openUrl(siteMatch[1]);
-                return;
-            }
+if(androidAvailable()){
 
-            // --- 15. پاسخ پیش‌فرض ---
-            const defaults = [
-                'من متوجه نشدم. می‌توانی بگویی چه اپی رو باز کنم، یا تماس بگیرم، یا در گوگل جستجو کنم؟',
-                'متأسفم، منظور شما را نفهمیدم. لطفاً واضح‌تر بگویید.',
-                'دستور شما قابل تشخیص نبود. از من بپرسید ساعت چند است، یا برنامه‌ای را باز کنید.'
-            ];
-            showResponse(defaults[Math.floor(Math.random() * defaults.length)], 'd.mp3', '🤔');
-        }
+try{
 
-        // ============================================================
-        // دکمه‌های تأیید تماس
-        // ============================================================
-        confirmCall.addEventListener('click', function() {
-            if (pendingPhoneNumber) {
-                makeCall(pendingPhoneNumber);
-                pendingPhoneNumber = null;
-                confirmCard.classList.remove('show');
-                orb.className = 'orb pulse';
-            }
-        });
+Android.openApp(packageName);
 
-        confirmCancel.addEventListener('click', function() {
-            pendingPhoneNumber = null;
-            confirmCard.classList.remove('show');
-            showResponse('تماس لغو شد.', null, '❌');
-            orb.className = 'orb pulse';
-            setStatus('آماده', 'idle');
-        });
+response(
+"📱 در حال باز کردن "+name+" ..."
+);
 
-        // ============================================================
-        // میکروفون
-        // ============================================================
-        micBtn.addEventListener('click', function() {
-            if (isListening) stopListening();
-            else startListening();
-        });
+return;
 
-        // ============================================================
-        // Bridge اندروید (Fallback)
-        // ============================================================
-        if (typeof window.Android === 'undefined') {
-            window.Android = {
-                openApp: function() { console.warn('Android Bridge not available'); },
-                makeCall: function() { console.warn('Android Bridge not available'); },
-                openGallery: function() { console.warn('Android Bridge not available'); },
-                openImage: function() { console.warn('Android Bridge not available'); },
-                openVideo: function() { console.warn('Android Bridge not available'); },
-                openCamera: function() { console.warn('Android Bridge not available'); },
-                recordVideo: function() { console.warn('Android Bridge not available'); },
-                sendSMS: function() { console.warn('Android Bridge not available'); },
-                openUrl: function() { console.warn('Android Bridge not available'); },
-                adjustVolume: function() { console.warn('Android Bridge not available'); }
-            };
-        }
+}catch(e){}
 
-        // ============================================================
-        // پیش‌بارگذاری MP3ها
-        // ============================================================
-        const mp3Files = ['a.mp3','b.mp3','c.mp3','d.mp3','e.mp3','f.mp3','g.mp3'];
-        mp3Files.forEach(f => {
-            const a = new Audio();
-            a.src = f;
-            a.load();
-        });
+}
 
-        // ============================================================
-        // شروع
-        // ============================================================
-        setStatus('آماده', 'idle');
+if(url){
 
-        setTimeout(() => {
-            showResponse('👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟', 'e.mp3', '🤖');
-        }, 500);
+window.location.href=url;
 
-        console.log('✨ Ahoora AI با MP3 و دیباگ کامل آماده است!');
-        console.log('📱 User Agent:', navigator.userAgent);
-        console.log('🔍 Android Bridge موجود؟', typeof window.Android !== 'undefined' && typeof window.Android.openApp === 'function');
-    })();
+}
+
+}
+
+
+function callNumber(number){
+
+number=normalize(number);
+
+number=number.replace(/[^0-9+]/g,"");
+
+if(androidAvailable()){
+
+Android.makeCall(number);
+
+response(
+"📞 در حال باز کردن شماره‌گیر برای "+number
+);
+
+}else{
+
+window.location.href="tel:"+number;
+
+}
+
+}
+
+
+function sendSMS(number,message){
+
+number=normalize(number);
+
+number=number.replace(/[^0-9+]/g,"");
+
+if(androidAvailable()){
+
+Android.sendSMS(number,message);
+
+response("✉️ پیامک آماده ارسال شد.");
+
+}else{
+
+window.location.href=
+"sms:"+number+
+"?body="+
+encodeURIComponent(message);
+
+}
+
+}
+
+
+function openCamera(){
+
+if(androidAvailable()){
+
+Android.openCamera();
+
+response("📷 دوربین باز شد.");
+
+}else{
+
+const input=document.createElement("input");
+
+input.type="file";
+
+input.accept="image/*";
+
+input.capture="environment";
+
+input.click();
+
+}
+
+}
+
+
+function openGallery(){
+
+if(androidAvailable()){
+
+Android.openGallery();
+
+response("🖼️ گالری باز شد.");
+
+}else{
+
+const input=document.createElement("input");
+
+input.type="file";
+
+input.accept="image/*,video/*";
+
+input.click();
+
+}
+
+}
+
+
+function volume(direction){
+
+if(androidAvailable()){
+
+Android.adjustVolume(direction);
+
+response(
+direction==="up"
+?
+"🔊 صدا زیاد شد."
+:
+"🔉 صدا کم شد."
+);
+
+}else{
+
+response("این قابلیت فقط در APK اندروید فعال است.");
+
+}
+
+}
+
+
+function musicToggle(){
+
+if(androidAvailable()){
+
+Android.toggleMusic();
+
+response("🎵 کنترل پخش موسیقی اجرا شد.");
+
+}else{
+
+response("این قابلیت فقط در APK اندروید فعال است.");
+
+}
+
+}
+
+
+function musicStop(){
+
+if(androidAvailable()){
+
+Android.stopMusic();
+
+response("⏹️ موسیقی متوقف شد.");
+
+}else{
+
+response("این قابلیت فقط در APK اندروید فعال است.");
+
+}
+
+}
+
+
+function searchGoogle(query){
+
+const url=
+"https://www.google.com/search?q="+
+encodeURIComponent(query);
+
+if(androidAvailable()){
+
+Android.openUrl(url);
+
+}else{
+
+window.location.href=url;
+
+}
+
+response(
+"🔎 در حال جستجوی «"+query+"» در گوگل..."
+);
+
+}
+
+
+function initRecognition(){
+
+const SpeechRecognition=
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+if(!SpeechRecognition){
+
+response(
+"❌ تشخیص گفتار در این WebView پشتیبانی نمی‌شود."
+);
+
+return false;
+
+}
+
+recognition=new SpeechRecognition();
+
+recognition.lang="fa-IR";
+
+recognition.continuous=false;
+
+recognition.interimResults=false;
+
+recognition.maxAlternatives=1;
+
+
+recognition.onstart=function(){
+
+listening=true;
+
+processing=false;
+
+status(
+"در حال گوش دادن...",
+"listening"
+);
+
+micBtn.classList.add("listening");
+
+orb.className="orb listening";
+
+micIcon.className=
+"fas fa-circle-notch fa-spin";
+
+};
+
+
+recognition.onresult=function(event){
+
+const text=
+event.results[0][0].transcript.trim();
+
+userText.textContent=text;
+
+listening=false;
+
+processing=true;
+
+micBtn.classList.remove("listening");
+
+orb.className="orb processing";
+
+micIcon.className="fas fa-microphone";
+
+processCommand(text);
+
+};
+
+
+recognition.onerror=function(event){
+
+console.log(event.error);
+
+listening=false;
+
+processing=false;
+
+micBtn.classList.remove("listening");
+
+orb.className="orb pulse";
+
+micIcon.className="fas fa-microphone";
+
+status("خطا در تشخیص صدا","");
+
+response(
+"❌ نتوانستم صدای شما را تشخیص بدهم."
+);
+
+};
+
+
+recognition.onend=function(){
+
+listening=false;
+
+micBtn.classList.remove("listening");
+
+micIcon.className="fas fa-microphone";
+
+};
+
+return true;
+
+}
+
+
+function startListening(){
+
+if(!recognition){
+
+if(!initRecognition()){
+
+return;
+
+}
+
+}
+
+if(listening)return;
+
+try{
+
+recognition.start();
+
+}catch(e){
+
+console.log(e);
+
+}
+
+}
+
+
+function processCommand(original){
+
+const text=normalize(original);
+
+status("در حال پردازش...","processing");
+
+
+// ============================
+// باز کردن برنامه‌ها
+// ============================
+
+if(/واتساپ.*(باز|اجرا)/.test(text)){
+
+openApp(
+"com.whatsapp",
+"واتساپ",
+"https://www.whatsapp.com/"
+);
+
+return;
+
+}
+
+
+if(/تلگرام.*(باز|اجرا)/.test(text)){
+
+openApp(
+"org.telegram.messenger",
+"تلگرام",
+"https://telegram.org/"
+);
+
+return;
+
+}
+
+
+if(/اینستاگرام.*(باز|اجرا)/.test(text)){
+
+openApp(
+"com.instagram.android",
+"اینستاگرام",
+"https://www.instagram.com/"
+);
+
+return;
+
+}
+
+
+if(/یوتیوب.*(باز|اجرا)/.test(text)){
+
+openApp(
+"com.google.android.youtube",
+"یوتیوب",
+"https://www.youtube.com/"
+);
+
+return;
+
+}
+
+
+if(/کروم.*(باز|اجرا)/.test(text)){
+
+openApp(
+"com.android.chrome",
+"کروم",
+"https://www.google.com/chrome/"
+);
+
+return;
+
+}
+
+
+if(/تنظیمات.*(باز|اجرا)/.test(text)){
+
+openApp(
+"com.android.settings",
+"تنظیمات",
+null
+);
+
+return;
+
+}
+
+
+// ============================
+// دوربین
+// ============================
+
+if(
+
+/دوربین.*باز/.test(text) ||
+
+/عکس بگیر/.test(text)
+
+){
+
+openCamera();
+
+return;
+
+}
+
+
+// ============================
+// گالری
+// ============================
+
+if(
+
+/گالری.*باز/.test(text) ||
+
+/عکس هام/.test(text) ||
+
+/عکسها/.test(text)
+
+){
+
+openGallery();
+
+return;
+
+}
+
+
+// ============================
+// تماس با شماره
+// ============================
+
+let phone=text.match(
+
+/(?:با\s*)?(?:شماره\s*)?([0-9+]{10,13})\s*(?:رو\s*)?(?:بگیر|تماس)/
+
+);
+
+if(phone){
+
+pendingPhone=phone[1];
+
+response(
+
+"📞 می‌خواهید با شماره "+
+pendingPhone+
+" تماس بگیرید؟<br><br>"+
+
+"<button onclick=\"confirmCall()\" style=\"padding:10px 25px;border:0;border-radius:20px;background:#00cc77\">تماس</button>"
+
+);
+
+status("تأیید تماس","");
+
+return;
+
+}
+
+
+// ============================
+// تماس با نام
+// ============================
+
+const contacts={
+
+"علی":"09123456789",
+
+"احمد":"09129876543",
+
+"رضا":"09123456780",
+
+"محمد":"09121234567",
+
+"سارا":"09128765432"
+
+};
+
+
+for(const name in contacts){
+
+if(
+
+text.includes(name) &&
+
+/تماس|زنگ/.test(text)
+
+){
+
+pendingPhone=contacts[name];
+
+response(
+
+"📞 تماس با "+
+name+
+"؟<br><br>"+
+
+"<button onclick=\"confirmCall()\" style=\"padding:10px 25px;border:0;border-radius:20px;background:#00cc77\">تماس</button>"
+
+);
+
+status("تأیید تماس","");
+
+return;
+
+}
+
+}
+
+
+// ============================
+// SMS
+// ============================
+
+let sms=text.match(
+
+/(?:به\s*)?([0-9+]{10,13})\s*(?:پیامک|پیام)\s*(?:بفرست|بده)/
+
+);
+
+if(sms){
+
+sendSMS(
+
+sms[1],
+
+"سلام، این پیام از اهورا AI است."
+
+);
+
+return;
+
+}
+
+
+// ============================
+// زیاد کردن صدا
+// ============================
+
+if(
+
+/صدا.*(زیاد|بالا)/.test(text)
+
+){
+
+volume("up");
+
+return;
+
+}
+
+
+// ============================
+// کم کردن صدا
+// ============================
+
+if(
+
+/صدا.*(کم|پایین)/.test(text)
+
+){
+
+volume("down");
+
+return;
+
+}
+
+
+// ============================
+// موسیقی
+// ============================
+
+if(
+
+/موسیقی.*(متوقف|قطع)/.test(text) ||
+
+/آهنگ.*(متوقف|قطع)/.test(text)
+
+){
+
+musicStop();
+
+return;
+
+}
+
+
+if(
+
+/موسیقی.*(پخش|اجرا)/.test(text) ||
+
+/آهنگ.*(پخش|اجرا)/.test(text)
+
+){
+
+musicToggle();
+
+return;
+
+}
+
+
+// ============================
+// گوگل
+// ============================
+
+let google=text.match(
+
+/(?:در\s*)?گوگل\s*(?:جستجو\s*)?(?:کن\s*)?(.+)/
+
+);
+
+if(google){
+
+searchGoogle(google[1]);
+
+return;
+
+}
+
+
+// ============================
+// سایت
+// ============================
+
+let url=text.match(
+
+/https?:\/\/[^\s]+/
+
+);
+
+if(url){
+
+if(androidAvailable()){
+
+Android.openUrl(url[0]);
+
+}else{
+
+window.location.href=url[0];
+
+}
+
+return;
+
+}
+
+
+// ============================
+// ساعت
+// ============================
+
+if(
+
+/ساعت.*(چنده|چند است|الان)/.test(text)
+
+){
+
+const d=new Date();
+
+response(
+
+"🕐 ساعت "+
+String(d.getHours()).padStart(2,"0")+
+":"+
+String(d.getMinutes()).padStart(2,"0")+
+" است."
+
+);
+
+status("آماده","");
+
+orb.className="orb pulse";
+
+return;
+
+}
+
+
+// ============================
+// محاسبه
+// ============================
+
+let calc=text.match(
+
+/([0-9]+)\s*([+\-*\/])\s*([0-9]+)/
+
+);
+
+if(calc){
+
+const a=parseFloat(calc[1]);
+
+const op=calc[2];
+
+const b=parseFloat(calc[3]);
+
+let result=0;
+
+if(op==="+")result=a+b;
+
+if(op==="-")result=a-b;
+
+if(op==="*")result=a*b;
+
+if(op==="/")result=a/b;
+
+response(
+
+"🧮 نتیجه: "+result
+
+);
+
+status("آماده","");
+
+orb.className="orb pulse";
+
+return;
+
+}
+
+
+// ============================
+// پاسخ پیشفرض
+// ============================
+
+response(
+
+"🤔 متوجه فرمان نشدم.<br><br>"+
+"مثلاً بگو:<br>"+
+"«واتساپ رو باز کن»<br>"+
+"«با 09123456789 تماس بگیر»<br>"+
+"«به 09123456789 پیامک بفرست»<br>"+
+"«صدا رو زیاد کن»<br>"+
+"«موسیقی رو متوقف کن»<br>"+
+"«در گوگل ماینکرفت رو جستجو کن»"
+
+);
+
+status("آماده","");
+
+orb.className="orb pulse";
+
+processing=false;
+
+}
+
+
+// ============================
+// تأیید تماس
+// ============================
+
+window.confirmCall=function(){
+
+if(pendingPhone){
+
+callNumber(pendingPhone);
+
+pendingPhone=null;
+
+}
+
+};
+
+
+// ============================
+// میکروفون
+// ============================
+
+micBtn.addEventListener(
+
+"click",
+
+function(){
+
+if(listening){
+
+try{
+
+recognition.stop();
+
+}catch(e){}
+
+}else{
+
+startListening();
+
+}
+
+}
+
+);
+
+
+// ============================
+// شروع
+// ============================
+
+response(
+
+"👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟"
+
+);
+
 </script>
+
 </body>
+
 </html>
