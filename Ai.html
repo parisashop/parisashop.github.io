@@ -33,6 +33,7 @@ button,input{
     height:100vh;
     margin:auto;
     padding:18px;
+
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -47,6 +48,7 @@ button,input{
 
 .header{
     width:100%;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -75,10 +77,6 @@ button,input{
     color:#9da8c5;
 }
 
-/* =========================
-   صفحه اصلی
-========================= */
-
 .mainPage{
     width:100%;
     height:100%;
@@ -87,10 +85,6 @@ button,input{
     flex-direction:column;
     align-items:center;
 }
-
-/* =========================
-   Orb
-========================= */
 
 .orb-wrapper{
     width:230px;
@@ -196,10 +190,6 @@ button,input{
     }
 }
 
-/* =========================
-   Mic
-========================= */
-
 .mic{
     width:78px;
     height:78px;
@@ -243,10 +233,6 @@ button,input{
     }
 }
 
-/* =========================
-   وضعیت
-========================= */
-
 .status{
     margin:12px;
 
@@ -260,10 +246,6 @@ button,input{
 
     text-align:center;
 }
-
-/* =========================
-   کاربر
-========================= */
 
 .user{
     width:100%;
@@ -280,10 +262,6 @@ button,input{
 
     overflow:hidden;
 }
-
-/* =========================
-   پاسخ
-========================= */
 
 .response{
     width:100%;
@@ -316,7 +294,40 @@ button,input{
 }
 
 /* =========================
-   پنل تنظیم مخاطبین
+   دکمه‌های پایین
+========================= */
+
+.settingsBtn,
+.commandsBtn{
+    position:fixed;
+
+    bottom:18px;
+
+    width:48px;
+    height:48px;
+
+    border:0;
+    border-radius:50%;
+
+    background:#ffffff10;
+
+    color:white;
+
+    font-size:22px;
+
+    z-index:20;
+}
+
+.settingsBtn{
+    left:18px;
+}
+
+.commandsBtn{
+    left:76px;
+}
+
+/* =========================
+   پنل
 ========================= */
 
 .panel{
@@ -461,28 +472,95 @@ button,input{
 }
 
 /* =========================
-   تنظیمات
+   پنل دستورات
 ========================= */
 
-.settingsBtn{
-    position:fixed;
+.commandGrid{
+    display:grid;
 
-    left:18px;
-    bottom:18px;
+    grid-template-columns:
+    1fr 1fr;
 
-    width:48px;
-    height:48px;
+    gap:10px;
 
-    border:0;
-    border-radius:50%;
+    margin-top:15px;
+}
 
-    background:#ffffff10;
+.commandCard{
+    background:
+    linear-gradient(
+        135deg,
+        #ffffff0c,
+        #ffffff04
+    );
 
-    color:white;
+    border:1px solid #ffffff12;
 
-    font-size:22px;
+    border-radius:20px;
 
-    z-index:20;
+    padding:15px;
+
+    text-align:center;
+
+    min-height:125px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.2s;
+}
+
+.commandCard:active{
+    transform:scale(.96);
+
+    background:#0066ff22;
+}
+
+.commandIcon{
+    font-size:32px;
+
+    margin-bottom:7px;
+}
+
+.commandCard b{
+    font-size:15px;
+}
+
+.commandCard span{
+    color:#8993af;
+
+    font-size:11px;
+
+    margin-top:5px;
+
+    line-height:1.7;
+}
+
+.commandsList{
+    margin-top:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+}
+
+.commandsList div{
+    padding:11px 13px;
+
+    border-radius:14px;
+
+    background:#ffffff08;
+
+    color:#c4cbe0;
+
+    font-size:13px;
 }
 
 </style>
@@ -490,13 +568,9 @@ button,input{
 
 <body>
 
-<!-- =========================
-     برنامه اصلی
-========================= -->
-
 <div class="app">
 
-<div class="mainPage" id="mainPage">
+<div class="mainPage">
 
     <div class="header">
 
@@ -566,6 +640,7 @@ button,input{
 
 </div>
 
+
 <!-- =========================
      دکمه تنظیمات
 ========================= -->
@@ -573,8 +648,24 @@ button,input{
 <button
     class="settingsBtn"
     id="settingsBtn">
+
     ⚙
+
 </button>
+
+
+<!-- =========================
+     دکمه دستورات
+========================= -->
+
+<button
+    class="commandsBtn"
+    id="commandsBtn">
+
+    🎙️
+
+</button>
+
 
 <!-- =========================
      پنل مخاطبین
@@ -638,9 +729,208 @@ button,input{
 
 </div>
 
+
+<!-- =========================
+     پنل دستورات
+========================= -->
+
+<div
+    class="panel"
+    id="commandsPanel">
+
+    <div class="panelBox">
+
+        <div class="panelTitle">
+            🎙️ دستورات Ahoora AI
+        </div>
+
+        <div class="commandGrid">
+
+            <div class="commandCard">
+                <div class="commandIcon">📶</div>
+                <b>وای‌فای</b>
+                <span>
+                    «وای‌فای رو روشن کن»
+                </span>
+            </div>
+
+            <div class="commandCard">
+                <div class="commandIcon">🟦</div>
+                <b>بلوتوث</b>
+                <span>
+                    «بلوتوث رو خاموش کن»
+                </span>
+            </div>
+
+            <div class="commandCard">
+                <div class="commandIcon">📡</div>
+                <b>اینترنت همراه</b>
+                <span>
+                    «اینترنت همراه رو روشن کن»
+                </span>
+            </div>
+
+            <div class="commandCard">
+                <div class="commandIcon">📳</div>
+                <b>هات‌اسپات</b>
+                <span>
+                    «هات‌اسپات رو روشن کن»
+                </span>
+            </div>
+
+            <div class="commandCard">
+                <div class="commandIcon">🔦</div>
+                <b>چراغ قوه</b>
+                <span>
+                    «چراغ قوه رو روشن کن»
+                </span>
+            </div>
+
+            <div class="commandCard">
+                <div class="commandIcon">📍</div>
+                <b>مکان</b>
+                <span>
+                    «مکان رو روشن کن»
+                </span>
+            </div>
+
+            <div class="commandCard">
+                <div class="commandIcon">☀️</div>
+                <b>نور صفحه</b>
+                <span>
+                    «نور رو زیاد کن»
+                </span>
+            </div>
+
+            <div class="commandCard">
+                <div class="commandIcon">🎵</div>
+                <b>موسیقی</b>
+                <span>
+                    «آهنگ بعدی»
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="commandsList">
+
+            <div>
+                🔊 «صدا رو زیاد کن»
+            </div>
+
+            <div>
+                🔉 «صدا رو کم کن»
+            </div>
+
+            <div>
+                ▶️ «موزیک رو پخش کن»
+            </div>
+
+            <div>
+                ⏹️ «موزیک رو متوقف کن»
+            </div>
+
+            <div>
+                ⏭️ «آهنگ بعدی»
+            </div>
+
+            <div>
+                ⏮️ «آهنگ قبلی»
+            </div>
+
+            <div>
+                🔦 «چراغ قوه رو روشن کن»
+            </div>
+
+            <div>
+                🔦 «چراغ قوه رو خاموش کن»
+            </div>
+
+            <div>
+                📶 «وای‌فای رو روشن کن»
+            </div>
+
+            <div>
+                📶 «وای‌فای رو خاموش کن»
+            </div>
+
+            <div>
+                🟦 «بلوتوث رو روشن کن»
+            </div>
+
+            <div>
+                🟦 «بلوتوث رو خاموش کن»
+            </div>
+
+            <div>
+                📡 «اینترنت همراه رو روشن کن»
+            </div>
+
+            <div>
+                📡 «اینترنت همراه رو خاموش کن»
+            </div>
+
+            <div>
+                📳 «هات‌اسپات رو روشن کن»
+            </div>
+
+            <div>
+                📍 «مکان رو روشن کن»
+            </div>
+
+            <div>
+                📍 «مکان رو خاموش کن»
+            </div>
+
+            <div>
+                ☀️ «نور رو زیاد کن»
+            </div>
+
+            <div>
+                🌙 «نور رو کم کن»
+            </div>
+
+            <div>
+                📷 «دوربین رو باز کن»
+            </div>
+
+            <div>
+                🖼️ «گالری رو باز کن»
+            </div>
+
+            <div>
+                📞 «با پدرم تماس بگیر»
+            </div>
+
+            <div>
+                ✉️ «به مادرم پیام بده سلام»
+            </div>
+
+            <div>
+                🔎 «در گوگل ایران رو جستجو کن»
+            </div>
+
+        </div>
+
+
+        <button
+            class="close"
+            id="closeCommands">
+
+            بستن
+
+        </button>
+
+    </div>
+
+</div>
+
+
 <script>
 
 "use strict";
+
 
 /* =====================================================
    عناصر
@@ -685,6 +975,16 @@ const saveContact =
 const contactsList =
     document.getElementById("contactsList");
 
+const commandsBtn =
+    document.getElementById("commandsBtn");
+
+const commandsPanel =
+    document.getElementById("commandsPanel");
+
+const closeCommands =
+    document.getElementById("closeCommands");
+
+
 /* =====================================================
    Android Bridge
 ===================================================== */
@@ -695,33 +995,48 @@ function android(){
 
 }
 
+
 /* =====================================================
    ساعت
 ===================================================== */
 
 function clock(){
 
-    const d = new Date();
+    const d =
+        new Date();
 
     timeBox.textContent =
-        String(d.getHours()).padStart(2,"0")
-        + ":"
+        String(
+            d.getHours()
+        ).padStart(2,"0")
         +
-        String(d.getMinutes()).padStart(2,"0");
+        ":"
+        +
+        String(
+            d.getMinutes()
+        ).padStart(2,"0");
 
 }
 
 clock();
 
-setInterval(clock,10000);
+setInterval(
+    clock,
+    10000
+);
+
 
 /* =====================================================
    وضعیت
 ===================================================== */
 
-function setStatus(text,type=""){
+function setStatus(
+    text,
+    type=""
+){
 
-    statusBox.textContent = text;
+    statusBox.textContent =
+        text;
 
     orb.classList.remove(
         "listening",
@@ -730,11 +1045,14 @@ function setStatus(text,type=""){
 
     if(type){
 
-        orb.classList.add(type);
+        orb.classList.add(
+            type
+        );
 
     }
 
 }
+
 
 /* =====================================================
    نرمال‌سازی فارسی
@@ -744,17 +1062,39 @@ function normalize(text){
 
     return String(text)
 
-        .replace(/[۰-۹]/g,d =>
-            String("۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        .replace(
+            /[۰-۹]/g,
+            d =>
+            String(
+                "۰۱۲۳۴۵۶۷۸۹"
+                .indexOf(d)
+            )
         )
 
-        .replace(/ي/g,"ی")
-        .replace(/ك/g,"ک")
-        .replace(/ۀ/g,"ه")
+        .replace(
+            /ي/g,
+            "ی"
+        )
 
-        .replace(/[،,]/g," ")
+        .replace(
+            /ك/g,
+            "ک"
+        )
 
-        .replace(/\s+/g," ")
+        .replace(
+            /ۀ/g,
+            "ه"
+        )
+
+        .replace(
+            /[،,]/g,
+            " "
+        )
+
+        .replace(
+            /\s+/g,
+            " "
+        )
 
         .trim()
 
@@ -762,8 +1102,9 @@ function normalize(text){
 
 }
 
+
 /* =====================================================
-   صداهای قبلی
+   صدا
 ===================================================== */
 
 function playVoice(file){
@@ -773,7 +1114,9 @@ function playVoice(file){
         const audio =
             new Audio(file);
 
-        audio.play().catch(()=>{});
+        audio.play().catch(
+            ()=>{}
+        );
 
     }catch(e){}
 
@@ -807,11 +1150,15 @@ function voiceG(){
     playVoice("g.mp3");
 }
 
+
 /* =====================================================
    پاسخ
 ===================================================== */
 
-function answer(text,voice=null){
+function answer(
+    text,
+    voice=null
+){
 
     responseBox.innerHTML =
         text;
@@ -823,6 +1170,54 @@ function answer(text,voice=null){
     }
 
 }
+
+
+/* =====================================================
+   پنل‌ها
+===================================================== */
+
+settingsBtn.addEventListener(
+    "click",
+    function(){
+
+        renderContacts();
+
+        panel.style.display =
+            "block";
+
+    }
+);
+
+closePanel.addEventListener(
+    "click",
+    function(){
+
+        panel.style.display =
+            "none";
+
+    }
+);
+
+commandsBtn.addEventListener(
+    "click",
+    function(){
+
+        commandsPanel.style.display =
+            "block";
+
+    }
+);
+
+closeCommands.addEventListener(
+    "click",
+    function(){
+
+        commandsPanel.style.display =
+            "none";
+
+    }
+);
+
 
 /* =====================================================
    مخاطبین
@@ -846,6 +1241,7 @@ function getContacts(){
 
 }
 
+
 function saveContacts(data){
 
     localStorage.setItem(
@@ -855,11 +1251,47 @@ function saveContacts(data){
 
 }
 
+
 function isPersianName(name){
 
-    return /[\u0600-\u06FF]/.test(name);
+    return /[\u0600-\u06FF]/.test(
+        name
+    );
 
 }
+
+
+function escapeHTML(text){
+
+    return String(text)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
 
 function addContact(){
 
@@ -867,8 +1299,13 @@ function addContact(){
         contactName.value.trim();
 
     const number =
-        normalize(contactNumber.value)
-        .replace(/[^0-9+]/g,"");
+        normalize(
+            contactNumber.value
+        )
+        .replace(
+            /[^0-9+]/g,
+            ""
+        );
 
     if(!name){
 
@@ -907,7 +1344,8 @@ function addContact(){
         contacts.findIndex(
             c =>
             normalize(c.name)
-            === normalize(name)
+            ===
+            normalize(name)
         );
 
     if(old >= 0){
@@ -924,27 +1362,34 @@ function addContact(){
 
     }
 
-    saveContacts(contacts);
+    saveContacts(
+        contacts
+    );
 
-    contactName.value="";
-    contactNumber.value="";
+    contactName.value =
+        "";
+
+    contactNumber.value =
+        "";
 
     renderContacts();
 
     answer(
         "✅ مخاطب «"+
-        name+
+        escapeHTML(name)+
         "» ذخیره شد."
     );
 
 }
+
 
 function renderContacts(){
 
     const contacts =
         getContacts();
 
-    contactsList.innerHTML="";
+    contactsList.innerHTML =
+        "";
 
     if(!contacts.length){
 
@@ -958,10 +1403,15 @@ function renderContacts(){
     }
 
     contacts.forEach(
-        (contact,index)=>{
+        (
+            contact,
+            index
+        )=>{
 
             const div =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             div.className =
                 "savedContact";
@@ -970,11 +1420,15 @@ function renderContacts(){
 
                 "<div>"+
                 "<b>"+
-                escapeHTML(contact.name)+
+                escapeHTML(
+                    contact.name
+                )+
                 "</b>"+
                 "<br>"+
                 "<small>"+
-                escapeHTML(contact.number)+
+                escapeHTML(
+                    contact.number
+                )+
                 "</small>"+
                 "</div>"+
 
@@ -983,72 +1437,56 @@ function renderContacts(){
                 "حذف"+
                 "</button>";
 
-            contactsList.appendChild(div);
+            contactsList.appendChild(
+                div
+            );
 
         }
     );
 
+
     document
-    .querySelectorAll(".deleteContact")
-    .forEach(btn=>{
+    .querySelectorAll(
+        ".deleteContact"
+    )
+    .forEach(
+        btn=>{
 
-        btn.onclick=function(){
+            btn.onclick =
+            function(){
 
-            const index =
-                Number(
-                    this.dataset.index
+                const index =
+                    Number(
+                        this.dataset.index
+                    );
+
+                const contacts =
+                    getContacts();
+
+                contacts.splice(
+                    index,
+                    1
                 );
 
-            const contacts =
-                getContacts();
+                saveContacts(
+                    contacts
+                );
 
-            contacts.splice(index,1);
+                renderContacts();
 
-            saveContacts(contacts);
+            };
 
-            renderContacts();
-
-        };
-
-    });
+        }
+    );
 
 }
 
-function escapeHTML(text){
-
-    return String(text)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
 
 saveContact.addEventListener(
     "click",
     addContact
 );
 
-settingsBtn.addEventListener(
-    "click",
-    function(){
-
-        renderContacts();
-
-        panel.style.display="block";
-
-    }
-);
-
-closePanel.addEventListener(
-    "click",
-    function(){
-
-        panel.style.display="none";
-
-    }
-);
 
 /* =====================================================
    پیدا کردن مخاطب
@@ -1065,7 +1503,8 @@ function findContact(name){
     return contacts.find(
         c =>
         normalize(c.name)
-        === target
+        ===
+        target
         ||
         target.includes(
             normalize(c.name)
@@ -1074,8 +1513,9 @@ function findContact(name){
 
 }
 
+
 /* =====================================================
-   نام‌های خانوادگی
+   روابط خانوادگی
 ===================================================== */
 
 const relationAliases = {
@@ -1110,6 +1550,7 @@ const relationAliases = {
 
 };
 
+
 function normalizeRelation(text){
 
     const t =
@@ -1133,6 +1574,7 @@ function normalizeRelation(text){
 
 }
 
+
 /* =====================================================
    تماس
 ===================================================== */
@@ -1141,19 +1583,26 @@ function callNumber(number){
 
     number =
         normalize(number)
-        .replace(/[^0-9+]/g,"");
+        .replace(
+            /[^0-9+]/g,
+            ""
+        );
 
-    if(!number) return;
+    if(!number)
+        return;
 
     if(android()){
 
         try{
 
-            Android.makeCall(number);
+            Android.makeCall(
+                number
+            );
 
             answer(
                 "📞 در حال تماس با "+
-                number+"..."
+                number+
+                "..."
             );
 
             return;
@@ -1167,6 +1616,7 @@ function callNumber(number){
 
 }
 
+
 function callContact(name){
 
     const contact =
@@ -1176,7 +1626,7 @@ function callContact(name){
 
         answer(
             "❌ برای «"+
-            name+
+            escapeHTML(name)+
             "» شماره‌ای ذخیره نشده است.<br><br>"+
             "از ⚙ قسمت مخاطبین، شماره را ثبت کن.",
             voiceD
@@ -1191,6 +1641,7 @@ function callContact(name){
     );
 
 }
+
 
 /* =====================================================
    پیامک
@@ -1208,7 +1659,7 @@ function smsContact(
 
         answer(
             "❌ برای «"+
-            name+
+            escapeHTML(name)+
             "» شماره‌ای ذخیره نشده است.",
             voiceD
         );
@@ -1228,7 +1679,9 @@ function smsContact(
 
             answer(
                 "✉️ پیام برای "+
-                contact.name+
+                escapeHTML(
+                    contact.name
+                )+
                 " ارسال شد."
             );
 
@@ -1239,14 +1692,18 @@ function smsContact(
     }
 
     window.location.href =
-        "sms:"+contact.number+
+        "sms:"+
+        contact.number+
         "?body="+
-        encodeURIComponent(message);
+        encodeURIComponent(
+            message
+        );
 
 }
 
+
 /* =====================================================
-   استخراج متن پیام
+   استخراج پیام
 ===================================================== */
 
 function extractMessage(text){
@@ -1256,12 +1713,37 @@ function extractMessage(text){
 
     result =
         result
-        .replace(/به\s+/g,"")
-        .replace(/پیامک/g,"")
-        .replace(/پیام/g,"")
-        .replace(/بفرست/g,"")
-        .replace(/بده/g,"")
-        .replace(/ارسال کن/g,"")
+
+        .replace(
+            /به\s+/g,
+            ""
+        )
+
+        .replace(
+            /پیامک/g,
+            ""
+        )
+
+        .replace(
+            /پیام/g,
+            ""
+        )
+
+        .replace(
+            /بفرست/g,
+            ""
+        )
+
+        .replace(
+            /بده/g,
+            ""
+        )
+
+        .replace(
+            /ارسال کن/g,
+            ""
+        )
+
         .trim();
 
     const contacts =
@@ -1272,7 +1754,9 @@ function extractMessage(text){
     ){
 
         const n =
-            normalize(c.name);
+            normalize(
+                c.name
+            );
 
         if(
             result.includes(n)
@@ -1280,7 +1764,10 @@ function extractMessage(text){
 
             result =
                 result
-                .replace(n,"")
+                .replace(
+                    n,
+                    ""
+                )
                 .trim();
 
             break;
@@ -1293,11 +1780,14 @@ function extractMessage(text){
 
 }
 
+
 /* =====================================================
    استخراج مخاطب
 ===================================================== */
 
-function extractContactFromCommand(text){
+function extractContactFromCommand(
+    text
+){
 
     const contacts =
         getContacts();
@@ -1308,7 +1798,9 @@ function extractContactFromCommand(text){
 
         if(
             text.includes(
-                normalize(c.name)
+                normalize(
+                    c.name
+                )
             )
         ){
 
@@ -1319,7 +1811,9 @@ function extractContactFromCommand(text){
     }
 
     const relation =
-        normalizeRelation(text);
+        normalizeRelation(
+            text
+        );
 
     if(relation){
 
@@ -1331,41 +1825,57 @@ function extractContactFromCommand(text){
 
 }
 
+
 /* =====================================================
    برنامه‌ها
 ===================================================== */
 
 const apps = {
 
-    "واتساپ":"com.whatsapp",
+    "واتساپ":
+        "com.whatsapp",
 
-    "تلگرام":"org.telegram.messenger",
+    "تلگرام":
+        "org.telegram.messenger",
 
-    "اینستاگرام":"com.instagram.android",
+    "اینستاگرام":
+        "com.instagram.android",
 
-    "یوتیوب":"com.google.android.youtube",
+    "یوتیوب":
+        "com.google.android.youtube",
 
-    "کروم":"com.android.chrome",
+    "کروم":
+        "com.android.chrome",
 
-    "فیسبوک":"com.facebook.katana",
+    "فیسبوک":
+        "com.facebook.katana",
 
-    "ایکس":"com.twitter.android",
+    "ایکس":
+        "com.twitter.android",
 
-    "تیک تاک":"com.zhiliaoapp.musically",
+    "تیک تاک":
+        "com.zhiliaoapp.musically",
 
-    "اسنپ":"com.snapp.passenger",
+    "اسنپ":
+        "com.snapp.passenger",
 
-    "دیوار":"ir.divar",
+    "دیوار":
+        "ir.divar",
 
-    "روبیکا":"ir.resaneh1.iptv",
+    "روبیکا":
+        "ir.resaneh1.iptv",
 
-    "مایکت":"ir.mservices.market",
+    "مایکت":
+        "ir.mservices.market",
 
-    "بازار":"com.farsitel.bazaar",
+    "بازار":
+        "com.farsitel.bazaar",
 
-    "تنظیمات":"com.android.settings"
+    "تنظیمات":
+        "com.android.settings"
 
 };
+
 
 /* =====================================================
    باز کردن برنامه
@@ -1381,7 +1891,8 @@ function openApp(
         try{
 
             if(
-                typeof Android.openApp ===
+                typeof Android.openApp
+                ===
                 "function"
             ){
 
@@ -1425,9 +1936,6 @@ function openApp(
 
 }
 
-/* =====================================================
-   جستجوی برنامه
-===================================================== */
 
 function openNamedApp(text){
 
@@ -1463,6 +1971,7 @@ function openNamedApp(text){
 
 }
 
+
 /* =====================================================
    صدا
 ===================================================== */
@@ -1473,7 +1982,9 @@ function volumeUp(){
 
         try{
 
-            Android.adjustVolume("up");
+            Android.adjustVolume(
+                "up"
+            );
 
         }catch(e){}
 
@@ -1485,13 +1996,16 @@ function volumeUp(){
 
 }
 
+
 function volumeDown(){
 
     if(android()){
 
         try{
 
-            Android.adjustVolume("down");
+            Android.adjustVolume(
+                "down"
+            );
 
         }catch(e){}
 
@@ -1502,6 +2016,7 @@ function volumeDown(){
     );
 
 }
+
 
 /* =====================================================
    موسیقی
@@ -1531,6 +2046,7 @@ function musicPlay(){
 
 }
 
+
 function musicStop(){
 
     if(android()){
@@ -1554,6 +2070,335 @@ function musicStop(){
     );
 
 }
+
+
+/* =====================================================
+   موسیقی بعدی
+===================================================== */
+
+function musicNext(){
+
+    if(android()){
+
+        try{
+
+            Android.nextMusic();
+
+            answer(
+                "⏭️ آهنگ بعدی.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "⏭️ آهنگ بعدی"
+    );
+
+}
+
+
+/* =====================================================
+   موسیقی قبلی
+===================================================== */
+
+function musicPrevious(){
+
+    if(android()){
+
+        try{
+
+            Android.previousMusic();
+
+            answer(
+                "⏮️ آهنگ قبلی.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "⏮️ آهنگ قبلی"
+    );
+
+}
+
+
+/* =====================================================
+   چراغ قوه
+===================================================== */
+
+function flashlightOn(){
+
+    if(android()){
+
+        try{
+
+            Android.setFlashlight(
+                true
+            );
+
+            answer(
+                "🔦 چراغ قوه روشن شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "❌ کنترل چراغ قوه در دسترس نیست.",
+        voiceD
+    );
+
+}
+
+
+function flashlightOff(){
+
+    if(android()){
+
+        try{
+
+            Android.setFlashlight(
+                false
+            );
+
+            answer(
+                "🔦 چراغ قوه خاموش شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "❌ کنترل چراغ قوه در دسترس نیست.",
+        voiceD
+    );
+
+}
+
+
+/* =====================================================
+   تنظیمات وای‌فای
+===================================================== */
+
+function wifiSettings(){
+
+    if(android()){
+
+        try{
+
+            Android.openWifiSettings();
+
+            answer(
+                "📶 تنظیمات وای‌فای باز شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "📶 تنظیمات وای‌فای در دسترس نیست."
+    );
+
+}
+
+
+/* =====================================================
+   بلوتوث
+===================================================== */
+
+function bluetoothSettings(){
+
+    if(android()){
+
+        try{
+
+            Android.openBluetoothSettings();
+
+            answer(
+                "🟦 تنظیمات بلوتوث باز شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "🟦 تنظیمات بلوتوث باز نشد."
+    );
+
+}
+
+
+/* =====================================================
+   اینترنت همراه
+===================================================== */
+
+function mobileDataSettings(){
+
+    if(android()){
+
+        try{
+
+            Android.openMobileNetworkSettings();
+
+            answer(
+                "📡 تنظیمات اینترنت همراه باز شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "📡 تنظیمات اینترنت همراه باز نشد."
+    );
+
+}
+
+
+/* =====================================================
+   هات‌اسپات
+===================================================== */
+
+function hotspotSettings(){
+
+    if(android()){
+
+        try{
+
+            Android.openHotspotSettings();
+
+            answer(
+                "📳 تنظیمات هات‌اسپات باز شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "📳 تنظیمات هات‌اسپات باز نشد."
+    );
+
+}
+
+
+/* =====================================================
+   مکان
+===================================================== */
+
+function locationSettings(){
+
+    if(android()){
+
+        try{
+
+            Android.openLocationSettings();
+
+            answer(
+                "📍 تنظیمات مکان باز شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "📍 تنظیمات مکان باز نشد."
+    );
+
+}
+
+
+/* =====================================================
+   نور صفحه
+===================================================== */
+
+function brightnessUp(){
+
+    if(android()){
+
+        try{
+
+            Android.brightnessUp();
+
+            answer(
+                "☀️ نور صفحه زیاد شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "☀️ کنترل نور صفحه در دسترس نیست."
+    );
+
+}
+
+
+function brightnessDown(){
+
+    if(android()){
+
+        try{
+
+            Android.brightnessDown();
+
+            answer(
+                "🌙 نور صفحه کم شد.",
+                voiceA
+            );
+
+            return;
+
+        }catch(e){}
+
+    }
+
+    answer(
+        "🌙 کنترل نور صفحه در دسترس نیست."
+    );
+
+}
+
 
 /* =====================================================
    دوربین
@@ -1584,6 +2429,7 @@ function camera(){
 
 }
 
+
 /* =====================================================
    گالری
 ===================================================== */
@@ -1613,6 +2459,7 @@ function gallery(){
 
 }
 
+
 /* =====================================================
    ساعت
 ===================================================== */
@@ -1625,12 +2472,18 @@ function sayTime(){
     const h =
         String(
             d.getHours()
-        ).padStart(2,"0");
+        ).padStart(
+            2,
+            "0"
+        );
 
     const m =
         String(
             d.getMinutes()
-        ).padStart(2,"0");
+        ).padStart(
+            2,
+            "0"
+        );
 
     answer(
         "🕐 الان ساعت "+
@@ -1643,25 +2496,32 @@ function sayTime(){
 
 }
 
+
 /* =====================================================
    گوگل
 ===================================================== */
 
-function googleSearch(query){
+function googleSearch(
+    query
+){
 
     const url =
         "https://www.google.com/search?q="+
-        encodeURIComponent(query);
+        encodeURIComponent(
+            query
+        );
 
     if(android()){
 
         try{
 
-            Android.openUrl(url);
+            Android.openUrl(
+                url
+            );
 
             answer(
                 "🔎 در گوگل برای «"+
-                query+
+                escapeHTML(query)+
                 "» جستجو کردم.",
                 voiceG
             );
@@ -1677,19 +2537,26 @@ function googleSearch(query){
 
 }
 
+
 /* =====================================================
    Speech Recognition
 ===================================================== */
 
-let recognition=null;
+let recognition =
+    null;
 
-let listening=false;
+let listening =
+    false;
 
-let commandMode=false;
+let commandMode =
+    false;
 
-let lastTranscript = null;   // آخرین متن تشخیص داده شده
+let lastTranscript =
+    null;
 
-let manualStop = false;     // آیا توقف به دست کاربر بوده؟
+let manualStop =
+    false;
+
 
 function initSpeech(){
 
@@ -1723,10 +2590,12 @@ function initSpeech(){
     recognition.maxAlternatives =
         3;
 
+
     recognition.onstart =
     function(){
 
-        listening=true;
+        listening =
+            true;
 
         setStatus(
             commandMode ?
@@ -1741,6 +2610,7 @@ function initSpeech(){
 
     };
 
+
     recognition.onresult =
     function(event){
 
@@ -1753,10 +2623,11 @@ function initSpeech(){
         userBox.textContent =
             text;
 
-        // ذخیره آخرین متن برای پردازش بعدی
-        lastTranscript = text;
+        lastTranscript =
+            text;
 
     };
+
 
     recognition.onerror =
     function(event){
@@ -1765,7 +2636,8 @@ function initSpeech(){
             event.error
         );
 
-        listening=false;
+        listening =
+            false;
 
         mic.classList.remove(
             "active"
@@ -1783,19 +2655,28 @@ function initSpeech(){
 
         }
 
-        // اگر خطا رخ داد، وضعیت را بر اساس حالت تنظیم کن
-        if (commandMode) {
-            setStatus("فرمان صوتی فعال است");
-        } else {
-            setStatus("آماده — بگو «سلام اهورا»");
+        if(commandMode){
+
+            setStatus(
+                "فرمان صوتی فعال است"
+            );
+
+        }else{
+
+            setStatus(
+                "آماده — بگو «سلام اهورا»"
+            );
+
         }
 
     };
 
+
     recognition.onend =
     function(){
 
-        listening=false;
+        listening =
+            false;
 
         mic.classList.remove(
             "active"
@@ -1806,32 +2687,45 @@ function initSpeech(){
             "processing"
         );
 
-        // اگر توقف دستی بود، فرمان را پردازش کن
-        if (manualStop) {
 
-            manualStop = false;
+        if(manualStop){
 
-            if (lastTranscript) {
+            manualStop =
+                false;
 
-                // پردازش با پرچم fromButton=true
-                processSpeech(lastTranscript, true);
+            if(lastTranscript){
 
-                lastTranscript = null;
+                processSpeech(
+                    lastTranscript,
+                    true
+                );
 
-            } else {
+                lastTranscript =
+                    null;
 
-                setStatus("تشخیص داده نشد");
+            }else{
+
+                setStatus(
+                    "تشخیص داده نشد"
+                );
 
                 answer(
                     "❌ چیزی تشخیص داده نشد.",
                     voiceD
                 );
 
-                // پس از خطا، اگر commandMode فعال بود، نگه دار
-                if (!commandMode) {
-                    setStatus("آماده — بگو «سلام اهورا»");
-                } else {
-                    setStatus("فرمان صوتی فعال است");
+                if(!commandMode){
+
+                    setStatus(
+                        "آماده — بگو «سلام اهورا»"
+                    );
+
+                }else{
+
+                    setStatus(
+                        "فرمان صوتی فعال است"
+                    );
+
                 }
 
             }
@@ -1840,31 +2734,41 @@ function initSpeech(){
 
         }
 
-        // توقف خودکار (غیر دستی)
-        if (commandMode) {
-            setStatus("فرمان صوتی فعال است");
-        } else {
-            setStatus("آماده — بگو «سلام اهورا»");
+
+        if(commandMode){
+
+            setStatus(
+                "فرمان صوتی فعال است"
+            );
+
+        }else{
+
+            setStatus(
+                "آماده — بگو «سلام اهورا»"
+            );
+
         }
 
     };
+
 
     return true;
 
 }
 
+
 /* =====================================================
-   تغییر وضعیت میکروفن (روشن/خاموش)
+   روشن/خاموش میکروفن
 ===================================================== */
 
 function toggleListen(){
 
-    // اگر در حال گوش دادن است، متوقف کن
-    if (listening) {
+    if(listening){
 
-        manualStop = true;
+        manualStop =
+            true;
 
-        if (recognition) {
+        if(recognition){
 
             recognition.stop();
 
@@ -1874,20 +2778,28 @@ function toggleListen(){
 
     }
 
-    // در غیر این صورت شروع کن
-    if (!recognition) {
 
-        if (!initSpeech()) return;
+    if(!recognition){
+
+        if(
+            !initSpeech()
+        )
+            return;
 
     }
 
-    try {
+
+    lastTranscript =
+        null;
+
+    try{
 
         recognition.start();
 
-    } catch(e) {}
+    }catch(e){}
 
 }
+
 
 /* =====================================================
    Wake Word
@@ -1899,32 +2811,48 @@ function wakeWord(text){
         normalize(text);
 
     return(
-        t.includes("سلام اهورا") ||
-        t.includes("اهورا")
+        t.includes(
+            "سلام اهورا"
+        )
+        ||
+        t.includes(
+            "اهورا"
+        )
     );
 
 }
+
 
 /* =====================================================
    پردازش فرمان
 ===================================================== */
 
-function processSpeech(original, fromButton = false){
+function processSpeech(
+    original,
+    fromButton=false
+){
 
     const text =
-        normalize(original);
+        normalize(
+            original
+        );
 
-    listening=false;
+    listening =
+        false;
 
     setStatus(
         "در حال پردازش...",
         "processing"
     );
 
-    // اگر از دکمه آمده، حتماً حالت فرمان فعال کن
-    if (fromButton) {
-        commandMode = true;
+
+    if(fromButton){
+
+        commandMode =
+            true;
+
     }
+
 
     /* =====================
        Wake Word
@@ -1932,9 +2860,12 @@ function processSpeech(original, fromButton = false){
 
     if(!commandMode){
 
-        if(wakeWord(text)){
+        if(
+            wakeWord(text)
+        ){
 
-            commandMode=true;
+            commandMode =
+                true;
 
             answer(
                 "👋 بله؟ فرمانت را بگو.",
@@ -1945,13 +2876,10 @@ function processSpeech(original, fromButton = false){
                 "فرمان صوتی فعال شد"
             );
 
-            // بعد از بیدار شدن، دوباره گوش بده (اختیاری)
-            // ولی حالا با دکمه کنترل می‌شه، می‌تونیم غیرفعال کنیم
-            // setTimeout(toggleListen, 800);
-
             return;
 
         }
+
 
         setStatus(
             "برای فعال شدن بگو «سلام اهورا»"
@@ -1960,6 +2888,7 @@ function processSpeech(original, fromButton = false){
         return;
 
     }
+
 
     /* =====================
        لغو
@@ -1971,7 +2900,8 @@ function processSpeech(original, fromButton = false){
         text === "خروج"
     ){
 
-        commandMode=false;
+        commandMode =
+            false;
 
         answer(
             "باشه."
@@ -1985,15 +2915,258 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
+    /* =====================
+       چراغ قوه
+    ===================== */
+
+    if(
+        text.includes(
+            "چراغ قوه"
+        )
+        ||
+        text.includes(
+            "فلش"
+        )
+    ){
+
+        if(
+            text.includes("روشن") ||
+            text.includes("فعال")
+        ){
+
+            flashlightOn();
+
+            return;
+
+        }
+
+        if(
+            text.includes("خاموش") ||
+            text.includes("غیرفعال")
+        ){
+
+            flashlightOff();
+
+            return;
+
+        }
+
+    }
+
+
+    /* =====================
+       وای‌فای
+    ===================== */
+
+    if(
+        text.includes("وای فای") ||
+        text.includes("وای‌فای") ||
+        text.includes("wifi")
+    ){
+
+        wifiSettings();
+
+        return;
+
+    }
+
+
+    /* =====================
+       بلوتوث
+    ===================== */
+
+    if(
+        text.includes(
+            "بلوتوث"
+        )
+        ||
+        text.includes(
+            "bluetooth"
+        )
+    ){
+
+        bluetoothSettings();
+
+        return;
+
+    }
+
+
+    /* =====================
+       اینترنت همراه
+    ===================== */
+
+    if(
+        text.includes(
+            "اینترنت همراه"
+        )
+        ||
+        text.includes(
+            "دیتای همراه"
+        )
+        ||
+        text.includes(
+            "دیتا"
+        )
+    ){
+
+        mobileDataSettings();
+
+        return;
+
+    }
+
+
+    /* =====================
+       هات‌اسپات
+    ===================== */
+
+    if(
+        text.includes(
+            "هات اسپات"
+        )
+        ||
+        text.includes(
+            "هات‌اسپات"
+        )
+        ||
+        text.includes(
+            "نقطه اتصال"
+        )
+    ){
+
+        hotspotSettings();
+
+        return;
+
+    }
+
+
+    /* =====================
+       مکان
+    ===================== */
+
+    if(
+        text.includes(
+            "مکان"
+        )
+        ||
+        text.includes(
+            "لوکیشن"
+        )
+    ){
+
+        locationSettings();
+
+        return;
+
+    }
+
+
+    /* =====================
+       نور
+    ===================== */
+
+    if(
+        text.includes(
+            "نور"
+        )
+    ){
+
+        if(
+            text.includes(
+                "زیاد"
+            )
+            ||
+            text.includes(
+                "بالا"
+            )
+        ){
+
+            brightnessUp();
+
+            return;
+
+        }
+
+        if(
+            text.includes(
+                "کم"
+            )
+            ||
+            text.includes(
+                "پایین"
+            )
+        ){
+
+            brightnessDown();
+
+            return;
+
+        }
+
+    }
+
+
+    /* =====================
+       موزیک بعدی
+    ===================== */
+
+    if(
+        text.includes(
+            "آهنگ بعدی"
+        )
+        ||
+        text.includes(
+            "موزیک بعدی"
+        )
+        ||
+        text === "بعدی"
+    ){
+
+        musicNext();
+
+        return;
+
+    }
+
+
+    /* =====================
+       موزیک قبلی
+    ===================== */
+
+    if(
+        text.includes(
+            "آهنگ قبلی"
+        )
+        ||
+        text.includes(
+            "موزیک قبلی"
+        )
+        ||
+        text === "قبلی"
+    ){
+
+        musicPrevious();
+
+        return;
+
+    }
+
+
     /* =====================
        ساعت
     ===================== */
 
     if(
-        text.includes("ساعت") &&
+        text.includes("ساعت")
+        &&
         (
-            text.includes("چنده") ||
-            text.includes("چند") ||
+            text.includes("چنده")
+            ||
+            text.includes("چند")
+            ||
             text.includes("الان")
         )
     ){
@@ -2004,13 +3177,19 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        دوربین
     ===================== */
 
     if(
-        text.includes("دوربین") ||
-        text.includes("عکس بگیر")
+        text.includes(
+            "دوربین"
+        )
+        ||
+        text.includes(
+            "عکس بگیر"
+        )
     ){
 
         camera();
@@ -2019,14 +3198,23 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        گالری
     ===================== */
 
     if(
-        text.includes("گالری") ||
-        text.includes("عکس هام") ||
-        text.includes("عکسها")
+        text.includes(
+            "گالری"
+        )
+        ||
+        text.includes(
+            "عکس هام"
+        )
+        ||
+        text.includes(
+            "عکسها"
+        )
     ){
 
         gallery();
@@ -2035,15 +3223,24 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        افزایش صدا
     ===================== */
 
     if(
-        text.includes("صدا") &&
+        text.includes(
+            "صدا"
+        )
+        &&
         (
-            text.includes("زیاد") ||
-            text.includes("بالا")
+            text.includes(
+                "زیاد"
+            )
+            ||
+            text.includes(
+                "بالا"
+            )
         )
     ){
 
@@ -2053,15 +3250,24 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        کاهش صدا
     ===================== */
 
     if(
-        text.includes("صدا") &&
+        text.includes(
+            "صدا"
+        )
+        &&
         (
-            text.includes("کم") ||
-            text.includes("پایین")
+            text.includes(
+                "کم"
+            )
+            ||
+            text.includes(
+                "پایین"
+            )
         )
     ){
 
@@ -2071,19 +3277,38 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
-       موسیقی
+       موسیقی پخش
     ===================== */
 
     if(
         (
-            text.includes("آهنگ") ||
-            text.includes("موسیقی")
-        ) &&
+            text.includes(
+                "آهنگ"
+            )
+            ||
+            text.includes(
+                "موسیقی"
+            )
+            ||
+            text.includes(
+                "موزیک"
+            )
+        )
+        &&
         (
-            text.includes("پخش") ||
-            text.includes("اجرا") ||
-            text.includes("ادامه")
+            text.includes(
+                "پخش"
+            )
+            ||
+            text.includes(
+                "اجرا"
+            )
+            ||
+            text.includes(
+                "ادامه"
+            )
         )
     ){
 
@@ -2093,15 +3318,38 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
+    /* =====================
+       موسیقی توقف
+    ===================== */
+
     if(
         (
-            text.includes("آهنگ") ||
-            text.includes("موسیقی")
-        ) &&
+            text.includes(
+                "آهنگ"
+            )
+            ||
+            text.includes(
+                "موسیقی"
+            )
+            ||
+            text.includes(
+                "موزیک"
+            )
+        )
+        &&
         (
-            text.includes("توقف") ||
-            text.includes("متوقف") ||
-            text.includes("قطع")
+            text.includes(
+                "توقف"
+            )
+            ||
+            text.includes(
+                "متوقف"
+            )
+            ||
+            text.includes(
+                "قطع"
+            )
         )
     ){
 
@@ -2111,14 +3359,23 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        تماس
     ===================== */
 
     if(
-        text.includes("تماس") ||
-        text.includes("زنگ") ||
-        text.includes("بگیر")
+        text.includes(
+            "تماس"
+        )
+        ||
+        text.includes(
+            "زنگ"
+        )
+        ||
+        text.includes(
+            "بگیر"
+        )
     ){
 
         const contact =
@@ -2153,13 +3410,19 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        پیام
     ===================== */
 
     if(
-        text.includes("پیام") ||
-        text.includes("پیامک")
+        text.includes(
+            "پیام"
+        )
+        ||
+        text.includes(
+            "پیامک"
+        )
     ){
 
         const contact =
@@ -2192,52 +3455,110 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
-       جستجو گوگل
+       جستجوی گوگل
     ===================== */
 
-    let searchText=null;
+    let searchText =
+        null;
+
 
     if(
-        text.startsWith("گوگل")
+        text.startsWith(
+            "گوگل"
+        )
     ){
 
         searchText =
             text
-            .replace("گوگل","")
-            .replace("جستجو","")
-            .replace("کن","")
+
+            .replace(
+                "گوگل",
+                ""
+            )
+
+            .replace(
+                "جستجو",
+                ""
+            )
+
+            .replace(
+                "کن",
+                ""
+            )
+
             .trim();
 
     }
 
+
     if(
-        text.includes("در گوگل") ||
-        text.includes("توی گوگل")
+        text.includes(
+            "در گوگل"
+        )
+        ||
+        text.includes(
+            "توی گوگل"
+        )
     ){
 
         searchText =
             text
-            .replace("در گوگل","")
-            .replace("توی گوگل","")
-            .replace("جستجو","")
-            .replace("کن","")
+
+            .replace(
+                "در گوگل",
+                ""
+            )
+
+            .replace(
+                "توی گوگل",
+                ""
+            )
+
+            .replace(
+                "جستجو",
+                ""
+            )
+
+            .replace(
+                "کن",
+                ""
+            )
+
             .trim();
 
     }
 
+
     if(
-        text.startsWith("جستجو کن")
+        text.startsWith(
+            "جستجو کن"
+        )
     ){
 
         searchText =
             text
-            .replace("جستجو کن","")
-            .replace("در گوگل","")
-            .replace("توی گوگل","")
+
+            .replace(
+                "جستجو کن",
+                ""
+            )
+
+            .replace(
+                "در گوگل",
+                ""
+            )
+
+            .replace(
+                "توی گوگل",
+                ""
+            )
+
             .trim();
 
     }
+
 
     if(searchText){
 
@@ -2249,17 +3570,21 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
-       باز کردن برنامه
+       برنامه‌ها
     ===================== */
 
     if(
-        openNamedApp(text)
+        openNamedApp(
+            text
+        )
     ){
 
         return;
 
     }
+
 
     /* =====================
        لینک
@@ -2293,12 +3618,15 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        سلام
     ===================== */
 
     if(
-        text.includes("سلام")
+        text.includes(
+            "سلام"
+        )
     ){
 
         answer(
@@ -2310,6 +3638,7 @@ function processSpeech(original, fromButton = false){
 
     }
 
+
     /* =====================
        نامفهوم
     ===================== */
@@ -2320,15 +3649,19 @@ function processSpeech(original, fromButton = false){
 
         "مثلاً بگو:<br>"+
 
-        "«واتساپ رو باز کن»<br>"+
-        "«روبیکا رو باز کن»<br>"+
+        "«وای‌فای رو روشن کن»<br>"+
+        "«بلوتوث رو خاموش کن»<br>"+
+        "«چراغ قوه رو روشن کن»<br>"+
+        "«چراغ قوه رو خاموش کن»<br>"+
+        "«هات‌اسپات رو روشن کن»<br>"+
+        "«مکان رو روشن کن»<br>"+
+        "«نور رو زیاد کن»<br>"+
+        "«نور رو کم کن»<br>"+
+        "«آهنگ بعدی»<br>"+
+        "«آهنگ قبلی»<br>"+
+        "«موزیک رو متوقف کن»<br>"+
         "«با پدرم تماس بگیر»<br>"+
-        "«با دایی تماس بگیر»<br>"+
         "«به پدرم پیام بده سلام»<br>"+
-        "«به دایی پیام بده فردا بیا»<br>"+
-        "«آهنگ رو پخش کن»<br>"+
-        "«صدا رو زیاد کن»<br>"+
-        "«ساعت چنده»<br>"+
         "«در گوگل ایران رو جستجو کن»",
 
         voiceD
@@ -2337,14 +3670,16 @@ function processSpeech(original, fromButton = false){
 
 }
 
+
 /* =====================================================
-   دکمه میکروفن
+   میکروفن
 ===================================================== */
 
 mic.addEventListener(
     "click",
     toggleListen
 );
+
 
 /* =====================================================
    اجرای اولیه
