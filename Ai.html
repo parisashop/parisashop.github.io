@@ -1380,11 +1380,6 @@ function openApp(
 
         try{
 
-            /*
-             * Java باید متد openAppByName
-             * یا openApp داشته باشد.
-             */
-
             if(
                 typeof Android.openApp ===
                 "function"
@@ -1692,6 +1687,10 @@ let listening=false;
 
 let commandMode=false;
 
+let lastTranscript = null;   // آخرین متن تشخیص داده شده
+
+let manualStop = false;     // آیا توقف به دست کاربر بوده؟
+
 function initSpeech(){
 
     const Speech =
@@ -1754,7 +1753,8 @@ function initSpeech(){
         userBox.textContent =
             text;
 
-        processSpeech(text);
+        // ذخیره آخرین متن برای پردازش بعدی
+        lastTranscript = text;
 
     };
 
@@ -1783,9 +1783,12 @@ function initSpeech(){
 
         }
 
-        setStatus(
-            "آماده — بگو «سلام اهورا»"
-        );
+        // اگر خطا رخ داد، وضعیت را بر اساس حالت تنظیم کن
+        if (commandMode) {
+            setStatus("فرمان صوتی فعال است");
+        } else {
+            setStatus("آماده — بگو «سلام اهورا»");
+        }
 
     };
 
@@ -1803,6 +1806,47 @@ function initSpeech(){
             "processing"
         );
 
+        // اگر توقف دستی بود، فرمان را پردازش کن
+        if (manualStop) {
+
+            manualStop = false;
+
+            if (lastTranscript) {
+
+                // پردازش با پرچم fromButton=true
+                processSpeech(lastTranscript, true);
+
+                lastTranscript = null;
+
+            } else {
+
+                setStatus("تشخیص داده نشد");
+
+                answer(
+                    "❌ چیزی تشخیص داده نشد.",
+                    voiceD
+                );
+
+                // پس از خطا، اگر commandMode فعال بود، نگه دار
+                if (!commandMode) {
+                    setStatus("آماده — بگو «سلام اهورا»");
+                } else {
+                    setStatus("فرمان صوتی فعال است");
+                }
+
+            }
+
+            return;
+
+        }
+
+        // توقف خودکار (غیر دستی)
+        if (commandMode) {
+            setStatus("فرمان صوتی فعال است");
+        } else {
+            setStatus("آماده — بگو «سلام اهورا»");
+        }
+
     };
 
     return true;
@@ -1810,26 +1854,38 @@ function initSpeech(){
 }
 
 /* =====================================================
-   گوش دادن
+   تغییر وضعیت میکروفن (روشن/خاموش)
 ===================================================== */
 
-function listen(){
+function toggleListen(){
 
-    if(listening)
+    // اگر در حال گوش دادن است، متوقف کن
+    if (listening) {
+
+        manualStop = true;
+
+        if (recognition) {
+
+            recognition.stop();
+
+        }
+
         return;
-
-    if(!recognition){
-
-        if(!initSpeech())
-            return;
 
     }
 
-    try{
+    // در غیر این صورت شروع کن
+    if (!recognition) {
+
+        if (!initSpeech()) return;
+
+    }
+
+    try {
 
         recognition.start();
 
-    }catch(e){}
+    } catch(e) {}
 
 }
 
@@ -1853,7 +1909,7 @@ function wakeWord(text){
    پردازش فرمان
 ===================================================== */
 
-function processSpeech(original){
+function processSpeech(original, fromButton = false){
 
     const text =
         normalize(original);
@@ -1864,6 +1920,11 @@ function processSpeech(original){
         "در حال پردازش...",
         "processing"
     );
+
+    // اگر از دکمه آمده، حتماً حالت فرمان فعال کن
+    if (fromButton) {
+        commandMode = true;
+    }
 
     /* =====================
        Wake Word
@@ -1884,10 +1945,9 @@ function processSpeech(original){
                 "فرمان صوتی فعال شد"
             );
 
-            setTimeout(
-                listen,
-                800
-            );
+            // بعد از بیدار شدن، دوباره گوش بده (اختیاری)
+            // ولی حالا با دکمه کنترل می‌شه، می‌تونیم غیرفعال کنیم
+            // setTimeout(toggleListen, 800);
 
             return;
 
@@ -2278,21 +2338,16 @@ function processSpeech(original){
 }
 
 /* =====================================================
-   دکمه میکروفون
+   دکمه میکروفن
 ===================================================== */
 
 mic.addEventListener(
     "click",
-    function(){
-
-        listen();
-
-    }
+    toggleListen
 );
 
 /* =====================================================
    اجرای اولیه
-   بدون تست
 ===================================================== */
 
 renderContacts();
