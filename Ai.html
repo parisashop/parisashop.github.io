@@ -7,9 +7,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- فونت وزیر -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* reset */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +17,7 @@
 
         body {
             font-family: 'Vazir', sans-serif;
-            background: #0a0a0f;
+            background: #0a0a12;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -29,20 +28,47 @@
             direction: rtl;
         }
 
-        /* کانتینر اصلی */
+        /* ذرات پس‌زمینه */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+        }
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
         .app {
             width: 100%;
             max-width: 480px;
             height: 100vh;
             max-height: 900px;
-            background: radial-gradient(circle at 50% 30%, #1a1a2e, #0a0a0f 80%);
+            background: radial-gradient(ellipse at 50% 20%, #181830, #0a0a12 80%);
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 16px;
-            box-shadow: 0 0 40px rgba(0, 150, 255, 0.05);
+            padding: 20px 16px 10px;
+            box-shadow: 0 0 80px rgba(0, 100, 255, 0.08);
+            z-index: 1;
+            border-radius: 0;
         }
 
         /* هدر */
@@ -51,186 +77,215 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 4px;
+            padding: 4px 2px 12px;
             z-index: 10;
         }
         .header .title {
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #00d2ff, #7b2ffc);
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc, #ff6fd8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: 1px;
+            text-shadow: 0 0 40px rgba(0, 180, 255, 0.2);
         }
         .header .time {
             font-size: 14px;
-            color: #aab;
-            background: rgba(255,255,255,0.06);
-            padding: 6px 14px;
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.05);
+            color: #99aacc;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 16px;
+            border-radius: 30px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-weight: 300;
         }
 
-        /* دایره مرکزی + امواج */
-        .orb-container {
+        /* دایره مرکزی با هاله */
+        .orb-wrapper {
             position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 20px auto 10px;
+            width: 220px;
+            height: 220px;
+            margin: 8px auto 4px;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0;
         }
 
-        /* امواج صوتی (پشت دایره) */
-        .wave {
+        /* هاله بیرونی */
+        .orb-glow {
             position: absolute;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            border: 2px solid rgba(0, 180, 255, 0.15);
-            animation: waveAnim 2.5s ease-out infinite;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 150, 255, 0.15), transparent 70%);
+            filter: blur(30px);
+            transition: all 0.6s ease;
             pointer-events: none;
         }
-        .wave:nth-child(1) { width: 100%; height: 100%; animation-delay: 0s; }
-        .wave:nth-child(2) { width: 130%; height: 130%; animation-delay: 0.4s; }
-        .wave:nth-child(3) { width: 160%; height: 160%; animation-delay: 0.8s; }
-        .wave:nth-child(4) { width: 190%; height: 190%; animation-delay: 1.2s; }
-        .wave.active {
-            border-color: rgba(0, 200, 255, 0.4);
+        .orb-glow.active {
+            background: radial-gradient(circle at 50% 50%, rgba(0, 255, 200, 0.25), transparent 70%);
+            filter: blur(40px);
         }
 
-        @keyframes waveAnim {
-            0% { transform: scale(0.8); opacity: 0.8; }
-            100% { transform: scale(1.6); opacity: 0; }
-        }
-
-        /* دایره اصلی (Orb) */
-        .orb {
-            width: 140px;
-            height: 140px;
+        .wave-ring {
+            position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 30%, #00b4ff, #0055ff);
-            box-shadow: 0 0 50px rgba(0, 120, 255, 0.6), 0 0 100px rgba(0, 120, 255, 0.3);
+            border: 1.5px solid rgba(0, 180, 255, 0.08);
+            animation: ringPulse 3s ease-out infinite;
+            pointer-events: none;
+        }
+        .wave-ring:nth-child(2) { width: 140%; height: 140%; animation-delay: 0.6s; }
+        .wave-ring:nth-child(3) { width: 180%; height: 180%; animation-delay: 1.2s; }
+        .wave-ring:nth-child(4) { width: 220%; height: 220%; animation-delay: 1.8s; }
+        .wave-ring.active {
+            border-color: rgba(0, 220, 255, 0.25);
+        }
+        @keyframes ringPulse {
+            0% { transform: scale(0.7); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        .orb {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #0088ff, #0033aa);
+            box-shadow: 0 0 60px rgba(0, 100, 255, 0.5), 0 0 120px rgba(0, 100, 255, 0.2);
             position: relative;
-            z-index: 2;
-            transition: all 0.3s ease;
+            z-index: 3;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: default;
         }
         .orb .inner-glow {
-            width: 80%;
-            height: 80%;
+            width: 70%;
+            height: 70%;
             border-radius: 50%;
-            background: radial-gradient(circle at 40% 35%, rgba(255,255,255,0.5), transparent 70%);
-            opacity: 0.6;
+            background: radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.5), transparent 70%);
+            opacity: 0.5;
+            transition: 0.4s;
         }
         .orb.pulse {
-            animation: orbPulse 1.8s ease-in-out infinite;
+            animation: orbGlow 2.2s ease-in-out infinite;
         }
-        @keyframes orbPulse {
-            0% { box-shadow: 0 0 50px rgba(0, 120, 255, 0.6), 0 0 100px rgba(0, 120, 255, 0.3); transform: scale(1); }
-            50% { box-shadow: 0 0 80px rgba(0, 180, 255, 0.9), 0 0 150px rgba(0, 120, 255, 0.5); transform: scale(1.04); }
-            100% { box-shadow: 0 0 50px rgba(0, 120, 255, 0.6), 0 0 100px rgba(0, 120, 255, 0.3); transform: scale(1); }
+        @keyframes orbGlow {
+            0% { box-shadow: 0 0 60px rgba(0, 100, 255, 0.4), 0 0 120px rgba(0, 100, 255, 0.15); transform: scale(1); }
+            50% { box-shadow: 0 0 100px rgba(0, 180, 255, 0.7), 0 0 180px rgba(0, 100, 255, 0.3); transform: scale(1.03); }
+            100% { box-shadow: 0 0 60px rgba(0, 100, 255, 0.4), 0 0 120px rgba(0, 100, 255, 0.15); transform: scale(1); }
         }
         .orb.listening {
-            background: radial-gradient(circle at 35% 30%, #00ffb3, #0088ff);
-            box-shadow: 0 0 60px rgba(0, 255, 200, 0.7), 0 0 120px rgba(0, 200, 255, 0.4);
+            background: radial-gradient(circle at 35% 30%, #00ff99, #00aaff);
+            box-shadow: 0 0 80px rgba(0, 255, 150, 0.6), 0 0 160px rgba(0, 200, 255, 0.3);
+            animation: orbListen 1s ease-in-out infinite;
+        }
+        @keyframes orbListen {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
         }
         .orb.processing {
-            background: radial-gradient(circle at 35% 30%, #ffbb00, #ff5500);
-            box-shadow: 0 0 60px rgba(255, 180, 0, 0.7), 0 0 120px rgba(255, 100, 0, 0.4);
-            animation: orbPulse 0.6s ease-in-out infinite;
+            background: radial-gradient(circle at 35% 30%, #ffcc00, #ff6600);
+            box-shadow: 0 0 80px rgba(255, 200, 0, 0.6), 0 0 160px rgba(255, 100, 0, 0.3);
+            animation: orbProcess 0.5s ease-in-out infinite;
+        }
+        @keyframes orbProcess {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.04) rotate(3deg); }
         }
         .orb.responding {
-            background: radial-gradient(circle at 35% 30%, #00ff88, #00bbff);
-            box-shadow: 0 0 60px rgba(0, 255, 150, 0.7), 0 0 120px rgba(0, 200, 255, 0.4);
+            background: radial-gradient(circle at 35% 30%, #00ff88, #00ccff);
+            box-shadow: 0 0 80px rgba(0, 255, 150, 0.6), 0 0 160px rgba(0, 200, 255, 0.3);
+            animation: orbRespond 0.8s ease-in-out infinite;
+        }
+        @keyframes orbRespond {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         /* دکمه میکروفون */
         .mic-btn {
-            width: 72px;
-            height: 72px;
+            width: 76px;
+            height: 76px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #0077ff, #4400ff);
+            background: linear-gradient(135deg, #0066ff, #4400cc);
             border: none;
             outline: none;
             color: #fff;
-            font-size: 36px;
-            box-shadow: 0 8px 30px rgba(0, 100, 255, 0.5);
+            font-size: 38px;
+            box-shadow: 0 10px 40px rgba(0, 80, 255, 0.5);
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 6px;
             z-index: 5;
             position: relative;
         }
         .mic-btn:active {
-            transform: scale(0.9);
+            transform: scale(0.88);
         }
         .mic-btn.listening {
-            background: linear-gradient(135deg, #ff3366, #ff00aa);
-            box-shadow: 0 0 50px rgba(255, 0, 100, 0.7);
-            animation: micPulse 1s ease-in-out infinite;
+            background: linear-gradient(135deg, #ff2266, #cc0066);
+            box-shadow: 0 0 60px rgba(255, 0, 100, 0.7);
+            animation: micBeat 1s ease-in-out infinite;
         }
-        @keyframes micPulse {
-            0% { box-shadow: 0 0 30px rgba(255, 0, 100, 0.5); }
-            50% { box-shadow: 0 0 70px rgba(255, 0, 100, 0.9); }
-            100% { box-shadow: 0 0 30px rgba(255, 0, 100, 0.5); }
+        @keyframes micBeat {
+            0%, 100% { box-shadow: 0 0 40px rgba(255, 0, 100, 0.5); }
+            50% { box-shadow: 0 0 90px rgba(255, 0, 100, 0.9); }
         }
 
         /* وضعیت */
         .status {
             font-size: 15px;
-            color: #aac;
-            margin: 12px 0 6px;
-            background: rgba(255,255,255,0.05);
-            padding: 4px 18px;
-            border-radius: 30px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.04);
-            min-height: 32px;
+            color: #99aacc;
+            margin: 10px 0 4px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px 22px;
+            border-radius: 40px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 34px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-weight: 300;
         }
         .status .dot {
             display: inline-block;
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #666;
+            background: #555;
             transition: 0.3s;
         }
-        .status .dot.idle { background: #666; }
-        .status .dot.listening { background: #00ff88; box-shadow: 0 0 12px #00ff88; animation: dotBlink 0.8s infinite; }
-        .status .dot.processing { background: #ffaa00; box-shadow: 0 0 12px #ffaa00; animation: dotBlink 0.4s infinite; }
-        .status .dot.responding { background: #00ccff; box-shadow: 0 0 12px #00ccff; animation: dotBlink 0.6s infinite; }
-
-        @keyframes dotBlink {
+        .status .dot.idle { background: #555; }
+        .status .dot.listening { background: #00ff88; box-shadow: 0 0 16px #00ff88; animation: dotFlash 0.8s infinite; }
+        .status .dot.processing { background: #ffaa00; box-shadow: 0 0 16px #ffaa00; animation: dotFlash 0.4s infinite; }
+        .status .dot.responding { background: #00ccff; box-shadow: 0 0 16px #00ccff; animation: dotFlash 0.6s infinite; }
+        @keyframes dotFlash {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.2; }
         }
 
-        /* کارت نمایش متن کاربر */
+        /* کارت متن کاربر */
         .user-text {
             width: 100%;
-            max-height: 80px;
+            max-height: 70px;
             overflow-y: auto;
             text-align: center;
             font-size: 18px;
             font-weight: 300;
-            color: #ccd;
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.04);
-            border-radius: 20px;
+            color: #ccd8ee;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 24px;
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.06);
-            margin: 6px 0 4px;
-            min-height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 4px 0 6px;
+            min-height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -238,58 +293,86 @@
             transition: 0.3s;
         }
         .user-text.has-text {
-            background: rgba(0,150,255,0.08);
-            border-color: rgba(0,150,255,0.15);
+            background: rgba(0, 150, 255, 0.06);
+            border-color: rgba(0, 150, 255, 0.12);
         }
 
-        /* کارت پاسخ (Siri-like) */
+        /* کارت پاسخ */
         .response-card {
             width: 100%;
-            max-height: 200px;
+            max-height: 180px;
             overflow-y: auto;
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 28px;
-            padding: 18px 20px;
-            margin: 8px 0 12px;
-            transition: all 0.4s ease;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
-            min-height: 60px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            padding: 18px 22px;
+            margin: 4px 0 10px;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 50px rgba(0, 0, 0, 0.4);
+            min-height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             font-size: 17px;
-            line-height: 1.7;
-            color: #eee;
+            line-height: 1.8;
+            color: #eef;
             opacity: 0;
-            transform: translateY(8px);
+            transform: translateY(12px) scale(0.96);
             pointer-events: none;
         }
         .response-card.show {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
             pointer-events: auto;
         }
         .response-card .response-text {
             width: 100%;
+        }
+        .response-card .response-icon {
+            font-size: 28px;
+            margin-left: 12px;
+            opacity: 0.7;
+        }
+
+        /* کارت جستجو (iframe) */
+        .search-container {
+            width: 100%;
+            max-height: 300px;
+            border-radius: 24px;
+            overflow: hidden;
+            margin: 4px 0 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            display: none;
+            transition: 0.3s;
+        }
+        .search-container.show {
+            display: block;
+        }
+        .search-container iframe {
+            width: 100%;
+            height: 280px;
+            border: none;
+            border-radius: 24px;
         }
 
         /* کارت تأیید تماس */
         .confirm-card {
             display: none;
             width: 100%;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 24px;
-            padding: 16px 20px;
-            margin: 6px 0 10px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 18px 20px;
+            margin: 4px 0 8px;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            gap: 14px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
         }
         .confirm-card.show {
             display: flex;
@@ -297,98 +380,92 @@
         .confirm-card .confirm-text {
             font-size: 16px;
             color: #ddd;
+            font-weight: 300;
         }
         .confirm-card .confirm-actions {
             display: flex;
-            gap: 20px;
+            gap: 24px;
         }
         .confirm-card .confirm-actions button {
-            padding: 8px 32px;
-            border-radius: 40px;
+            padding: 10px 40px;
+            border-radius: 50px;
             border: none;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.25s;
+            font-family: 'Vazir', sans-serif;
         }
         .confirm-card .confirm-actions .btn-call {
             background: linear-gradient(135deg, #00c853, #00e676);
             color: #000;
+            box-shadow: 0 4px 20px rgba(0, 200, 80, 0.3);
         }
         .confirm-card .confirm-actions .btn-cancel {
-            background: rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.08);
             color: #ccc;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .confirm-card .confirm-actions button:active {
-            transform: scale(0.94);
+            transform: scale(0.92);
         }
 
         /* اسکرول بار */
-        ::-webkit-scrollbar {
-            width: 3px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.15);
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 10px; }
 
-        /* ریسپانسیو */
         @media (max-width: 420px) {
-            .orb-container { width: 160px; height: 160px; }
-            .orb { width: 110px; height: 110px; }
-            .mic-btn { width: 60px; height: 60px; font-size: 28px; }
-            .header .title { font-size: 18px; }
+            .orb-wrapper { width: 170px; height: 170px; }
+            .orb { width: 120px; height: 120px; }
+            .mic-btn { width: 64px; height: 64px; font-size: 30px; }
+            .header .title { font-size: 20px; }
             .user-text { font-size: 16px; min-height: 40px; }
             .response-card { font-size: 15px; padding: 14px 16px; }
+            .search-container iframe { height: 200px; }
         }
 
-        /* انیمیشن‌های ورود */
+        /* انیمیشن ورود */
         .fade-in {
-            animation: fadeIn 0.4s ease forwards;
+            animation: fadeSlide 0.5s ease forwards;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* استایل کاستوم برای دکمه‌ها */
-        .icon-btn {
-            background: rgba(255,255,255,0.05);
-            border: none;
-            color: #aab;
-            padding: 6px 12px;
-            border-radius: 30px;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.04);
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.2s;
+        /* لودر داخلی */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
         }
-        .icon-btn:hover {
-            background: rgba(255,255,255,0.1);
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="app" id="app">
+<!-- ذرات پس‌زمینه -->
+<div class="particles" id="particles"></div>
 
+<div class="app" id="app">
     <!-- هدر -->
     <div class="header">
         <span class="title">✨ Ahoora AI</span>
         <span class="time" id="headerTime">--:--</span>
     </div>
 
-    <!-- دایره مرکزی + امواج -->
-    <div class="orb-container" id="orbContainer">
-        <div class="wave" id="wave1"></div>
-        <div class="wave" id="wave2"></div>
-        <div class="wave" id="wave3"></div>
-        <div class="wave" id="wave4"></div>
+    <!-- دایره مرکزی -->
+    <div class="orb-wrapper" id="orbWrapper">
+        <div class="orb-glow" id="orbGlow"></div>
+        <div class="wave-ring"></div>
+        <div class="wave-ring"></div>
+        <div class="wave-ring"></div>
+        <div class="wave-ring"></div>
         <div class="orb pulse" id="orb">
             <div class="inner-glow"></div>
         </div>
@@ -405,23 +482,30 @@
         <span id="statusText">آماده</span>
     </div>
 
-    <!-- نمایش متن کاربر -->
+    <!-- متن کاربر -->
     <div class="user-text" id="userText">...</div>
 
     <!-- کارت پاسخ -->
     <div class="response-card" id="responseCard">
-        <div class="response-text" id="responseText">👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟</div>
+        <div class="response-text" id="responseText">
+            <span class="response-icon">👋</span>
+            سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟
+        </div>
+    </div>
+
+    <!-- کارت جستجو -->
+    <div class="search-container" id="searchContainer">
+        <iframe id="searchIframe" src="about:blank"></iframe>
     </div>
 
     <!-- کارت تأیید تماس -->
     <div class="confirm-card" id="confirmCard">
         <div class="confirm-text" id="confirmText">می‌خواهید با این شماره تماس بگیرید؟</div>
         <div class="confirm-actions">
-            <button class="btn-call" id="confirmCall">تماس</button>
+            <button class="btn-call" id="confirmCall">📞 تماس</button>
             <button class="btn-cancel" id="confirmCancel">لغو</button>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -429,9 +513,10 @@
         'use strict';
 
         // ============================================================
-        // 1. متغیرها و المان‌ها
+        // 1. المان‌ها
         // ============================================================
         const orb = document.getElementById('orb');
+        const orbGlow = document.getElementById('orbGlow');
         const micBtn = document.getElementById('micBtn');
         const micIcon = document.getElementById('micIcon');
         const statusText = document.getElementById('statusText');
@@ -444,15 +529,37 @@
         const confirmCall = document.getElementById('confirmCall');
         const confirmCancel = document.getElementById('confirmCancel');
         const headerTime = document.getElementById('headerTime');
-        const waveEls = [document.getElementById('wave1'), document.getElementById('wave2'), document.getElementById('wave3'), document.getElementById('wave4')];
+        const searchContainer = document.getElementById('searchContainer');
+        const searchIframe = document.getElementById('searchIframe');
 
         let isListening = false;
         let isProcessing = false;
         let recognition = null;
         let pendingPhoneNumber = null;
+        let audioPlayer = new Audio();
+        let searchTimeout = null;
 
         // ============================================================
-        // 2. تنظیمات اولیه
+        // 2. ذرات پس‌زمینه
+        // ============================================================
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 35; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = (2 + Math.random() * 4) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (15 + Math.random() * 25) + 's';
+                p.style.animationDelay = (Math.random() * 20) + 's';
+                p.style.opacity = 0.2 + Math.random() * 0.3;
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // ============================================================
+        // 3. ساعت
         // ============================================================
         function updateClock() {
             const now = new Date();
@@ -463,17 +570,13 @@
         updateClock();
         setInterval(updateClock, 10000);
 
-        setTimeout(() => {
-            showResponse('👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟', 'e.mp3');
-        }, 400);
-
         // ============================================================
-        // 3. تشخیص گفتار (Web Speech API)
+        // 4. تشخیص گفتار
         // ============================================================
         function initSpeech() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                setStatus('مرورگر شما از تشخیص گفتار پشتیبانی نمی‌کند.', 'idle');
+                setStatus('مرورگر پشتیبانی نمی‌کند.', 'idle');
                 return false;
             }
             recognition = new SpeechRecognition();
@@ -486,12 +589,12 @@
                 isListening = true;
                 setStatus('در حال گوش دادن ...', 'listening');
                 micBtn.classList.add('listening');
-                orb.classList.add('listening');
-                orb.classList.remove('pulse', 'processing', 'responding');
-                waveEls.forEach(w => w.classList.add('active'));
+                orb.className = 'orb listening';
+                orbGlow.classList.add('active');
                 micIcon.className = 'fas fa-circle-notch fa-spin';
                 userText.textContent = '...';
                 userText.classList.remove('has-text');
+                hideSearch();
             };
 
             recognition.onresult = function(event) {
@@ -521,48 +624,31 @@
             };
 
             recognition.onend = function() {
-                if (isListening) {
-                    stopListening();
-                }
+                if (isListening) stopListening();
             };
 
             return true;
         }
 
         function startListening() {
-            if (!recognition) {
-                if (!initSpeech()) return;
-            }
+            if (!recognition) { if (!initSpeech()) return; }
             if (isListening) return;
-            try {
-                recognition.start();
-            } catch (e) {
-                console.warn(e);
-            }
+            try { recognition.start(); } catch (e) {}
         }
 
         function stopListening() {
-            if (recognition) {
-                try {
-                    recognition.stop();
-                } catch (e) {}
-            }
+            if (recognition) { try { recognition.stop(); } catch (e) {} }
             isListening = false;
             micBtn.classList.remove('listening');
-            orb.classList.remove('listening', 'processing', 'responding');
-            orb.classList.add('pulse');
-            waveEls.forEach(w => w.classList.remove('active'));
+            orb.className = 'orb pulse';
+            orbGlow.classList.remove('active');
             micIcon.className = 'fas fa-microphone';
-            if (!isProcessing) {
-                setStatus('آماده', 'idle');
-            }
+            if (!isProcessing) setStatus('آماده', 'idle');
         }
 
         // ============================================================
-        // 4. پخش صدا (MP3 و SpeechSynthesis)
+        // 5. پخش صدا
         // ============================================================
-        let audioPlayer = new Audio();
-
         function playSound(file) {
             return new Promise((resolve) => {
                 if (!file) return resolve();
@@ -578,7 +664,7 @@
             if ('speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'fa-IR';
-                utterance.rate = 1.0;
+                utterance.rate = 0.95;
                 utterance.pitch = 1.0;
                 const voices = window.speechSynthesis.getVoices();
                 const faVoice = voices.find(v => v.lang.startsWith('fa'));
@@ -588,22 +674,19 @@
         }
 
         // ============================================================
-        // 5. نمایش پاسخ و وضعیت
+        // 6. نمایش وضعیت و پاسخ
         // ============================================================
         function setStatus(text, type) {
             statusText.textContent = text;
             statusDot.className = 'dot ' + type;
-            if (type === 'listening') {
-                isProcessing = false;
-            } else if (type === 'processing') {
-                isProcessing = true;
-            } else {
-                isProcessing = false;
-            }
+            if (type === 'listening') { isProcessing = false; }
+            else if (type === 'processing') { isProcessing = true; }
+            else { isProcessing = false; }
         }
 
-        function showResponse(text, audioFile) {
-            responseText.textContent = text;
+        function showResponse(text, audioFile, icon) {
+            const iconHtml = icon ? `<span class="response-icon">${icon}</span>` : '';
+            responseText.innerHTML = iconHtml + text;
             responseCard.classList.add('show');
             if (audioFile) {
                 playSound(audioFile);
@@ -612,13 +695,29 @@
             }
             if (isProcessing) {
                 setStatus('آماده', 'idle');
-                orb.classList.remove('processing');
-                orb.classList.add('pulse');
+                orb.className = 'orb pulse';
             }
         }
 
+        function hideSearch() {
+            searchContainer.classList.remove('show');
+            searchIframe.src = 'about:blank';
+            if (searchTimeout) { clearTimeout(searchTimeout); searchTimeout = null; }
+        }
+
+        function showSearch(query) {
+            const url = 'https://duckduckgo.com/?q=' + encodeURIComponent(query) + '&ia=web';
+            searchIframe.src = url;
+            searchContainer.classList.add('show');
+            // بعد از 5 ثانیه خودکار بسته شود (اختیاری)
+            if (searchTimeout) clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                hideSearch();
+            }, 30000);
+        }
+
         // ============================================================
-        // 6. مدیریت فرمان‌ها
+        // 7. فرمان‌ها
         // ============================================================
         const appMap = {
             'واتساپ': 'com.whatsapp',
@@ -634,7 +733,9 @@
         const contacts = {
             'علی': '09123456789',
             'احمد': '09129876543',
-            'رضا': '09123456780'
+            'رضا': '09123456780',
+            'محمد': '09121234567',
+            'سارا': '09128765432'
         };
 
         function getPackageName(name) {
@@ -646,222 +747,165 @@
 
         function openApp(packageName, appName) {
             if (window.Android && typeof Android.openApp === 'function') {
-                try {
-                    Android.openApp(packageName);
-                    showResponse('چشم، ' + appName + ' را باز کردم.', 'a.mp3');
-                    return true;
-                } catch (e) {
-                    showResponse('متأسفانه باز نشد.', 'b.mp3');
-                    return false;
-                }
+                try { Android.openApp(packageName); showResponse('چشم، ' + appName + ' را باز کردم.', 'a.mp3', '📱'); return true; }
+                catch (e) { showResponse('متأسفانه باز نشد.', 'b.mp3', '❌'); return false; }
             } else {
-                showResponse('برای باز کردن برنامه‌ها، این قابلیت فقط در نسخه اندروید WebView پشتیبانی می‌شود.', 'b.mp3');
+                showResponse('برای باز کردن برنامه‌ها، این قابلیت فقط در نسخه اندروید WebView پشتیبانی می‌شود.', 'b.mp3', '⚠️');
                 return false;
             }
         }
 
         function makeCall(phoneNumber) {
             if (window.Android && typeof Android.makeCall === 'function') {
-                try {
-                    Android.makeCall(phoneNumber);
-                    showResponse('در حال برقراری تماس با ' + phoneNumber, null);
-                    return true;
-                } catch (e) {
-                    showResponse('خطا در برقراری تماس.', 'd.mp3');
-                    return false;
-                }
+                try { Android.makeCall(phoneNumber); showResponse('در حال برقراری تماس با ' + phoneNumber, null, '📞'); return true; }
+                catch (e) { showResponse('خطا در برقراری تماس.', 'd.mp3', '❌'); return false; }
             } else {
                 const telUrl = 'tel:' + phoneNumber;
                 window.location.href = telUrl;
-                showResponse('در حال انتقال به شماره‌گیر ...', null);
+                showResponse('در حال انتقال به شماره‌گیر ...', null, '📞');
                 return true;
             }
         }
 
         function sendSMS(phoneNumber, message) {
             if (window.Android && typeof Android.sendSMS === 'function') {
-                try {
-                    Android.sendSMS(phoneNumber, message || '');
-                    showResponse('پیامک در حال ارسال ...', null);
-                    return true;
-                } catch (e) {
-                    showResponse('خطا در ارسال پیامک.', 'd.mp3');
-                    return false;
-                }
+                try { Android.sendSMS(phoneNumber, message || ''); showResponse('پیامک در حال ارسال ...', null, '✉️'); return true; }
+                catch (e) { showResponse('خطا در ارسال پیامک.', 'd.mp3', '❌'); return false; }
             } else {
                 const smsUrl = 'sms:' + phoneNumber + '?body=' + encodeURIComponent(message || '');
                 window.location.href = smsUrl;
-                showResponse('در حال باز کردن پیامک ...', null);
+                showResponse('در حال باز کردن پیامک ...', null, '✉️');
                 return true;
             }
         }
 
         function openGallery() {
             if (window.Android && typeof Android.openGallery === 'function') {
-                try {
-                    Android.openGallery();
-                    showResponse('گالری باز شد.', 'a.mp3');
-                    return true;
-                } catch (e) {
-                    showResponse('خطا در باز کردن گالری.', 'b.mp3');
-                    return false;
-                }
+                try { Android.openGallery(); showResponse('گالری باز شد.', 'a.mp3', '🖼️'); return true; }
+                catch (e) { showResponse('خطا در باز کردن گالری.', 'b.mp3', '❌'); return false; }
             } else {
                 const input = document.createElement('input');
                 input.type = 'file';
                 input.accept = 'image/*,video/*';
-                input.onchange = function() {
-                    if (this.files && this.files[0]) {
-                        showResponse('فایل انتخاب شد: ' + this.files[0].name, null);
-                    }
-                };
+                input.onchange = function() { if (this.files && this.files[0]) showResponse('فایل انتخاب شد: ' + this.files[0].name, null, '✅'); };
                 input.click();
-                showResponse('لطفاً فایل مورد نظر را انتخاب کنید.', null);
+                showResponse('لطفاً فایل مورد نظر را انتخاب کنید.', null, '📂');
                 return true;
             }
         }
 
         function openCamera() {
             if (window.Android && typeof Android.openCamera === 'function') {
-                try {
-                    Android.openCamera();
-                    showResponse('دوربین باز شد.', 'a.mp3');
-                    return true;
-                } catch (e) {
-                    showResponse('خطا در باز کردن دوربین.', 'b.mp3');
-                    return false;
-                }
+                try { Android.openCamera(); showResponse('دوربین باز شد.', 'a.mp3', '📷'); return true; }
+                catch (e) { showResponse('خطا در باز کردن دوربین.', 'b.mp3', '❌'); return false; }
             } else {
                 const input = document.createElement('input');
                 input.type = 'file';
                 input.accept = 'image/*';
                 input.capture = 'environment';
-                input.onchange = function() {
-                    if (this.files && this.files[0]) {
-                        showResponse('عکس گرفته شد.', null);
-                    }
-                };
+                input.onchange = function() { if (this.files && this.files[0]) showResponse('عکس گرفته شد.', null, '📷'); };
                 input.click();
-                showResponse('لطفاً عکس بگیرید.', null);
+                showResponse('لطفاً عکس بگیرید.', null, '📷');
                 return true;
             }
         }
 
         function recordVideo() {
             if (window.Android && typeof Android.recordVideo === 'function') {
-                try {
-                    Android.recordVideo();
-                    showResponse('در حال ضبط فیلم ...', null);
-                    return true;
-                } catch (e) {
-                    showResponse('خطا در ضبط فیلم.', 'b.mp3');
-                    return false;
-                }
+                try { Android.recordVideo(); showResponse('در حال ضبط فیلم ...', null, '🎥'); return true; }
+                catch (e) { showResponse('خطا در ضبط فیلم.', 'b.mp3', '❌'); return false; }
             } else {
                 const input = document.createElement('input');
                 input.type = 'file';
                 input.accept = 'video/*';
                 input.capture = 'environment';
-                input.onchange = function() {
-                    if (this.files && this.files[0]) {
-                        showResponse('فیلم ضبط شد.', null);
-                    }
-                };
+                input.onchange = function() { if (this.files && this.files[0]) showResponse('فیلم ضبط شد.', null, '🎥'); };
                 input.click();
-                showResponse('لطفاً فیلم بگیرید.', null);
+                showResponse('لطفاً فیلم بگیرید.', null, '🎥');
                 return true;
             }
         }
 
         function openUrl(url) {
             if (window.Android && typeof Android.openUrl === 'function') {
-                try {
-                    Android.openUrl(url);
-                    showResponse('لینک باز شد.', 'g.mp3');
-                    return true;
-                } catch (e) {
-                    showResponse('خطا در باز کردن لینک.', 'b.mp3');
-                    return false;
-                }
+                try { Android.openUrl(url); showResponse('لینک باز شد.', 'g.mp3', '🌐'); return true; }
+                catch (e) { showResponse('خطا در باز کردن لینک.', 'b.mp3', '❌'); return false; }
             } else {
                 window.open(url, '_blank');
-                showResponse('لینک در مرورگر باز شد.', null);
+                showResponse('لینک در مرورگر باز شد.', null, '🌐');
                 return true;
             }
         }
 
+        function adjustVolume(direction) {
+            if (window.Android && typeof Android.adjustVolume === 'function') {
+                try { Android.adjustVolume(direction); showResponse('صدا ' + (direction === 'up' ? 'زیاد' : 'کم') + ' شد.', null, '🔊'); return true; }
+                catch (e) { showResponse('خطا در کنترل صدا.', 'b.mp3', '❌'); return false; }
+            } else {
+                showResponse('این قابلیت فقط در نسخه اندروید WebView پشتیبانی می‌شود.', 'b.mp3', '⚠️');
+                return false;
+            }
+        }
+
         // ============================================================
-        // 7. هسته پردازش فرمان
+        // 8. پردازش فرمان اصلی
         // ============================================================
         function processCommand(text) {
             if (!text) return;
             setStatus('در حال پردازش ...', 'processing');
-            orb.classList.remove('listening', 'responding', 'pulse');
-            orb.classList.add('processing');
-            waveEls.forEach(w => w.classList.remove('active'));
+            orb.className = 'orb processing';
+            hideSearch();
 
             const lower = text.toLowerCase().trim();
 
-            // 1. باز کردن برنامه
+            // --- 1. باز کردن برنامه ---
             const appMatch = lower.match(/(واتساپ|تلگرام|اینستاگرام|یوتیوب|کروم|گالری|دوربین|تنظیمات)\s*(?:رو\s*)?باز\s*کن/);
             if (appMatch) {
                 const appName = appMatch[1];
                 const pkg = getPackageName(appName);
-                if (pkg) {
-                    openApp(pkg, appName);
-                } else {
-                    showResponse('برنامه مورد نظر شناخته نشد.', 'b.mp3');
-                }
+                if (pkg) openApp(pkg, appName);
+                else showResponse('برنامه مورد نظر شناخته نشد.', 'b.mp3', '❓');
                 return;
             }
 
-            // 2. تماس با شماره مستقیم
+            // --- 2. تماس با شماره ---
             const phoneMatch = lower.match(/(?:با\s*)?شماره\s*([\d۰-۹]+)\s*(?:رو\s*)?(?:بگیر|تماس\s*بگیر)/);
             if (phoneMatch) {
-                let num = phoneMatch[1];
-                num = num.replace(/[۰-۹]/g, function(d) {
-                    return String.fromCharCode(d.charCodeAt(0) - 1728);
-                });
+                let num = phoneMatch[1].replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
                 pendingPhoneNumber = num;
-                confirmText.textContent = 'می‌خواهید با شماره ' + num + ' تماس بگیرید؟';
+                confirmText.textContent = '📞 می‌خواهید با شماره ' + num + ' تماس بگیرید؟';
                 confirmCard.classList.add('show');
                 playSound('c.mp3');
                 setStatus('تأیید تماس', 'idle');
-                orb.classList.remove('processing');
-                orb.classList.add('pulse');
+                orb.className = 'orb pulse';
                 return;
             }
 
-            // 3. تماس با نام (از دفترچه)
+            // --- 3. تماس با نام ---
             const nameMatch = lower.match(/با\s*([\u0600-\u06FF\s]+)\s*تماس\s*بگیر/);
             if (nameMatch) {
                 const name = nameMatch[1].trim();
                 if (contacts[name]) {
                     pendingPhoneNumber = contacts[name];
-                    confirmText.textContent = 'می‌خواهید با ' + name + ' (شماره ' + contacts[name] + ') تماس بگیرید؟';
+                    confirmText.textContent = '📞 می‌خواهید با ' + name + ' (شماره ' + contacts[name] + ') تماس بگیرید؟';
                     confirmCard.classList.add('show');
                     playSound('c.mp3');
                     setStatus('تأیید تماس', 'idle');
-                    orb.classList.remove('processing');
-                    orb.classList.add('pulse');
+                    orb.className = 'orb pulse';
                 } else {
-                    showResponse('متأسفم، شماره ' + name + ' را در دفترچه ندارم.', 'b.mp3');
+                    showResponse('متأسفم، شماره ' + name + ' را در دفترچه ندارم.', 'b.mp3', '📕');
                 }
                 return;
             }
 
-            // 4. گالری
+            // --- 4. گالری ---
             if (/(گالری|عکس‌هام|فیلم‌هام)\s*(?:رو\s*)?باز\s*کن/.test(lower)) {
                 openGallery();
                 return;
             }
 
-            // 5. دوربین
-            if (/دوربین\s*(?:رو\s*)?باز\s*کن/.test(lower)) {
-                openCamera();
-                return;
-            }
-            if (/عکس\s*بگیر/.test(lower)) {
+            // --- 5. دوربین ---
+            if (/دوربین\s*(?:رو\s*)?باز\s*کن/.test(lower) || /عکس\s*بگیر/.test(lower)) {
                 openCamera();
                 return;
             }
@@ -870,18 +914,15 @@
                 return;
             }
 
-            // 6. ارسال پیامک
+            // --- 6. پیامک ---
             const smsMatch = lower.match(/(?:به\s*)?([\d۰-۹]+)\s*پیام\s*(?:بده|بفرست)/);
             if (smsMatch) {
-                let num = smsMatch[1].replace(/[۰-۹]/g, function(d) {
-                    return String.fromCharCode(d.charCodeAt(0) - 1728);
-                });
-                const msg = 'سلام، این پیام از اهورا است.';
-                sendSMS(num, msg);
+                let num = smsMatch[1].replace(/[۰-۹]/g, d => String.fromCharCode(d.charCodeAt(0) - 1728));
+                sendSMS(num, 'سلام، این پیام از اهورا است.');
                 return;
             }
 
-            // 7. واتساپ برای نام
+            // --- 7. واتساپ ---
             const waMatch = lower.match(/واتساپ\s*(?:رو\s*)?برای\s*([\u0600-\u06FF\s]+)\s*باز\s*کن/);
             if (waMatch) {
                 const name = waMatch[1].trim();
@@ -893,174 +934,140 @@
                             const waUrl = 'https://wa.me/' + phone;
                             if (window.Android && typeof Android.openUrl === 'function') {
                                 Android.openUrl(waUrl);
-                            } else {
-                                window.open(waUrl, '_blank');
-                            }
-                        }, 500);
+                            } else { window.open(waUrl, '_blank'); }
+                        }, 600);
                     } else {
-                        const waUrl = 'https://wa.me/' + phone;
-                        window.open(waUrl, '_blank');
-                        showResponse('واتساپ برای ' + name + ' باز شد.', 'a.mp3');
+                        window.open('https://wa.me/' + phone, '_blank');
+                        showResponse('واتساپ برای ' + name + ' باز شد.', 'a.mp3', '💬');
                     }
                 } else {
-                    showResponse('شماره ' + name + ' را در دفترچه ندارم.', 'b.mp3');
+                    showResponse('شماره ' + name + ' را در دفترچه ندارم.', 'b.mp3', '📕');
                 }
                 return;
             }
 
-            // 8. کنترل صدا (فقط با Bridge)
-            if (/صدا\s*(?:رو\s*)?زیاد\s*کن/.test(lower)) {
-                if (window.Android && typeof Android.adjustVolume === 'function') {
-                    try {
-                        Android.adjustVolume('up');
-                        showResponse('صدا زیاد شد.', null);
-                    } catch (e) {
-                        showResponse('خطا در کنترل صدا.', 'b.mp3');
-                    }
-                } else {
-                    showResponse('این قابلیت فقط در نسخه اندروید WebView پشتیبانی می‌شود.', 'b.mp3');
-                }
-                return;
-            }
-            if (/صدا\s*(?:رو\s*)?کم\s*کن/.test(lower)) {
-                if (window.Android && typeof Android.adjustVolume === 'function') {
-                    try {
-                        Android.adjustVolume('down');
-                        showResponse('صدا کم شد.', null);
-                    } catch (e) {
-                        showResponse('خطا در کنترل صدا.', 'b.mp3');
-                    }
-                } else {
-                    showResponse('این قابلیت فقط در نسخه اندروید WebView پشتیبانی می‌شود.', 'b.mp3');
-                }
-                return;
-            }
+            // --- 8. کنترل صدا ---
+            if (/صدا\s*(?:رو\s*)?زیاد\s*کن/.test(lower)) { adjustVolume('up'); return; }
+            if (/صدا\s*(?:رو\s*)?کم\s*کن/.test(lower)) { adjustVolume('down'); return; }
 
-            // 9. پخش موسیقی / ویدئو
+            // --- 9. پخش موسیقی / ویدئو ---
             if (/موسیقی\s*پخش\s*کن/.test(lower)) {
                 const music = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
                 music.play().catch(() => {});
-                showResponse('در حال پخش موسیقی ...', null);
+                showResponse('در حال پخش موسیقی ...', null, '🎵');
                 return;
             }
             if (/موسیقی\s*(?:رو\s*)?متوقف\s*کن/.test(lower)) {
                 const audios = document.getElementsByTagName('audio');
                 for (let a of audios) a.pause();
-                showResponse('موسیقی متوقف شد.', null);
+                showResponse('موسیقی متوقف شد.', null, '⏹️');
                 return;
             }
             if (/ویدئو\s*پخش\s*کن/.test(lower)) {
                 window.open('https://www.w3schools.com/html/mov_bbb.mp4', '_blank');
-                showResponse('ویدئو در مرورگر باز شد.', null);
+                showResponse('ویدئو در مرورگر باز شد.', null, '🎬');
                 return;
             }
 
-            // 10. ساعت
+            // --- 10. ساعت ---
             if (/(ساعت\s*(?:چنده|چند\s*است|رو\s*بگو)|ساعت\s*الان\s*چنده)/.test(lower)) {
                 const now = new Date();
                 const h = String(now.getHours()).padStart(2, '0');
                 const m = String(now.getMinutes()).padStart(2, '0');
-                const timeStr = 'ساعت ' + h + ' و ' + m + ' دقیقه است.';
-                showResponse(timeStr, 'f.mp3');
+                showResponse('ساعت ' + h + ' و ' + m + ' دقیقه است.', 'f.mp3', '🕐');
                 return;
             }
 
-            // 11. تاریخ
+            // --- 11. تاریخ ---
             if (/(تاریخ\s*(?:چنده|چند\s*است|رو\s*بگو)|تاریخ\s*امروز\s*چنده)/.test(lower)) {
                 const now = new Date();
                 const year = now.getFullYear();
                 const month = String(now.getMonth() + 1).padStart(2, '0');
                 const day = String(now.getDate()).padStart(2, '0');
-                const dateStr = 'امروز ' + year + '/' + month + '/' + day;
-                showResponse(dateStr, null);
+                showResponse('امروز ' + year + '/' + month + '/' + day, null, '📅');
                 return;
             }
 
-            // 12. محاسبات ساده
+            // --- 12. محاسبه ---
             const calcMatch = lower.match(/(\d+)\s*([+\-*/])\s*(\d+)/);
             if (calcMatch) {
                 try {
-                    const a = parseFloat(calcMatch[1]);
-                    const op = calcMatch[2];
-                    const b = parseFloat(calcMatch[3]);
+                    const a = parseFloat(calcMatch[1]), op = calcMatch[2], b = parseFloat(calcMatch[3]);
                     let result;
                     switch (op) {
                         case '+': result = a + b; break;
                         case '-': result = a - b; break;
                         case '*': result = a * b; break;
                         case '/': result = a / b; break;
-                        default: result = 'عملیات نامشخص';
+                        default: result = 'نامشخص';
                     }
-                    showResponse('نتیجه: ' + result, null);
-                } catch (e) {
-                    showResponse('خطا در محاسبه.', 'd.mp3');
-                }
+                    showResponse('نتیجه: ' + result, null, '🧮');
+                } catch (e) { showResponse('خطا در محاسبه.', 'd.mp3', '❌'); }
                 return;
             }
 
-            // 13. جستجوی گوگل
+            // --- 13. جستجوی گوگل (نمایش در iframe) ---
             const searchMatch = lower.match(/(?:در\s*)?گوگل\s*(?:جستجو\s*کن\s*)?(.+)/);
             if (searchMatch) {
                 const query = searchMatch[1].trim();
                 if (query) {
-                    const url = 'https://www.google.com/search?q=' + encodeURIComponent(query);
-                    openUrl(url);
-                    return;
+                    showResponse('در حال جستجوی «' + query + '» ...', null, '🔍');
+                    setTimeout(() => {
+                        showSearch(query);
+                        showResponse('نتایج جستجو در پایین نمایش داده شد.', null, '🌐');
+                    }, 800);
+                } else {
+                    showResponse('چیزی برای جستجو پیدا نکردم.', 'b.mp3', '❓');
                 }
+                return;
             }
 
-            // 14. باز کردن سایت
+            // --- 14. باز کردن سایت ---
             const siteMatch = lower.match(/(?:باز\s*کن\s*)?(https?:\/\/\S+)/);
             if (siteMatch) {
                 openUrl(siteMatch[1]);
                 return;
             }
 
-            // 15. پاسخ عمومی
-            const defaultResponses = [
+            // --- 15. پاسخ پیش‌فرض ---
+            const defaults = [
                 'من متوجه نشدم. می‌توانی بگویی چه اپی رو باز کنم، یا تماس بگیرم، یا در گوگل جستجو کنم؟',
                 'متأسفم، منظور شما را نفهمیدم. لطفاً واضح‌تر بگویید.',
                 'دستور شما قابل تشخیص نبود. از من بپرسید ساعت چند است، یا برنامه‌ای را باز کنید.'
             ];
-            const rand = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-            showResponse(rand, 'd.mp3');
+            showResponse(defaults[Math.floor(Math.random() * defaults.length)], 'd.mp3', '🤔');
         }
 
         // ============================================================
-        // 8. دکمه تأیید تماس
+        // 9. دکمه‌های تأیید تماس
         // ============================================================
         confirmCall.addEventListener('click', function() {
             if (pendingPhoneNumber) {
                 makeCall(pendingPhoneNumber);
                 pendingPhoneNumber = null;
                 confirmCard.classList.remove('show');
-                orb.classList.remove('processing');
-                orb.classList.add('pulse');
+                orb.className = 'orb pulse';
             }
         });
 
         confirmCancel.addEventListener('click', function() {
             pendingPhoneNumber = null;
             confirmCard.classList.remove('show');
-            showResponse('تماس لغو شد.', null);
-            orb.classList.remove('processing');
-            orb.classList.add('pulse');
+            showResponse('تماس لغو شد.', null, '❌');
+            orb.className = 'orb pulse';
             setStatus('آماده', 'idle');
         });
 
         // ============================================================
-        // 9. رویداد دکمه میکروفون
+        // 10. رویداد میکروفون
         // ============================================================
         micBtn.addEventListener('click', function() {
-            if (isListening) {
-                stopListening();
-            } else {
-                startListening();
-            }
+            if (isListening) stopListening();
+            else startListening();
         });
 
         // ============================================================
-        // 10. مدیریت Bridge اندروید
+        // 11. Bridge اندروید (Fallback)
         // ============================================================
         if (typeof window.Android === 'undefined') {
             window.Android = {
@@ -1078,28 +1085,25 @@
         }
 
         // ============================================================
-        // 11. پیش‌بارگذاری صداها
+        // 12. پیش‌بارگذاری صداها
         // ============================================================
-        function preloadAudio(files) {
-            files.forEach(f => {
-                const audio = new Audio();
-                audio.src = f;
-                audio.load();
-            });
-        }
-        preloadAudio(['a.mp3', 'b.mp3', 'c.mp3', 'd.mp3', 'e.mp3', 'f.mp3', 'g.mp3']);
+        ['a.mp3','b.mp3','c.mp3','d.mp3','e.mp3','f.mp3','g.mp3'].forEach(f => {
+            const a = new Audio(); a.src = f; a.load();
+        });
 
         // ============================================================
-        // 12. تنظیم نهایی
+        // 13. شروع
         // ============================================================
         setStatus('آماده', 'idle');
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.getVoices();
-        }
+        if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
 
-        console.log('Ahoora AI آماده است!');
+        // پیام خوش‌آمدگویی با تاخیر
+        setTimeout(() => {
+            showResponse('👋 سلام! من اهورا هستم، چطور می‌توانم کمک کنم؟', 'e.mp3', '🤖');
+        }, 500);
+
+        console.log('✨ Ahoora AI آماده است!');
     })();
 </script>
-
 </body>
 </html>
