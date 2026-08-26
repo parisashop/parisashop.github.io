@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>Ahoora AI | دستیار صوتی هوشمند</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    margin:0;
+    overflow:hidden;
+}
+
+body{
+    font-family:Vazirmatn,Tahoma,sans-serif;
+    color:#fff;
+    background:
+        radial-gradient(circle at 50% 20%,#18234c 0%,#080b18 35%,#02030a 100%);
+}
+
+button,input{
+    font-family:inherit;
+}
+
+.app{
+    height:100%;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    height:70px;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:10;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:800;
+}
+
+.logo b{
+    background:linear-gradient(90deg,#72a8ff,#c56cff,#ff6cd9);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.status{
+    padding:7px 12px;
+    border-radius:30px;
+    font-size:11px;
+    color:#b8c3df;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(15px);
+}
+
+/* ================= BACKGROUND ================= */
+
+.bg{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+.bg i{
+    position:absolute;
+    width:250px;
+    height:250px;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:.2;
+}
+
+.bg i:nth-child(1){
+    background:#405cff;
+    top:15%;
+    left:5%;
+}
+
+.bg i:nth-child(2){
+    background:#d238ff;
+    bottom:5%;
+    right:-5%;
+}
+
+.bg i:nth-child(3){
+    background:#24b7ff;
+    top:45%;
+    right:25%;
+}
+
+/* ================= CENTER ================= */
+
+.center{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    position:relative;
+    min-height:300px;
+}
+
+.orb-wrap{
+    width:260px;
+    height:260px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+.orb{
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    background:
+        radial-gradient(circle at 30% 25%,
+        #fff 0%,
+        #cbe0ff 5%,
+        #779cff 20%,
+        #505cff 43%,
+        #8a36ff 67%,
+        #ff43d0 100%);
+    box-shadow:
+        0 0 25px #728cff,
+        0 0 65px rgba(103,89,255,.75),
+        0 0 130px rgba(229,57,255,.3);
+    position:relative;
+    transition:.4s;
+}
+
+.orb:before,
+.orb:after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    border:1px solid rgba(150,180,255,.2);
+}
+
+.orb:before{
+    inset:-18px;
+    animation:spin 6s linear infinite;
+}
+
+.orb:after{
+    inset:-38px;
+    border-color:rgba(255,100,225,.15);
+    animation:spin 9s linear infinite reverse;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* ================= LISTENING ================= */
+
+.listening .orb{
+    transform:scale(1.13);
+    animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+    from{
+        box-shadow:
+        0 0 35px #748dff,
+        0 0 80px rgba(105,87,255,.8);
+    }
+    to{
+        box-shadow:
+        0 0 75px #849cff,
+        0 0 160px rgba(255,63,215,.7);
+    }
+}
+
+/* ================= WAVE ================= */
+
+.wave{
+    position:absolute;
+    width:240px;
+    height:100px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    opacity:.25;
+}
+
+.wave span{
+    width:4px;
+    height:12px;
+    border-radius:5px;
+    background:#c8d4ff;
+}
+
+.listening .wave{
+    opacity:1;
+}
+
+.listening .wave span{
+    animation:wave .7s infinite alternate;
+}
+
+.wave span:nth-child(1){animation-delay:.05s}
+.wave span:nth-child(2){animation-delay:.1s}
+.wave span:nth-child(3){animation-delay:.15s}
+.wave span:nth-child(4){animation-delay:.2s}
+.wave span:nth-child(5){animation-delay:.25s}
+.wave span:nth-child(6){animation-delay:.3s}
+.wave span:nth-child(7){animation-delay:.35s}
+.wave span:nth-child(8){animation-delay:.4s}
+.wave span:nth-child(9){animation-delay:.45s}
+.wave span:nth-child(10){animation-delay:.5s}
+.wave span:nth-child(11){animation-delay:.55s}
+.wave span:nth-child(12){animation-delay:.6s}
+
+@keyframes wave{
+    from{height:8px}
+    to{height:55px}
+}
+
+/* ================= RESPONSE ================= */
+
+.response{
+    width:calc(100% - 30px);
+    max-width:650px;
+    max-height:150px;
+    overflow:auto;
+    margin-bottom:10px;
+}
+
+.message{
+    padding:12px 15px;
+    margin:6px 0;
+    border-radius:18px;
+    font-size:13px;
+    line-height:1.9;
+    animation:show .25s ease;
+}
+
+@keyframes show{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.user{
+    background:rgba(86,108,215,.25);
+    border:1px solid rgba(120,150,255,.15);
+    margin-left:15%;
+}
+
+.ai{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    margin-right:15%;
+}
+
+/* ================= COMMAND ================= */
+
+.command{
+    width:calc(100% - 30px);
+    max-width:650px;
+    padding:12px 15px;
+    text-align:center;
+    font-size:12px;
+    color:#aeb9d7;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:17px;
+    backdrop-filter:blur(18px);
+}
+
+/* ================= MICROPHONE ================= */
+
+.bottom{
+    padding:13px 20px 23px;
+    display:flex;
+    align-items:center;
+    flex-direction:column;
+    gap:10px;
+}
+
+.mic{
+    width:76px;
+    height:76px;
+    border:0;
+    border-radius:50%;
+    color:#fff;
+    font-size:27px;
+    cursor:pointer;
+    background:linear-gradient(145deg,#627eff,#9239ff);
+    box-shadow:0 12px 40px rgba(87,91,255,.5);
+    transition:.25s;
+}
+
+.mic:active{
+    transform:scale(.9);
+}
+
+.listening .mic{
+    background:linear-gradient(145deg,#ff42c9,#664eff);
+    box-shadow:0 0 55px rgba(255,62,210,.7);
+}
+
+.tip{
+    color:#65708d;
+    font-size:10px;
+}
+
+/* ================= CONFIRM ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.68);
+    backdrop-filter:blur(12px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.card{
+    width:100%;
+    max-width:400px;
+    background:rgba(20,25,45,.96);
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:25px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 30px 100px rgba(0,0,0,.7);
+}
+
+.card h3{
+    margin-top:0;
+}
+
+.phone{
+    direction:ltr;
+    font-size:20px;
+    color:#9bb9ff;
+    margin:18px 0;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+.buttons button{
+    flex:1;
+    border:0;
+    border-radius:14px;
+    padding:13px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.call{
+    background:#4165ff;
+}
+
+.cancel{
+    background:#353b50;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app" id="app">
+
+<div class="bg">
+    <i></i>
+    <i></i>
+    <i></i>
+</div>
+
+<header class="header">
+
+    <div class="logo">
+        <b>Ahoora</b> AI
+    </div>
+
+    <div class="status" id="status">
+        آماده
+    </div>
+
+</header>
+
+
+<main class="center">
+
+    <div class="orb-wrap">
+
+        <div class="orb"></div>
+
+        <div class="wave">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+        </div>
+
+    </div>
+
+    <div class="response" id="response"></div>
+
+    <div class="command" id="command">
+        برای صحبت با Ahoora AI روی میکروفون بزن
+    </div>
+
+</main>
+
+
+<footer class="bottom">
+
+    <button class="mic" id="mic">
+        🎙️
+    </button>
+
+    <div class="tip">
+        روی میکروفون بزن و فارسی صحبت کن
+    </div>
+
+</footer>
+
+</div>
+
+
+<!-- CALL MODAL -->
+
+<div class="modal" id="modal">
+
+    <div class="card">
+
+        <h3>
+            تأیید تماس
+        </h3>
+
+        <div>
+            می‌خواهی با این شماره تماس بگیرم؟
+        </div>
+
+        <div class="phone" id="phone"></div>
+
+        <div class="buttons">
+
+            <button class="call" id="call">
+                📞 تماس
+            </button>
+
+            <button class="cancel" id="cancel">
+                لغو
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   AHOORA AI CORE
+   ========================================================= */
+
+const app =
+    document.getElementById("app");
+
+const mic =
+    document.getElementById("mic");
+
+const status =
+    document.getElementById("status");
+
+const command =
+    document.getElementById("command");
+
+const response =
+    document.getElementById("response");
+
+const modal =
+    document.getElementById("modal");
+
+const phoneBox =
+    document.getElementById("phone");
+
+const callButton =
+    document.getElementById("call");
+
+const cancelButton =
+    document.getElementById("cancel");
+
+
+let recognition = null;
+
+let listening = false;
+
+let pendingPhone = null;
+
+
+/* =========================================================
+   ANDROID BRIDGE
+   ========================================================= */
+
+function androidAvailable(){
+
+    return (
+        typeof window.Android !== "undefined"
+    );
+
+}
+
+
+function android(method,...args){
+
+    try{
+
+        if(
+            androidAvailable() &&
+            typeof window.Android[method] ===
+            "function"
+        ){
+
+            return window.Android[method](...args);
+
+        }
+
+    }
+    catch(e){
+
+        console.error(
+            "Android Bridge:",
+            e
+        );
+
+    }
+
+    return null;
+
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+function setStatus(text){
+
+    status.textContent = text;
+
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+function addMessage(
+    text,
+    type
+){
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "message " +
+        (type === "user"
+            ? "user"
+            : "ai");
+
+    div.textContent = text;
+
+    response.appendChild(div);
+
+    response.scrollTop =
+        response.scrollHeight;
+
+}
+
+
+/* =========================================================
+   SPEAK
+   ========================================================= */
+
+function speak(text){
+
+    if(
+        !window.speechSynthesis
+    ){
+
+        return;
+
+    }
+
+    speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(
+            text
+        );
+
+    utterance.lang = "fa-IR";
+
+    utterance.rate = .95;
+
+    utterance.pitch = 1;
+
+    const voices =
+        speechSynthesis.getVoices();
+
+    const voice =
+        voices.find(
+            v =>
+            v.lang &&
+            v.lang.toLowerCase()
+             .startsWith("fa")
+        );
+
+    if(voice){
+
+        utterance.voice = voice;
+
+    }
+
+    setStatus(
+        "در حال پاسخ دادن"
+    );
+
+    utterance.onend =
+        function(){
+
+            setStatus("آماده");
+
+        };
+
+    speechSynthesis.speak(
+        utterance
+    );
+
+}
+
+
+/* =========================================================
+   ANSWER
+   ========================================================= */
+
+function answer(text){
+
+    addMessage(
+        text,
+        "ai"
+    );
+
+    command.textContent =
+        text;
+
+    speak(text);
+
+}
+
+
+/* =========================================================
+   SPEECH RECOGNITION
+   ========================================================= */
+
+const Recognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+if(Recognition){
+
+    recognition =
+        new Recognition();
+
+    recognition.lang =
+        "fa-IR";
+
+    recognition.continuous =
+        false;
+
+    recognition.interimResults =
+        true;
+
+    recognition.maxAlternatives =
+        1;
+
+
+    recognition.onstart =
+        function(){
+
+            listening = true;
+
+            app.classList.add(
+                "listening"
+            );
+
+            setStatus(
+                "در حال گوش دادن"
+            );
+
+            command.textContent =
+                "دارم گوش می‌دهم...";
+
+        };
+
+
+    recognition.onresult =
+        function(event){
+
+            let text = "";
+
+            for(
+                let i =
+                    event.resultIndex;
+                i <
+                    event.results.length;
+                i++
+            ){
+
+                text +=
+                    event.results[i][0]
+                        .transcript;
+
+            }
+
+            text =
+                text.trim();
+
+            command.textContent =
+                text;
+
+            const result =
+                event.results[
+                    event.results.length - 1
+                ];
+
+            if(result.isFinal){
+
+                processCommand(text);
+
+            }
+
+        };
+
+
+    recognition.onerror =
+        function(event){
+
+            stopListening();
+
+            if(
+                event.error ===
+                "not-allowed"
+            ){
+
+                answer(
+                    "اجازه استفاده از میکروفون داده نشده است."
+                );
+
+            }
+            else if(
+                event.error ===
+                "no-speech"
+            ){
+
+                setStatus(
+                    "صدایی شنیده نشد"
+                );
+
+            }
+            else{
+
+                setStatus(
+                    "خطا در تشخیص صدا"
+                );
+
+            }
+
+        };
+
+
+    recognition.onend =
+        function(){
+
+            stopListening();
+
+        };
+
+}
+else{
+
+    setStatus(
+        "Speech API موجود نیست"
+    );
+
+}
+
+
+/* =========================================================
+   START LISTENING
+   ========================================================= */
+
+function startListening(){
+
+    if(!recognition){
+
+        answer(
+            "تشخیص گفتار در این مرورگر در دسترس نیست."
+        );
+
+        return;
+
+    }
+
+    try{
+
+        recognition.start();
+
+    }
+    catch(e){
+
+        console.log(e);
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP
+   ========================================================= */
+
+function stopListening(){
+
+    listening = false;
+
+    app.classList.remove(
+        "listening"
+    );
+
+}
+
+
+/* =========================================================
+   MICROPHONE
+   ========================================================= */
+
+mic.onclick =
+    function(){
+
+        if(listening){
+
+            try{
+
+                recognition.stop();
+
+            }catch(e){}
+
+        }
+        else{
+
+            startListening();
+
+        }
+
+    };
+
+
+/* =========================================================
+   NORMALIZE
+   ========================================================= */
+
+function normalize(text){
+
+    return text
+        .toLowerCase()
+        .replace(/ي/g,"ی")
+        .replace(/ك/g,"ک")
+        .replace(/ۀ/g,"ه")
+        .replace(/[َُِّْ]/g,"")
+        .replace(/\s+/g," ")
+        .trim();
+
+}
+
+
+/* =========================================================
+   DIGITS
+   ========================================================= */
+
+function digits(text){
+
+    const fa =
+        "۰۱۲۳۴۵۶۷۸۹";
+
+    const ar =
+        "٠١٢٣٤٥٦٧٨٩";
+
+    return text
+        .replace(
+            /[۰-۹]/g,
+            x => fa.indexOf(x)
+        )
+        .replace(
+            /[٠-٩]/g,
+            x => ar.indexOf(x)
+        );
+
+}
+
+
+/* =========================================================
+   PHONE
+   ========================================================= */
+
+function getPhone(text){
+
+    text =
+        digits(text);
+
+    const m =
+        text.match(
+            /(?:\+98|0098|98|0)?9\d{9}/
+        );
+
+    if(!m){
+
+        return null;
+
+    }
+
+    let phone =
+        m[0];
+
+    if(
+        phone.startsWith("+98")
+    ){
+
+        phone =
+            "0" +
+            phone.substring(3);
+
+    }
+    else if(
+        phone.startsWith("0098")
+    ){
+
+        phone =
+            "0" +
+            phone.substring(4);
+
+    }
+    else if(
+        phone.startsWith("98")
+    ){
+
+        phone =
+            "0" +
+            phone.substring(2);
+
+    }
+
+    return phone;
+
+}
+
+
+/* =========================================================
+   OPEN URL
+   ========================================================= */
+
+function openUrl(url){
+
+    if(
+        android("openUrl",url)
+        !== null
+    ){
+
+        return;
+
+    }
+
+    window.location.href =
+        url;
+
+}
+
+
+/* =========================================================
+   OPEN APP
+   ========================================================= */
+
+function openApp(
+    packageName,
+    fallback
+){
+
+    if(
+        android(
+            "openApp",
+            packageName
+        ) !== null
+    ){
+
+        return;
+
+    }
+
+    if(fallback){
+
+        try{
+
+            window.location.href =
+                fallback;
+
+        }
+        catch(e){}
+
+    }
+
+}
+
+
+/* =========================================================
+   APPS
+   ========================================================= */
+
+const apps = {
+
+    whatsapp:{
+        package:"com.whatsapp",
+        url:"https://wa.me/"
+    },
+
+    telegram:{
+        package:"org.telegram.messenger",
+        url:"tg://"
+    },
+
+    instagram:{
+        package:"com.instagram.android",
+        url:"https://instagram.com/"
+    },
+
+    youtube:{
+        package:"com.google.android.youtube",
+        url:"https://youtube.com/"
+    },
+
+    chrome:{
+        package:"com.android.chrome",
+        url:"https://google.com/"
+    }
+
+};
+
+
+function launch(name){
+
+    const a =
+        apps[name];
+
+    if(!a){
+
+        return;
+
+    }
+
+    openApp(
+        a.package,
+        a.url
+    );
+
+}
+
+
+/* =========================================================
+   GALLERY
+   ========================================================= */
+
+function gallery(){
+
+    if(
+        android("openGallery")
+        !== null
+    ){
+
+        return;
+
+    }
+
+    openUrl(
+        "https://photos.google.com/"
+    );
+
+}
+
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+function image(){
+
+    if(
+        android("openImage")
+        !== null
+    ){
+
+        return;
+
+    }
+
+    gallery();
+
+}
+
+
+/* =========================================================
+   VIDEO
+   ========================================================= */
+
+function video(){
+
+    if(
+        android("openVideo")
+        !== null
+    ){
+
+        return;
+
+    }
+
+    gallery();
+
+}
+
+
+/* =========================================================
+   CAMERA
+   ========================================================= */
+
+function camera(){
+
+    if(
+        android("openCamera")
+        !== null
+    ){
+
+        return;
+
+    }
+
+    openUrl(
+        "intent://camera/#Intent;" +
+        "scheme=android.media.action." +
+        "IMAGE_CAPTURE;end"
+    );
+
+}
+
+
+/* =========================================================
+   VIDEO CAMERA
+   ========================================================= */
+
+function recordVideo(){
+
+    if(
+        android("recordVideo")
+        !== null
+    ){
+
+        return;
+
+    }
+
+    openUrl(
+        "intent://camera/#Intent;" +
+        "scheme=android.media.action." +
+        "VIDEO_CAPTURE;end"
+    );
+
+}
+
+
+/* =========================================================
+   CALL CONFIRM
+   ========================================================= */
+
+function requestCall(phone){
+
+    pendingPhone =
+        phone;
+
+    phoneBox.textContent =
+        phone;
+
+    modal.classList.add(
+        "show"
+    );
+
+    speak(
+        "می‌خواهی با این شماره تماس بگیرم؟"
+    );
+
+}
+
+
+callButton.onclick =
+    function(){
+
+        if(!pendingPhone){
+
+            return;
+
+        }
+
+        const phone =
+            pendingPhone;
+
+        pendingPhone = null;
+
+        modal.classList.remove(
+            "show"
+        );
+
+        if(
+            android(
+                "makeCall",
+                phone
+            ) !== null
+        ){
+
+            return;
+
+        }
+
+        window.location.href =
+            "tel:" + phone;
+
+    };
+
+
+cancelButton.onclick =
+    function(){
+
+        pendingPhone = null;
+
+        modal.classList.remove(
+            "show"
+        );
+
+        answer(
+            "تماس لغو شد."
+        );
+
+    };
+
+
+/* =========================================================
+   SMS
+   ========================================================= */
+
+function sms(
+    phone,
+    message=""
+){
+
+    if(
+        android(
+            "sendSMS",
+            phone,
+            message
+        ) !== null
+    ){
+
+        return;
+
+    }
+
+    window.location.href =
+        "sms:" +
+        phone +
+        "?body=" +
+        encodeURIComponent(
+            message
+        );
+
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+function search(query){
+
+    openUrl(
+        "https://www.google.com/search?q=" +
+        encodeURIComponent(query)
+    );
+
+}
+
+
+/* =========================================================
+   TIME
+   ========================================================= */
+
+function getTime(){
+
+    return new Date()
+        .toLocaleTimeString(
+            "fa-IR",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+function getDate(){
+
+    return new Date()
+        .toLocaleDateString(
+            "fa-IR",
+            {
+                year:"numeric",
+                month:"long",
+                day:"numeric"
+            }
+        );
+
+}
+
+
+/* =========================================================
+   CALCULATOR
+   ========================================================= */
+
+function calculate(text){
+
+    try{
+
+        let expression =
+            digits(text)
+            .replace(
+                /جمع|بعلاوه/g,
+                "+"
+            )
+            .replace(
+                /منهای/g,
+                "-"
+            )
+            .replace(
+                /ضربدر|ضرب/g,
+                "*"
+            )
+            .replace(
+                /تقسیم بر|تقسیم/g,
+                "/"
+            )
+            .replace(
+                /[^0-9+\-*/().]/g,
+                ""
+            );
+
+        if(!expression){
+
+            return null;
+
+        }
+
+        const result =
+            Function(
+                '"use strict";return (' +
+                expression +
+                ')'
+            )();
+
+        if(
+            Number.isFinite(result)
+        ){
+
+            return result;
+
+        }
+
+    }
+    catch(e){}
+
+    return null;
+
+}
+
+
+/* =========================================================
+   PROCESS COMMAND
+   ========================================================= */
+
+function processCommand(original){
+
+    const text =
+        normalize(original);
+
+    if(!text){
+
+        return;
+
+    }
+
+    addMessage(
+        original,
+        "user"
+    );
+
+    setStatus(
+        "در حال پردازش"
+    );
+
+
+    /* ================= CALL ================= */
+
+    const phone =
+        getPhone(text);
+
+    if(
+        phone &&
+        (
+            text.includes("تماس") ||
+            text.includes("زنگ") ||
+            text.includes("شماره") ||
+            text.includes("بگیر")
+        )
+    ){
+
+        requestCall(phone);
+
+        return;
+
+    }
+
+
+    /* ================= WHATSAPP ================= */
+
+    if(
+        text.includes("واتساپ") &&
+        (
+            text.includes("باز") ||
+            text.includes("اجرا")
+        )
+    ){
+
+        launch("whatsapp");
+
+        answer(
+            "واتساپ را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= TELEGRAM ================= */
+
+    if(
+        text.includes("تلگرام") &&
+        (
+            text.includes("باز") ||
+            text.includes("اجرا")
+        )
+    ){
+
+        launch("telegram");
+
+        answer(
+            "تلگرام را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= INSTAGRAM ================= */
+
+    if(
+        text.includes("اینستاگرام") &&
+        (
+            text.includes("باز") ||
+            text.includes("اجرا")
+        )
+    ){
+
+        launch("instagram");
+
+        answer(
+            "اینستاگرام را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= YOUTUBE ================= */
+
+    if(
+        (
+            text.includes("یوتیوب") ||
+            text.includes("یو تیوب")
+        ) &&
+        (
+            text.includes("باز") ||
+            text.includes("اجرا")
+        )
+    ){
+
+        launch("youtube");
+
+        answer(
+            "یوتیوب را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= CHROME ================= */
+
+    if(
+        text.includes("کروم") &&
+        (
+            text.includes("باز") ||
+            text.includes("اجرا")
+        )
+    ){
+
+        launch("chrome");
+
+        answer(
+            "کروم را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= GALLERY ================= */
+
+    if(
+        text.includes("گالری") ||
+        text.includes("عکس هام") ||
+        text.includes("عکس‌هام") ||
+        text.includes("عکس های من")
+    ){
+
+        gallery();
+
+        answer(
+            "گالری را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= IMAGE ================= */
+
+    if(
+        text.includes("عکس") &&
+        (
+            text.includes("انتخاب") ||
+            text.includes("باز کن")
+        )
+    ){
+
+        image();
+
+        answer(
+            "انتخاب عکس را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= VIDEO ================= */
+
+    if(
+        text.includes("فیلم هام") ||
+        text.includes("فیلم های من") ||
+        text.includes("ویدئو هام")
+    ){
+
+        video();
+
+        answer(
+            "ویدئوها را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= CAMERA ================= */
+
+    if(
+        text.includes("دوربین") &&
+        (
+            text.includes("باز") ||
+            text.includes("اجرا")
+        )
+    ){
+
+        camera();
+
+        answer(
+            "دوربین را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= TAKE PHOTO ================= */
+
+    if(
+        text.includes("عکس بگیر")
+    ){
+
+        camera();
+
+        answer(
+            "دوربین را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= VIDEO RECORD ================= */
+
+    if(
+        text.includes("فیلم بگیر") ||
+        text.includes("فیلم برداری") ||
+        text.includes("فیلمبرداری")
+    ){
+
+        recordVideo();
+
+        answer(
+            "دوربین فیلم‌برداری را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= SMS ================= */
+
+    if(
+        phone &&
+        (
+            text.includes("پیام") ||
+            text.includes("اس ام اس")
+        )
+    ){
+
+        sms(
+            phone,
+            ""
+        );
+
+        answer(
+            "صفحه پیام را باز کردم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= SETTINGS ================= */
+
+    if(
+        text.includes("تنظیمات") &&
+        (
+            text.includes("باز") ||
+            text.includes("اجرا")
+        )
+    ){
+
+        if(
+            android(
+                "openSettings"
+            ) !== null
+        ){
+
+            answer(
+                "تنظیمات را باز کردم."
+            );
+
+        }
+        else{
+
+            answer(
+                "باز کردن تنظیمات گوشی از سایت معمولی امکان‌پذیر نیست."
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /* ================= VOLUME ================= */
+
+    if(
+        text.includes("صدا") &&
+        (
+            text.includes("زیاد") ||
+            text.includes("بالا")
+        )
+    ){
+
+        if(
+            android("volumeUp")
+            !== null
+        ){
+
+            answer(
+                "صدا را زیاد کردم."
+            );
+
+        }
+        else{
+
+            answer(
+                "کنترل صدای گوشی از سایت معمولی امکان‌پذیر نیست."
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    if(
+        text.includes("صدا") &&
+        (
+            text.includes("کم") ||
+            text.includes("پایین")
+        )
+    ){
+
+        if(
+            android("volumeDown")
+            !== null
+        ){
+
+            answer(
+                "صدا را کم کردم."
+            );
+
+        }
+        else{
+
+            answer(
+                "کنترل صدای گوشی از سایت معمولی امکان‌پذیر نیست."
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /* ================= MUSIC ================= */
+
+    if(
+        text.includes("موسیقی پخش") ||
+        text.includes("آهنگ پخش")
+    ){
+
+        if(
+            android("playMusic")
+            !== null
+        ){
+
+            answer(
+                "موسیقی را پخش کردم."
+            );
+
+        }
+        else{
+
+            answer(
+                "برای کنترل موسیقی باید Ahoora AI داخل اپ اندروید اجرا شود."
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /* ================= TIME ================= */
+
+    if(
+        text.includes("ساعت") ||
+        text.includes("چه ساعتی")
+    ){
+
+        answer(
+            "الان ساعت " +
+            getTime() +
+            " است."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= DATE ================= */
+
+    if(
+        text.includes("تاریخ") ||
+        text.includes("امروز چندمه")
+    ){
+
+        answer(
+            "امروز " +
+            getDate() +
+            " است."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= CALCULATOR ================= */
+
+    if(
+        text.includes("حساب کن") ||
+        text.includes("محاسبه کن") ||
+        text.includes("چند میشه")
+    ){
+
+        const result =
+            calculate(text);
+
+        if(result !== null){
+
+            answer(
+                "نتیجه می‌شود " +
+                result
+            );
+
+        }
+        else{
+
+            answer(
+                "عبارت ریاضی را متوجه نشدم."
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /* ================= SEARCH ================= */
+
+    if(
+        text.startsWith("جستجو") ||
+        text.startsWith("جست و جو") ||
+        text.startsWith("در اینترنت")
+    ){
+
+        const query =
+            text
+                .replace(
+                    /^جستجو/,
+                    ""
+                )
+                .replace(
+                    /^جست و جو/,
+                    ""
+                )
+                .replace(
+                    /^در اینترنت/,
+                    ""
+                )
+                .trim();
+
+        if(query){
+
+            search(query);
+
+            answer(
+                "در اینترنت جستجو کردم."
+            );
+
+        }
+        else{
+
+            answer(
+                "چه چیزی را جستجو کنم؟"
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    /* ================= HELLO ================= */
+
+    if(
+        text.includes("سلام")
+    ){
+
+        answer(
+            "سلام! من Ahoora AI هستم. چه کاری برات انجام بدم؟"
+        );
+
+        return;
+
+    }
+
+
+    /* ================= NAME ================= */
+
+    if(
+        text.includes("اسمت چیه") ||
+        text.includes("کی هستی")
+    ){
+
+        answer(
+            "من Ahoora AI هستم، دستیار صوتی فارسی تو."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= THANKS ================= */
+
+    if(
+        text.includes("ممنون") ||
+        text.includes("مرسی")
+    ){
+
+        answer(
+            "خواهش می‌کنم."
+        );
+
+        return;
+
+    }
+
+
+    /* ================= WEB SITES ================= */
+
+    const websiteMap = {
+
+        "گوگل":
+            "https://www.google.com",
+
+        "یوتیوب":
+            "https://www.youtube.com",
+
+        "آپارات":
+            "https://www.aparat.com",
+
+        "اینستاگرام":
+            "https://www.instagram.com",
+
+        "واتساپ":
+            "https://web.whatsapp.com",
+
+        "تلگرام":
+            "https://web.telegram.org"
+
+    };
+
+
+    if(
+        text.includes("سایت") &&
+        text.includes("باز")
+    ){
+
+        for(
+            const key in websiteMap
+        ){
+
+            if(
+                text.includes(key)
+            ){
+
+                openUrl(
+                    websiteMap[key]
+                );
+
+                answer(
+                    "سایت " +
+                    key +
+                    " را باز کردم."
+                );
+
+                return;
+
+            }
+
+        }
+
+    }
+
+
+    /* ================= FALLBACK ================= */
+
+    answer(
+        "این دستور را متوجه نشدم. می‌توانی بگویی واتساپ را باز کن، دوربین را باز کن، ساعت را بگو، یک عبارت را حساب کن یا با یک شماره تماس بگیر."
+    );
+
+}
+
+
+/* =========================================================
+   VOICES
+   ========================================================= */
+
+if(
+    "speechSynthesis" in window
+){
+
+    speechSynthesis.onvoiceschanged =
+        function(){
+
+            speechSynthesis.getVoices();
+
+        };
+
+}
+
+
+/* =========================================================
+   FIRST MESSAGE
+   ========================================================= */
+
+setTimeout(
+    function(){
+
+        answer(
+            "سلام! من Ahoora AI هستم. برای صحبت کردن روی میکروفون بزن."
+        );
+
+    },
+    700
+);
+
+</script>
+
+</body>
+</html>
