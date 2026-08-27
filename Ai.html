@@ -494,7 +494,7 @@ button,input{
         class="status"
         id="status">
 
-        آماده — بگو «Ahoora AI»
+        آماده — بگو «سلام اهورا»
 
     </div>
 
@@ -518,7 +518,7 @@ button,input{
 
         <br>
 
-        <b>Ahoora AI</b>
+        <b>سلام اهورا</b>
 
     </div>
 
@@ -1339,6 +1339,9 @@ function callNumber(number){
         return;
     }
 
+    // پخش صدای تأیید تماس (c.mp3)
+    voiceC();
+
     if(android()){
 
         try{
@@ -1351,7 +1354,7 @@ function callNumber(number){
                 "📞 در حال تماس با " +
                 number +
                 "...",
-                voiceA
+                null // صدا قبلاً پخش شده
             );
 
             return;
@@ -2174,11 +2177,7 @@ var recognition = null;
 
 var listening = false;
 
-var commandMode = false;
-
 var manualStop = false;
-
-var waitingForCommand = false;
 
 
 /* =====================================================
@@ -2228,9 +2227,7 @@ function initSpeech(){
         );
 
         setStatus(
-            commandMode ?
-            "🎙️ فرمانت را بگو..." :
-            "🎙️ منتظر Ahoora AI...",
+            "🎙️ گوش می‌کنم...",
             "listening"
         );
 
@@ -2249,66 +2246,46 @@ function initSpeech(){
         userBox.textContent =
             text;
 
-        var t =
+        var normalizedText =
             normalize(text);
 
+        // جستجوی کلیدواژه "سلام اهورا"
+        var wakeIndex =
+            normalizedText.indexOf(
+                "سلام اهورا"
+            );
 
-        /* ==========================================
-           Wake Word
-        ========================================== */
-
-        if(!commandMode){
-
-            if(
-                t.indexOf("ahoor a i") >= 0 ||
-                t.indexOf("ahoora ai") >= 0 ||
-                t.indexOf("ahoora") >= 0 ||
-                t.indexOf("اهورا ای") >= 0 ||
-                t.indexOf("اهورا آی") >= 0 ||
-                t.indexOf("اهورا") >= 0
-            ){
-
-                commandMode = true;
-
-                waitingForCommand = true;
-
-                answer(
-                    "👋 بله؟ فرمانت را بگو.",
-                    voiceE
+        // همچنین ممکن است بدون فاصله باشد
+        if(wakeIndex === -1){
+            wakeIndex =
+                normalizedText.indexOf(
+                    "سلاماهورا"
                 );
+        }
 
-                setStatus(
-                    "🎙️ فرمان صوتی فعال شد"
-                );
-
-                setTimeout(
-                    function(){
-
-                        if(commandMode){
-
-                            startListening();
-
-                        }
-
-                    },
-                    1200
-                );
-
-            }
-
+        // اگر کلیدواژه پیدا نشد، سکوت مطلق
+        if(wakeIndex === -1){
             return;
         }
 
+        // استخراج بخش بعد از کلیدواژه
+        var commandPart =
+            text.substring(
+                wakeIndex + (
+                    normalizedText.indexOf("سلام اهورا") !== -1 ?
+                    "سلام اهورا".length :
+                    "سلاماهورا".length
+                )
+            ).trim();
 
-        /* ==========================================
-           فرمان
-        ========================================== */
+        // اگر بعد از کلیدواژه چیزی نباشد، سکوت
+        if(!commandPart){
+            return;
+        }
 
-        waitingForCommand = false;
-
-        processSpeech(
-            text,
-            true
+        // پردازش فرمان
+        processCommand(
+            commandPart
         );
 
     };
@@ -2479,12 +2456,11 @@ function stopListening(){
 
 
 /* =====================================================
-   پردازش فرمان
+   پردازش فرمان (بدون نیاز به کلیدواژه)
 ===================================================== */
 
-function processSpeech(
-    original,
-    fromButton
+function processCommand(
+    original
 ){
 
     var text =
@@ -2494,13 +2470,6 @@ function processSpeech(
         "در حال پردازش...",
         "processing"
     );
-
-
-    if(fromButton){
-
-        commandMode = true;
-
-    }
 
 
     /* ==========================================
@@ -2513,15 +2482,13 @@ function processSpeech(
         text === "خروج"
     ){
 
-        commandMode = false;
-
         answer(
             "باشه.",
             voiceA
         );
 
         setStatus(
-            "آماده — بگو «Ahoora AI»"
+            "آماده — بگو «سلام اهورا»"
         );
 
         return;
@@ -3146,12 +3113,12 @@ renderContacts();
 answer(
     "👋 سلام! من اهورا هستم.<br>" +
     "بگو:<br>" +
-    "<b>Ahoora AI</b>",
+    "<b>سلام اهورا</b>",
     voiceE
 );
 
 setStatus(
-    "آماده — بگو «Ahoora AI»"
+    "آماده — بگو «سلام اهورا»"
 );
 
 
