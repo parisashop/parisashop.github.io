@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -886,68 +885,116 @@ function normalize(text){
 
 
 /* =====================================================
-   صدا
+   صدا (با مدیریت قطع و وصل میکروفن)
 ===================================================== */
 
-function playVoice(file){
+var currentAudio = null;
+var isSpeaking = false;
+
+function playVoice(file, callback){
+
+    // stop any current audio
+    if(currentAudio){
+        try{
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }catch(e){}
+        currentAudio = null;
+    }
 
     try{
 
-        var audio =
-            new Audio(file);
+        var audio = new Audio(file);
+        currentAudio = audio;
+        isSpeaking = true;
 
-        audio.play().catch(
-            function(){}
-        );
+        audio.onended = function(){
+            currentAudio = null;
+            isSpeaking = false;
+            if(callback) callback();
+        };
 
-    }catch(e){}
+        audio.onerror = function(){
+            currentAudio = null;
+            isSpeaking = false;
+            if(callback) callback();
+        };
 
-}
+        audio.play().catch(function(e){
+            currentAudio = null;
+            isSpeaking = false;
+            if(callback) callback();
+        });
 
-function voiceA(){
-    playVoice("a.mp3");
-}
+    }catch(e){
+        isSpeaking = false;
+        if(callback) callback();
+    }
 
-function voiceB(){
-    playVoice("b.mp3");
-}
-
-function voiceC(){
-    playVoice("c.mp3");
-}
-
-function voiceD(){
-    playVoice("d.mp3");
-}
-
-function voiceE(){
-    playVoice("e.mp3");
-}
-
-function voiceF(){
-    playVoice("f.mp3");
-}
-
-function voiceG(){
-    playVoice("g.mp3");
 }
 
 
 /* =====================================================
-   پاسخ
+   توابع صوتی (همگی callback پذیر)
 ===================================================== */
 
-function answer(
-    text,
-    voice
-){
+function voiceA(callback){
+    playVoice("a.mp3", callback);
+}
 
-    responseBox.innerHTML =
-        text;
+function voiceB(callback){
+    playVoice("b.mp3", callback);
+}
+
+function voiceC(callback){
+    playVoice("c.mp3", callback);
+}
+
+function voiceD(callback){
+    playVoice("d.mp3", callback);
+}
+
+function voiceE(callback){
+    playVoice("e.mp3", callback);
+}
+
+function voiceF(callback){
+    playVoice("f.mp3", callback);
+}
+
+function voiceG(callback){
+    playVoice("g.mp3", callback);
+}
+
+
+/* =====================================================
+   پاسخ (با کنترل میکروفن)
+===================================================== */
+
+var userStopped = false;
+var speechPause = false;
+
+function answer(text, voice){
+
+    responseBox.innerHTML = text;
 
     if(voice){
 
-        voice();
+        // اگر در حال گوش دادن هستیم، متوقفش کن (برای جلوگیری از تشخیص صدای خودمان)
+        if(listening){
+            speechPause = true;
+            try{
+                recognition.stop();
+            }catch(e){}
+        }
+
+        // پخش صدا و پس از پایان، دوباره گوش دادن را فعال کن (در صورتی که کاربر دستی خاموش نکرده باشد)
+        voice(function(){
+            speechPause = false;
+            if(!userStopped){
+                startListening();
+            }
+        });
 
     }
 
@@ -1340,8 +1387,13 @@ function callNumber(number){
         return;
     }
 
-    // پخش صدای تأیید تماس (c.mp3)
-    voiceC();
+    // پخش صدای تأیید تماس (c.mp3) – این کار میکروفن را موقتاً قطع می‌کند
+    answer(
+        "📞 در حال تماس با " +
+        number +
+        "...",
+        voiceC
+    );
 
     if(android()){
 
@@ -1349,13 +1401,6 @@ function callNumber(number){
 
             Android.makeCall(
                 number
-            );
-
-            answer(
-                "📞 در حال تماس با " +
-                number +
-                "...",
-                null // صدا قبلاً پخش شده
             );
 
             return;
@@ -2178,8 +2223,6 @@ var recognition = null;
 
 var listening = false;
 
-var manualStop = false;
-
 
 /* =====================================================
    شروع Speech
@@ -2208,8 +2251,7 @@ function initSpeech(){
     recognition.lang =
         "fa-IR";
 
-    // حالت پیوسته: میکروفن همیشه روشن می‌ماند و قطع نمی‌شود
-    recognition.continuous = true;
+    recognition.continuous = true;  // همیشه گوش می‌دهد
 
     recognition.interimResults = false;
 
@@ -2255,7 +2297,6 @@ function initSpeech(){
                 "سلام اهورا"
             );
 
-        // همچنین ممکن است بدون فاصله باشد
         if(wakeIndex === -1){
             wakeIndex =
                 normalizedText.indexOf(
@@ -2278,7 +2319,6 @@ function initSpeech(){
                 )
             ).trim();
 
-        // اگر بعد از کلیدواژه چیزی نباشد، سکوت
         if(!commandPart){
             return;
         }
@@ -2305,7 +2345,6 @@ function initSpeech(){
             event.error
         );
 
-        // اگر خطای عدم اجازه باشد، دیگر تلاش نکنیم
         if(
             event.error === "not-allowed"
         ){
@@ -2322,16 +2361,15 @@ function initSpeech(){
             return;
         }
 
-        // برای سایر خطاها (از جمله no-speech, aborted, network, ...)
-        // دوباره تلاش می‌کنیم تا میکروفن همیشه فعال بماند
-        setTimeout(
-            function(){
-
-                startListening();
-
-            },
-            300
-        );
+        // برای سایر خطاها، دوباره تلاش می‌کنیم (مگر اینکه کاربر یا صدا قطع کرده باشد)
+        if(!userStopped && !speechPause){
+            setTimeout(
+                function(){
+                    startListening();
+                },
+                300
+            );
+        }
 
     };
 
@@ -2350,22 +2388,15 @@ function initSpeech(){
             "processing"
         );
 
-
-        if(manualStop){
-
-            manualStop = false;
-
+        // اگر به‌دستور کاربر یا برای پخش صدا قطع شده، خودکار راه‌اندازی نکن
+        if(userStopped || speechPause){
             return;
-
         }
 
-        // اگر به هر دلیلی قطع شد، دوباره شروع می‌کنیم
-        // با تأخیر کم برای جلوگیری از قطع و وصل‌های مکرر
+        // در غیر این صورت دوباره شروع کن (با تأخیر کم)
         setTimeout(
             function(){
-
                 startListening();
-
             },
             200
         );
@@ -2384,65 +2415,45 @@ function initSpeech(){
 function startListening(){
 
     if(listening){
-
         return;
+    }
 
+    // اگر کاربر دستی خاموش کرده، شروع نکن
+    if(userStopped){
+        return;
     }
 
     if(!recognition){
-
         if(!initSpeech()){
-
             return;
-
         }
-
     }
 
     try{
-
         recognition.start();
-
     }catch(e){
-
-        console.log(
-            "start error",
-            e
-        );
-
-        // اگر خطایی رخ داد، دوباره تلاش کنیم
-        setTimeout(
-            function(){
-
-                startListening();
-
-            },
-            500
-        );
-
+        console.log("start error", e);
+        setTimeout(function(){
+            startListening();
+        }, 500);
     }
 
 }
 
 
 /* =====================================================
-   توقف شنود (دستی)
+   توقف شنود (دستی توسط کاربر)
 ===================================================== */
 
 function stopListening(){
 
-    manualStop = true;
-
+    userStopped = true;   // کاربر خواسته خاموش شود
     listening = false;
 
     if(recognition){
-
         try{
-
             recognition.stop();
-
         }catch(e){}
-
     }
 
     mic.classList.remove(
@@ -2459,6 +2470,26 @@ function stopListening(){
     );
 
 }
+
+
+/* =====================================================
+   دکمه میکروفن
+===================================================== */
+
+mic.addEventListener(
+    "click",
+    function(){
+
+        if(listening){
+            stopListening();
+        }else{
+            // اگر خاموش بود، روشن کن
+            userStopped = false;
+            startListening();
+        }
+
+    }
+);
 
 
 /* =====================================================
@@ -3084,30 +3115,6 @@ function processCommand(
     );
 
 }
-
-
-/* =====================================================
-   دکمه میکروفن
-===================================================== */
-
-mic.addEventListener(
-    "click",
-    function(){
-
-        if(listening){
-
-            stopListening();
-
-        }else{
-
-            manualStop = false;
-
-            startListening();
-
-        }
-
-    }
-);
 
 
 /* =====================================================
