@@ -2155,6 +2155,9 @@ var manualStop = false;
 
 var waitingForCommand = false;
 
+// متغیر جدید برای کنترل اینکه آیا میکروفن باید به طور خودکار دوباره روشن شود
+var autoRestart = true;
+
 
 /* =====================================================
    شروع Speech
@@ -2303,37 +2306,42 @@ function initSpeech(){
             event.error
         );
 
-        if(
-            event.error === "no-speech" ||
-            event.error === "aborted"
-        ){
+        // فقط در صورتی که autoRestart true باشد و خاموشی دستی نباشد
+        if(autoRestart && !manualStop){
+            if(
+                event.error === "no-speech" ||
+                event.error === "aborted"
+            ){
 
-            setTimeout(
-                function(){
+                setTimeout(
+                    function(){
 
-                    startListening();
+                        if(autoRestart && !manualStop){
+                            startListening();
+                        }
 
-                },
-                600
-            );
+                    },
+                    600
+                );
 
-            return;
-        }
+                return;
+            }
 
-        if(
-            event.error === "not-allowed"
-        ){
+            if(
+                event.error === "not-allowed"
+            ){
 
-            answer(
-                "❌ اجازه استفاده از میکروفن داده نشده است.",
-                voiceD
-            );
+                answer(
+                    "❌ اجازه استفاده از میکروفن داده نشده است.",
+                    voiceD
+                );
 
-            setStatus(
-                "اجازه میکروفن لازم است"
-            );
+                setStatus(
+                    "اجازه میکروفن لازم است"
+                );
 
-            return;
+                return;
+            }
         }
 
     };
@@ -2353,24 +2361,27 @@ function initSpeech(){
             "processing"
         );
 
-
+        // اگر خاموشی دستی بود، هیچ کاری نکن
         if(manualStop){
-
             manualStop = false;
-
+            autoRestart = false; // جلوگیری از راه‌اندازی مجدد خودکار
+            setStatus(
+                "میکروفن خاموش شد"
+            );
             return;
-
         }
 
-
-        setTimeout(
-            function(){
-
-                startListening();
-
-            },
-            600
-        );
+        // اگر autoRestart true باشد، دوباره شروع کن
+        if(autoRestart){
+            setTimeout(
+                function(){
+                    if(!manualStop && autoRestart){
+                        startListening();
+                    }
+                },
+                600
+            );
+        }
 
     };
 
@@ -2386,32 +2397,26 @@ function initSpeech(){
 function startListening(){
 
     if(listening){
-
         return;
-
     }
 
     if(!recognition){
-
         if(!initSpeech()){
-
             return;
-
         }
-
     }
 
+    // تنظیم autoRestart روی true
+    autoRestart = true;
+    manualStop = false;
+
     try{
-
         recognition.start();
-
     }catch(e){
-
         console.log(
             "start error",
             e
         );
-
     }
 
 }
@@ -2424,17 +2429,14 @@ function startListening(){
 function stopListening(){
 
     manualStop = true;
+    autoRestart = false; // جلوگیری از راه‌اندازی مجدد خودکار
 
     listening = false;
 
     if(recognition){
-
         try{
-
             recognition.stop();
-
         }catch(e){}
-
     }
 
     mic.classList.remove(
@@ -2449,7 +2451,6 @@ function stopListening(){
     setStatus(
         "میکروفن خاموش شد"
     );
-
 }
 
 
@@ -3096,15 +3097,13 @@ mic.addEventListener(
     function(){
 
         if(listening){
-
+            // اگر در حال گوش دادن است، خاموش کن
             stopListening();
-
         }else{
-
+            // اگر خاموش است، روشن کن
             manualStop = false;
-
+            autoRestart = true;
             startListening();
-
         }
 
     }
