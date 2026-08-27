@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
 <title>Ahoora AI</title>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 
@@ -25,6 +30,10 @@ body{
 
 button,input{
     font-family:inherit;
+}
+
+button{
+    cursor:pointer;
 }
 
 .app{
@@ -86,15 +95,18 @@ button,input{
 .orb-wrapper{
     width:230px;
     height:230px;
+
     display:flex;
     align-items:center;
     justify-content:center;
+
     margin:15px 0;
 }
 
 .orb{
     width:155px;
     height:155px;
+
     border-radius:50%;
 
     background:
@@ -118,6 +130,7 @@ button,input{
 .inner{
     width:70%;
     height:70%;
+
     border-radius:50%;
 
     background:
@@ -154,6 +167,7 @@ button,input{
 }
 
 @keyframes pulse{
+
     0%,100%{
         transform:scale(1);
     }
@@ -161,9 +175,11 @@ button,input{
     50%{
         transform:scale(1.05);
     }
+
 }
 
 @keyframes listen{
+
     0%,100%{
         transform:scale(1);
     }
@@ -171,9 +187,11 @@ button,input{
     50%{
         transform:scale(1.1);
     }
+
 }
 
 @keyframes process{
+
     0%,100%{
         transform:scale(1);
     }
@@ -181,6 +199,7 @@ button,input{
     50%{
         transform:scale(1.06);
     }
+
 }
 
 .mic{
@@ -198,6 +217,7 @@ button,input{
     );
 
     color:white;
+
     font-size:34px;
 
     box-shadow:
@@ -216,6 +236,7 @@ button,input{
 }
 
 @keyframes mic{
+
     0%,100%{
         box-shadow:0 0 40px #ff006688;
     }
@@ -223,257 +244,154 @@ button,input{
     50%{
         box-shadow:0 0 90px #ff0066dd;
     }
+
 }
 
 .status{
     margin:12px;
+
     padding:8px 20px;
+
     background:#ffffff0c;
+
     border-radius:30px;
+
     color:#aab4ce;
+
     text-align:center;
 }
 
 .user{
     width:100%;
+
     min-height:52px;
+
     padding:15px;
+
     background:#ffffff08;
+
     border-radius:25px;
+
     text-align:center;
+
     overflow:hidden;
 }
 
 .response{
     width:100%;
+
     margin-top:12px;
+
     padding:18px;
+
     background:#ffffff08;
+
     border:1px solid #ffffff0d;
+
     border-radius:25px;
+
     text-align:center;
+
     line-height:2;
+
     overflow:auto;
+
     max-height:210px;
 }
 
 .small{
     color:#8993af;
+
     font-size:13px;
+
     margin-top:10px;
 }
 
-.panel{
-    position:fixed;
-    inset:0;
-    background:#080812ee;
-    z-index:500;
-    display:none;
-    overflow:auto;
-    padding:20px;
-}
-
-.panelBox{
-    width:100%;
-    max-width:450px;
-    margin:20px auto;
-    background:#151526;
-    border-radius:30px;
-    padding:22px;
-}
-
-.panelTitle{
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:15px;
-}
-
-.input{
-    width:100%;
-    border:1px solid #ffffff15;
-    outline:none;
-    border-radius:16px;
-    padding:14px;
-    background:#ffffff08;
-    color:white;
-    margin-bottom:10px;
-    font-size:16px;
-}
-
-.primary{
-    width:100%;
-    border:0;
-    border-radius:16px;
-    padding:14px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff,
-        #7200ff
-    );
-
-    color:white;
-    font-size:16px;
-}
-
-.close{
-    width:100%;
-    margin-top:10px;
-    padding:13px;
-    border:0;
-    border-radius:16px;
-    background:#ffffff10;
-    color:white;
-}
-
-.privacy{
-    margin-top:15px;
-    padding:14px;
-    border-radius:16px;
-    background:#00ff9910;
-    border:1px solid #00ff9920;
-    color:#a8e8ca;
-    line-height:1.9;
-    font-size:13px;
-    text-align:center;
-}
-
-.savedContact{
-    background:#ffffff08;
-    border-radius:18px;
-    padding:13px;
-    margin-top:10px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.deleteContact{
-    border:0;
-    border-radius:12px;
-    padding:8px 12px;
-    background:#ff224422;
-    color:#ff6688;
-}
-
-.settingsBtn{
-    position:fixed;
-    left:18px;
-    bottom:18px;
-    width:48px;
-    height:48px;
-    border:0;
-    border-radius:50%;
-    background:#ffffff10;
-    color:white;
-    font-size:22px;
-    z-index:20;
-}
-
-.commandsBtn{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-    width:48px;
-    height:48px;
-    border:0;
-    border-radius:50%;
-    background:#ffffff10;
-    color:white;
-    font-size:22px;
-    z-index:20;
-}
-
-.commandsPanel{
-    position:fixed;
-    inset:0;
-    background:#080812ee;
-    z-index:600;
-    display:none;
-    overflow:auto;
-    padding:20px;
-}
-
-.commandsBox{
-    width:100%;
-    max-width:450px;
-    margin:20px auto;
-    background:#151526;
-    border-radius:30px;
-    padding:22px;
-}
-
-.commandsTitle{
-    font-size:23px;
-    font-weight:bold;
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.commandCard{
-    background:#ffffff08;
-    border:1px solid #ffffff0c;
-    border-radius:18px;
-    padding:14px;
-    margin-bottom:10px;
-    line-height:1.9;
-}
-
-.commandCard b{
-    color:#00d4ff;
-}
-
-.commandIcon{
-    font-size:25px;
-    margin-left:8px;
-}
 
 /* =====================================================
    AUTH
 ===================================================== */
 
-#authScreen{
+.authOverlay{
+
     position:fixed;
+
     inset:0;
-    z-index:9999;
+
+    z-index:1000;
+
+    display:none;
 
     background:
     radial-gradient(
-        circle at 50% 15%,
+        circle at 50% 20%,
         #20204b,
-        #080812 70%
+        #080812 75%
     );
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
     padding:20px;
+
+    overflow:auto;
 }
 
 .authBox{
+
     width:100%;
-    max-width:420px;
+
+    max-width:430px;
+
+    margin:50px auto;
 
     background:#151526;
 
+    border:1px solid #ffffff12;
+
     border-radius:30px;
 
-    padding:25px;
+    padding:28px;
 
     box-shadow:
     0 20px 80px #00000088;
+
+    text-align:center;
 }
 
 .authLogo{
-    text-align:center;
 
-    font-size:30px;
+    width:90px;
+
+    height:90px;
+
+    margin:0 auto 20px;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle at 35% 30%,
+        #008cff,
+        #0033aa
+    );
+
+    box-shadow:
+    0 0 60px #0066ff66;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:40px;
+}
+
+.authTitle{
+
+    font-size:27px;
 
     font-weight:bold;
 
-    margin-bottom:10px;
+    margin-bottom:8px;
 
     background:
     linear-gradient(
@@ -488,47 +406,433 @@ button,input{
     color:transparent;
 }
 
-.authSubtitle{
-    text-align:center;
+.authText{
 
     color:#9da8c5;
 
-    margin-bottom:25px;
+    line-height:1.9;
 
-    line-height:1.8;
+    margin-bottom:22px;
 }
 
-.authStatus{
+.authInput{
+
+    width:100%;
+
+    padding:16px;
+
+    border:1px solid #ffffff15;
+
+    outline:none;
+
+    border-radius:16px;
+
+    background:#ffffff08;
+
+    color:white;
+
+    font-size:16px;
+
     text-align:center;
 
-    margin-top:15px;
+    direction:ltr;
 
-    color:#9da8c5;
-
-    line-height:1.8;
-
-    min-height:25px;
+    margin-bottom:12px;
 }
 
-.logoutBtn{
+.authInput:focus{
+
+    border-color:#0066ff;
+
+    box-shadow:
+    0 0 20px #0066ff22;
+
+}
+
+.authButton{
+
+    width:100%;
+
+    padding:15px;
+
+    border:0;
+
+    border-radius:16px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0066ff,
+        #7200ff
+    );
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+}
+
+.authButton:disabled{
+
+    opacity:.5;
+
+}
+
+.otpBox{
+
+    display:none;
+}
+
+.otpInput{
+
+    letter-spacing:8px;
+
+    font-size:25px;
+
+    font-weight:bold;
+}
+
+.authBack{
+
     width:100%;
 
     margin-top:10px;
 
-    padding:12px;
+    padding:13px;
 
     border:0;
 
-    border-radius:15px;
+    border-radius:16px;
+
+    background:#ffffff10;
+
+    color:white;
+
+}
+
+.authMessage{
+
+    min-height:28px;
+
+    margin-top:15px;
+
+    color:#aab4ce;
+
+    line-height:1.8;
+}
+
+.authSuccess{
+
+    color:#55ffaa;
+}
+
+.authError{
+
+    color:#ff6688;
+}
+
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+.panel{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#080812ee;
+
+    z-index:500;
+
+    display:none;
+
+    overflow:auto;
+
+    padding:20px;
+}
+
+.panelBox{
+
+    width:100%;
+
+    max-width:450px;
+
+    margin:20px auto;
+
+    background:#151526;
+
+    border-radius:30px;
+
+    padding:22px;
+}
+
+.panelTitle{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    margin-bottom:15px;
+}
+
+.input{
+
+    width:100%;
+
+    border:1px solid #ffffff15;
+
+    outline:none;
+
+    border-radius:16px;
+
+    padding:14px;
+
+    background:#ffffff08;
+
+    color:white;
+
+    margin-bottom:10px;
+
+    font-size:16px;
+}
+
+.primary{
+
+    width:100%;
+
+    border:0;
+
+    border-radius:16px;
+
+    padding:14px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0066ff,
+        #7200ff
+    );
+
+    color:white;
+
+    font-size:16px;
+}
+
+.close{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:13px;
+
+    border:0;
+
+    border-radius:16px;
+
+    background:#ffffff10;
+
+    color:white;
+}
+
+.logout{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:13px;
+
+    border:0;
+
+    border-radius:16px;
 
     background:#ff224422;
 
     color:#ff6688;
+}
 
-    font-size:14px;
+.privacy{
+
+    margin-top:15px;
+
+    padding:14px;
+
+    border-radius:16px;
+
+    background:#00ff9910;
+
+    border:1px solid #00ff9920;
+
+    color:#a8e8ca;
+
+    line-height:1.9;
+
+    font-size:13px;
+
+    text-align:center;
+}
+
+.savedContact{
+
+    background:#ffffff08;
+
+    border-radius:18px;
+
+    padding:13px;
+
+    margin-top:10px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.deleteContact{
+
+    border:0;
+
+    border-radius:12px;
+
+    padding:8px 12px;
+
+    background:#ff224422;
+
+    color:#ff6688;
+}
+
+.settingsBtn{
+
+    position:fixed;
+
+    left:18px;
+
+    bottom:18px;
+
+    width:48px;
+
+    height:48px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#ffffff10;
+
+    color:white;
+
+    font-size:22px;
+
+    z-index:20;
+}
+
+
+/* =====================================================
+   COMMANDS
+===================================================== */
+
+.commandsBtn{
+
+    position:fixed;
+
+    right:18px;
+
+    bottom:18px;
+
+    width:48px;
+
+    height:48px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#ffffff10;
+
+    color:white;
+
+    font-size:22px;
+
+    z-index:20;
+}
+
+.commandsPanel{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#080812ee;
+
+    z-index:600;
+
+    display:none;
+
+    overflow:auto;
+
+    padding:20px;
+}
+
+.commandsBox{
+
+    width:100%;
+
+    max-width:450px;
+
+    margin:20px auto;
+
+    background:#151526;
+
+    border-radius:30px;
+
+    padding:22px;
+}
+
+.commandsTitle{
+
+    font-size:23px;
+
+    font-weight:bold;
+
+    text-align:center;
+
+    margin-bottom:20px;
+}
+
+.commandCard{
+
+    background:#ffffff08;
+
+    border:1px solid #ffffff0c;
+
+    border-radius:18px;
+
+    padding:14px;
+
+    margin-bottom:10px;
+
+    line-height:1.9;
+}
+
+.commandCard b{
+
+    color:#00d4ff;
+}
+
+.commandIcon{
+
+    font-size:25px;
+
+    margin-left:8px;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -538,81 +842,85 @@ button,input{
      AUTH SCREEN
 ===================================================== -->
 
-<div id="authScreen">
+<div class="authOverlay" id="authOverlay">
 
     <div class="authBox">
 
         <div class="authLogo">
-            ✦ Ahoora AI
+            ✦
         </div>
 
-        <div class="authSubtitle">
-            برای استفاده از قابلیت‌های Ahoora AI
-            ابتدا ثبت‌نام یا ورود کنید.
+        <div class="authTitle">
+            Ahoora AI
         </div>
 
+        <!-- EMAIL -->
 
-        <!-- مرحله ایمیل -->
+        <div id="emailBox">
 
-        <div id="emailStep">
+            <div class="authText">
 
-            <input
-                class="input"
-                id="authEmail"
-                type="email"
-                dir="ltr"
-                autocomplete="email"
-                placeholder="ایمیل خود را وارد کنید">
+                برای استفاده از قابلیت‌های Ahoora AI
+                ابتدا وارد حساب خود شوید.
 
-            <button
-                class="primary"
-                id="sendOtpBtn">
+                <br>
 
-                📧 ارسال کد ورود
-
-            </button>
-
-        </div>
-
-
-        <!-- مرحله OTP -->
-
-        <div
-            id="otpStep"
-            style="display:none">
-
-            <div style="
-                text-align:center;
-                color:#aab4ce;
-                margin-bottom:12px;
-                line-height:1.8;
-                ">
-
-                کد ۶ رقمی ارسال‌شده به ایمیل
-                را وارد کنید.
+                ایمیل خود را وارد کنید تا
+                کد تأیید برایتان ارسال شود.
 
             </div>
 
             <input
-                class="input"
-                id="authOtp"
+                class="authInput"
+                id="emailInput"
+                type="email"
+                autocomplete="email"
+                placeholder="example@gmail.com">
+
+            <button
+                class="authButton"
+                id="sendOtpBtn">
+
+                📧 ارسال کد OTP
+
+            </button>
+
+        </div>
+
+
+        <!-- OTP -->
+
+        <div class="otpBox" id="otpBox">
+
+            <div class="authText">
+
+                کد ۶ رقمی ارسال‌شده به ایمیل را وارد کنید.
+
+                <br>
+
+                <span id="sentEmail"></span>
+
+            </div>
+
+            <input
+                class="authInput otpInput"
+                id="otpInput"
                 type="text"
                 inputmode="numeric"
                 maxlength="6"
-                dir="ltr"
                 autocomplete="one-time-code"
-                placeholder="123456">
+                placeholder="------">
 
             <button
-                class="primary"
+                class="authButton"
                 id="verifyOtpBtn">
 
-                🔐 تأیید کد و ورود
+                🔐 تأیید و ورود
 
             </button>
 
             <button
-                class="close"
+                class="authBack"
                 id="backEmailBtn">
 
                 تغییر ایمیل
@@ -623,8 +931,8 @@ button,input{
 
 
         <div
-            id="authStatus"
-            class="authStatus">
+            class="authMessage"
+            id="authMessage">
         </div>
 
     </div>
@@ -633,7 +941,7 @@ button,input{
 
 
 <!-- =====================================================
-     MAIN APP
+     MAIN
 ===================================================== -->
 
 <div class="app">
@@ -677,7 +985,7 @@ button,input{
         class="status"
         id="status">
 
-        🔒 ابتدا وارد حساب شوید
+        آماده
 
     </div>
 
@@ -686,7 +994,8 @@ button,input{
         class="user"
         id="user">
 
-        برای استفاده ابتدا وارد شوید.
+        برای شروع فرمان صوتی بگو:
+        «Ahoora AI»
 
     </div>
 
@@ -695,8 +1004,12 @@ button,input{
         class="response"
         id="response">
 
-        🔐 برای استفاده از قابلیت‌های
-        Ahoora AI ابتدا ثبت‌نام یا ورود کنید.
+        سلام! من اهورا هستم.
+
+        <br>
+
+        برای استفاده از قابلیت‌ها
+        ابتدا وارد حساب شوید.
 
     </div>
 
@@ -710,7 +1023,7 @@ button,input{
 </div>
 
 
-<!-- تنظیمات -->
+<!-- SETTINGS -->
 
 <button
     class="settingsBtn"
@@ -721,7 +1034,7 @@ button,input{
 </button>
 
 
-<!-- دستورات -->
+<!-- COMMANDS -->
 
 <button
     class="commandsBtn"
@@ -774,6 +1087,14 @@ button,input{
         </div>
 
         <button
+            class="logout"
+            id="logoutBtn">
+
+            🚪 خروج از حساب
+
+        </button>
+
+        <button
             class="close"
             id="closePanel">
 
@@ -787,7 +1108,7 @@ button,input{
 
 
 <!-- =====================================================
-     COMMANDS PANEL
+     COMMAND PANEL
 ===================================================== -->
 
 <div
@@ -800,110 +1121,205 @@ button,input{
             🎙️ دستورات Ahoora AI
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">📱</span>
+
             <b>برنامه‌ها</b>
+
             <br>
+
             «واتساپ رو باز کن»
+
             <br>
+
             «تلگرام رو باز کن»
+
             <br>
+
             «کروم رو باز کن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">📞</span>
+
             <b>تماس</b>
+
             <br>
+
             «با پدرم تماس بگیر»
+
             <br>
+
             «به دایی زنگ بزن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">✉️</span>
+
             <b>پیام</b>
+
             <br>
+
             «به پدرم پیام بده سلام»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">🔦</span>
+
             <b>چراغ قوه</b>
+
             <br>
+
             «چراغ قوه رو روشن کن»
+
             <br>
+
             «چراغ قوه رو خاموش کن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">📶</span>
+
             <b>اتصالات</b>
+
             <br>
+
             «وای فای رو باز کن»
+
             <br>
+
             «بلوتوث رو باز کن»
+
             <br>
+
             «اینترنت همراه رو باز کن»
+
             <br>
+
             «هات اسپات رو باز کن»
+
             <br>
+
             «مکان رو باز کن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">🔊</span>
+
             <b>صدا</b>
+
             <br>
+
             «صدا رو زیاد کن»
+
             <br>
+
             «صدا رو کم کن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">☀️</span>
+
             <b>روشنایی صفحه</b>
+
             <br>
+
             «نور رو زیاد کن»
+
             <br>
+
             «نور رو کم کن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">🎵</span>
+
             <b>موسیقی</b>
+
             <br>
+
             «موزیک رو پخش کن»
+
             <br>
+
             «موزیک رو متوقف کن»
+
             <br>
+
             «آهنگ بعدی»
+
             <br>
+
             «آهنگ قبلی»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">📷</span>
+
             <b>دوربین و گالری</b>
+
             <br>
+
             «دوربین رو باز کن»
+
             <br>
+
             «گالری رو باز کن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">🔎</span>
+
             <b>جستجو</b>
+
             <br>
+
             «در گوگل آب و هوا رو جستجو کن»
+
         </div>
 
+
         <div class="commandCard">
+
             <span class="commandIcon">🕐</span>
+
             <b>ساعت</b>
+
             <br>
+
             «ساعت چنده؟»
+
         </div>
+
 
         <button
             class="close"
@@ -920,9 +1336,6 @@ button,input{
 
 <script>
 
-"use strict";
-
-
 /* =====================================================
    SUPABASE
 ===================================================== */
@@ -931,21 +1344,43 @@ var SUPABASE_URL =
     "https://vkqmlfumodqmmylchgdx.supabase.co";
 
 var SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmUiLCJyZWYiOiJ2a3FtbGZ1bW9kcW1teWxjaGdkeCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzg3ODM2NTE4LCJleHAiOjIxMDM0MTI1MTh9.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+
+
+var supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =====================================================
+   AUTH VARIABLES
+===================================================== */
+
+var currentEmail = "";
+
+var loggedIn = false;
 
 
 /* =====================================================
    AUTH ELEMENTS
 ===================================================== */
 
-var authScreen =
-    document.getElementById("authScreen");
+var authOverlay =
+    document.getElementById("authOverlay");
 
-var authEmail =
-    document.getElementById("authEmail");
+var emailBox =
+    document.getElementById("emailBox");
 
-var authOtp =
-    document.getElementById("authOtp");
+var otpBox =
+    document.getElementById("otpBox");
+
+var emailInput =
+    document.getElementById("emailInput");
+
+var otpInput =
+    document.getElementById("otpInput");
 
 var sendOtpBtn =
     document.getElementById("sendOtpBtn");
@@ -956,21 +1391,476 @@ var verifyOtpBtn =
 var backEmailBtn =
     document.getElementById("backEmailBtn");
 
-var emailStep =
-    document.getElementById("emailStep");
+var authMessage =
+    document.getElementById("authMessage");
 
-var otpStep =
-    document.getElementById("otpStep");
-
-var authStatus =
-    document.getElementById("authStatus");
-
-var authLoggedIn =
-    false;
+var sentEmail =
+    document.getElementById("sentEmail");
 
 
 /* =====================================================
-   MAIN ELEMENTS
+   AUTH MESSAGE
+===================================================== */
+
+function showAuthMessage(
+    text,
+    type
+){
+
+    authMessage.textContent =
+        text;
+
+    authMessage.className =
+        "authMessage";
+
+    if(type === "error"){
+
+        authMessage.classList.add(
+            "authError"
+        );
+
+    }
+
+    if(type === "success"){
+
+        authMessage.classList.add(
+            "authSuccess"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SHOW LOGIN
+===================================================== */
+
+function showLogin(){
+
+    loggedIn = false;
+
+    authOverlay.style.display =
+        "block";
+
+    emailBox.style.display =
+        "block";
+
+    otpBox.style.display =
+        "none";
+
+    emailInput.focus();
+
+}
+
+
+/* =====================================================
+   HIDE LOGIN
+===================================================== */
+
+function hideLogin(){
+
+    loggedIn = true;
+
+    authOverlay.style.display =
+        "none";
+
+    setStatus(
+        "آماده — بگو «Ahoora AI»"
+    );
+
+    answer(
+        "👋 سلام! ورود موفق بود.<br><br>" +
+        "حالا بگو <b>Ahoora AI</b> تا دستیار فعال شود."
+    );
+
+}
+
+
+/* =====================================================
+   SEND OTP
+===================================================== */
+
+async function sendOTP(){
+
+    var email =
+        emailInput.value
+        .trim()
+        .toLowerCase();
+
+
+    if(!email){
+
+        showAuthMessage(
+            "لطفاً ایمیل خود را وارد کنید.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+
+        showAuthMessage(
+            "ایمیل وارد شده صحیح نیست.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    sendOtpBtn.disabled =
+        true;
+
+    showAuthMessage(
+        "در حال ارسال کد...",
+        ""
+    );
+
+
+    try{
+
+        var result =
+            await supabaseClient.auth.signInWithOtp({
+
+                email:email,
+
+                options:{
+
+                    shouldCreateUser:true
+
+                }
+
+            });
+
+
+        if(result.error){
+
+            throw result.error;
+
+        }
+
+
+        currentEmail =
+            email;
+
+
+        sentEmail.textContent =
+            email;
+
+
+        emailBox.style.display =
+            "none";
+
+        otpBox.style.display =
+            "block";
+
+
+        showAuthMessage(
+            "✅ کد ۶ رقمی به ایمیل شما ارسال شد.",
+            "success"
+        );
+
+
+        otpInput.focus();
+
+
+    }catch(error){
+
+        console.log(error);
+
+        showAuthMessage(
+            "❌ ارسال کد انجام نشد: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+
+    sendOtpBtn.disabled =
+        false;
+
+}
+
+
+/* =====================================================
+   VERIFY OTP
+===================================================== */
+
+async function verifyOTP(){
+
+    var otp =
+        otpInput.value
+        .replace(/[^0-9]/g,"")
+        .trim();
+
+
+    if(otp.length !== 6){
+
+        showAuthMessage(
+            "کد باید ۶ رقمی باشد.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    verifyOtpBtn.disabled =
+        true;
+
+
+    showAuthMessage(
+        "در حال بررسی کد...",
+        ""
+    );
+
+
+    try{
+
+        var result =
+            await supabaseClient.auth.verifyOtp({
+
+                email:currentEmail,
+
+                token:otp,
+
+                type:"email"
+
+            });
+
+
+        if(result.error){
+
+            throw result.error;
+
+        }
+
+
+        if(result.data &&
+           result.data.session){
+
+            showAuthMessage(
+                "✅ ورود موفق بود.",
+                "success"
+            );
+
+
+            setTimeout(
+                function(){
+
+                    hideLogin();
+
+                },
+                500
+            );
+
+        }else{
+
+            throw new Error(
+                "نشست کاربر ایجاد نشد."
+            );
+
+        }
+
+
+    }catch(error){
+
+        console.log(error);
+
+        showAuthMessage(
+            "❌ کد اشتباه است یا منقضی شده.",
+            "error"
+        );
+
+    }
+
+
+    verifyOtpBtn.disabled =
+        false;
+
+}
+
+
+/* =====================================================
+   BACK EMAIL
+===================================================== */
+
+backEmailBtn.addEventListener(
+    "click",
+    function(){
+
+        otpBox.style.display =
+            "none";
+
+        emailBox.style.display =
+            "block";
+
+        otpInput.value =
+            "";
+
+        showAuthMessage(
+            "",
+            ""
+        );
+
+        emailInput.focus();
+
+    }
+);
+
+
+/* =====================================================
+   AUTH BUTTONS
+===================================================== */
+
+sendOtpBtn.addEventListener(
+    "click",
+    sendOTP
+);
+
+verifyOtpBtn.addEventListener(
+    "click",
+    verifyOTP
+);
+
+
+/* =====================================================
+   ENTER KEY
+===================================================== */
+
+emailInput.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key === "Enter"){
+
+            sendOTP();
+
+        }
+
+    }
+);
+
+
+otpInput.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key === "Enter"){
+
+            verifyOTP();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+supabaseClient.auth.onAuthStateChange(
+    function(event,session){
+
+        if(session){
+
+            loggedIn = true;
+
+            if(
+                authOverlay.style.display !==
+                "none"
+            ){
+
+                authOverlay.style.display =
+                    "none";
+
+            }
+
+        }else{
+
+            loggedIn = false;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CHECK SESSION
+===================================================== */
+
+async function checkSession(){
+
+    try{
+
+        var result =
+            await supabaseClient.auth.getSession();
+
+        if(
+            result.data &&
+            result.data.session
+        ){
+
+            hideLogin();
+
+        }else{
+
+            showLogin();
+
+        }
+
+    }catch(error){
+
+        console.log(error);
+
+        showLogin();
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+document
+.getElementById("logoutBtn")
+.addEventListener(
+    "click",
+    async function(){
+
+        try{
+
+            await supabaseClient.auth.signOut();
+
+        }catch(e){}
+
+        stopListening();
+
+        commandMode =
+            false;
+
+        showLogin();
+
+        panel.style.display =
+            "none";
+
+    }
+);
+
+
+/* =====================================================
+   ELEMENTS
 ===================================================== */
 
 var orb =
@@ -1028,25 +1918,50 @@ var closeCommands =
 
 function android(){
 
-    return typeof window.Android !== "undefined";
+    return typeof window.Android !==
+        "undefined";
 
 }
 
 
 /* =====================================================
-   ساعت
+   REQUIRE LOGIN
+===================================================== */
+
+function requireLogin(){
+
+    if(!loggedIn){
+
+        showLogin();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* =====================================================
+   CLOCK
 ===================================================== */
 
 function clock(){
 
-    var d = new Date();
+    var d =
+        new Date();
 
     timeBox.textContent =
-        String(d.getHours()).padStart(2,"0")
+        String(
+            d.getHours()
+        ).padStart(2,"0")
         +
         ":"
         +
-        String(d.getMinutes()).padStart(2,"0");
+        String(
+            d.getMinutes()
+        ).padStart(2,"0");
 
 }
 
@@ -1092,13 +2007,16 @@ function normalize(text){
 
     return String(text)
 
-        .replace(/[۰-۹]/g,function(d){
+        .replace(
+            /[۰-۹]/g,
+            function(d){
 
-            return String(
-                "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
-            );
+                return String(
+                    "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
+                );
 
-        })
+            }
+        )
 
         .replace(/ي/g,"ی")
         .replace(/ك/g,"ک")
@@ -1106,506 +2024,15 @@ function normalize(text){
 
         .replace(/[،,]/g," ")
 
-        .replace(/\s+/g," ")
+        .replace(
+            /\s+/g,
+            " "
+        )
 
         .trim()
         .toLowerCase();
 
 }
-
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHTML(text){
-
-    return String(text)
-
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* =====================================================
-   AUTH MESSAGE
-===================================================== */
-
-function authMessage(text){
-
-    authStatus.innerHTML =
-        text;
-
-}
-
-
-/* =====================================================
-   SEND OTP
-===================================================== */
-
-async function sendOTP(){
-
-    var email =
-        authEmail.value.trim();
-
-
-    if(!email){
-
-        authMessage(
-            "❌ لطفاً ایمیل خود را وارد کنید."
-        );
-
-        return;
-
-    }
-
-
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-
-        authMessage(
-            "❌ ایمیل واردشده صحیح نیست."
-        );
-
-        return;
-
-    }
-
-
-    sendOtpBtn.disabled =
-        true;
-
-    sendOtpBtn.textContent =
-        "در حال ارسال...";
-
-
-    try{
-
-        var response =
-            await fetch(
-                SUPABASE_URL +
-                "/auth/v1/otp",
-                {
-
-                    method:"POST",
-
-                    headers:{
-
-                        "apikey":
-                            SUPABASE_ANON_KEY,
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:JSON.stringify({
-
-                        email:email,
-
-                        create_user:true
-
-                    })
-
-                }
-            );
-
-
-        var data =
-            await response.json();
-
-
-        if(!response.ok){
-
-            throw new Error(
-                data.msg ||
-                data.message ||
-                data.error_description ||
-                "خطا در ارسال کد"
-            );
-
-        }
-
-
-        emailStep.style.display =
-            "none";
-
-        otpStep.style.display =
-            "block";
-
-
-        authOtp.value =
-            "";
-
-        authOtp.focus();
-
-
-        authMessage(
-            "✅ کد ورود به ایمیل شما ارسال شد."
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "OTP SEND ERROR:",
-            error
-        );
-
-        authMessage(
-            "❌ ارسال کد ناموفق بود.<br>" +
-            escapeHTML(
-                error.message
-            )
-        );
-
-    }
-
-
-    sendOtpBtn.disabled =
-        false;
-
-    sendOtpBtn.textContent =
-        "📧 ارسال کد ورود";
-
-}
-
-
-/* =====================================================
-   VERIFY OTP
-===================================================== */
-
-async function verifyOTP(){
-
-    var email =
-        authEmail.value.trim();
-
-    var token =
-        authOtp.value.trim();
-
-
-    if(!token){
-
-        authMessage(
-            "❌ کد OTP را وارد کنید."
-        );
-
-        return;
-
-    }
-
-
-    if(!/^\d{6}$/.test(token)){
-
-        authMessage(
-            "❌ کد باید ۶ رقمی باشد."
-        );
-
-        return;
-
-    }
-
-
-    verifyOtpBtn.disabled =
-        true;
-
-    verifyOtpBtn.textContent =
-        "در حال بررسی...";
-
-
-    try{
-
-        var response =
-            await fetch(
-                SUPABASE_URL +
-                "/auth/v1/verify",
-                {
-
-                    method:"POST",
-
-                    headers:{
-
-                        "apikey":
-                            SUPABASE_ANON_KEY,
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:JSON.stringify({
-
-                        email:email,
-
-                        token:token,
-
-                        type:"email"
-
-                    })
-
-                }
-            );
-
-
-        var data =
-            await response.json();
-
-
-        if(!response.ok){
-
-            throw new Error(
-                data.msg ||
-                data.message ||
-                data.error_description ||
-                "کد واردشده صحیح نیست"
-            );
-
-        }
-
-
-        /* =========================================
-           SESSION
-        ========================================= */
-
-        if(data.access_token){
-
-            localStorage.setItem(
-                "ahoora_access_token",
-                data.access_token
-            );
-
-        }
-
-
-        if(data.refresh_token){
-
-            localStorage.setItem(
-                "ahoora_refresh_token",
-                data.refresh_token
-            );
-
-        }
-
-
-        if(data.user){
-
-            localStorage.setItem(
-                "ahoora_user",
-                JSON.stringify(
-                    data.user
-                )
-            );
-
-        }
-
-
-        authLoggedIn =
-            true;
-
-
-        authMessage(
-            "✅ ورود موفق بود."
-        );
-
-
-        setTimeout(
-            function(){
-
-                authScreen.style.display =
-                    "none";
-
-                enableAhoora();
-
-            },
-            500
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "OTP VERIFY ERROR:",
-            error
-        );
-
-        authMessage(
-            "❌ " +
-            escapeHTML(
-                error.message
-            )
-        );
-
-    }
-
-
-    verifyOtpBtn.disabled =
-        false;
-
-    verifyOtpBtn.textContent =
-        "🔐 تأیید کد و ورود";
-
-}
-
-
-/* =====================================================
-   CHECK LOGIN
-===================================================== */
-
-function checkLogin(){
-
-    var token =
-        localStorage.getItem(
-            "ahoora_access_token"
-        );
-
-
-    if(token){
-
-        authLoggedIn =
-            true;
-
-        authScreen.style.display =
-            "none";
-
-        enableAhoora();
-
-    }else{
-
-        authLoggedIn =
-            false;
-
-        authScreen.style.display =
-            "flex";
-
-        disableAhoora();
-
-    }
-
-}
-
-
-/* =====================================================
-   ENABLE
-===================================================== */
-
-function enableAhoora(){
-
-    authLoggedIn =
-        true;
-
-    setStatus(
-        "آماده — بگو «Ahoora AI»"
-    );
-
-    responseBox.innerHTML =
-        "👋 سلام! من اهورا هستم.<br>" +
-        "برای فعال شدن فرمان صوتی بگو:<br>" +
-        "<b>Ahoora AI</b>";
-
-}
-
-
-/* =====================================================
-   DISABLE
-===================================================== */
-
-function disableAhoora(){
-
-    authLoggedIn =
-        false;
-
-    setStatus(
-        "🔒 ابتدا وارد حساب شوید"
-    );
-
-    userBox.textContent =
-        "برای استفاده ابتدا وارد حساب شوید.";
-
-    responseBox.innerHTML =
-        "🔐 برای استفاده از قابلیت‌های Ahoora AI<br>" +
-        "ابتدا ثبت‌نام یا ورود کنید.";
-
-}
-
-
-/* =====================================================
-   AUTH BUTTONS
-===================================================== */
-
-sendOtpBtn.addEventListener(
-    "click",
-    function(){
-
-        sendOTP();
-
-    }
-);
-
-
-verifyOtpBtn.addEventListener(
-    "click",
-    function(){
-
-        verifyOTP();
-
-    }
-);
-
-
-backEmailBtn.addEventListener(
-    "click",
-    function(){
-
-        otpStep.style.display =
-            "none";
-
-        emailStep.style.display =
-            "block";
-
-        authOtp.value =
-            "";
-
-        authMessage("");
-
-        authEmail.focus();
-
-    }
-);
-
-
-/* =====================================================
-   ENTER KEY
-===================================================== */
-
-authEmail.addEventListener(
-    "keydown",
-    function(event){
-
-        if(event.key === "Enter"){
-
-            sendOTP();
-
-        }
-
-    }
-);
-
-
-authOtp.addEventListener(
-    "keydown",
-    function(event){
-
-        if(event.key === "Enter"){
-
-            verifyOTP();
-
-        }
-
-    }
-);
 
 
 /* =====================================================
@@ -1717,7 +2144,24 @@ function isPersianName(name){
 }
 
 
+function escapeHTML(text){
+
+    return String(text)
+
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
 function addContact(){
+
+    if(!requireLogin()){
+        return;
+    }
 
     var name =
         contactName.value.trim();
@@ -1827,7 +2271,6 @@ function renderContacts(){
     var contacts =
         getContacts();
 
-
     contactsList.innerHTML =
         "";
 
@@ -1852,7 +2295,6 @@ function renderContacts(){
                     "div"
                 );
 
-
             div.className =
                 "savedContact";
 
@@ -1862,24 +2304,31 @@ function renderContacts(){
                 "<div>" +
 
                 "<b>" +
+
                 escapeHTML(
                     contact.name
                 ) +
+
                 "</b>" +
 
                 "<br>" +
 
                 "<small>" +
+
                 escapeHTML(
                     contact.number
                 ) +
+
                 "</small>" +
 
                 "</div>" +
 
                 "<button class='deleteContact' " +
+
                 "data-index='" +
+
                 index +
+
                 "'>" +
 
                 "حذف" +
@@ -1896,86 +2345,55 @@ function renderContacts(){
 
 
     document
-        .querySelectorAll(
-            ".deleteContact"
-        )
-        .forEach(
-            function(btn){
+    .querySelectorAll(
+        ".deleteContact"
+    )
+    .forEach(
+        function(btn){
 
-                btn.onclick =
-                function(){
+            btn.onclick =
+            function(){
 
-                    var index =
-                        Number(
-                            this.dataset.index
-                        );
-
-
-                    var contacts =
-                        getContacts();
-
-
-                    contacts.splice(
-                        index,
-                        1
+                var index =
+                    Number(
+                        this.dataset.index
                     );
 
+                var contacts =
+                    getContacts();
 
-                    saveContacts(
-                        contacts
-                    );
+                contacts.splice(
+                    index,
+                    1
+                );
 
+                saveContacts(
+                    contacts
+                );
 
-                    renderContacts();
+                renderContacts();
 
-                };
+            };
 
-            }
-        );
+        }
+    );
 
 }
 
 
 saveContact.addEventListener(
     "click",
-    function(){
-
-        if(!authLoggedIn){
-
-            authScreen.style.display =
-                "flex";
-
-            return;
-
-        }
-
-        addContact();
-
-    }
+    addContact
 );
 
-
-/* =====================================================
-   SETTINGS
-===================================================== */
 
 settingsBtn.addEventListener(
     "click",
     function(){
 
-        if(!authLoggedIn){
-
-            authScreen.style.display =
-                "flex";
-
-            authMessage(
-                "🔒 ابتدا وارد حساب شوید."
-            );
-
+        if(!requireLogin()){
             return;
-
         }
-
 
         renderContacts();
 
@@ -1998,26 +2416,16 @@ closePanel.addEventListener(
 
 
 /* =====================================================
-   COMMANDS
+   COMMAND PANEL
 ===================================================== */
 
 commandsBtn.addEventListener(
     "click",
     function(){
 
-        if(!authLoggedIn){
-
-            authScreen.style.display =
-                "flex";
-
-            authMessage(
-                "🔒 برای مشاهده دستورات ابتدا وارد شوید."
-            );
-
+        if(!requireLogin()){
             return;
-
         }
-
 
         commandsPanel.style.display =
             "block";
@@ -2046,7 +2454,6 @@ function findContact(name){
     var contacts =
         getContacts();
 
-
     var target =
         normalize(name);
 
@@ -2055,7 +2462,8 @@ function findContact(name){
         function(c){
 
             return normalize(c.name)
-                === target
+                ===
+                target
                 ||
                 target.indexOf(
                     normalize(c.name)
@@ -2136,6 +2544,11 @@ function normalizeRelation(text){
 
 function callNumber(number){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     number =
         normalize(number)
         .replace(
@@ -2145,9 +2558,7 @@ function callNumber(number){
 
 
     if(!number){
-
         return;
-
     }
 
 
@@ -2215,6 +2626,11 @@ function smsContact(
     name,
     message
 ){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     var contact =
         findContact(name);
@@ -2284,12 +2700,35 @@ function extractMessage(text){
     result =
         result
 
-        .replace(/به\s+/g,"")
-        .replace(/پیامک/g,"")
-        .replace(/پیام/g,"")
-        .replace(/بفرست/g,"")
-        .replace(/بده/g,"")
-        .replace(/ارسال کن/g,"")
+        .replace(
+            /به\s+/g,
+            ""
+        )
+
+        .replace(
+            /پیامک/g,
+            ""
+        )
+
+        .replace(
+            /پیام/g,
+            ""
+        )
+
+        .replace(
+            /بفرست/g,
+            ""
+        )
+
+        .replace(
+            /بده/g,
+            ""
+        )
+
+        .replace(
+            /ارسال کن/g,
+            ""
+        )
 
         .trim();
 
@@ -2316,7 +2755,10 @@ function extractMessage(text){
 
             result =
                 result
-                .replace(n,"")
+                .replace(
+                    n,
+                    ""
+                )
                 .trim();
 
             break;
@@ -2335,7 +2777,9 @@ function extractMessage(text){
    EXTRACT CONTACT
 ===================================================== */
 
-function extractContactFromCommand(text){
+function extractContactFromCommand(
+    text
+){
 
     var contacts =
         getContacts();
@@ -2385,18 +2829,31 @@ function extractContactFromCommand(text){
 var apps = {
 
     "واتساپ":"com.whatsapp",
+
     "تلگرام":"org.telegram.messenger",
+
     "اینستاگرام":"com.instagram.android",
+
     "یوتیوب":"com.google.android.youtube",
+
     "کروم":"com.android.chrome",
+
     "فیسبوک":"com.facebook.katana",
+
     "ایکس":"com.twitter.android",
+
     "تیک تاک":"com.zhiliaoapp.musically",
+
     "اسنپ":"com.snapp.passenger",
+
     "دیوار":"ir.divar",
+
     "روبیکا":"ir.resaneh1.iptv",
+
     "مایکت":"ir.mservices.market",
+
     "بازار":"com.farsitel.bazaar",
+
     "تنظیمات":"com.android.settings"
 
 };
@@ -2406,6 +2863,11 @@ function openApp(
     packageName,
     name
 ){
+
+    if(!requireLogin()){
+        return false;
+    }
+
 
     if(android()){
 
@@ -2485,6 +2947,11 @@ function openNamedApp(text){
 
 function volumeUp(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2504,6 +2971,11 @@ function volumeUp(){
 
 
 function volumeDown(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2529,6 +3001,11 @@ function volumeDown(){
 
 function musicPlay(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2548,6 +3025,11 @@ function musicPlay(){
 
 
 function musicStop(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2569,6 +3051,11 @@ function musicStop(){
 
 function musicNext(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2588,6 +3075,11 @@ function musicNext(){
 
 
 function musicPrevious(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2612,6 +3104,11 @@ function musicPrevious(){
 ===================================================== */
 
 function flashlightOn(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2643,6 +3140,11 @@ function flashlightOn(){
 
 
 function flashlightOff(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2679,6 +3181,11 @@ function flashlightOff(){
 
 function wifi(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2710,6 +3217,11 @@ function wifi(){
 ===================================================== */
 
 function bluetooth(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2743,6 +3255,11 @@ function bluetooth(){
 
 function mobileData(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2774,6 +3291,11 @@ function mobileData(){
 ===================================================== */
 
 function locationSettings(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2807,6 +3329,11 @@ function locationSettings(){
 
 function hotspot(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2839,6 +3366,11 @@ function hotspot(){
 
 function brightnessUp(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2858,6 +3390,11 @@ function brightnessUp(){
 
 
 function brightnessDown(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2882,6 +3419,11 @@ function brightnessDown(){
 ===================================================== */
 
 function camera(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     if(android()){
 
@@ -2916,6 +3458,11 @@ function camera(){
 
 function gallery(){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     if(android()){
 
         try{
@@ -2948,6 +3495,11 @@ function gallery(){
 ===================================================== */
 
 function sayTime(){
+
+    if(!requireLogin()){
+        return;
+    }
+
 
     var d =
         new Date();
@@ -2989,16 +3541,25 @@ function sayTime(){
 
 function googleSearch(query){
 
+    if(!requireLogin()){
+        return;
+    }
+
+
     var url =
         "https://www.google.com/search?q=" +
-        encodeURIComponent(query);
+        encodeURIComponent(
+            query
+        );
 
 
     if(android()){
 
         try{
 
-            Android.openUrl(url);
+            Android.openUrl(
+                url
+            );
 
 
             answer(
@@ -3050,6 +3611,11 @@ var autoRestart =
 ===================================================== */
 
 function initSpeech(){
+
+    if(!requireLogin()){
+        return false;
+    }
+
 
     var Speech =
         window.SpeechRecognition ||
@@ -3113,6 +3679,11 @@ function initSpeech(){
     recognition.onresult =
     function(event){
 
+        if(!loggedIn){
+            return;
+        }
+
+
         var text =
             event
             .results[0][0]
@@ -3128,15 +3699,22 @@ function initSpeech(){
             normalize(text);
 
 
+        /* WAKE WORD */
+
         if(!commandMode){
 
             if(
 
                 t.indexOf("ahoor a i") >= 0 ||
+
                 t.indexOf("ahoora ai") >= 0 ||
+
                 t.indexOf("ahoora") >= 0 ||
+
                 t.indexOf("اهورا ای") >= 0 ||
+
                 t.indexOf("اهورا آی") >= 0 ||
+
                 t.indexOf("اهورا") >= 0
 
             ){
@@ -3165,7 +3743,7 @@ function initSpeech(){
 
                         if(
                             commandMode &&
-                            authLoggedIn
+                            loggedIn
                         ){
 
                             startListening();
@@ -3209,20 +3787,26 @@ function initSpeech(){
 
 
         console.log(
-            "Speech error: " +
+            "Speech error:",
             event.error
         );
 
 
         if(
             autoRestart &&
-            !manualStop
+            !manualStop &&
+            loggedIn
         ){
 
             if(
 
-                event.error === "no-speech" ||
-                event.error === "aborted"
+                event.error ===
+                "no-speech"
+
+                ||
+
+                event.error ===
+                "aborted"
 
             ){
 
@@ -3232,7 +3816,7 @@ function initSpeech(){
                         if(
                             autoRestart &&
                             !manualStop &&
-                            authLoggedIn
+                            loggedIn
                         ){
 
                             startListening();
@@ -3250,7 +3834,8 @@ function initSpeech(){
 
 
             if(
-                event.error === "not-allowed"
+                event.error ===
+                "not-allowed"
             ){
 
                 answer(
@@ -3313,7 +3898,7 @@ function initSpeech(){
 
         if(
             autoRestart &&
-            authLoggedIn
+            loggedIn
         ){
 
             setTimeout(
@@ -3322,7 +3907,7 @@ function initSpeech(){
                     if(
                         !manualStop &&
                         autoRestart &&
-                        authLoggedIn
+                        loggedIn
                     ){
 
                         startListening();
@@ -3349,17 +3934,13 @@ function initSpeech(){
 
 function startListening(){
 
-    if(!authLoggedIn){
-
+    if(!requireLogin()){
         return;
-
     }
 
 
     if(listening){
-
         return;
-
     }
 
 
@@ -3406,10 +3987,8 @@ function stopListening(){
     manualStop =
         true;
 
-
     autoRestart =
         false;
-
 
     listening =
         false;
@@ -3453,10 +4032,8 @@ function processSpeech(
     fromButton
 ){
 
-    if(!authLoggedIn){
-
+    if(!requireLogin()){
         return;
-
     }
 
 
@@ -3478,12 +4055,14 @@ function processSpeech(
     }
 
 
-    /* لغو */
+    /* CANCEL */
 
     if(
 
         text === "لغو" ||
+
         text === "بیخیال" ||
+
         text === "خروج"
 
     ){
@@ -3507,12 +4086,13 @@ function processSpeech(
     }
 
 
-    /* چراغ قوه خاموش */
+    /* FLASH OFF */
 
     if(
 
         (
             text.indexOf("چراغ قوه") >= 0 ||
+
             text.indexOf("فلاش") >= 0
         )
 
@@ -3520,6 +4100,7 @@ function processSpeech(
 
         (
             text.indexOf("خاموش") >= 0 ||
+
             text.indexOf("قطع") >= 0
         )
 
@@ -3532,12 +4113,13 @@ function processSpeech(
     }
 
 
-    /* چراغ قوه روشن */
+    /* FLASH ON */
 
     if(
 
         (
             text.indexOf("چراغ قوه") >= 0 ||
+
             text.indexOf("فلاش") >= 0
         )
 
@@ -3545,6 +4127,7 @@ function processSpeech(
 
         (
             text.indexOf("روشن") >= 0 ||
+
             text.indexOf("فعال") >= 0
         )
 
@@ -3557,12 +4140,14 @@ function processSpeech(
     }
 
 
-    /* WiFi */
+    /* WIFI */
 
     if(
 
         text.indexOf("وای فای") >= 0 ||
+
         text.indexOf("وایفای") >= 0 ||
+
         text.indexOf("wifi") >= 0
 
     ){
@@ -3574,11 +4159,12 @@ function processSpeech(
     }
 
 
-    /* Bluetooth */
+    /* BLUETOOTH */
 
     if(
 
         text.indexOf("بلوتوث") >= 0 ||
+
         text.indexOf("bluetooth") >= 0
 
     ){
@@ -3590,13 +4176,16 @@ function processSpeech(
     }
 
 
-    /* Mobile Data */
+    /* MOBILE DATA */
 
     if(
 
         text.indexOf("اینترنت همراه") >= 0 ||
+
         text.indexOf("دیتای همراه") >= 0 ||
+
         text.indexOf("دیتا همراه") >= 0 ||
+
         text.indexOf("داده همراه") >= 0
 
     ){
@@ -3608,12 +4197,14 @@ function processSpeech(
     }
 
 
-    /* Location */
+    /* LOCATION */
 
     if(
 
         text.indexOf("مکان") >= 0 ||
+
         text.indexOf("لوکیشن") >= 0 ||
+
         text.indexOf("gps") >= 0
 
     ){
@@ -3625,12 +4216,14 @@ function processSpeech(
     }
 
 
-    /* Hotspot */
+    /* HOTSPOT */
 
     if(
 
         text.indexOf("هات اسپات") >= 0 ||
+
         text.indexOf("هات‌اسپات") >= 0 ||
+
         text.indexOf("نقطه اتصال") >= 0
 
     ){
@@ -3642,12 +4235,13 @@ function processSpeech(
     }
 
 
-    /* Brightness Up */
+    /* BRIGHTNESS UP */
 
     if(
 
         (
             text.indexOf("نور") >= 0 ||
+
             text.indexOf("روشنایی") >= 0
         )
 
@@ -3655,6 +4249,7 @@ function processSpeech(
 
         (
             text.indexOf("زیاد") >= 0 ||
+
             text.indexOf("بالا") >= 0
         )
 
@@ -3667,12 +4262,13 @@ function processSpeech(
     }
 
 
-    /* Brightness Down */
+    /* BRIGHTNESS DOWN */
 
     if(
 
         (
             text.indexOf("نور") >= 0 ||
+
             text.indexOf("روشنایی") >= 0
         )
 
@@ -3680,6 +4276,7 @@ function processSpeech(
 
         (
             text.indexOf("کم") >= 0 ||
+
             text.indexOf("پایین") >= 0
         )
 
@@ -3692,13 +4289,15 @@ function processSpeech(
     }
 
 
-    /* Music Next */
+    /* MUSIC NEXT */
 
     if(
 
         (
             text.indexOf("آهنگ") >= 0 ||
+
             text.indexOf("موزیک") >= 0 ||
+
             text.indexOf("موسیقی") >= 0
         )
 
@@ -3706,6 +4305,7 @@ function processSpeech(
 
         (
             text.indexOf("بعدی") >= 0 ||
+
             text.indexOf("بعد") >= 0
         )
 
@@ -3718,13 +4318,15 @@ function processSpeech(
     }
 
 
-    /* Music Previous */
+    /* MUSIC PREVIOUS */
 
     if(
 
         (
             text.indexOf("آهنگ") >= 0 ||
+
             text.indexOf("موزیک") >= 0 ||
+
             text.indexOf("موسیقی") >= 0
         )
 
@@ -3732,6 +4334,7 @@ function processSpeech(
 
         (
             text.indexOf("قبلی") >= 0 ||
+
             text.indexOf("قبل") >= 0
         )
 
@@ -3744,13 +4347,15 @@ function processSpeech(
     }
 
 
-    /* Music Stop */
+    /* MUSIC STOP */
 
     if(
 
         (
             text.indexOf("آهنگ") >= 0 ||
+
             text.indexOf("موزیک") >= 0 ||
+
             text.indexOf("موسیقی") >= 0
         )
 
@@ -3758,8 +4363,11 @@ function processSpeech(
 
         (
             text.indexOf("توقف") >= 0 ||
+
             text.indexOf("متوقف") >= 0 ||
+
             text.indexOf("قطع") >= 0 ||
+
             text.indexOf("بایست") >= 0
         )
 
@@ -3772,13 +4380,15 @@ function processSpeech(
     }
 
 
-    /* Music Play */
+    /* MUSIC PLAY */
 
     if(
 
         (
             text.indexOf("آهنگ") >= 0 ||
+
             text.indexOf("موزیک") >= 0 ||
+
             text.indexOf("موسیقی") >= 0
         )
 
@@ -3786,8 +4396,11 @@ function processSpeech(
 
         (
             text.indexOf("پخش") >= 0 ||
+
             text.indexOf("اجرا") >= 0 ||
+
             text.indexOf("ادامه") >= 0 ||
+
             text.indexOf("شروع") >= 0
         )
 
@@ -3800,16 +4413,15 @@ function processSpeech(
     }
 
 
-    /* Volume Up */
+    /* VOLUME UP */
 
     if(
 
-        text.indexOf("صدا") >= 0
-
-        &&
+        text.indexOf("صدا") >= 0 &&
 
         (
             text.indexOf("زیاد") >= 0 ||
+
             text.indexOf("بالا") >= 0
         )
 
@@ -3822,16 +4434,15 @@ function processSpeech(
     }
 
 
-    /* Volume Down */
+    /* VOLUME DOWN */
 
     if(
 
-        text.indexOf("صدا") >= 0
-
-        &&
+        text.indexOf("صدا") >= 0 &&
 
         (
             text.indexOf("کم") >= 0 ||
+
             text.indexOf("پایین") >= 0
         )
 
@@ -3844,7 +4455,7 @@ function processSpeech(
     }
 
 
-    /* Time */
+    /* TIME */
 
     if(
         text.indexOf("ساعت") >= 0
@@ -3857,11 +4468,12 @@ function processSpeech(
     }
 
 
-    /* Camera */
+    /* CAMERA */
 
     if(
 
         text.indexOf("دوربین") >= 0 ||
+
         text.indexOf("عکس بگیر") >= 0
 
     ){
@@ -3873,12 +4485,14 @@ function processSpeech(
     }
 
 
-    /* Gallery */
+    /* GALLERY */
 
     if(
 
         text.indexOf("گالری") >= 0 ||
+
         text.indexOf("عکس هام") >= 0 ||
+
         text.indexOf("عکسها") >= 0
 
     ){
@@ -3890,12 +4504,14 @@ function processSpeech(
     }
 
 
-    /* Call */
+    /* CALL */
 
     if(
 
         text.indexOf("تماس") >= 0 ||
+
         text.indexOf("زنگ") >= 0 ||
+
         text.indexOf("بگیر") >= 0
 
     ){
@@ -3911,7 +4527,6 @@ function processSpeech(
             callContact(
                 contact
             );
-
 
             return;
 
@@ -3930,7 +4545,6 @@ function processSpeech(
                 match[1]
             );
 
-
             return;
 
         }
@@ -3943,6 +4557,7 @@ function processSpeech(
     if(
 
         text.indexOf("پیام") >= 0 ||
+
         text.indexOf("پیامک") >= 0
 
     ){
@@ -3982,7 +4597,7 @@ function processSpeech(
     }
 
 
-    /* Google */
+    /* GOOGLE */
 
     var searchText =
         null;
@@ -3991,49 +4606,61 @@ function processSpeech(
     if(
 
         text.indexOf("در گوگل") >= 0 ||
+
         text.indexOf("توی گوگل") >= 0
 
     ){
 
         searchText =
             text
+
             .replace(
                 "در گوگل",
                 ""
             )
+
             .replace(
                 "توی گوگل",
                 ""
             )
+
             .replace(
                 "جستجو",
                 ""
             )
+
             .replace(
                 "کن",
                 ""
             )
+
             .trim();
 
     }
+
+
     else if(
         text.indexOf("گوگل") === 0
     ){
 
         searchText =
             text
+
             .replace(
                 "گوگل",
                 ""
             )
+
             .replace(
                 "جستجو",
                 ""
             )
+
             .replace(
                 "کن",
                 ""
             )
+
             .trim();
 
     }
@@ -4045,13 +4672,12 @@ function processSpeech(
             searchText
         );
 
-
         return;
 
     }
 
 
-    /* Apps */
+    /* APPS */
 
     if(
         openNamedApp(text)
@@ -4089,13 +4715,12 @@ function processSpeech(
 
         }
 
-
         return;
 
     }
 
 
-    /* سلام */
+    /* HELLO */
 
     if(
         text.indexOf("سلام") >= 0
@@ -4106,13 +4731,12 @@ function processSpeech(
             voiceE
         );
 
-
         return;
 
     }
 
 
-    /* Unknown */
+    /* UNKNOWN */
 
     answer(
 
@@ -4121,42 +4745,44 @@ function processSpeech(
         "مثلاً بگو:<br>" +
 
         "«چراغ قوه رو روشن کن»<br>" +
+
         "«وای فای رو باز کن»<br>" +
+
         "«بلوتوث رو باز کن»<br>" +
+
         "«مکان رو باز کن»<br>" +
+
         "«نور رو زیاد کن»<br>" +
+
         "«آهنگ بعدی»<br>" +
+
         "«آهنگ قبلی»<br>" +
+
         "«موزیک رو متوقف کن»<br>" +
+
         "«واتساپ رو باز کن»<br>" +
+
         "«با پدرم تماس بگیر»<br>" +
+
         "«به پدرم پیام بده سلام»",
 
         voiceD
+
     );
 
 }
 
 
 /* =====================================================
-   MIC
+   MIC BUTTON
 ===================================================== */
 
 mic.addEventListener(
     "click",
     function(){
 
-        if(!authLoggedIn){
-
-            authScreen.style.display =
-                "flex";
-
-            authMessage(
-                "🔒 برای استفاده از میکروفن ابتدا وارد شوید."
-            );
-
+        if(!requireLogin()){
             return;
-
         }
 
 
@@ -4186,32 +4812,22 @@ mic.addEventListener(
 
 renderContacts();
 
-
-disableAhoora();
-
-
-/* =====================================================
-   CHECK AUTH
-===================================================== */
-
-checkLogin();
+setStatus(
+    "در حال بررسی حساب..."
+);
 
 
 /* =====================================================
-   AUTO LISTEN ONLY AFTER LOGIN
+   START APP
 ===================================================== */
 
 setTimeout(
     function(){
 
-        if(authLoggedIn){
-
-            startListening();
-
-        }
+        checkSession();
 
     },
-    1000
+    500
 );
 
 </script>
