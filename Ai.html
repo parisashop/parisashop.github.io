@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
 
 <meta charset="UTF-8">
@@ -12,6 +13,10 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+/* =====================================================
+   GLOBAL
+===================================================== */
 
 *{
     box-sizing:border-box;
@@ -27,13 +32,19 @@ body{
     overflow:hidden;
 }
 
-button,input{
+button,
+input{
     font-family:inherit;
 }
 
 button{
     cursor:pointer;
 }
+
+
+/* =====================================================
+   AHOORA
+===================================================== */
 
 .app{
     width:100%;
@@ -271,47 +282,120 @@ button{
     margin-top:10px;
 }
 
+
+/* =====================================================
+   AHOORA TABS
+===================================================== */
+
+.aiTabs{
+    position:fixed;
+    top:10px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:calc(100% - 30px);
+    max-width:450px;
+
+    height:50px;
+
+    display:flex;
+
+    background:#111;
+    border:1px solid #292929;
+
+    border-radius:17px;
+
+    padding:4px;
+
+    z-index:1000;
+}
+
+.aiTab{
+    flex:1;
+
+    border:0;
+    border-radius:13px;
+
+    background:transparent;
+
+    color:#888;
+
+    font-size:15px;
+    font-weight:bold;
+}
+
+.aiTab.active{
+    background:#fff;
+    color:#000;
+}
+
+
+/* =====================================================
+   SETTINGS PANEL
+===================================================== */
+
 .panel{
     position:fixed;
     inset:0;
+
     background:#080812ee;
+
     z-index:500;
+
     display:none;
+
     overflow:auto;
+
     padding:20px;
 }
 
 .panelBox{
     width:100%;
     max-width:450px;
+
     margin:20px auto;
+
     background:#151526;
+
     border-radius:30px;
+
     padding:22px;
 }
 
 .panelTitle{
     font-size:22px;
     font-weight:bold;
+
     margin-bottom:15px;
 }
 
 .input{
     width:100%;
+
     border:1px solid #ffffff15;
+
     outline:none;
+
     border-radius:16px;
+
     padding:14px;
+
     background:#ffffff08;
+
     color:white;
+
     margin-bottom:10px;
+
     font-size:16px;
 }
 
 .primary{
     width:100%;
+
     border:0;
+
     border-radius:16px;
+
     padding:14px;
 
     background:
@@ -322,65 +406,99 @@ button{
     );
 
     color:white;
+
     font-size:16px;
 }
 
 .close{
     width:100%;
+
     margin-top:10px;
+
     padding:13px;
+
     border:0;
+
     border-radius:16px;
+
     background:#ffffff10;
+
     color:white;
 }
 
 .privacy{
     margin-top:15px;
+
     padding:14px;
+
     border-radius:16px;
+
     background:#00ff9910;
+
     border:1px solid #00ff9920;
+
     color:#a8e8ca;
+
     line-height:1.9;
+
     font-size:13px;
+
     text-align:center;
 }
 
 .savedContact{
     background:#ffffff08;
+
     border-radius:18px;
+
     padding:13px;
+
     margin-top:10px;
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
 }
 
 .deleteContact{
     border:0;
+
     border-radius:12px;
+
     padding:8px 12px;
+
     background:#ff224422;
+
     color:#ff6688;
 }
 
 .settingsBtn{
     position:fixed;
+
     left:18px;
     bottom:18px;
+
     width:48px;
     height:48px;
+
     border:0;
+
     border-radius:50%;
+
     background:#ffffff10;
+
     color:white;
+
     font-size:22px;
+
     z-index:20;
 }
 
 .commandsBtn{
     position:fixed;
+
     right:18px;
     bottom:18px;
 
@@ -388,14 +506,22 @@ button{
     height:48px;
 
     border:0;
+
     border-radius:50%;
 
     background:#ffffff10;
+
     color:white;
 
     font-size:22px;
+
     z-index:20;
 }
+
+
+/* =====================================================
+   COMMANDS
+===================================================== */
 
 .commandsPanel{
     position:fixed;
@@ -427,6 +553,7 @@ button{
 
 .commandsTitle{
     font-size:23px;
+
     font-weight:bold;
 
     text-align:center;
@@ -452,15 +579,10 @@ button{
     color:#00d4ff;
 }
 
-.commandIcon{
-    font-size:25px;
-    margin-left:8px;
-}
 
-
-/* ==============================
+/* =====================================================
    LOGIN
-============================== */
+===================================================== */
 
 #loginScreen{
     position:fixed;
@@ -478,6 +600,7 @@ button{
     display:flex;
 
     align-items:center;
+
     justify-content:center;
 
     padding:20px;
@@ -503,6 +626,7 @@ button{
 
 .loginLogo{
     font-size:32px;
+
     font-weight:bold;
 
     margin-bottom:10px;
@@ -522,7 +646,9 @@ button{
 
 .loginDescription{
     color:#9da8c5;
+
     line-height:1.9;
+
     margin-bottom:20px;
 }
 
@@ -587,30 +713,329 @@ button{
 
 .userEmail{
     color:#00d4ff;
+
     direction:ltr;
+
     margin:10px 0 15px;
 }
 
 .logoutButton{
     width:100%;
+
     margin-top:12px;
+
     padding:12px;
+
     border:0;
+
     border-radius:14px;
+
     background:#ff224422;
+
     color:#ff6688;
 }
 
+
+/* =====================================================
+   CHATY
+===================================================== */
+
+.chatyPage{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:#000;
+
+    color:#fff;
+
+    z-index:900;
+
+    padding-top:68px;
+}
+
+.chatyHeader{
+    height:64px;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:8px 15px;
+
+    border-bottom:1px solid #222;
+
+    background:#050505;
+}
+
+.chatyAvatar{
+    width:45px;
+    height:45px;
+
+    min-width:45px;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    color:#000;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:23px;
+}
+
+.chatyHeaderInfo{
+    flex:1;
+
+    margin-right:10px;
+
+    text-align:right;
+}
+
+.chatyHeaderInfo div{
+    font-size:17px;
+
+    font-weight:bold;
+}
+
+.chatyHeaderInfo small{
+    color:#777;
+}
+
+#characterBtn{
+    width:42px;
+    height:42px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#181818;
+
+    color:white;
+
+    font-size:20px;
+}
+
+.chatMessages{
+    height:calc(100vh - 145px);
+
+    overflow-y:auto;
+
+    padding:15px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.chatBubble{
+    max-width:82%;
+
+    padding:11px 14px;
+
+    border-radius:18px;
+
+    line-height:1.8;
+
+    word-break:break-word;
+
+    white-space:normal;
+}
+
+.aiBubble{
+    align-self:flex-start;
+
+    background:#191919;
+
+    border:1px solid #292929;
+}
+
+.userBubble{
+    align-self:flex-end;
+
+    background:#fff;
+
+    color:#000;
+}
+
+.chatInputArea{
+    position:absolute;
+
+    bottom:0;
+
+    left:0;
+
+    right:0;
+
+    padding:10px;
+
+    display:flex;
+
+    gap:8px;
+
+    background:#050505;
+
+    border-top:1px solid #222;
+}
+
+#chatInput{
+    flex:1;
+
+    height:48px;
+
+    border:1px solid #333;
+
+    border-radius:25px;
+
+    background:#151515;
+
+    color:#fff;
+
+    outline:none;
+
+    padding:0 17px;
+
+    font-size:15px;
+}
+
+#sendChat{
+    width:48px;
+    height:48px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    color:#000;
+
+    font-size:20px;
+}
+
+#sendChat:disabled{
+    opacity:.5;
+}
+
+
+/* =====================================================
+   CHARACTER PANEL
+===================================================== */
+
+.characterPanel{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:#000e;
+
+    z-index:2000;
+
+    padding:20px;
+
+    overflow-y:auto;
+}
+
+.characterBox{
+    max-width:450px;
+
+    margin:30px auto;
+
+    background:#111;
+
+    border:1px solid #292929;
+
+    border-radius:25px;
+
+    padding:20px;
+}
+
+.characterBox h2{
+    text-align:center;
+
+    margin-bottom:18px;
+}
+
+.characters{
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:10px;
+}
+
+.characters button{
+    min-height:90px;
+
+    border:1px solid #292929;
+
+    border-radius:17px;
+
+    background:#181818;
+
+    color:#fff;
+
+    font-size:28px;
+}
+
+.characters button span{
+    display:block;
+
+    font-size:12px;
+
+    margin-top:6px;
+
+    color:#ccc;
+}
+
+.characters button:active{
+    background:#fff;
+
+    color:#000;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:360px){
+
+    .characters{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+
+    .aiTab{
+        font-size:13px;
+    }
+
+}
+
 </style>
+
 </head>
 
 
 <body>
 
 
-<!-- =========================================
+<!-- =====================================================
      LOGIN
-========================================= -->
+===================================================== -->
 
 <div id="loginScreen">
 
@@ -626,9 +1051,6 @@ button{
             ابتدا وارد حساب خود شوید.
 
         </div>
-
-
-        <!-- EMAIL -->
 
         <div id="emailArea">
 
@@ -649,8 +1071,6 @@ button{
 
         </div>
 
-
-        <!-- OTP -->
 
         <div id="otpArea">
 
@@ -700,91 +1120,206 @@ button{
 </div>
 
 
-<!-- =========================================
-     APP
-========================================= -->
+<!-- =====================================================
+     AI TABS
+===================================================== -->
 
-<div class="app">
-
-<div class="mainPage">
-
-    <div class="header">
-
-        <div class="title">
-            ✦ Ahoora AI
-        </div>
-
-        <div class="time" id="time">
-            --:--
-        </div>
-
-    </div>
-
-
-    <div class="orb-wrapper">
-
-        <div class="orb" id="orb">
-
-            <div class="inner"></div>
-
-        </div>
-
-    </div>
-
+<div class="aiTabs">
 
     <button
-        class="mic"
-        id="mic">
+        id="ahooraTab"
+        class="aiTab active">
 
-        🎙️
+        ✦ Ahoora AI
 
     </button>
 
+    <button
+        id="chatyTab"
+        class="aiTab">
 
-    <div
-        class="status"
-        id="status">
+        💬 Chaty AI
 
-        آماده
-
-    </div>
-
-
-    <div
-        class="user"
-        id="user">
-
-        منتظر فرمان صوتی...
-
-    </div>
-
-
-    <div
-        class="response"
-        id="response">
-
-        سلام! من اهورا هستم.
-
-        <br>
-
-        برای استفاده از دستیار صوتی
-        می‌توانی فرمان بدهی.
-
-    </div>
-
-
-    <div class="small">
-        Ahoora AI
-    </div>
-
-</div>
+    </button>
 
 </div>
 
 
-<!-- =========================================
+<!-- =====================================================
+     MAIN APP
+===================================================== -->
+
+<div class="app">
+
+    <div class="mainPage">
+
+        <div class="header">
+
+            <div class="title">
+                ✦ Ahoora AI
+            </div>
+
+            <div
+                class="time"
+                id="time">
+
+                --:--
+
+            </div>
+
+        </div>
+
+
+        <div class="orb-wrapper">
+
+            <div
+                class="orb"
+                id="orb">
+
+                <div class="inner"></div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="mic"
+            id="mic">
+
+            🎙️
+
+        </button>
+
+
+        <div
+            class="status"
+            id="status">
+
+            آماده
+
+        </div>
+
+
+        <div
+            class="user"
+            id="user">
+
+            منتظر فرمان صوتی...
+
+        </div>
+
+
+        <div
+            class="response"
+            id="response">
+
+            سلام! من اهورا هستم.
+
+            <br>
+
+            برای استفاده از دستیار صوتی
+            می‌توانی فرمان بدهی.
+
+        </div>
+
+
+        <div class="small">
+            Ahoora AI
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CHATY PAGE
+    ================================================= -->
+
+    <div
+        id="chatyPage"
+        class="chatyPage">
+
+
+        <div class="chatyHeader">
+
+            <div
+                class="chatyAvatar"
+                id="chatyAvatar">
+
+                🤖
+
+            </div>
+
+
+            <div class="chatyHeaderInfo">
+
+                <div id="chatyName">
+                    Chaty AI
+                </div>
+
+                <small>
+                    آنلاین
+                </small>
+
+            </div>
+
+
+            <button
+                id="characterBtn">
+
+                👤
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="chatMessages"
+            class="chatMessages">
+
+
+            <div
+                class="chatBubble aiBubble">
+
+                سلام 👋
+                <br>
+                من Chaty AI هستم.
+                <br>
+                می‌تونی از قسمت 👤 شخصیت من را انتخاب کنی.
+
+            </div>
+
+
+        </div>
+
+
+        <div class="chatInputArea">
+
+            <input
+                id="chatInput"
+                type="text"
+                placeholder="پیامت را بنویس..."
+                autocomplete="off">
+
+
+            <button
+                id="sendChat">
+
+                ➤
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
      SETTINGS
-========================================= -->
+===================================================== -->
 
 <button
     class="settingsBtn"
@@ -795,9 +1330,9 @@ button{
 </button>
 
 
-<!-- =========================================
+<!-- =====================================================
      COMMANDS
-========================================= -->
+===================================================== -->
 
 <button
     class="commandsBtn"
@@ -808,9 +1343,9 @@ button{
 </button>
 
 
-<!-- =========================================
+<!-- =====================================================
      CONTACT PANEL
-========================================= -->
+===================================================== -->
 
 <div
     class="panel"
@@ -877,9 +1412,9 @@ button{
 </div>
 
 
-<!-- =========================================
+<!-- =====================================================
      COMMANDS PANEL
-========================================= -->
+===================================================== -->
 
 <div
     class="commandsPanel"
@@ -1021,26 +1556,201 @@ button{
 </div>
 
 
+<!-- =====================================================
+     CHARACTER PANEL
+===================================================== -->
+
+<div
+    id="characterPanel"
+    class="characterPanel">
+
+    <div class="characterBox">
+
+        <h2>
+            انتخاب شخصیت Chaty AI
+        </h2>
+
+
+        <div class="characters">
+
+
+            <button
+                data-name="مسی AI"
+                data-avatar="⚽">
+
+                ⚽
+
+                <span>
+                    مسی
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="رونالدو AI"
+                data-avatar="⚽">
+
+                ⚽
+
+                <span>
+                    رونالدو
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="پرسپولیس AI"
+                data-avatar="🔴">
+
+                🔴
+
+                <span>
+                    پرسپولیس
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="استقلال AI"
+                data-avatar="🔵">
+
+                🔵
+
+                <span>
+                    استقلال
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="Breaking Bad AI"
+                data-avatar="🧪">
+
+                🧪
+
+                <span>
+                    Breaking Bad
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="باب اسفنجی AI"
+                data-avatar="🧽">
+
+                🧽
+
+                <span>
+                    باب اسفنجی
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="BTS AI"
+                data-avatar="🎤">
+
+                🎤
+
+                <span>
+                    BTS
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="دیوید بکام AI"
+                data-avatar="⚽">
+
+                ⚽
+
+                <span>
+                    دیوید بکام
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="هکر AI"
+                data-avatar="💻">
+
+                💻
+
+                <span>
+                    هکر
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="شاعر AI"
+                data-avatar="📖">
+
+                📖
+
+                <span>
+                    شاعر
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="آشپز AI"
+                data-avatar="👨‍🍳">
+
+                👨‍🍳
+
+                <span>
+                    آشپز
+                </span>
+
+            </button>
+
+
+            <button
+                data-name="تراپیست AI"
+                data-avatar="🧠">
+
+                🧠
+
+                <span>
+                    تراپیست
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+        <button
+            id="closeCharacter"
+            class="close">
+
+            بستن
+
+        </button>
+
+    </div>
+
+</div>
+
+
 <script>
 
 /* =====================================================
    SUPABASE
 ===================================================== */
-
-/*
-   مهم:
-   این مقدار را از:
-
-   Supabase
-   → Project Settings
-   → API
-
-   بردار.
-
-   Publishable key یا anon public key
-
-   service_role را هرگز اینجا قرار نده.
-*/
 
 const SUPABASE_URL =
 "https://vkqmlfumodqmmylchgdx.supabase.co";
@@ -1051,10 +1761,10 @@ const SUPABASE_ANON_KEY =
 
 
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
 
 /* =====================================================
@@ -1062,34 +1772,34 @@ const supabaseClient =
 ===================================================== */
 
 var loginScreen =
-    document.getElementById("loginScreen");
+document.getElementById("loginScreen");
 
 var emailArea =
-    document.getElementById("emailArea");
+document.getElementById("emailArea");
 
 var otpArea =
-    document.getElementById("otpArea");
+document.getElementById("otpArea");
 
 var emailInput =
-    document.getElementById("emailInput");
+document.getElementById("emailInput");
 
 var otpInput =
-    document.getElementById("otpInput");
+document.getElementById("otpInput");
 
 var loginEmail =
-    document.getElementById("loginEmail");
+document.getElementById("loginEmail");
 
 var sendOtpButton =
-    document.getElementById("sendOtpButton");
+document.getElementById("sendOtpButton");
 
 var verifyOtpButton =
-    document.getElementById("verifyOtpButton");
+document.getElementById("verifyOtpButton");
 
 var backEmailButton =
-    document.getElementById("backEmailButton");
+document.getElementById("backEmailButton");
 
 var loginMessage =
-    document.getElementById("loginMessage");
+document.getElementById("loginMessage");
 
 
 /* =====================================================
@@ -1097,74 +1807,78 @@ var loginMessage =
 ===================================================== */
 
 var orb =
-    document.getElementById("orb");
+document.getElementById("orb");
 
 var mic =
-    document.getElementById("mic");
+document.getElementById("mic");
 
 var statusBox =
-    document.getElementById("status");
+document.getElementById("status");
 
 var userBox =
-    document.getElementById("user");
+document.getElementById("user");
 
 var responseBox =
-    document.getElementById("response");
+document.getElementById("response");
 
 var timeBox =
-    document.getElementById("time");
+document.getElementById("time");
 
 var panel =
-    document.getElementById("panel");
+document.getElementById("panel");
 
 var settingsBtn =
-    document.getElementById("settingsBtn");
+document.getElementById("settingsBtn");
 
 var closePanel =
-    document.getElementById("closePanel");
+document.getElementById("closePanel");
 
 var logoutButton =
-    document.getElementById("logoutButton");
+document.getElementById("logoutButton");
 
 var contactName =
-    document.getElementById("contactName");
+document.getElementById("contactName");
 
 var contactNumber =
-    document.getElementById("contactNumber");
+document.getElementById("contactNumber");
 
 var saveContact =
-    document.getElementById("saveContact");
+document.getElementById("saveContact");
 
 var contactsList =
-    document.getElementById("contactsList");
+document.getElementById("contactsList");
 
 var commandsBtn =
-    document.getElementById("commandsBtn");
+document.getElementById("commandsBtn");
 
 var commandsPanel =
-    document.getElementById("commandsPanel");
+document.getElementById("commandsPanel");
 
 var closeCommands =
-    document.getElementById("closeCommands");
+document.getElementById("closeCommands");
 
 
 /* =====================================================
-   AUTH STATE
+   AUTH
 ===================================================== */
 
-var isLoggedIn = false;
+var isLoggedIn =
+false;
 
-var currentUser = null;
+var currentUser =
+null;
 
 
 function showLogin(){
 
-    isLoggedIn = false;
+    isLoggedIn =
+    false;
 
-    currentUser = null;
+    currentUser =
+    null;
 
     loginScreen.style.display =
-        "flex";
+    "flex";
 
     stopListening();
 
@@ -1173,10 +1887,11 @@ function showLogin(){
 
 function showApp(){
 
-    isLoggedIn = true;
+    isLoggedIn =
+    true;
 
     loginScreen.style.display =
-        "none";
+    "none";
 
     setStatus(
         "آماده — بگو «Ahoora AI»"
@@ -1201,9 +1916,9 @@ async function checkSession(){
     try{
 
         var result =
-            await supabaseClient
-            .auth
-            .getSession();
+        await supabaseClient
+        .auth
+        .getSession();
 
 
         if(result.error){
@@ -1220,13 +1935,13 @@ async function checkSession(){
 
 
         var session =
-            result.data.session;
+        result.data.session;
 
 
         if(session){
 
             currentUser =
-                session.user;
+            session.user;
 
             showApp();
 
@@ -1248,47 +1963,46 @@ async function checkSession(){
 
 
 /* =====================================================
-   AUTH STATE CHANGE
+   AUTH STATE
 ===================================================== */
 
 supabaseClient
 .auth
 .onAuthStateChange(
-    function(event,session){
+function(event,session){
 
-        if(session){
+    if(session){
 
-            currentUser =
-                session.user;
+        currentUser =
+        session.user;
 
-            showApp();
+        showApp();
 
-        }else{
+    }else{
 
-            showLogin();
-
-        }
+        showLogin();
 
     }
-);
+
+});
 
 
 /* =====================================================
-   SEND OTP
+   OTP
 ===================================================== */
 
 async function sendOTP(){
 
     var email =
-        emailInput.value
-        .trim()
-        .toLowerCase();
+    emailInput.value
+    .trim()
+    .toLowerCase();
 
 
     if(!email){
 
         loginMessage.textContent =
-            "لطفاً ایمیل را وارد کن.";
+        "لطفاً ایمیل را وارد کن.";
 
         return;
 
@@ -1298,7 +2012,7 @@ async function sendOTP(){
     if(!email.includes("@")){
 
         loginMessage.textContent =
-            "ایمیل وارد شده صحیح نیست.";
+        "ایمیل وارد شده صحیح نیست.";
 
         return;
 
@@ -1306,31 +2020,30 @@ async function sendOTP(){
 
 
     sendOtpButton.disabled =
-        true;
+    true;
 
     sendOtpButton.textContent =
-        "در حال ارسال...";
+    "در حال ارسال...";
+
 
     loginMessage.textContent =
-        "";
+    "";
 
 
     try{
 
         var result =
-            await supabaseClient
-            .auth
-            .signInWithOtp({
+        await supabaseClient
+        .auth
+        .signInWithOtp({
 
-                email:email,
+            email:email,
 
-                options:{
+            options:{
+                shouldCreateUser:true
+            }
 
-                    shouldCreateUser:true
-
-                }
-
-            });
+        });
 
 
         if(result.error){
@@ -1340,14 +2053,8 @@ async function sendOTP(){
             );
 
             loginMessage.textContent =
-                "❌ " +
-                result.error.message;
-
-            sendOtpButton.disabled =
-                false;
-
-            sendOtpButton.textContent =
-                "📩 دریافت کد ورود";
+            "❌ " +
+            result.error.message;
 
             return;
 
@@ -1355,17 +2062,16 @@ async function sendOTP(){
 
 
         loginEmail.textContent =
-            email;
+        email;
 
         emailArea.style.display =
-            "none";
+        "none";
 
         otpArea.style.display =
-            "block";
+        "block";
 
         loginMessage.textContent =
-            "✅ کد ورود به ایمیل شما ارسال شد.";
-
+        "✅ کد ورود به ایمیل شما ارسال شد.";
 
         otpInput.focus();
 
@@ -1375,16 +2081,16 @@ async function sendOTP(){
         console.log(error);
 
         loginMessage.textContent =
-            "❌ خطا در ارسال کد.";
+        "❌ خطا در ارسال کد.";
 
     }
 
 
     sendOtpButton.disabled =
-        false;
+    false;
 
     sendOtpButton.textContent =
-        "📩 دریافت کد ورود";
+    "📩 دریافت کد ورود";
 
 }
 
@@ -1396,22 +2102,23 @@ async function sendOTP(){
 async function verifyOTP(){
 
     var email =
-        emailInput.value
-        .trim()
-        .toLowerCase();
+    emailInput.value
+    .trim()
+    .toLowerCase();
+
 
     var token =
-        otpInput.value
-        .replace(
-            /[^0-9]/g,
-            ""
-        );
+    otpInput.value
+    .replace(
+        /[^0-9]/g,
+        ""
+    );
 
 
     if(token.length !== 6){
 
         loginMessage.textContent =
-            "❌ کد باید ۶ رقمی باشد.";
+        "❌ کد باید ۶ رقمی باشد.";
 
         return;
 
@@ -1419,42 +2126,32 @@ async function verifyOTP(){
 
 
     verifyOtpButton.disabled =
-        true;
+    true;
 
     verifyOtpButton.textContent =
-        "در حال بررسی...";
+    "در حال بررسی...";
 
 
     try{
 
         var result =
-            await supabaseClient
-            .auth
-            .verifyOtp({
+        await supabaseClient
+        .auth
+        .verifyOtp({
 
-                email:email,
+            email:email,
 
-                token:token,
+            token:token,
 
-                type:"email"
+            type:"email"
 
-            });
+        });
 
 
         if(result.error){
 
-            console.log(
-                result.error
-            );
-
             loginMessage.textContent =
-                "❌ کد صحیح نیست یا منقضی شده است.";
-
-            verifyOtpButton.disabled =
-                false;
-
-            verifyOtpButton.textContent =
-                "🔐 ورود به Ahoora AI";
+            "❌ کد صحیح نیست یا منقضی شده است.";
 
             return;
 
@@ -1462,7 +2159,7 @@ async function verifyOTP(){
 
 
         currentUser =
-            result.data.user;
+        result.data.user;
 
         showApp();
 
@@ -1472,16 +2169,16 @@ async function verifyOTP(){
         console.log(error);
 
         loginMessage.textContent =
-            "❌ خطا در تأیید کد.";
+        "❌ خطا در تأیید کد.";
 
     }
 
 
     verifyOtpButton.disabled =
-        false;
+    false;
 
     verifyOtpButton.textContent =
-        "🔐 ورود به Ahoora AI";
+    "🔐 ورود به Ahoora AI";
 
 }
 
@@ -1491,53 +2188,47 @@ async function verifyOTP(){
 ===================================================== */
 
 backEmailButton.addEventListener(
-    "click",
-    function(){
+"click",
+function(){
 
-        otpArea.style.display =
-            "none";
+    otpArea.style.display =
+    "none";
 
-        emailArea.style.display =
-            "block";
+    emailArea.style.display =
+    "block";
 
-        otpInput.value =
-            "";
+    otpInput.value =
+    "";
 
-        loginMessage.textContent =
-            "";
+    loginMessage.textContent =
+    "";
 
-    }
-);
+});
 
-
-/* =====================================================
-   BUTTONS
-===================================================== */
 
 sendOtpButton.addEventListener(
-    "click",
-    sendOTP
+"click",
+sendOTP
 );
 
 
 verifyOtpButton.addEventListener(
-    "click",
-    verifyOTP
+"click",
+verifyOTP
 );
 
 
 otpInput.addEventListener(
-    "input",
-    function(){
+"input",
+function(){
 
-        this.value =
-            this.value.replace(
-                /[^0-9]/g,
-                ""
-            );
+    this.value =
+    this.value.replace(
+        /[^0-9]/g,
+        ""
+    );
 
-    }
-);
+});
 
 
 /* =====================================================
@@ -1545,26 +2236,25 @@ otpInput.addEventListener(
 ===================================================== */
 
 logoutButton.addEventListener(
-    "click",
-    async function(){
+"click",
+async function(){
 
-        try{
+    try{
 
-            await supabaseClient
-            .auth
-            .signOut();
+        await supabaseClient
+        .auth
+        .signOut();
 
-            panel.style.display =
-                "none";
+        panel.style.display =
+        "none";
 
-        }catch(e){
+    }catch(e){
 
-            console.log(e);
-
-        }
+        console.log(e);
 
     }
-);
+
+});
 
 
 /* =====================================================
@@ -1573,7 +2263,8 @@ logoutButton.addEventListener(
 
 function android(){
 
-    return typeof window.Android !== "undefined";
+    return typeof window.Android !==
+    "undefined";
 
 }
 
@@ -1585,26 +2276,26 @@ function android(){
 function clock(){
 
     var d =
-        new Date();
+    new Date();
 
     timeBox.textContent =
-        String(
-            d.getHours()
-        ).padStart(2,"0")
-        +
-        ":"
-        +
-        String(
-            d.getMinutes()
-        ).padStart(2,"0");
+    String(
+        d.getHours()
+    ).padStart(2,"0")
+    +
+    ":"
+    +
+    String(
+        d.getMinutes()
+    ).padStart(2,"0");
 
 }
 
 clock();
 
 setInterval(
-    clock,
-    10000
+clock,
+10000
 );
 
 
@@ -1613,17 +2304,18 @@ setInterval(
 ===================================================== */
 
 function setStatus(
-    text,
-    type
+text,
+type
 ){
 
     statusBox.textContent =
-        text;
+    text;
 
     orb.classList.remove(
         "listening",
         "processing"
     );
+
 
     if(type){
 
@@ -1644,30 +2336,30 @@ function normalize(text){
 
     return String(text)
 
-        .replace(/[۰-۹]/g,function(d){
+    .replace(/[۰-۹]/g,function(d){
 
-            return String(
-                "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
-            );
+        return String(
+            "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
+        );
 
-        })
+    })
 
-        .replace(/ي/g,"ی")
-        .replace(/ك/g,"ک")
-        .replace(/ۀ/g,"ه")
+    .replace(/ي/g,"ی")
+    .replace(/ك/g,"ک")
+    .replace(/ۀ/g,"ه")
 
-        .replace(/[،,]/g," ")
+    .replace(/[،,]/g," ")
 
-        .replace(/\s+/g," ")
+    .replace(/\s+/g," ")
 
-        .trim()
-        .toLowerCase();
+    .trim()
+    .toLowerCase();
 
 }
 
 
 /* =====================================================
-   VOICE
+   VOICE FILES
 ===================================================== */
 
 function playVoice(file){
@@ -1675,10 +2367,10 @@ function playVoice(file){
     try{
 
         var audio =
-            new Audio(file);
+        new Audio(file);
 
         audio.play().catch(
-            function(){}
+        function(){}
         );
 
     }catch(e){}
@@ -1719,12 +2411,12 @@ function voiceG(){
 ===================================================== */
 
 function answer(
-    text,
-    voice
+text,
+voice
 ){
 
     responseBox.innerHTML =
-        text;
+    text;
 
     if(voice){
 
@@ -1779,11 +2471,11 @@ function escapeHTML(text){
 
     return String(text)
 
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -1796,16 +2488,18 @@ function addContact(){
 
     }
 
+
     var name =
-        contactName.value.trim();
+    contactName.value.trim();
+
 
     var number =
-        normalize(
-            contactNumber.value
-        ).replace(
-            /[^0-9+]/g,
-            ""
-        );
+    normalize(
+        contactNumber.value
+    ).replace(
+        /[^0-9+]/g,
+        ""
+    );
 
 
     if(!name){
@@ -1842,31 +2536,33 @@ function addContact(){
 
 
     var contacts =
-        getContacts();
+    getContacts();
 
 
     var old =
-        contacts.findIndex(
-            function(c){
+    contacts.findIndex(
+    function(c){
 
-                return normalize(c.name)
-                    ===
-                    normalize(name);
+        return normalize(c.name)
+        ===
+        normalize(name);
 
-            }
-        );
+    });
 
 
     if(old >= 0){
 
         contacts[old].number =
-            number;
+        number;
 
     }else{
 
         contacts.push({
+
             name:name,
+
             number:number
+
         });
 
     }
@@ -1878,10 +2574,10 @@ function addContact(){
 
 
     contactName.value =
-        "";
+    "";
 
     contactNumber.value =
-        "";
+    "";
 
 
     renderContacts();
@@ -1899,18 +2595,18 @@ function addContact(){
 function renderContacts(){
 
     var contacts =
-        getContacts();
+    getContacts();
 
     contactsList.innerHTML =
-        "";
+    "";
 
 
     if(!contacts.length){
 
         contactsList.innerHTML =
-            "<div style='color:#8993af;margin-top:15px;text-align:center'>" +
-            "هنوز مخاطبی ذخیره نشده است." +
-            "</div>";
+        "<div style='color:#8993af;margin-top:15px;text-align:center'>" +
+        "هنوز مخاطبی ذخیره نشده است." +
+        "</div>";
 
         return;
 
@@ -1918,47 +2614,52 @@ function renderContacts(){
 
 
     contacts.forEach(
-        function(contact,index){
+    function(contact,index){
 
-            var div =
-                document.createElement(
-                    "div"
-                );
+        var div =
+        document.createElement(
+            "div"
+        );
 
-            div.className =
-                "savedContact";
-
-
-            div.innerHTML =
-
-                "<div>" +
-                "<b>" +
-                escapeHTML(
-                    contact.name
-                ) +
-                "</b>" +
-                "<br>" +
-                "<small>" +
-                escapeHTML(
-                    contact.number
-                ) +
-                "</small>" +
-                "</div>" +
-
-                "<button class='deleteContact' " +
-                "data-index='" +
-                index +
-                "'>" +
-                "حذف" +
-                "</button>";
+        div.className =
+        "savedContact";
 
 
-            contactsList.appendChild(
-                div
-            );
+        div.innerHTML =
 
-        }
-    );
+        "<div>" +
+
+        "<b>" +
+        escapeHTML(
+            contact.name
+        ) +
+        "</b>" +
+
+        "<br>" +
+
+        "<small>" +
+        escapeHTML(
+            contact.number
+        ) +
+        "</small>" +
+
+        "</div>" +
+
+        "<button class='deleteContact' " +
+        "data-index='" +
+        index +
+        "'>" +
+
+        "حذف" +
+
+        "</button>";
+
+
+        contactsList.appendChild(
+            div
+        );
+
+    });
 
 
     document
@@ -1966,76 +2667,73 @@ function renderContacts(){
         ".deleteContact"
     )
     .forEach(
-        function(btn){
+    function(btn){
 
-            btn.onclick =
-            function(){
+        btn.onclick =
+        function(){
 
-                var index =
-                    Number(
-                        this.dataset.index
-                    );
-
-
-                var contacts =
-                    getContacts();
+            var index =
+            Number(
+                this.dataset.index
+            );
 
 
-                contacts.splice(
-                    index,
-                    1
-                );
+            var contacts =
+            getContacts();
 
 
-                saveContacts(
-                    contacts
-                );
+            contacts.splice(
+                index,
+                1
+            );
 
 
-                renderContacts();
+            saveContacts(
+                contacts
+            );
 
-            };
 
-        }
-    );
+            renderContacts();
+
+        };
+
+    });
 
 }
 
 
 saveContact.addEventListener(
-    "click",
-    addContact
+"click",
+addContact
 );
 
 
 settingsBtn.addEventListener(
-    "click",
-    function(){
+"click",
+function(){
 
-        if(!isLoggedIn){
+    if(!isLoggedIn){
 
-            return;
-
-        }
-
-        renderContacts();
-
-        panel.style.display =
-            "block";
+        return;
 
     }
-);
+
+    renderContacts();
+
+    panel.style.display =
+    "block";
+
+});
 
 
 closePanel.addEventListener(
-    "click",
-    function(){
+"click",
+function(){
 
-        panel.style.display =
-            "none";
+    panel.style.display =
+    "none";
 
-    }
-);
+});
 
 
 /* =====================================================
@@ -2043,31 +2741,29 @@ closePanel.addEventListener(
 ===================================================== */
 
 commandsBtn.addEventListener(
-    "click",
-    function(){
+"click",
+function(){
 
-        if(!isLoggedIn){
+    if(!isLoggedIn){
 
-            return;
-
-        }
-
-        commandsPanel.style.display =
-            "block";
+        return;
 
     }
-);
+
+    commandsPanel.style.display =
+    "block";
+
+});
 
 
 closeCommands.addEventListener(
-    "click",
-    function(){
+"click",
+function(){
 
-        commandsPanel.style.display =
-            "none";
+    commandsPanel.style.display =
+    "none";
 
-    }
-);
+});
 
 
 /* =====================================================
@@ -2077,24 +2773,23 @@ closeCommands.addEventListener(
 function findContact(name){
 
     var contacts =
-        getContacts();
+    getContacts();
 
     var target =
-        normalize(name);
+    normalize(name);
 
 
     return contacts.find(
-        function(c){
+    function(c){
 
-            return normalize(c.name)
-                === target
-                ||
-                target.indexOf(
-                    normalize(c.name)
-                ) >= 0;
+        return normalize(c.name)
+        === target
+        ||
+        target.indexOf(
+            normalize(c.name)
+        ) >= 0;
 
-        }
-    );
+    });
 
 }
 
@@ -2139,7 +2834,7 @@ var relationAliases = {
 function normalizeRelation(text){
 
     var t =
-        normalize(text);
+    normalize(text);
 
 
     for(
@@ -2176,11 +2871,11 @@ function callNumber(number){
 
 
     number =
-        normalize(number)
-        .replace(
-            /[^0-9+]/g,
-            ""
-        );
+    normalize(number)
+    .replace(
+        /[^0-9+]/g,
+        ""
+    );
 
 
     if(!number){
@@ -2212,8 +2907,8 @@ function callNumber(number){
 
 
     window.location.href =
-        "tel:" +
-        number;
+    "tel:" +
+    number;
 
 }
 
@@ -2221,7 +2916,7 @@ function callNumber(number){
 function callContact(name){
 
     var contact =
-        findContact(name);
+    findContact(name);
 
 
     if(!contact){
@@ -2250,12 +2945,12 @@ function callContact(name){
 ===================================================== */
 
 function smsContact(
-    name,
-    message
+name,
+message
 ){
 
     var contact =
-        findContact(name);
+    findContact(name);
 
 
     if(!contact){
@@ -2297,12 +2992,12 @@ function smsContact(
 
 
     window.location.href =
-        "sms:" +
-        contact.number +
-        "?body=" +
-        encodeURIComponent(
-            message
-        );
+    "sms:" +
+    contact.number +
+    "?body=" +
+    encodeURIComponent(
+        message
+    );
 
 }
 
@@ -2314,24 +3009,24 @@ function smsContact(
 function extractMessage(text){
 
     var result =
-        text;
+    text;
 
 
     result =
-        result
+    result
 
-        .replace(/به\s+/g,"")
-        .replace(/پیامک/g,"")
-        .replace(/پیام/g,"")
-        .replace(/بفرست/g,"")
-        .replace(/بده/g,"")
-        .replace(/ارسال کن/g,"")
+    .replace(/به\s+/g,"")
+    .replace(/پیامک/g,"")
+    .replace(/پیام/g,"")
+    .replace(/بفرست/g,"")
+    .replace(/بده/g,"")
+    .replace(/ارسال کن/g,"")
 
-        .trim();
+    .trim();
 
 
     var contacts =
-        getContacts();
+    getContacts();
 
 
     for(
@@ -2341,9 +3036,9 @@ function extractMessage(text){
     ){
 
         var n =
-            normalize(
-                contacts[i].name
-            );
+        normalize(
+            contacts[i].name
+        );
 
 
         if(
@@ -2351,9 +3046,9 @@ function extractMessage(text){
         ){
 
             result =
-                result
-                .replace(n,"")
-                .trim();
+            result
+            .replace(n,"")
+            .trim();
 
             break;
 
@@ -2372,11 +3067,11 @@ function extractMessage(text){
 ===================================================== */
 
 function extractContactFromCommand(
-    text
+text
 ){
 
     var contacts =
-        getContacts();
+    getContacts();
 
 
     for(
@@ -2401,7 +3096,7 @@ function extractContactFromCommand(
 
 
     var relation =
-        normalizeRelation(text);
+    normalizeRelation(text);
 
 
     if(relation){
@@ -2441,8 +3136,8 @@ var apps = {
 
 
 function openApp(
-    packageName,
-    name
+packageName,
+name
 ){
 
     if(!isLoggedIn){
@@ -2977,25 +3672,25 @@ function gallery(){
 function sayTime(){
 
     var d =
-        new Date();
+    new Date();
 
 
     var h =
-        String(
-            d.getHours()
-        ).padStart(
-            2,
-            "0"
-        );
+    String(
+        d.getHours()
+    ).padStart(
+        2,
+        "0"
+    );
 
 
     var m =
-        String(
-            d.getMinutes()
-        ).padStart(
-            2,
-            "0"
-        );
+    String(
+        d.getMinutes()
+    ).padStart(
+        2,
+        "0"
+    );
 
 
     answer(
@@ -3017,8 +3712,8 @@ function sayTime(){
 function googleSearch(query){
 
     var url =
-        "https://www.google.com/search?q=" +
-        encodeURIComponent(query);
+    "https://www.google.com/search?q=" +
+    encodeURIComponent(query);
 
 
     if(android()){
@@ -3046,7 +3741,7 @@ function googleSearch(query){
 
 
     window.location.href =
-        url;
+    url;
 
 }
 
@@ -3056,22 +3751,22 @@ function googleSearch(query){
 ===================================================== */
 
 var recognition =
-    null;
+null;
 
 var listening =
-    false;
+false;
 
 var commandMode =
-    false;
+false;
 
 var manualStop =
-    false;
+false;
 
 var waitingForCommand =
-    false;
+false;
 
 var autoRestart =
-    true;
+true;
 
 
 /* =====================================================
@@ -3081,8 +3776,8 @@ var autoRestart =
 function initSpeech(){
 
     var Speech =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
 
     if(!Speech){
@@ -3098,23 +3793,23 @@ function initSpeech(){
 
 
     recognition =
-        new Speech();
+    new Speech();
 
 
     recognition.lang =
-        "fa-IR";
+    "fa-IR";
 
 
     recognition.continuous =
-        false;
+    false;
 
 
     recognition.interimResults =
-        false;
+    false;
 
 
     recognition.maxAlternatives =
-        3;
+    3;
 
 
     recognition.onstart =
@@ -3130,7 +3825,7 @@ function initSpeech(){
 
 
         listening =
-            true;
+        true;
 
 
         mic.classList.add(
@@ -3139,8 +3834,10 @@ function initSpeech(){
 
 
         setStatus(
-            commandMode ?
-            "🎙️ فرمانت را بگو..." :
+            commandMode
+            ?
+            "🎙️ فرمانت را بگو..."
+            :
             "🎙️ منتظر Ahoora AI...",
             "listening"
         );
@@ -3159,18 +3856,18 @@ function initSpeech(){
 
 
         var text =
-            event
-            .results[0][0]
-            .transcript
-            .trim();
+        event
+        .results[0][0]
+        .transcript
+        .trim();
 
 
         userBox.textContent =
-            text;
+        text;
 
 
         var t =
-            normalize(text);
+        normalize(text);
 
 
         if(!commandMode){
@@ -3184,11 +3881,11 @@ function initSpeech(){
             ){
 
                 commandMode =
-                    true;
+                true;
 
 
                 waitingForCommand =
-                    true;
+                true;
 
 
                 answer(
@@ -3203,19 +3900,19 @@ function initSpeech(){
 
 
                 setTimeout(
-                    function(){
+                function(){
 
-                        if(
-                            commandMode &&
-                            isLoggedIn
-                        ){
+                    if(
+                        commandMode &&
+                        isLoggedIn
+                    ){
 
-                            startListening();
+                        startListening();
 
-                        }
+                    }
 
-                    },
-                    1200
+                },
+                1200
                 );
 
             }
@@ -3227,7 +3924,7 @@ function initSpeech(){
 
 
         waitingForCommand =
-            false;
+        false;
 
 
         processSpeech(
@@ -3242,7 +3939,7 @@ function initSpeech(){
     function(event){
 
         listening =
-            false;
+        false;
 
 
         mic.classList.remove(
@@ -3270,20 +3967,20 @@ function initSpeech(){
             ){
 
                 setTimeout(
-                    function(){
+                function(){
 
-                        if(
-                            autoRestart &&
-                            !manualStop &&
-                            isLoggedIn
-                        ){
+                    if(
+                        autoRestart &&
+                        !manualStop &&
+                        isLoggedIn
+                    ){
 
-                            startListening();
+                        startListening();
 
-                        }
+                    }
 
-                    },
-                    600
+                },
+                600
                 );
 
                 return;
@@ -3319,7 +4016,7 @@ function initSpeech(){
     function(){
 
         listening =
-            false;
+        false;
 
 
         mic.classList.remove(
@@ -3336,11 +4033,11 @@ function initSpeech(){
         if(manualStop){
 
             manualStop =
-                false;
+            false;
 
 
             autoRestart =
-                false;
+            false;
 
 
             setStatus(
@@ -3359,20 +4056,20 @@ function initSpeech(){
         ){
 
             setTimeout(
-                function(){
+            function(){
 
-                    if(
-                        !manualStop &&
-                        autoRestart &&
-                        isLoggedIn
-                    ){
+                if(
+                    !manualStop &&
+                    autoRestart &&
+                    isLoggedIn
+                ){
 
-                        startListening();
+                    startListening();
 
-                    }
+                }
 
-                },
-                600
+            },
+            600
             );
 
         }
@@ -3417,11 +4114,11 @@ function startListening(){
 
 
     autoRestart =
-        true;
+    true;
 
 
     manualStop =
-        false;
+    false;
 
 
     try{
@@ -3447,15 +4144,15 @@ function startListening(){
 function stopListening(){
 
     manualStop =
-        true;
+    true;
 
 
     autoRestart =
-        false;
+    false;
 
 
     listening =
-        false;
+    false;
 
 
     if(recognition){
@@ -3492,8 +4189,8 @@ function stopListening(){
 ===================================================== */
 
 function processSpeech(
-    original,
-    fromButton
+original,
+fromButton
 ){
 
     if(!isLoggedIn){
@@ -3504,7 +4201,7 @@ function processSpeech(
 
 
     var text =
-        normalize(original);
+    normalize(original);
 
 
     setStatus(
@@ -3516,7 +4213,7 @@ function processSpeech(
     if(fromButton){
 
         commandMode =
-            true;
+        true;
 
     }
 
@@ -3528,7 +4225,7 @@ function processSpeech(
     ){
 
         commandMode =
-            false;
+        false;
 
 
         answer(
@@ -3844,9 +4541,9 @@ function processSpeech(
     ){
 
         var contact =
-            extractContactFromCommand(
-                text
-            );
+        extractContactFromCommand(
+            text
+        );
 
 
         if(contact){
@@ -3861,9 +4558,9 @@ function processSpeech(
 
 
         var match =
-            text.match(
-                /(\+?[0-9]{10,15})/
-            );
+        text.match(
+            /(\+?[0-9]{10,15})/
+        );
 
 
         if(match){
@@ -3885,23 +4582,23 @@ function processSpeech(
     ){
 
         var smsContactName =
-            extractContactFromCommand(
-                text
-            );
+        extractContactFromCommand(
+            text
+        );
 
 
         if(smsContactName){
 
             var message =
-                extractMessage(
-                    text
-                );
+            extractMessage(
+                text
+            );
 
 
             if(!message){
 
                 message =
-                    "سلام";
+                "سلام";
 
             }
 
@@ -3920,7 +4617,7 @@ function processSpeech(
 
 
     var searchText =
-        null;
+    null;
 
 
     if(
@@ -3929,24 +4626,24 @@ function processSpeech(
     ){
 
         searchText =
-            text
-            .replace(
-                "در گوگل",
-                ""
-            )
-            .replace(
-                "توی گوگل",
-                ""
-            )
-            .replace(
-                "جستجو",
-                ""
-            )
-            .replace(
-                "کن",
-                ""
-            )
-            .trim();
+        text
+        .replace(
+            "در گوگل",
+            ""
+        )
+        .replace(
+            "توی گوگل",
+            ""
+        )
+        .replace(
+            "جستجو",
+            ""
+        )
+        .replace(
+            "کن",
+            ""
+        )
+        .trim();
 
     }
     else if(
@@ -3954,20 +4651,20 @@ function processSpeech(
     ){
 
         searchText =
-            text
-            .replace(
-                "گوگل",
-                ""
-            )
-            .replace(
-                "جستجو",
-                ""
-            )
-            .replace(
-                "کن",
-                ""
-            )
-            .trim();
+        text
+        .replace(
+            "گوگل",
+            ""
+        )
+        .replace(
+            "جستجو",
+            ""
+        )
+        .replace(
+            "کن",
+            ""
+        )
+        .trim();
 
     }
 
@@ -3993,9 +4690,9 @@ function processSpeech(
 
 
     var url =
-        original.match(
-            /https?:\/\/[^\s]+/i
-        );
+    original.match(
+        /https?:\/\/[^\s]+/i
+    );
 
 
     if(url){
@@ -4013,7 +4710,7 @@ function processSpeech(
         }else{
 
             window.location.href =
-                url[0];
+            url[0];
 
         }
 
@@ -4062,34 +4759,604 @@ function processSpeech(
 ===================================================== */
 
 mic.addEventListener(
-    "click",
+"click",
+function(){
+
+    if(!isLoggedIn){
+
+        return;
+
+    }
+
+
+    if(listening){
+
+        stopListening();
+
+    }else{
+
+        manualStop =
+        false;
+
+        autoRestart =
+        true;
+
+        startListening();
+
+    }
+
+});
+
+
+/* =====================================================
+   CHATY AI
+===================================================== */
+
+
+/*
+   آدرس Edge Function فعلی تو
+
+   bright-endpoint
+
+   کلید OpenRouter اینجا نیست.
+*/
+
+var CHATY_FUNCTION_URL =
+"https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
+
+
+var currentCharacter = {
+
+    name:
+    "Chaty AI",
+
+    avatar:
+    "🤖",
+
+    prompt:
+    "تو Chaty AI هستی. یک دستیار هوش مصنوعی فارسی، مفید، دوستانه و دقیق باش."
+};
+
+
+/* =====================================================
+   CHATY ELEMENTS
+===================================================== */
+
+var ahooraTab =
+document.getElementById(
+    "ahooraTab"
+);
+
+
+var chatyTab =
+document.getElementById(
+    "chatyTab"
+);
+
+
+var chatyPage =
+document.getElementById(
+    "chatyPage"
+);
+
+
+var chatInput =
+document.getElementById(
+    "chatInput"
+);
+
+
+var sendChat =
+document.getElementById(
+    "sendChat"
+);
+
+
+var chatMessages =
+document.getElementById(
+    "chatMessages"
+);
+
+
+var chatyName =
+document.getElementById(
+    "chatyName"
+);
+
+
+var chatyAvatar =
+document.getElementById(
+    "chatyAvatar"
+);
+
+
+var characterBtn =
+document.getElementById(
+    "characterBtn"
+);
+
+
+var characterPanel =
+document.getElementById(
+    "characterPanel"
+);
+
+
+var closeCharacter =
+document.getElementById(
+    "closeCharacter"
+);
+
+
+/* =====================================================
+   AHOORA TAB
+===================================================== */
+
+ahooraTab.onclick =
+function(){
+
+    mainPage.style.display =
+    "flex";
+
+    chatyPage.style.display =
+    "none";
+
+
+    ahooraTab.classList.add(
+        "active"
+    );
+
+    chatyTab.classList.remove(
+        "active"
+    );
+
+};
+
+
+/* =====================================================
+   CHATY TAB
+===================================================== */
+
+chatyTab.onclick =
+function(){
+
+    if(!isLoggedIn){
+
+        return;
+
+    }
+
+
+    mainPage.style.display =
+    "none";
+
+    chatyPage.style.display =
+    "block";
+
+
+    chatyTab.classList.add(
+        "active"
+    );
+
+    ahooraTab.classList.remove(
+        "active"
+    );
+
+
+    setTimeout(
     function(){
 
-        if(!isLoggedIn){
+        chatInput.focus();
+
+    },
+    100
+    );
+
+};
+
+
+/* =====================================================
+   CHARACTER BUTTON
+===================================================== */
+
+characterBtn.onclick =
+function(){
+
+    characterPanel.style.display =
+    "block";
+
+};
+
+
+/* =====================================================
+   CLOSE CHARACTER
+===================================================== */
+
+closeCharacter.onclick =
+function(){
+
+    characterPanel.style.display =
+    "none";
+
+};
+
+
+/* =====================================================
+   SELECT CHARACTER
+===================================================== */
+
+document
+.querySelectorAll(
+    ".characters button"
+)
+.forEach(
+function(button){
+
+    button.onclick =
+    function(){
+
+        currentCharacter.name =
+        this.dataset.name;
+
+
+        currentCharacter.avatar =
+        this.dataset.avatar;
+
+
+        currentCharacter.prompt =
+
+        "تو " +
+        currentCharacter.name +
+        " هستی. " +
+
+        "با لحن و سبک مناسب این شخصیت پاسخ بده. " +
+
+        "خودت را به جای شخصیت انتخاب‌شده معرفی کن، " +
+
+        "اما ادعا نکن که واقعاً آن شخص هستی. " +
+
+        "همیشه فارسی پاسخ بده مگر کاربر زبان دیگری بخواهد.";
+
+
+        chatyName.textContent =
+        currentCharacter.name;
+
+
+        chatyAvatar.textContent =
+        currentCharacter.avatar;
+
+
+        characterPanel.style.display =
+        "none";
+
+
+        addChatMessage(
+
+            "👤 شخصیت انتخاب شد: " +
+            currentCharacter.name,
+
+            false
+
+        );
+
+    };
+
+});
+
+
+/* =====================================================
+   ADD CHAT MESSAGE
+===================================================== */
+
+function addChatMessage(
+text,
+user
+){
+
+    var div =
+    document.createElement(
+        "div"
+    );
+
+
+    div.className =
+    user
+    ?
+    "chatBubble userBubble"
+    :
+    "chatBubble aiBubble";
+
+
+    div.textContent =
+    text;
+
+
+    chatMessages.appendChild(
+        div
+    );
+
+
+    chatMessages.scrollTop =
+    chatMessages.scrollHeight;
+
+}
+
+
+/* =====================================================
+   CHATY REQUEST
+===================================================== */
+
+async function sendToChaty(){
+
+    if(!isLoggedIn){
+
+        return;
+
+    }
+
+
+    var message =
+    chatInput.value.trim();
+
+
+    if(!message){
+
+        return;
+
+    }
+
+
+    /* پیام کاربر */
+
+    addChatMessage(
+        message,
+        true
+    );
+
+
+    chatInput.value =
+    "";
+
+
+    sendChat.disabled =
+    true;
+
+
+    /* پیام در حال پردازش */
+
+    var loading =
+    document.createElement(
+        "div"
+    );
+
+
+    loading.className =
+    "chatBubble aiBubble";
+
+
+    loading.textContent =
+    "در حال فکر کردن...";
+
+
+    chatMessages.appendChild(
+        loading
+    );
+
+
+    chatMessages.scrollTop =
+    chatMessages.scrollHeight;
+
+
+    try{
+
+        /*
+           گرفتن Session
+        */
+
+        var sessionResult =
+        await supabaseClient
+        .auth
+        .getSession();
+
+
+        var session =
+        sessionResult.data.session;
+
+
+        /*
+           هدرها
+        */
+
+        var headers = {
+
+            "Content-Type":
+            "application/json"
+
+        };
+
+
+        /*
+           ارسال JWT کاربر به Edge Function
+        */
+
+        if(session){
+
+            headers.Authorization =
+            "Bearer " +
+            session.access_token;
+
+        }
+
+
+        /*
+           ارسال درخواست به Supabase
+        */
+
+        var response =
+        await fetch(
+
+            CHATY_FUNCTION_URL,
+
+            {
+
+                method:
+                "POST",
+
+                headers:
+                headers,
+
+                body:
+                JSON.stringify({
+
+                    message:
+                    message,
+
+                    system:
+                    currentCharacter.prompt
+
+                })
+
+            }
+
+        );
+
+
+        var data =
+        await response.json();
+
+
+        loading.remove();
+
+
+        /*
+           خطای Function
+        */
+
+        if(!response.ok){
+
+            var errorMessage =
+            "خطا در ارتباط با Chaty AI";
+
+
+            if(data){
+
+                if(
+                    typeof data.error ===
+                    "string"
+                ){
+
+                    errorMessage =
+                    data.error;
+
+                }
+                else if(
+                    data.error &&
+                    data.error.message
+                ){
+
+                    errorMessage =
+                    data.error.message;
+
+                }
+
+            }
+
+
+            addChatMessage(
+                "❌ " +
+                errorMessage,
+                false
+            );
+
 
             return;
 
         }
 
 
-        if(listening){
+        /*
+           گرفتن پاسخ OpenRouter
+        */
 
-            stopListening();
+        var answerText =
+        data
+        &&
+        data.choices
+        &&
+        data.choices[0]
+        &&
+        data.choices[0].message
+        &&
+        data.choices[0].message.content;
 
-        }else{
 
-            manualStop =
-                false;
+        if(!answerText){
 
-            autoRestart =
-                true;
-
-            startListening();
+            answerText =
+            "❌ پاسخی از هوش مصنوعی دریافت نشد.";
 
         }
 
+
+        addChatMessage(
+            answerText,
+            false
+        );
+
+
+    }catch(error){
+
+        console.log(
+            "Chaty error:",
+            error
+        );
+
+
+        loading.remove();
+
+
+        addChatMessage(
+
+            "❌ اتصال به Chaty AI برقرار نشد.",
+
+            false
+
+        );
+
     }
-);
+
+
+    sendChat.disabled =
+    false;
+
+}
+
+
+/* =====================================================
+   SEND BUTTON
+===================================================== */
+
+sendChat.onclick =
+sendToChaty;
+
+
+/* =====================================================
+   ENTER KEY
+===================================================== */
+
+chatInput.addEventListener(
+"keydown",
+function(event){
+
+    if(event.key === "Enter"){
+
+        event.preventDefault();
+
+        sendToChaty();
+
+    }
+
+});
 
 
 /* =====================================================
@@ -4099,7 +5366,6 @@ mic.addEventListener(
 renderContacts();
 
 checkSession();
-
 
 </script>
 
