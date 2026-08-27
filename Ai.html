@@ -1084,7 +1084,8 @@ function addContact(){
     answer(
         "✅ مخاطب «" +
         escapeHTML(name) +
-        "» ذخیره شد."
+        "» ذخیره شد.",
+        voiceA
     );
 
 }
@@ -1349,7 +1350,8 @@ function callNumber(number){
             answer(
                 "📞 در حال تماس با " +
                 number +
-                "..."
+                "...",
+                voiceA
             );
 
             return;
@@ -1426,7 +1428,8 @@ function smsContact(
             answer(
                 "✉️ پیام برای " +
                 escapeHTML(contact.name) +
-                " ارسال شد."
+                " ارسال شد.",
+                voiceA
             );
 
             return;
@@ -1657,7 +1660,8 @@ function volumeUp(){
     }
 
     answer(
-        "🔊 صدا زیاد شد."
+        "🔊 صدا زیاد شد.",
+        voiceA
     );
 
 }
@@ -1676,7 +1680,8 @@ function volumeDown(){
     }
 
     answer(
-        "🔉 صدا کم شد."
+        "🔉 صدا کم شد.",
+        voiceA
     );
 
 }
@@ -1699,7 +1704,8 @@ function musicPlay(){
     }
 
     answer(
-        "🎵 موسیقی پخش شد."
+        "🎵 موسیقی پخش شد.",
+        voiceA
     );
 
 }
@@ -1718,7 +1724,8 @@ function musicStop(){
     }
 
     answer(
-        "⏹️ موسیقی متوقف شد."
+        "⏹️ موسیقی متوقف شد.",
+        voiceA
     );
 
 }
@@ -1737,7 +1744,8 @@ function musicNext(){
     }
 
     answer(
-        "⏭️ آهنگ بعدی."
+        "⏭️ آهنگ بعدی.",
+        voiceA
     );
 
 }
@@ -1756,7 +1764,8 @@ function musicPrevious(){
     }
 
     answer(
-        "⏮️ آهنگ قبلی."
+        "⏮️ آهنگ قبلی.",
+        voiceA
     );
 
 }
@@ -1777,7 +1786,8 @@ function flashlightOn(){
             );
 
             answer(
-                "🔦 چراغ قوه روشن شد."
+                "🔦 چراغ قوه روشن شد.",
+                voiceA
             );
 
             return;
@@ -1805,7 +1815,8 @@ function flashlightOff(){
             );
 
             answer(
-                "🔦 چراغ قوه خاموش شد."
+                "🔦 چراغ قوه خاموش شد.",
+                voiceA
             );
 
             return;
@@ -1835,7 +1846,8 @@ function wifi(){
             Android.wifiSettings();
 
             answer(
-                "📶 تنظیمات Wi-Fi باز شد."
+                "📶 تنظیمات Wi-Fi باز شد.",
+                voiceA
             );
 
             return;
@@ -1845,7 +1857,8 @@ function wifi(){
     }
 
     answer(
-        "❌ Wi-Fi در دسترس نیست."
+        "❌ Wi-Fi در دسترس نیست.",
+        voiceD
     );
 
 }
@@ -1864,7 +1877,8 @@ function bluetooth(){
             Android.bluetoothSettings();
 
             answer(
-                "🔵 تنظیمات بلوتوث باز شد."
+                "🔵 تنظیمات بلوتوث باز شد.",
+                voiceA
             );
 
             return;
@@ -1874,7 +1888,8 @@ function bluetooth(){
     }
 
     answer(
-        "❌ بلوتوث در دسترس نیست."
+        "❌ بلوتوث در دسترس نیست.",
+        voiceD
     );
 
 }
@@ -1893,7 +1908,8 @@ function mobileData(){
             Android.mobileDataSettings();
 
             answer(
-                "📡 تنظیمات اینترنت همراه باز شد."
+                "📡 تنظیمات اینترنت همراه باز شد.",
+                voiceA
             );
 
             return;
@@ -1903,7 +1919,8 @@ function mobileData(){
     }
 
     answer(
-        "❌ اینترنت همراه در دسترس نیست."
+        "❌ اینترنت همراه در دسترس نیست.",
+        voiceD
     );
 
 }
@@ -1922,7 +1939,8 @@ function locationSettings(){
             Android.locationSettings();
 
             answer(
-                "📍 تنظیمات مکان باز شد."
+                "📍 تنظیمات مکان باز شد.",
+                voiceA
             );
 
             return;
@@ -1932,7 +1950,8 @@ function locationSettings(){
     }
 
     answer(
-        "❌ تنظیمات مکان در دسترس نیست."
+        "❌ تنظیمات مکان در دسترس نیست.",
+        voiceD
     );
 
 }
@@ -1951,7 +1970,8 @@ function hotspot(){
             Android.hotspotSettings();
 
             answer(
-                "📡 تنظیمات هات‌اسپات باز شد."
+                "📡 تنظیمات هات‌اسپات باز شد.",
+                voiceA
             );
 
             return;
@@ -1961,7 +1981,8 @@ function hotspot(){
     }
 
     answer(
-        "❌ هات‌اسپات در دسترس نیست."
+        "❌ هات‌اسپات در دسترس نیست.",
+        voiceD
     );
 
 }
@@ -1984,7 +2005,8 @@ function brightnessUp(){
     }
 
     answer(
-        "☀️ نور صفحه زیاد شد."
+        "☀️ نور صفحه زیاد شد.",
+        voiceA
     );
 
 }
@@ -2003,7 +2025,8 @@ function brightnessDown(){
     }
 
     answer(
-        "🌙 نور صفحه کم شد."
+        "🌙 نور صفحه کم شد.",
+        voiceA
     );
 
 }
@@ -2033,7 +2056,8 @@ function camera(){
     }
 
     answer(
-        "❌ دوربین در دسترس نیست."
+        "❌ دوربین در دسترس نیست.",
+        voiceD
     );
 
 }
@@ -2063,7 +2087,8 @@ function gallery(){
     }
 
     answer(
-        "❌ گالری در دسترس نیست."
+        "❌ گالری در دسترس نیست.",
+        voiceD
     );
 
 }
@@ -2491,7 +2516,8 @@ function processSpeech(
         commandMode = false;
 
         answer(
-            "باشه."
+            "باشه.",
+            voiceA
         );
 
         setStatus(
@@ -3120,7 +3146,8 @@ renderContacts();
 answer(
     "👋 سلام! من اهورا هستم.<br>" +
     "بگو:<br>" +
-    "<b>Ahoora AI</b>"
+    "<b>Ahoora AI</b>",
+    voiceE
 );
 
 setStatus(
