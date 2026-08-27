@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -2207,11 +2208,10 @@ function initSpeech(){
     recognition.lang =
         "fa-IR";
 
-    recognition.continuous =
-        false;
+    // حالت پیوسته: میکروفن همیشه روشن می‌ماند و قطع نمی‌شود
+    recognition.continuous = true;
 
-    recognition.interimResults =
-        false;
+    recognition.interimResults = false;
 
     recognition.maxAlternatives =
         3;
@@ -2305,23 +2305,7 @@ function initSpeech(){
             event.error
         );
 
-        if(
-            event.error === "no-speech" ||
-            event.error === "aborted"
-        ){
-
-            setTimeout(
-                function(){
-
-                    startListening();
-
-                },
-                600
-            );
-
-            return;
-        }
-
+        // اگر خطای عدم اجازه باشد، دیگر تلاش نکنیم
         if(
             event.error === "not-allowed"
         ){
@@ -2337,6 +2321,17 @@ function initSpeech(){
 
             return;
         }
+
+        // برای سایر خطاها (از جمله no-speech, aborted, network, ...)
+        // دوباره تلاش می‌کنیم تا میکروفن همیشه فعال بماند
+        setTimeout(
+            function(){
+
+                startListening();
+
+            },
+            300
+        );
 
     };
 
@@ -2364,14 +2359,15 @@ function initSpeech(){
 
         }
 
-
+        // اگر به هر دلیلی قطع شد، دوباره شروع می‌کنیم
+        // با تأخیر کم برای جلوگیری از قطع و وصل‌های مکرر
         setTimeout(
             function(){
 
                 startListening();
 
             },
-            600
+            200
         );
 
     };
@@ -2414,13 +2410,23 @@ function startListening(){
             e
         );
 
+        // اگر خطایی رخ داد، دوباره تلاش کنیم
+        setTimeout(
+            function(){
+
+                startListening();
+
+            },
+            500
+        );
+
     }
 
 }
 
 
 /* =====================================================
-   توقف شنود
+   توقف شنود (دستی)
 ===================================================== */
 
 function stopListening(){
@@ -3123,7 +3129,7 @@ setStatus(
 
 
 /* =====================================================
-   شروع خودکار شنود
+   شروع خودکار شنود با حالت پیوسته
 ===================================================== */
 
 setTimeout(
@@ -3139,3 +3145,4 @@ setTimeout(
 
 </body>
 </html>
+```
