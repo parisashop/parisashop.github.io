@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Ahoora AI</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:Arial,Tahoma,sans-serif;
+    background:#080812;color:white;height:100vh;overflow:hidden
+}
+button,input{font-family:inherit}
+button{cursor:pointer}
+.app{
+    width:100%;max-width:480px;height:100vh;margin:auto;padding:18px;
+    display:flex;flex-direction:column;align-items:center;
+    background:radial-gradient(circle at 50% 15%,#20204b,#080812 70%)
+}
+.header{width:100%;display:flex;justify-content:space-between;align-items:center}
+.title{
+    font-size:24px;font-weight:bold;
+    background:linear-gradient(135deg,#00d4ff,#7b2ffc,#ff6fd8);
+    -webkit-background-clip:text;color:transparent
+}
+.headerRight{display:flex;align-items:center;gap:7px}
+.time,.flameBox{
+    background:#ffffff0d;padding:7px 13px;border-radius:30px;color:#9da8c5
+}
+.flameBox{
+    color:#ff9d4d;background:#ff6a0015;border:1px solid #ff6a0030;
+    font-weight:bold;direction:ltr;box-shadow:0 0 20px #ff6a0015
+}
+.flameBox.empty{color:#ff5577;background:#ff224415;border-color:#ff224433}
+.aiSwitcher{
+    width:100%;display:flex;justify-content:center;align-items:center;gap:10px;
+    margin-top:8px;margin-bottom:4px;position:relative;z-index:30
+}
+.aiCard{
+    position:relative;min-width:135px;padding:11px 18px;border-radius:20px;
+    border:1px solid #ffffff12;background:#ffffff08;color:#9da8c5;
+    text-align:center;font-size:15px;font-weight:bold;overflow:hidden;
+    transition:transform .25s ease,box-shadow .25s ease,background .25s ease
+}
+.aiCard.active{color:white;background:linear-gradient(135deg,#0066ff22,#7200ff22,#ff6fd822);box-shadow:0 0 25px #0066ff22}
+.aiCard:active{transform:scale(.94)}
+.aiCard::before{
+    content:"";position:absolute;inset:-2px;
+    background:linear-gradient(90deg,transparent,#00d4ff66,#7b2ffc66,#ff6fd866,transparent);
+    transform:translateX(-100%);transition:transform .5s ease
+}
+.aiCard:hover::before{transform:translateX(100%)}
+.aiIcon{display:block;font-size:22px;margin-bottom:3px}.aiName{display:block}
+
+#chatyTransition{
+    position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;
+    background:radial-gradient(circle at center,#24105c,#080812 65%);overflow:hidden
+}
+.chatyTransitionContent{text-align:center;animation:chatyEnter .8s cubic-bezier(.2,.8,.2,1) forwards}
+.chatyLogo{
+    width:125px;height:125px;margin:auto;border-radius:35px;display:flex;align-items:center;
+    justify-content:center;font-size:58px;background:linear-gradient(135deg,#00d4ff,#7b2ffc,#ff4fd8);
+    box-shadow:0 0 50px #0066ff88,0 0 110px #7b2ffc55;
+    animation:chatyLogoPulse .8s ease-in-out infinite alternate
+}
+.chatyText{
+    margin-top:22px;font-size:34px;font-weight:bold;
+    background:linear-gradient(135deg,#00d4ff,#7b2ffc,#ff6fd8);
+    -webkit-background-clip:text;color:transparent
+}
+.chatyLoading{margin-top:12px;color:#9da8c5;font-size:14px}
+.chatyLoading::after{content:"";animation:chatyDots 1.2s infinite}
+@keyframes chatyEnter{
+    0%{opacity:0;transform:scale(.35) translateY(40px);filter:blur(15px)}
+    60%{opacity:1;transform:scale(1.08) translateY(0);filter:blur(0)}
+    100%{opacity:1;transform:scale(1)}
+}
+@keyframes chatyLogoPulse{
+    from{transform:scale(1);box-shadow:0 0 50px #0066ff88,0 0 110px #7b2ffc55}
+    to{transform:scale(1.08);box-shadow:0 0 80px #00d4ffbb,0 0 150px #ff4fd866}
+}
+@keyframes chatyDots{0%{content:""}33%{content:"."}66%{content:".."}100%{content:"..."}}
+
+.mainPage{width:100%;height:100%;display:flex;flex-direction:column;align-items:center}
+.orb-wrapper{width:230px;height:230px;display:flex;align-items:center;justify-content:center;margin:15px 0}
+.orb{
+    width:155px;height:155px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#008cff,#0033aa);
+    box-shadow:0 0 70px #0066ff88,0 0 130px #0066ff33;
+    display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite
+}
+.inner{width:70%;height:70%;border-radius:50%;background:radial-gradient(circle at 40% 30%,#ffffff99,transparent 70%)}
+.listening{background:radial-gradient(circle at 35% 30%,#00ff99,#0088ff);box-shadow:0 0 90px #00ff9988;animation:listen .8s infinite}
+.processing{background:radial-gradient(circle at 35% 30%,#ffcc00,#ff5500);animation:process .5s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes listen{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes process{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.mic{
+    width:78px;height:78px;border:0;border-radius:50%;
+    background:linear-gradient(135deg,#0066ff,#5500cc);color:white;font-size:34px;
+    box-shadow:0 10px 45px #0066ff88
+}
+.mic.active{background:linear-gradient(135deg,#ff2266,#bb0066);animation:mic 1s infinite}
+@keyframes mic{0%,100%{box-shadow:0 0 40px #ff006688}50%{box-shadow:0 0 90px #ff0066dd}}
+.status{margin:12px;padding:8px 20px;background:#ffffff0c;border-radius:30px;color:#aab4ce;text-align:center}
+.user{width:100%;min-height:52px;padding:15px;background:#ffffff08;border-radius:25px;text-align:center;overflow:hidden}
+.response{
+    width:100%;margin-top:12px;padding:18px;background:#ffffff08;border:1px solid #ffffff0d;
+    border-radius:25px;text-align:center;line-height:2;overflow:auto;max-height:210px
+}
+.small{color:#8993af;font-size:13px;margin-top:10px}
+.panel,.commandsPanel{
+    position:fixed;inset:0;background:#080812ee;z-index:500;display:none;overflow:auto;padding:20px
+}
+.panelBox,.commandsBox{
+    width:100%;max-width:450px;margin:20px auto;background:#151526;border-radius:30px;padding:22px
+}
+.panelTitle{font-size:22px;font-weight:bold;margin-bottom:15px}
+.input{
+    width:100%;border:1px solid #ffffff15;outline:none;border-radius:16px;padding:14px;
+    background:#ffffff08;color:white;margin-bottom:10px;font-size:16px
+}
+.primary{
+    width:100%;border:0;border-radius:16px;padding:14px;
+    background:linear-gradient(135deg,#0066ff,#7200ff);color:white;font-size:16px
+}
+.close{width:100%;margin-top:10px;padding:13px;border:0;border-radius:16px;background:#ffffff10;color:white}
+.privacy{margin-top:15px;padding:14px;border-radius:16px;background:#00ff9910;border:1px solid #00ff9920;color:#a8e8ca;line-height:1.9;font-size:13px;text-align:center}
+.savedContact{background:#ffffff08;border-radius:18px;padding:13px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.deleteContact{border:0;border-radius:12px;padding:8px 12px;background:#ff224422;color:#ff6688}
+.settingsBtn,.commandsBtn{
+    position:fixed;bottom:18px;width:48px;height:48px;border:0;border-radius:50%;
+    background:#ffffff10;color:white;font-size:22px;z-index:20
+}
+.settingsBtn{left:18px}.commandsBtn{right:18px}
+.commandsPanel{z-index:600}
+.commandsTitle{font-size:23px;font-weight:bold;text-align:center;margin-bottom:20px}
+.commandCard{background:#ffffff08;border:1px solid #ffffff0c;border-radius:18px;padding:14px;margin-bottom:10px;line-height:1.9}
+.commandCard b{color:#00d4ff}
+
+#loginScreen{
+    position:fixed;inset:0;z-index:9999;
+    background:radial-gradient(circle at 50% 15%,#20204b,#080812 70%);
+    display:flex;align-items:center;justify-content:center;padding:20px
+}
+.loginBox{
+    width:100%;max-width:420px;background:#151526;border:1px solid #ffffff12;border-radius:30px;
+    padding:25px;box-shadow:0 20px 80px #00000088;text-align:center
+}
+.loginLogo{
+    font-size:32px;font-weight:bold;margin-bottom:10px;
+    background:linear-gradient(135deg,#00d4ff,#7b2ffc,#ff6fd8);
+    -webkit-background-clip:text;color:transparent
+}
+.loginDescription{color:#9da8c5;line-height:1.9;margin-bottom:20px}
+.loginInput{
+    width:100%;padding:15px;border-radius:16px;border:1px solid #ffffff15;outline:none;
+    background:#ffffff08;color:white;font-size:16px;direction:ltr;text-align:left;margin-bottom:12px
+}
+.loginButton{
+    width:100%;padding:15px;border:0;border-radius:16px;color:white;font-size:16px;
+    background:linear-gradient(135deg,#0066ff,#7200ff)
+}
+#otpArea{display:none}.loginMessage{min-height:25px;margin-top:12px;color:#aab4ce;line-height:1.8}
+.userEmail{color:#00d4ff;direction:ltr;margin:10px 0 15px}
+.logoutButton{width:100%;margin-top:12px;padding:12px;border:0;border-radius:14px;background:#ff224422;color:#ff6688}
+</style>
+</head>
+
+<body>
+
+<div id="loginScreen">
+    <div class="loginBox">
+        <div class="loginLogo">✦ Ahoora AI</div>
+        <div class="loginDescription">برای استفاده از قابلیت‌های Ahoora AI<br>ابتدا وارد حساب خود شوید.</div>
+
+        <div id="emailArea">
+            <input class="loginInput" id="emailInput" type="email" autocomplete="email" placeholder="ایمیل شما">
+            <button class="loginButton" id="sendOtpButton">📩 دریافت کد ورود</button>
+        </div>
+
+        <div id="otpArea">
+            <div>کد ارسال شده به:</div>
+            <div class="userEmail" id="loginEmail"></div>
+            <input class="loginInput" id="otpInput" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="کد ۶ رقمی">
+            <button class="loginButton" id="verifyOtpButton">🔐 ورود به Ahoora AI</button>
+            <button class="close" id="backEmailButton">تغییر ایمیل</button>
+        </div>
+
+        <div class="loginMessage" id="loginMessage"></div>
+    </div>
+</div>
+
+<div class="app">
+<div class="mainPage">
+
+    <div class="header">
+        <div class="title">✦ Ahoora AI</div>
+        <div class="headerRight">
+            <div class="flameBox" id="flameBox">🔥 <span id="flameCount">10</span></div>
+            <div class="time" id="time">--:--</div>
+        </div>
+    </div>
+
+    <div class="aiSwitcher">
+        <div class="aiCard active" id="ahooraAiCard">
+            <span class="aiIcon">✦</span><span class="aiName">Ahoora AI</span>
+        </div>
+        <div class="aiCard" id="chatyAiCard">
+            <span class="aiIcon">💬</span><span class="aiName">Chaty AI</span>
+        </div>
+    </div>
+
+    <div class="orb-wrapper">
+        <div class="orb" id="orb"><div class="inner"></div></div>
+    </div>
+
+    <button class="mic" id="mic">🎙️</button>
+
+    <div class="status" id="status">آماده</div>
+
+    <div class="user" id="user">منتظر فرمان صوتی...</div>
+
+    <div class="response" id="response">
+        سلام! من اهورا هستم.<br><br>
+        برای استفاده از دستیار صوتی می‌توانی فرمان بدهی.
+    </div>
+
+    <div class="small">Ahoora AI • روزانه ۱۰ شعله</div>
+</div>
+</div>
+
+<button class="settingsBtn" id="settingsBtn">⚙</button>
+<button class="commandsBtn" id="commandsBtn">❔</button>
+
+<div class="panel" id="panel">
+    <div class="panelBox">
+        <div class="panelTitle">👤 مخاطبین Ahoora AI</div>
+        <input class="input" id="contactName" placeholder="نام فارسی، مثلاً پدرم">
+        <input class="input" id="contactNumber" inputmode="tel" placeholder="شماره تلفن">
+        <button class="primary" id="saveContact">ذخیره مخاطب</button>
+        <div id="contactsList"></div>
+        <div class="privacy">🔒 اطلاعات مخاطبین فقط روی دستگاه ذخیره می‌شوند.</div>
+        <button class="close" id="closePanel">بستن</button>
+        <button class="logoutButton" id="logoutButton">خروج از حساب</button>
+    </div>
+</div>
+
+<div class="commandsPanel" id="commandsPanel">
+    <div class="commandsBox">
+        <div class="commandsTitle">🎙️ دستورات Ahoora AI</div>
+        <div class="commandCard">📱 <b>برنامه‌ها</b><br>«واتساپ رو باز کن»<br>«تلگرام رو باز کن»<br>«کروم رو باز کن»</div>
+        <div class="commandCard">📞 <b>تماس</b><br>«با پدرم تماس بگیر»<br>«به دایی زنگ بزن»</div>
+        <div class="commandCard">✉️ <b>پیام</b><br>«به پدرم پیام بده سلام»</div>
+        <div class="commandCard">🔦 <b>چراغ قوه</b><br>«چراغ قوه رو روشن کن»<br>«چراغ قوه رو خاموش کن»</div>
+        <div class="commandCard">📶 <b>اتصالات</b><br>«وای فای رو باز کن»<br>«بلوتوث رو باز کن»<br>«اینترنت همراه رو باز کن»<br>«هات اسپات رو باز کن»<br>«مکان رو باز کن»</div>
+        <div class="commandCard">🔊 <b>صدا</b><br>«صدا رو زیاد کن»<br>«صدا رو کم کن»</div>
+        <div class="commandCard">☀️ <b>روشنایی صفحه</b><br>«نور رو زیاد کن»<br>«نور رو کم کن»</div>
+        <div class="commandCard">🎵 <b>موسیقی</b><br>«موزیک رو پخش کن»<br>«موزیک رو متوقف کن»<br>«آهنگ بعدی»<br>«آهنگ قبلی»</div>
+        <div class="commandCard">📷 <b>دوربین و گالری</b><br>«دوربین رو باز کن»<br>«گالری رو باز کن»</div>
+        <div class="commandCard">🔎 <b>جستجو</b><br>«در گوگل آب و هوا رو جستجو کن»</div>
+        <div class="commandCard">🕐 <b>ساعت</b><br>«ساعت چنده؟»</div>
+        <button class="close" id="closeCommands">بستن</button>
+    </div>
+</div>
+
+<div id="chatyTransition">
+    <div class="chatyTransitionContent">
+        <div class="chatyLogo">💬</div>
+        <div class="chatyText">Chaty AI</div>
+        <div class="chatyLoading">در حال ورود به Chaty AI</div>
+    </div>
+</div>
+
+<script>
+/* ================= SUPABASE ================= */
+const SUPABASE_URL="https://vkqmlfumodqmmylchgdx.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+
+/* ================= ELEMENTS ================= */
+var loginScreen=document.getElementById("loginScreen");
+var emailArea=document.getElementById("emailArea");
+var otpArea=document.getElementById("otpArea");
+var emailInput=document.getElementById("emailInput");
+var otpInput=document.getElementById("otpInput");
+var loginEmail=document.getElementById("loginEmail");
+var sendOtpButton=document.getElementById("sendOtpButton");
+var verifyOtpButton=document.getElementById("verifyOtpButton");
+var backEmailButton=document.getElementById("backEmailButton");
+var loginMessage=document.getElementById("loginMessage");
+
+var orb=document.getElementById("orb");
+var mic=document.getElementById("mic");
+var statusBox=document.getElementById("status");
+var userBox=document.getElementById("user");
+var responseBox=document.getElementById("response");
+var timeBox=document.getElementById("time");
+var panel=document.getElementById("panel");
+var settingsBtn=document.getElementById("settingsBtn");
+var closePanel=document.getElementById("closePanel");
+var logoutButton=document.getElementById("logoutButton");
+var contactName=document.getElementById("contactName");
+var contactNumber=document.getElementById("contactNumber");
+var saveContact=document.getElementById("saveContact");
+var contactsList=document.getElementById("contactsList");
+var commandsBtn=document.getElementById("commandsBtn");
+var commandsPanel=document.getElementById("commandsPanel");
+var closeCommands=document.getElementById("closeCommands");
+
+var flameCount=document.getElementById("flameCount");
+var flameBox=document.getElementById("flameBox");
+var currentFlames=10;
+
+/* ================= AUTH ================= */
+var isLoggedIn=false;
+var currentUser=null;
+
+function showLogin(){
+    isLoggedIn=false;currentUser=null;loginScreen.style.display="flex";stopListening();
+}
+function showApp(){
+    isLoggedIn=true;loginScreen.style.display="none";
+    setStatus("آماده — بگو «Ahoora AI»");
+    responseBox.innerHTML="👋 سلام! من اهورا هستم.<br><br>بگو:<br><b>Ahoora AI</b>";
+    loadFlames();
+}
+
+async function checkSession(){
+    try{
+        var result=await supabaseClient.auth.getSession();
+        if(result.error){console.log(result.error);showLogin();return}
+        var session=result.data.session;
+        if(session){currentUser=session.user;showApp()}else showLogin();
+    }catch(error){console.log(error);showLogin()}
+}
+
+supabaseClient.auth.onAuthStateChange(function(event,session){
+    if(session){currentUser=session.user;showApp()}else showLogin();
+});
+
+/* ================= FLAMES ================= */
+function updateFlameUI(){
+    flameCount.textContent=currentFlames;
+    if(currentFlames<=0) flameBox.classList.add("empty");
+    else flameBox.classList.remove("empty");
+}
+
+async function loadFlames(){
+    if(!isLoggedIn)return;
+    try{
+        var result=await supabaseClient.rpc("get_my_ai_credits");
+        if(result.error){console.log("Flame error:",result.error);return}
+        var data=result.data||{};
+        currentFlames=Number(data.flames);
+        if(!Number.isFinite(currentFlames))currentFlames=0;
+        updateFlameUI();
+    }catch(error){console.log("Flame load error:",error)}
+}
+
+async function consumeFlame(){
+    if(!isLoggedIn)return false;
+    try{
+        var result=await supabaseClient.rpc("use_ai_flame");
+        if(result.error){
+            console.log("Consume flame error:",result.error);
+            answer("❌ خطا در بررسی شارژ Ahoora AI.");
+            return false;
+        }
+        var data=result.data||{};
+        currentFlames=Number(data.flames);
+        if(!Number.isFinite(currentFlames))currentFlames=0;
+        updateFlameUI();
+
+        if(!data.success){
+            answer("🔥 شارژ Ahoora AI تمام شده است.<br><br>⏳ بعد از ۲۴ ساعت دوباره ۱۰ شعله دریافت می‌کنی.");
+            setStatus("🔥 شعله‌ای باقی نمانده");
+            return false;
+        }
+        return true;
+    }catch(error){
+        console.log(error);
+        answer("❌ خطا در ارتباط با سرور شارژ.");
+        return false;
+    }
+}
+
+/* ================= LOGIN ================= */
+async function sendOTP(){
+    var email=emailInput.value.trim().toLowerCase();
+    if(!email){loginMessage.textContent="لطفاً ایمیل را وارد کن.";return}
+    if(!email.includes("@")){loginMessage.textContent="ایمیل وارد شده صحیح نیست.";return}
+
+    sendOtpButton.disabled=true;sendOtpButton.textContent="در حال ارسال...";loginMessage.textContent="";
+    try{
+        var result=await supabaseClient.auth.signInWithOtp({email:email,options:{shouldCreateUser:true}});
+        if(result.error){
+            console.log(result.error);
+            loginMessage.textContent="❌ "+result.error.message;
+            sendOtpButton.disabled=false;sendOtpButton.textContent="📩 دریافت کد ورود";return;
+        }
+        loginEmail.textContent=email;emailArea.style.display="none";otpArea.style.display="block";
+        loginMessage.textContent="✅ کد ورود به ایمیل شما ارسال شد.";otpInput.focus();
+    }catch(error){console.log(error);loginMessage.textContent="❌ خطا در ارسال کد."}
+    sendOtpButton.disabled=false;sendOtpButton.textContent="📩 دریافت کد ورود";
+}
+
+async function verifyOTP(){
+    var email=emailInput.value.trim().toLowerCase();
+    var token=otpInput.value.replace(/[^0-9]/g,"");
+    if(token.length!==6){loginMessage.textContent="❌ کد باید ۶ رقمی باشد.";return}
+
+    verifyOtpButton.disabled=true;verifyOtpButton.textContent="در حال بررسی...";
+    try{
+        var result=await supabaseClient.auth.verifyOtp({email:email,token:token,type:"email"});
+        if(result.error){
+            console.log(result.error);
+            loginMessage.textContent="❌ کد صحیح نیست یا منقضی شده است.";
+            verifyOtpButton.disabled=false;verifyOtpButton.textContent="🔐 ورود به Ahoora AI";return;
+        }
+        currentUser=result.data.user;showApp();
+    }catch(error){console.log(error);loginMessage.textContent="❌ خطا در تأیید کد."}
+    verifyOtpButton.disabled=false;verifyOtpButton.textContent="🔐 ورود به Ahoora AI";
+}
+
+backEmailButton.addEventListener("click",function(){
+    otpArea.style.display="none";emailArea.style.display="block";otpInput.value="";loginMessage.textContent="";
+});
+sendOtpButton.addEventListener("click",sendOTP);
+verifyOtpButton.addEventListener("click",verifyOTP);
+otpInput.addEventListener("input",function(){this.value=this.value.replace(/[^0-9]/g,"")});
+
+logoutButton.addEventListener("click",async function(){
+    try{await supabaseClient.auth.signOut();panel.style.display="none"}catch(e){console.log(e)}
+});
+
+/* ================= ANDROID ================= */
+function android(){return typeof window.Android!=="undefined"}
+
+/* ================= CLOCK ================= */
+function clock(){
+    var d=new Date();
+    timeBox.textContent=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+}
+clock();setInterval(clock,10000);
+
+/* ================= STATUS ================= */
+function setStatus(text,type){
+    statusBox.textContent=text;
+    orb.classList.remove("listening","processing");
+    if(type)orb.classList.add(type);
+}
+
+/* ================= NORMALIZE ================= */
+function normalize(text){
+    return String(text)
+        .replace(/[۰-۹]/g,function(d){return String("۰۱۲۳۴۵۶۷۸۹".indexOf(d))})
+        .replace(/ي/g,"ی").replace(/ك/g,"ک").replace(/ۀ/g,"ه")
+        .replace(/[،,]/g," ").replace(/\s+/g," ").trim().toLowerCase();
+}
+
+/* ================= VOICE ================= */
+function playVoice(file){try{var audio=new Audio(file);audio.play().catch(function(){})}catch(e){}}
+function voiceA(){playVoice("a.mp3")}
+function voiceB(){playVoice("b.mp3")}
+function voiceC(){playVoice("c.mp3")}
+function voiceD(){playVoice("d.mp3")}
+function voiceE(){playVoice("e.mp3")}
+function voiceF(){playVoice("f.mp3")}
+function voiceG(){playVoice("g.mp3")}
+
+function answer(text,voice){
+    responseBox.innerHTML=text;
+    if(voice)voice();
+}
+
+/* ================= CONTACTS ================= */
+function getContacts(){
+    try{return JSON.parse(localStorage.getItem("ahoora_contacts")||"[]")}catch(e){return []}
+}
+function saveContacts(data){localStorage.setItem("ahoora_contacts",JSON.stringify(data))}
+function isPersianName(name){return /[\u0600-\u06FF]/.test(name)}
+function escapeHTML(text){
+    return String(text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")
+}
+function addContact(){
+    if(!isLoggedIn)return;
+    var name=contactName.value.trim();
+    var number=normalize(contactNumber.value).replace(/[^0-9+]/g,"");
+    if(!name){alert("لطفاً نام مخاطب را وارد کن.");return}
+    if(!isPersianName(name)){alert("نام مخاطب باید فارسی باشد.");return}
+    if(number.length<10){alert("شماره تلفن صحیح نیست.");return}
+
+    var contacts=getContacts();
+    var old=contacts.findIndex(function(c){return normalize(c.name)===normalize(name)});
+    if(old>=0)contacts[old].number=number;
+    else contacts.push({name:name,number:number});
+    saveContacts(contacts);contactName.value="";contactNumber.value="";renderContacts();
+    answer("✅ مخاطب «"+escapeHTML(name)+"» ذخیره شد.");
+}
+function renderContacts(){
+    var contacts=getContacts();contactsList.innerHTML="";
+    if(!contacts.length){
+        contactsList.innerHTML="<div style='color:#8993af;margin-top:15px;text-align:center'>هنوز مخاطبی ذخیره نشده است.</div>";return;
+    }
+    contacts.forEach(function(contact,index){
+        var div=document.createElement("div");div.className="savedContact";
+        div.innerHTML="<div><b>"+escapeHTML(contact.name)+"</b><br><small>"+escapeHTML(contact.number)+"</small></div><button class='deleteContact' data-index='"+index+"'>حذف</button>";
+        contactsList.appendChild(div);
+    });
+    document.querySelectorAll(".deleteContact").forEach(function(btn){
+        btn.onclick=function(){
+            var index=Number(this.dataset.index),contacts=getContacts();
+            contacts.splice(index,1);saveContacts(contacts);renderContacts();
+        }
+    });
+}
+saveContact.addEventListener("click",addContact);
+settingsBtn.addEventListener("click",function(){
+    if(!isLoggedIn)return;renderContacts();panel.style.display="block";
+});
+closePanel.addEventListener("click",function(){panel.style.display="none"});
+
+/* ================= COMMANDS ================= */
+commandsBtn.addEventListener("click",function(){
+    if(!isLoggedIn)return;commandsPanel.style.display="block";
+});
+closeCommands.addEventListener("click",function(){commandsPanel.style.display="none"});
+
+function findContact(name){
+    var contacts=getContacts(),target=normalize(name);
+    return contacts.find(function(c){return normalize(c.name)===target||target.indexOf(normalize(c.name))>=0});
+}
+
+var relationAliases={
+    "پدر":"پدرم","پدرم":"پدرم","بابا":"پدرم","بابام":"پدرم",
+    "مادر":"مادرم","مادرم":"مادرم","مامان":"مادرم","مامانم":"مادرم",
+    "دایی":"دایی","داییم":"دایی","عمو":"عمو","عموم":"عمو",
+    "عمه":"عمه","عمم":"عمه","خاله":"خاله","خالم":"خاله",
+    "برادر":"برادرم","برادرم":"برادرم","خواهر":"خواهرم","خواهرم":"خواهرم"
+};
+function normalizeRelation(text){
+    var t=normalize(text);
+    for(var key in relationAliases)if(t.indexOf(key)>=0)return relationAliases[key];
+    return null;
+}
+
+/* ================= CALL / SMS ================= */
+function callNumber(number){
+    if(!isLoggedIn)return;
+    number=normalize(number).replace(/[^0-9+]/g,"");
+    if(!number)return;
+    if(android()){
+        try{Android.makeCall(number);answer("📞 در حال تماس با "+number+"...");return}catch(e){}
+    }
+    window.location.href="tel:"+number;
+}
+function callContact(name){
+    var contact=findContact(name);
+    if(!contact){answer("❌ برای «"+escapeHTML(name)+"» شماره‌ای ذخیره نشده است.",voiceD);return}
+    callNumber(contact.number);
+}
+function smsContact(name,message){
+    var contact=findContact(name);
+    if(!contact){answer("❌ برای «"+escapeHTML(name)+"» شماره‌ای ذخیره نشده است.",voiceD);return}
+    if(android()){
+        try{Android.sendSMS(contact.number,message);answer("✉️ پیام برای "+escapeHTML(contact.name)+" ارسال شد.");return}catch(e){}
+    }
+    window.location.href="sms:"+contact.number+"?body="+encodeURIComponent(message);
+}
+function extractMessage(text){
+    var result=text.replace(/به\s+/g,"").replace(/پیامک/g,"").replace(/پیام/g,"").replace(/بفرست/g,"").replace(/بده/g,"").replace(/ارسال کن/g,"").trim();
+    var contacts=getContacts();
+    for(var i=0;i<contacts.length;i++){
+        var n=normalize(contacts[i].name);
+        if(result.indexOf(n)>=0){result=result.replace(n,"").trim();break}
+    }
+    return result;
+}
+function extractContactFromCommand(text){
+    var contacts=getContacts();
+    for(var i=0;i<contacts.length;i++){
+        if(text.indexOf(normalize(contacts[i].name))>=0)return contacts[i].name;
+    }
+    return normalizeRelation(text);
+}
+
+/* ================= APPS ================= */
+var apps={
+    "واتساپ":"com.whatsapp","تلگرام":"org.telegram.messenger","اینستاگرام":"com.instagram.android",
+    "یوتیوب":"com.google.android.youtube","کروم":"com.android.chrome","فیسبوک":"com.facebook.katana",
+    "ایکس":"com.twitter.android","تیک تاک":"com.zhiliaoapp.musically","اسنپ":"com.snapp.passenger",
+    "دیوار":"ir.divar","روبیکا":"ir.resaneh1.iptv","مایکت":"ir.mservices.market",
+    "بازار":"com.farsitel.bazaar","تنظیمات":"com.android.settings"
+};
+function openApp(packageName,name){
+    if(!isLoggedIn)return false;
+    if(android()){
+        try{
+            Android.openAppByName(name);
+            answer("👁️ چشم، "+name+" را باز کردم.",voiceA);return true;
+        }catch(e){}
+    }
+    answer("❌ نتوانستم "+name+" را باز کنم.",voiceB);return false;
+}
+function openNamedApp(text){
+    for(var name in apps){
+        if(text.indexOf(name)>=0&&(text.indexOf("باز")>=0||text.indexOf("اجرا")>=0||text.indexOf("برو")>=0)){
+            openApp(apps[name],name);return true;
+        }
+    }
+    return false;
+}
+
+/* ================= DEVICE COMMANDS ================= */
+function volumeUp(){if(android())try{Android.volumeUp()}catch(e){}answer("🔊 صدا زیاد شد.")}
+function volumeDown(){if(android())try{Android.volumeDown()}catch(e){}answer("🔉 صدا کم شد.")}
+function musicPlay(){if(android())try{Android.toggleMusic()}catch(e){}answer("🎵 موسیقی پخش شد.")}
+function musicStop(){if(android())try{Android.toggleMusic()}catch(e){}answer("⏹️ موسیقی متوقف شد.")}
+function musicNext(){if(android())try{Android.musicNext()}catch(e){}answer("⏭️ آهنگ بعدی.")}
+function musicPrevious(){if(android())try{Android.musicPrevious()}catch(e){}answer("⏮️ آهنگ قبلی.")}
+function flashlightOn(){
+    if(android())try{Android.flashlight(true);answer("🔦 چراغ قوه روشن شد.");return}catch(e){}
+    answer("❌ چراغ قوه در دسترس نیست.",voiceD);
+}
+function flashlightOff(){
+    if(android())try{Android.flashlight(false);answer("🔦 چراغ قوه خاموش شد.");return}catch(e){}
+    answer("❌ چراغ قوه در دسترس نیست.",voiceD);
+}
+function wifi(){
+    if(android())try{Android.wifiSettings();answer("📶 تنظیمات Wi-Fi باز شد.");return}catch(e){}
+    answer("❌ Wi-Fi در دسترس نیست.");
+}
+function bluetooth(){
+    if(android())try{Android.bluetoothSettings();answer("🔵 تنظیمات بلوتوث باز شد.");return}catch(e){}
+    answer("❌ بلوتوث در دسترس نیست.");
+}
+function mobileData(){
+    if(android())try{Android.mobileDataSettings();answer("📡 تنظیمات اینترنت همراه باز شد.");return}catch(e){}
+    answer("❌ اینترنت همراه در دسترس نیست.");
+}
+function locationSettings(){
+    if(android())try{Android.locationSettings();answer("📍 تنظیمات مکان باز شد.");return}catch(e){}
+    answer("❌ تنظیمات مکان در دسترس نیست.");
+}
+function hotspot(){
+    if(android())try{Android.hotspotSettings();answer("📡 تنظیمات هات‌اسپات باز شد.");return}catch(e){}
+    answer("❌ هات‌اسپات در دسترس نیست.");
+}
+function brightnessUp(){if(android())try{Android.brightnessUp()}catch(e){}answer("☀️ نور صفحه زیاد شد.")}
+function brightnessDown(){if(android())try{Android.brightnessDown()}catch(e){}answer("🌙 نور صفحه کم شد.")}
+function camera(){
+    if(android())try{Android.openCamera();answer("📷 دوربین باز شد.",voiceA);return}catch(e){}
+    answer("❌ دوربین در دسترس نیست.");
+}
+function gallery(){
+    if(android())try{Android.openGallery();answer("🖼️ گالری باز شد.",voiceA);return}catch(e){}
+    answer("❌ گالری در دسترس نیست.");
+}
+function sayTime(){
+    var d=new Date(),h=String(d.getHours()).padStart(2,"0"),m=String(d.getMinutes()).padStart(2,"0");
+    answer("🕐 الان ساعت "+h+":"+m+" است.",voiceF);
+}
+function googleSearch(query){
+    var url="https://www.google.com/search?q="+encodeURIComponent(query);
+    if(android())try{Android.openUrl(url);answer("🔎 در گوگل برای «"+escapeHTML(query)+"» جستجو کردم.",voiceG);return}catch(e){}
+    window.location.href=url;
+}
+
+/* ================= SPEECH ================= */
+var recognition=null,listening=false,commandMode=false,manualStop=false,waitingForCommand=false,autoRestart=true;
+
+function initSpeech(){
+    var Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!Speech){answer("❌ تشخیص گفتار در WebView در دسترس نیست.",voiceD);return false}
+    recognition=new Speech();
+    recognition.lang="fa-IR";recognition.continuous=false;recognition.interimResults=false;recognition.maxAlternatives=3;
+
+    recognition.onstart=function(){
+        if(!isLoggedIn){stopListening();return}
+        listening=true;mic.classList.add("active");
+        setStatus(commandMode?"🎙️ فرمانت را بگو...":"🎙️ منتظر Ahoora AI...","listening");
+    };
+
+    recognition.onresult=function(event){
+        if(!isLoggedIn)return;
+        var text=event.results[0][0].transcript.trim();
+        userBox.textContent=text;
+        var t=normalize(text);
+
+        if(!commandMode){
+            if(t.indexOf("ahoora ai")>=0||t.indexOf("ahoor a i")>=0||t.indexOf("اهورا ای")>=0||t.indexOf("اهورا آی")>=0||t.indexOf("اهورا")>=0){
+                commandMode=true;waitingForCommand=true;
+                answer("👋 بله؟ فرمانت را بگو.",voiceE);
+                setStatus("🎙️ فرمان صوتی فعال شد");
+                setTimeout(function(){if(commandMode&&isLoggedIn)startListening()},1200);
+            }
+            return;
+        }
+        waitingForCommand=false;
+        processSpeech(text,true);
+    };
+
+    recognition.onerror=function(event){
+        listening=false;mic.classList.remove("active");console.log("Speech error:",event.error);
+        if(autoRestart&&!manualStop&&isLoggedIn){
+            if(event.error==="no-speech"||event.error==="aborted"){
+                setTimeout(function(){if(autoRestart&&!manualStop&&isLoggedIn)startListening()},600);return;
+            }
+            if(event.error==="not-allowed"){
+                answer("❌ اجازه استفاده از میکروفن داده نشده است.",voiceD);
+                setStatus("اجازه میکروفن لازم است");
+            }
+        }
+    };
+
+    recognition.onend=function(){
+        listening=false;mic.classList.remove("active");orb.classList.remove("listening","processing");
+        if(manualStop){
+            manualStop=false;autoRestart=false;setStatus("میکروفن خاموش شد");return;
+        }
+        if(autoRestart&&isLoggedIn)setTimeout(function(){if(!manualStop&&autoRestart&&isLoggedIn)startListening()},600);
+    };
+    return true;
+}
+
+function startListening(){
+    if(!isLoggedIn||listening)return;
+    if(!recognition)if(!initSpeech())return;
+    autoRestart=true;manualStop=false;
+    try{recognition.start()}catch(e){console.log("start error",e)}
+}
+function stopListening(){
+    manualStop=true;autoRestart=false;listening=false;
+    if(recognition)try{recognition.stop()}catch(e){}
+    mic.classList.remove("active");orb.classList.remove("listening","processing");setStatus("میکروفن خاموش شد");
+}
+
+/* ================= PROCESS SPEECH ================= */
+async function processSpeech(original,fromButton){
+    if(!isLoggedIn)return;
+    var text=normalize(original);
+    setStatus("در حال پردازش...","processing");
+
+    if(fromButton)commandMode=true;
+
+    if(text==="لغو"||text==="بیخیال"||text==="خروج"){
+        commandMode=false;answer("باشه.");setStatus("آماده — بگو «Ahoora AI»");return;
+    }
+
+    /* هر فرمانی که از Ahoora AI پردازش می‌شود، یک شعله مصرف می‌کند */
+    var allowed=await consumeFlame();
+    if(!allowed)return;
+
+    if((text.indexOf("چراغ قوه")>=0||text.indexOf("فلاش")>=0)&&(text.indexOf("خاموش")>=0||text.indexOf("قطع")>=0)){flashlightOff();return}
+    if((text.indexOf("چراغ قوه")>=0||text.indexOf("فلاش")>=0)&&(text.indexOf("روشن")>=0||text.indexOf("فعال")>=0)){flashlightOn();return}
+
+    if(text.indexOf("وای فای")>=0||text.indexOf("وایفای")>=0||text.indexOf("wifi")>=0){wifi();return}
+    if(text.indexOf("بلوتوث")>=0||text.indexOf("bluetooth")>=0){bluetooth();return}
+    if(text.indexOf("اینترنت همراه")>=0||text.indexOf("دیتای همراه")>=0||text.indexOf("دیتا همراه")>=0||text.indexOf("داده همراه")>=0){mobileData();return}
+    if(text.indexOf("مکان")>=0||text.indexOf("لوکیشن")>=0||text.indexOf("gps")>=0){locationSettings();return}
+    if(text.indexOf("هات اسپات")>=0||text.indexOf("هات‌اسپات")>=0||text.indexOf("نقطه اتصال")>=0){hotspot();return}
+
+    if((text.indexOf("نور")>=0||text.indexOf("روشنایی")>=0)&&(text.indexOf("زیاد")>=0||text.indexOf("بالا")>=0)){brightnessUp();return}
+    if((text.indexOf("نور")>=0||text.indexOf("روشنایی")>=0)&&(text.indexOf("کم")>=0||text.indexOf("پایین")>=0)){brightnessDown();return}
+
+    if((text.indexOf("آهنگ")>=0||text.indexOf("موزیک")>=0||text.indexOf("موسیقی")>=0)&&(text.indexOf("بعدی")>=0||text.indexOf("بعد")>=0)){musicNext();return}
+    if((text.indexOf("آهنگ")>=0||text.indexOf("موزیک")>=0||text.indexOf("موسیقی")>=0)&&(text.indexOf("قبلی")>=0||text.indexOf("قبل")>=0)){musicPrevious();return}
+    if((text.indexOf("آهنگ")>=0||text.indexOf("موزیک")>=0||text.indexOf("موسیقی")>=0)&&(text.indexOf("توقف")>=0||text.indexOf("متوقف")>=0||text.indexOf("قطع")>=0||text.indexOf("بایست")>=0)){musicStop();return}
+    if((text.indexOf("آهنگ")>=0||text.indexOf("موزیک")>=0||text.indexOf("موسیقی")>=0)&&(text.indexOf("پخش")>=0||text.indexOf("اجرا")>=0||text.indexOf("ادامه")>=0||text.indexOf("شروع")>=0)){musicPlay();return}
+
+    if(text.indexOf("صدا")>=0&&(text.indexOf("زیاد")>=0||text.indexOf("بالا")>=0)){volumeUp();return}
+    if(text.indexOf("صدا")>=0&&(text.indexOf("کم")>=0||text.indexOf("پایین")>=0)){volumeDown();return}
+    if(text.indexOf("ساعت")>=0){sayTime();return}
+    if(text.indexOf("دوربین")>=0||text.indexOf("عکس بگیر")>=0){camera();return}
+    if(text.indexOf("گالری")>=0||text.indexOf("عکس هام")>=0||text.indexOf("عکسها")>=0){gallery();return}
+
+    if(text.indexOf("تماس")>=0||text.indexOf("زنگ")>=0||text.indexOf("بگیر")>=0){
+        var contact=extractContactFromCommand(text);
+        if(contact){callContact(contact);return}
+        var match=text.match(/(\+?[0-9]{10,15})/);
+        if(match){callNumber(match[1]);return}
+    }
+
+    if(text.indexOf("پیام")>=0||text.indexOf("پیامک")>=0){
+        var smsContactName=extractContactFromCommand(text);
+        if(smsContactName){
+            var message=extractMessage(text);if(!message)message="سلام";
+            smsContact(smsContactName,message);return;
+        }
+    }
+
+    var searchText=null;
+    if(text.indexOf("در گوگل")>=0||text.indexOf("توی گوگل")>=0){
+        searchText=text.replace("در گوگل","").replace("توی گوگل","").replace("جستجو","").replace("کن","").trim();
+    }else if(text.indexOf("گوگل")===0){
+        searchText=text.replace("گوگل","").replace("جستجو","").replace("کن","").trim();
+    }
+    if(searchText){googleSearch(searchText);return}
+
+    if(openNamedApp(text))return;
+
+    var url=original.match(/https?:\/\/[^\s]+/i);
+    if(url){
+        if(android())try{Android.openUrl(url[0])}catch(e){}
+        else window.location.href=url[0];
+        return;
+    }
+
+    if(text.indexOf("سلام")>=0){answer("👋 سلام! من اهورا هستم.",voiceE);return}
+
+    answer("🤔 متوجه فرمان نشدم.<br><br>مثلاً بگو:<br>«چراغ قوه رو روشن کن»<br>«وای فای رو باز کن»<br>«بلوتوث رو باز کن»<br>«آهنگ بعدی»<br>«واتساپ رو باز کن»<br>«با پدرم تماس بگیر»<br>«به پدرم پیام بده سلام»",voiceD);
+}
+
+/* ================= MIC ================= */
+mic.addEventListener("click",function(){
+    if(!isLoggedIn)return;
+    if(listening)stopListening();
+    else{manualStop=false;autoRestart=true;startListening()}
+});
+
+/* ================= CHATY ================= */
+var chatyAiCard=document.getElementById("chatyAiCard");
+var ahooraAiCard=document.getElementById("ahooraAiCard");
+var chatyTransition=document.getElementById("chatyTransition");
+var chatyLoadingStarted=false;
+
+chatyAiCard.addEventListener("click",function(){
+    if(!isLoggedIn||chatyLoadingStarted)return;
+    chatyLoadingStarted=true;
+    chatyAiCard.classList.add("active");ahooraAiCard.classList.remove("active");
+    chatyTransition.style.display="flex";
+
+    var chatyPage=document.createElement("iframe");
+    chatyPage.style.position="fixed";chatyPage.style.width="100%";chatyPage.style.height="100%";
+    chatyPage.style.border="0";chatyPage.style.left="0";chatyPage.style.top="0";
+    chatyPage.style.opacity="0";chatyPage.style.pointerEvents="none";chatyPage.style.zIndex="-1";
+    chatyPage.src="chaty.html";
+    document.body.appendChild(chatyPage);
+
+    setTimeout(function(){
+        chatyPage.style.opacity="1";chatyPage.style.pointerEvents="auto";chatyPage.style.zIndex="10001";
+        chatyTransition.style.display="none";
+    },1400);
+});
+
+/* ================= START ================= */
+renderContacts();
+checkSession();
+</script>
+</body>
+</html>
