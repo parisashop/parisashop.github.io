@@ -1,25 +1,16 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
-
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1,
-               maximum-scale=1,
-               user-scalable=no,
-               viewport-fit=cover">
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
 <title>Chaty AI</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-/* =====================================================
-   RESET
-===================================================== */
 
 *{
     box-sizing:border-box;
@@ -27,73 +18,347 @@
     padding:0;
 }
 
-
-html,
-body{
+html,body{
     width:100%;
     height:100%;
-    min-height:100dvh;
+    overflow:hidden;
 }
 
-
 body{
+    font-family:Arial,Tahoma,sans-serif;
+    background:#000;
+    color:#fff;
+}
 
-    font-family:
-        Tahoma,
-        Arial,
-        sans-serif;
+/* =========================
+   APP
+========================= */
+
+.app{
+    width:100%;
+    max-width:600px;
+    height:100dvh;
+    min-height:100vh;
+    margin:auto;
+    background:#000;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    height:70px;
+    min-height:70px;
 
     background:#000;
 
-    color:#fff;
-
-    overflow:hidden;
-
-    overscroll-behavior:none;
-}
-
-
-/* =====================================================
-   MAIN APP
-===================================================== */
-
-.chaty{
-
-    width:100%;
-
-    max-width:520px;
-
-    height:100dvh;
-
-    min-height:100dvh;
-
-    margin:auto;
-
-    background:#0b0b0b;
+    border-bottom:1px solid #222;
 
     display:flex;
+    align-items:center;
+    justify-content:space-between;
 
-    flex-direction:column;
+    padding:
+        8px
+        14px
+        8px
+        14px;
 
-    overflow:hidden;
-
+    position:relative;
+    z-index:10;
 }
 
+.headerRight{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
 
-/* =====================================================
-   HEADER
-===================================================== */
+.character{
+    width:45px;
+    height:45px;
 
-.header{
+    border-radius:50%;
 
-    height:72px;
+    background:#222;
 
-    min-height:72px;
+    object-fit:cover;
+
+    border:1px solid #444;
+}
+
+.characterInfo{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.characterName{
+    font-size:16px;
+    font-weight:bold;
+}
+
+.characterModel{
+    font-size:11px;
+    color:#888;
+}
+
+.headerButton{
+    width:42px;
+    height:42px;
+
+    border:1px solid #333;
+
+    border-radius:50%;
 
     background:#111;
 
-    border-bottom:
-        1px solid #292929;
+    color:#fff;
+
+    font-size:20px;
+}
+
+/* =========================
+   CHAT
+========================= */
+
+.chat{
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:
+        12px
+        12px
+        110px
+        12px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:12px;
+
+    scroll-behavior:smooth;
+}
+
+.message{
+    max-width:84%;
+
+    padding:11px 14px;
+
+    border-radius:18px;
+
+    line-height:1.8;
+
+    font-size:15px;
+
+    word-wrap:break-word;
+
+    white-space:pre-wrap;
+}
+
+.userMessage{
+    align-self:flex-start;
+
+    background:#fff;
+
+    color:#000;
+
+    border-bottom-left-radius:5px;
+}
+
+.aiMessage{
+    align-self:flex-end;
+
+    background:#181818;
+
+    color:#fff;
+
+    border:1px solid #292929;
+
+    border-bottom-right-radius:5px;
+}
+
+.messageName{
+    font-size:10px;
+    color:#777;
+    margin-bottom:3px;
+}
+
+/* =========================
+   TYPING
+========================= */
+
+.typing{
+    display:none;
+
+    align-self:flex-end;
+
+    background:#181818;
+
+    border:1px solid #292929;
+
+    border-radius:18px;
+
+    padding:10px 15px;
+
+    color:#aaa;
+}
+
+.dot{
+    display:inline-block;
+
+    width:6px;
+    height:6px;
+
+    background:#aaa;
+
+    border-radius:50%;
+
+    margin:0 2px;
+
+    animation:blink 1s infinite;
+}
+
+.dot:nth-child(2){
+    animation-delay:.2s;
+}
+
+.dot:nth-child(3){
+    animation-delay:.4s;
+}
+
+@keyframes blink{
+    0%,100%{
+        opacity:.2;
+    }
+
+    50%{
+        opacity:1;
+    }
+}
+
+/* =========================
+   INPUT AREA
+========================= */
+
+.inputArea{
+    position:absolute;
+
+    left:10px;
+    right:10px;
+    bottom:12px;
+
+    min-height:58px;
+
+    background:#111;
+
+    border:1px solid #2b2b2b;
+
+    border-radius:30px;
+
+    display:flex;
+
+    align-items:flex-end;
+
+    gap:8px;
+
+    padding:7px;
+
+    z-index:20;
+
+    box-shadow:
+        0 5px 30px #000;
+}
+
+#messageInput{
+    flex:1;
+
+    min-width:0;
+
+    max-height:110px;
+
+    resize:none;
+
+    border:0;
+
+    outline:none;
+
+    background:transparent;
+
+    color:#fff;
+
+    font-family:inherit;
+
+    font-size:15px;
+
+    line-height:1.6;
+
+    padding:
+        9px
+        8px;
+
+}
+
+#messageInput::placeholder{
+    color:#777;
+}
+
+.sendButton{
+    width:44px;
+    height:44px;
+
+    flex-shrink:0;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#fff;
+
+    color:#000;
+
+    font-size:20px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+}
+
+.sendButton:disabled{
+    opacity:.4;
+}
+
+/* =========================
+   CHARACTER PANEL
+========================= */
+
+.panel{
+    position:fixed;
+
+    inset:0;
+
+    z-index:100;
+
+    display:none;
+
+    background:#000;
+
+    padding:
+        15px
+        12px
+        20px;
+
+    overflow-y:auto;
+}
+
+.panelHeader{
+    height:55px;
 
     display:flex;
 
@@ -101,468 +366,30 @@ body{
 
     justify-content:space-between;
 
-    padding:
-        8px
-        14px
-        5px;
-
-    padding-top:
-        max(
-            8px,
-            env(safe-area-inset-top)
-        );
-
-    flex-shrink:0;
-
+    margin-bottom:10px;
 }
 
-
-.headerTitle{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
+.panelTitle{
+    font-size:20px;
+    font-weight:bold;
 }
 
-
-.logo{
-
-    width:42px;
-
-    height:42px;
-
-    flex-shrink:0;
+.closeButton{
+    width:40px;
+    height:40px;
 
     border-radius:50%;
 
-    background:#fff;
-
-    color:#000;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:21px;
-
-    font-weight:bold;
-
-}
-
-
-.title{
-
-    font-size:18px;
-
-    font-weight:bold;
-
-}
-
-
-.subtitle{
-
-    font-size:11px;
-
-    color:#888;
-
-    margin-top:3px;
-
-    max-width:130px;
-
-    overflow:hidden;
-
-    text-overflow:ellipsis;
-
-    white-space:nowrap;
-
-}
-
-
-.characterButton{
-
-    border:0;
-
-    background:#1d1d1d;
-
-    color:#fff;
-
-    border-radius:20px;
-
-    padding:
-        9px
-        12px;
-
-    font-family:inherit;
-
-    font-size:12px;
-
-    white-space:nowrap;
-
-    flex-shrink:0;
-
-}
-
-
-/* =====================================================
-   MESSAGES
-===================================================== */
-
-.messages{
-
-    flex:1;
-
-    min-height:0;
-
-    overflow-y:auto;
-
-    overflow-x:hidden;
-
-    padding:
-        15px
-        12px
-        10px;
-
-    background:
-        radial-gradient(
-            circle at center,
-            #151515,
-            #070707 75%
-        );
-
-    -webkit-overflow-scrolling:touch;
-
-    overscroll-behavior:contain;
-
-}
-
-
-.message{
-
-    max-width:82%;
-
-    padding:
-        10px
-        13px;
-
-    margin-bottom:9px;
-
-    border-radius:16px;
-
-    line-height:1.8;
-
-    font-size:14px;
-
-    word-wrap:break-word;
-
-    overflow-wrap:anywhere;
-
-}
-
-
-.message.bot{
-
-    background:#202020;
-
-    border-top-right-radius:4px;
-
-    margin-left:auto;
-
-}
-
-
-.message.user{
-
-    background:#fff;
-
-    color:#000;
-
-    border-top-left-radius:4px;
-
-    margin-right:auto;
-
-}
-
-
-/* =====================================================
-   TYPING
-===================================================== */
-
-.typing{
-
-    color:#aaa;
-
-    font-size:13px;
-
-    display:none;
-
-    padding:
-        4px
-        12px;
+    border:1px solid #333;
 
     background:#111;
 
-    flex-shrink:0;
-
-}
-
-
-/* =====================================================
-   INPUT AREA
-===================================================== */
-
-.inputArea{
-
-    background:#111;
-
-    border-top:
-        1px solid #292929;
-
-    padding:
-        7px
-        9px;
-
-    padding-bottom:
-        max(
-            7px,
-            env(safe-area-inset-bottom)
-        );
-
-    display:flex;
-
-    gap:8px;
-
-    align-items:flex-end;
-
-    flex-shrink:0;
-
-    min-height:60px;
-
-}
-
-
-/* =====================================================
-   TEXT INPUT
-===================================================== */
-
-#messageInput{
-
-    flex:1;
-
-    width:0;
-
-    min-height:44px;
-
-    max-height:120px;
-
-    resize:none;
-
-    border:
-        1px solid #333;
-
-    outline:none;
-
-    border-radius:22px;
-
-    padding:
-        11px
-        15px;
-
-    background:#1d1d1d;
-
-    color:#fff;
-
-    font-family:inherit;
-
-    font-size:14px;
-
-    line-height:1.5;
-
-    direction:rtl;
-
-}
-
-
-#messageInput::placeholder{
-
-    color:#777;
-
-}
-
-
-/* =====================================================
-   SEND BUTTON
-===================================================== */
-
-#sendButton{
-
-    width:45px;
-
-    height:45px;
-
-    min-width:45px;
-
-    border:0;
-
-    border-radius:50%;
-
-    background:#fff;
-
-    color:#000;
-
-    font-size:19px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    flex-shrink:0;
-
-}
-
-
-/* =====================================================
-   WELCOME
-===================================================== */
-
-.welcome{
-
-    text-align:center;
-
-    padding:
-        35px
-        15px;
-
-    color:#aaa;
-
-}
-
-
-.welcomeLogo{
-
-    width:75px;
-
-    height:75px;
-
-    margin:
-        0
-        auto
-        15px;
-
-    border-radius:50%;
-
-    background:#fff;
-
-    color:#000;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:35px;
-
-}
-
-
-.welcome h2{
-
-    color:#fff;
-
-    margin-bottom:8px;
-
-}
-
-
-.welcome p{
-
-    line-height:2;
-
-    font-size:13px;
-
-}
-
-
-/* =====================================================
-   CHARACTER PANEL
-===================================================== */
-
-.characterPanel{
-
-    position:fixed;
-
-    inset:0;
-
-    background:#000e;
-
-    z-index:100;
-
-    display:none;
-
-    padding:
-        15px;
-
-    padding-top:
-        max(
-            15px,
-            env(safe-area-inset-top)
-        );
-
-    padding-bottom:
-        max(
-            15px,
-            env(safe-area-inset-bottom)
-        );
-
-    overflow-y:auto;
-
-}
-
-
-.characterBox{
-
-    width:100%;
-
-    max-width:480px;
-
-    margin:
-        10px
-        auto;
-
-    background:#151515;
-
-    border:
-        1px solid #292929;
-
-    border-radius:25px;
-
-    padding:18px;
-
-}
-
-
-.characterTitle{
-
-    text-align:center;
+    color:white;
 
     font-size:20px;
-
-    font-weight:bold;
-
-    margin-bottom:15px;
-
 }
 
-
-.characters{
-
+.characterGrid{
     display:grid;
 
     grid-template-columns:
@@ -570,287 +397,305 @@ body{
 
     gap:10px;
 
+    padding-bottom:20px;
 }
 
+.characterCard{
+    min-height:120px;
 
-.character{
-
-    border:
-        1px solid #303030;
-
-    background:#202020;
-
-    color:#fff;
+    border:1px solid #292929;
 
     border-radius:18px;
 
-    padding:14px 8px;
-
-    text-align:center;
-
-    font-family:inherit;
-
-    font-size:13px;
-
-}
-
-
-.character:active{
-
-    background:#fff;
-
-    color:#000;
-
-}
-
-
-.charIcon{
-
-    width:54px;
-
-    height:54px;
-
-    border-radius:50%;
-
-    background:#333;
-
-    margin:
-        0
-        auto
-        8px;
+    background:#111;
 
     display:flex;
+
+    flex-direction:column;
 
     align-items:center;
 
     justify-content:center;
 
-    font-size:25px;
-
-}
-
-
-.closeCharacters{
-
-    width:100%;
-
-    border:0;
-
-    margin-top:14px;
-
-    padding:13px;
-
-    border-radius:15px;
-
-    background:#303030;
+    gap:8px;
 
     color:#fff;
 
-    font-family:inherit;
+    padding:10px;
+}
+
+.characterCard img{
+    width:62px;
+    height:62px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:1px solid #444;
+}
+
+.characterCard span{
+    font-size:13px;
+}
+
+/* =========================
+   ERROR PANEL
+========================= */
+
+.errorBox{
+    display:none;
+
+    margin:10px;
+
+    padding:12px;
+
+    border:1px solid #552222;
+
+    background:#180909;
+
+    border-radius:15px;
+
+    color:#ff9999;
+
+    font-size:12px;
+
+    line-height:1.8;
+
+    direction:ltr;
+
+    text-align:left;
+
+    white-space:pre-wrap;
+
+    max-height:220px;
+
+    overflow:auto;
+}
+
+.clearError{
+    margin-top:8px;
+
+    padding:7px 12px;
+
+    border:1px solid #555;
+
+    background:#111;
+
+    color:white;
+
+    border-radius:10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-height:650px){
+
+    .header{
+        height:62px;
+        min-height:62px;
+    }
+
+    .character{
+        width:38px;
+        height:38px;
+    }
+
+    .headerButton{
+        width:38px;
+        height:38px;
+    }
+
+    .chat{
+        padding-bottom:100px;
+    }
 
 }
 
-
-/* =====================================================
-   SMALL PHONES
-===================================================== */
-
-@media(max-height:600px){
-
-    .header{
-
-        height:66px;
-
-        min-height:66px;
-
-        padding-top:
-            max(
-                5px,
-                env(safe-area-inset-top)
-            );
-
-    }
-
-
-    .logo{
-
-        width:38px;
-
-        height:38px;
-
-    }
-
-
-    .characterButton{
-
-        padding:
-            7px
-            10px;
-
-    }
-
-
-    .messages{
-
-        padding-top:8px;
-
-    }
-
+@media(min-width:601px){
 
     .inputArea{
+        left:50%;
 
-        min-height:56px;
+        right:auto;
 
-        padding:
-            5px
-            8px;
+        transform:translateX(-50%);
 
-        padding-bottom:
-            max(
-                5px,
-                env(safe-area-inset-bottom)
-            );
-
-    }
-
-
-    #messageInput{
-
-        min-height:42px;
-
-    }
-
-
-    #sendButton{
-
-        width:43px;
-
-        height:43px;
-
-        min-width:43px;
-
+        width:
+            min(580px,calc(100% - 20px));
     }
 
 }
 
+/* =========================
+   LOGIN
+========================= */
 
-/* =====================================================
-   VERY SMALL PHONES
-===================================================== */
+#loginScreen{
+    position:fixed;
 
-@media(max-height:480px){
+    inset:0;
 
-    .header{
+    z-index:9999;
 
-        height:60px;
+    background:#000;
 
-        min-height:60px;
+    display:none;
 
-    }
+    align-items:center;
 
+    justify-content:center;
 
-    .title{
-
-        font-size:16px;
-
-    }
-
-
-    .subtitle{
-
-        display:none;
-
-    }
-
-
-    .logo{
-
-        width:36px;
-
-        height:36px;
-
-    }
-
-
-    .welcome{
-
-        padding-top:15px;
-
-        padding-bottom:15px;
-
-    }
-
-
-    .welcomeLogo{
-
-        width:55px;
-
-        height:55px;
-
-        font-size:27px;
-
-    }
-
+    padding:20px;
 }
 
+.loginBox{
+    width:100%;
+    max-width:400px;
 
-/* =====================================================
-   LANDSCAPE
-===================================================== */
+    background:#111;
 
-@media(
-    orientation:landscape
-){
+    border:1px solid #292929;
 
-    .characterBox{
+    border-radius:25px;
 
-        margin:
-            5px
-            auto;
+    padding:25px;
 
-    }
-
+    text-align:center;
 }
 
+.loginTitle{
+    font-size:28px;
+    font-weight:bold;
+
+    margin-bottom:10px;
+}
+
+.loginText{
+    color:#888;
+
+    line-height:1.8;
+
+    margin-bottom:20px;
+}
+
+.loginInput{
+    width:100%;
+
+    padding:14px;
+
+    background:#080808;
+
+    border:1px solid #333;
+
+    border-radius:15px;
+
+    color:white;
+
+    outline:none;
+
+    margin-bottom:10px;
+
+    font-size:15px;
+
+    direction:ltr;
+}
+
+.loginButton{
+    width:100%;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:15px;
+
+    background:white;
+
+    color:black;
+
+    font-size:15px;
+}
 
 </style>
-
 </head>
-
 
 <body>
 
+<!-- =========================
+     LOGIN
+========================= -->
 
-<!-- =====================================================
+<div id="loginScreen">
+
+    <div class="loginBox">
+
+        <div class="loginTitle">
+            ✦ Chaty AI
+        </div>
+
+        <div class="loginText">
+            برای استفاده از Chaty AI وارد حساب خود شوید.
+        </div>
+
+        <input
+            id="emailInput"
+            class="loginInput"
+            type="email"
+            placeholder="Email">
+
+        <button
+            id="loginButton"
+            class="loginButton">
+
+            ورود با ایمیل
+
+        </button>
+
+        <div
+            id="loginMessage"
+            style="
+            color:#888;
+            margin-top:12px;
+            line-height:1.7;
+            ">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
      CHATY
-===================================================== -->
+========================= -->
 
-<div class="chaty">
-
+<div class="app">
 
     <!-- HEADER -->
 
     <div class="header">
 
+        <div class="headerRight">
 
-        <div class="headerTitle">
+            <img
+                id="headerCharacter"
+                class="character"
+                src="https://ui-avatars.com/api/?name=Chaty&background=222&color=fff">
 
-
-            <div class="logo">
-                C
-            </div>
-
-
-            <div>
-
-                <div class="title">
-                    Chaty AI
-                </div>
-
+            <div class="characterInfo">
 
                 <div
-                    class="subtitle"
-                    id="characterName">
+                    id="characterName"
+                    class="characterName">
+
+                    Chaty AI
+
+                </div>
+
+                <div class="characterModel">
 
                     Gemma 4 31B
 
@@ -858,536 +703,446 @@ body{
 
             </div>
 
-
         </div>
 
 
         <button
-            class="characterButton"
-            id="characterButton">
+            id="characterButton"
+            class="headerButton">
 
-            👤 کاراکتر
+            ☰
 
         </button>
 
-
     </div>
 
 
-
-    <!-- =================================================
-         MESSAGES
-    ================================================= -->
+    <!-- CHAT -->
 
     <div
-        class="messages"
-        id="messages">
+        id="chat"
+        class="chat">
 
+        <div class="message aiMessage">
 
-        <div class="welcome">
-
-
-            <div class="welcomeLogo">
-                C
+            <div class="messageName">
+                Chaty AI
             </div>
 
-
-            <h2>
-                Chaty AI
-            </h2>
-
-
-            <p>
-
-                سلام 👋
-
-                <br>
-
-                من Chaty AI هستم.
-
-                <br><br>
-
-                یک کاراکتر انتخاب کن تا
-                با شخصیت انتخاب‌شده با تو صحبت کنم.
-
-            </p>
-
+            سلام 👋
+            من Chaty AI هستم.
+            هر چیزی می‌خواهی بپرس.
 
         </div>
 
 
+        <div
+            id="typing"
+            class="typing">
+
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+
+        </div>
+
     </div>
 
 
-
-    <!-- TYPING -->
+    <!-- ERROR -->
 
     <div
-        class="typing"
-        id="typing">
-
-        Chaty در حال فکر کردن...
+        id="errorBox"
+        class="errorBox">
 
     </div>
 
 
-
-    <!-- =================================================
-         INPUT
-    ================================================= -->
+    <!-- INPUT -->
 
     <div class="inputArea">
 
-
         <textarea
             id="messageInput"
-            placeholder="پیامت را بنویس..."
-            rows="1"></textarea>
-
+            rows="1"
+            placeholder="پیامت را بنویس..."></textarea>
 
         <button
-            id="sendButton">
+            id="sendButton"
+            class="sendButton">
 
             ➤
 
         </button>
 
-
     </div>
-
 
 </div>
 
 
-
-<!-- =====================================================
+<!-- =========================
      CHARACTER PANEL
-===================================================== -->
+========================= -->
 
 <div
-    class="characterPanel"
-    id="characterPanel">
+    id="characterPanel"
+    class="panel">
 
+    <div class="panelHeader">
 
-    <div class="characterBox">
-
-
-        <div class="characterTitle">
-
-            🎭 انتخاب شخصیت Chaty AI
-
+        <div class="panelTitle">
+            انتخاب شخصیت Chaty AI
         </div>
 
+        <button
+            id="closeCharacterPanel"
+            class="closeButton">
 
-        <div class="characters">
+            ×
 
+        </button>
 
-            <button
-                class="character"
-                data-character="مسی">
-
-                <div class="charIcon">
-                    ⚽
-                </div>
-
-                مسی
-
-            </button>
+    </div>
 
 
-            <button
-                class="character"
-                data-character="رونالدو">
-
-                <div class="charIcon">
-                    ⚽
-                </div>
-
-                رونالدو
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="پرسپولیس">
-
-                <div class="charIcon">
-                    🔴
-                </div>
-
-                پرسپولیس
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="استقلال">
-
-                <div class="charIcon">
-                    🔵
-                </div>
-
-                استقلال
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="بریکینگ بد">
-
-                <div class="charIcon">
-                    🧪
-                </div>
-
-                بریکینگ بد
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="باب اسفنجی">
-
-                <div class="charIcon">
-                    🧽
-                </div>
-
-                باب اسفنجی
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="BTS">
-
-                <div class="charIcon">
-                    🎤
-                </div>
-
-                BTS
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="دیوید بکام">
-
-                <div class="charIcon">
-                    ⚽
-                </div>
-
-                دیوید بکام
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="هکر">
-
-                <div class="charIcon">
-                    💻
-                </div>
-
-                هکر
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="شاعر">
-
-                <div class="charIcon">
-                    📜
-                </div>
-
-                شاعر
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="آشپز">
-
-                <div class="charIcon">
-                    👨‍🍳
-                </div>
-
-                آشپز
-
-            </button>
-
-
-            <button
-                class="character"
-                data-character="تراپیست">
-
-                <div class="charIcon">
-                    🧠
-                </div>
-
-                تراپیست
-
-            </button>
-
-
-        </div>
+    <div class="characterGrid">
 
 
         <button
-            class="closeCharacters"
-            id="closeCharacters">
+            class="characterCard"
+            data-name="مسی"
+            data-image="https://ui-avatars.com/api/?name=Messi&background=222&color=fff">
 
-            بستن
+            <img src="https://ui-avatars.com/api/?name=Messi&background=222&color=fff">
+
+            <span>⚽ مسی</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="رونالدو"
+            data-image="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff">
+
+            <span>⚽ رونالدو</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="پرسپولیس"
+            data-image="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff">
+
+            <span>🔴 پرسپولیس</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="استقلال"
+            data-image="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff">
+
+            <span>🔵 استقلال</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="بریکینگ بد"
+            data-image="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff">
+
+            <span>🧪 بریکینگ بد</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="باب اسفنجی"
+            data-image="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff">
+
+            <span>🧽 باب اسفنجی</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="BTS"
+            data-image="https://ui-avatars.com/api/?name=BTS&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=BTS&background=222&color=fff">
+
+            <span>🎤 BTS</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="دیوید بکام"
+            data-image="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff">
+
+            <span>⚽ دیوید بکام</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="هکر"
+            data-image="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff">
+
+            <span>💻 هکر</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="شاعر"
+            data-image="https://ui-avatars.com/api/?name=Poet&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Poet&background=222&color=fff">
+
+            <span>📜 شاعر</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="آشپز"
+            data-image="https://ui-avatars.com/api/?name=Chef&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Chef&background=222&color=fff">
+
+            <span>👨‍🍳 آشپز</span>
+
+        </button>
+
+
+        <button
+            class="characterCard"
+            data-name="تراپیست"
+            data-image="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff">
+
+            <img src="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff">
+
+            <span>🧠 تراپیست</span>
 
         </button>
 
 
     </div>
 
-
 </div>
-
 
 
 <script>
 
 /* =====================================================
-   CHATY CONFIG
+   SUPABASE
 ===================================================== */
 
-const CHATY_API =
-"https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
+const SUPABASE_URL =
+"https://vkqmlfumodqmmylchgdx.supabase.co";
 
 
-const MODEL =
-"google/gemma-4-31B-it";
+const SUPABASE_ANON_KEY =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+
+
+const supabaseClient =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
 
 /* =====================================================
-   STATE
+   EDGE FUNCTION
 ===================================================== */
 
-let selectedCharacter =
-"دستیار هوش مصنوعی";
+const EDGE_FUNCTION_URL =
+"https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
+
+
+/* =====================================================
+   MODEL
+===================================================== */
+
+const AI_MODEL =
+"google/gemma-4-31B-it";
 
 
 /* =====================================================
    ELEMENTS
 ===================================================== */
 
-const messages =
-document.getElementById(
-    "messages"
-);
+const chat =
+document.getElementById("chat");
 
-
-const input =
-document.getElementById(
-    "messageInput"
-);
-
+const messageInput =
+document.getElementById("messageInput");
 
 const sendButton =
-document.getElementById(
-    "sendButton"
-);
-
+document.getElementById("sendButton");
 
 const typing =
-document.getElementById(
-    "typing"
-);
+document.getElementById("typing");
 
+const errorBox =
+document.getElementById("errorBox");
 
 const characterPanel =
-document.getElementById(
-    "characterPanel"
-);
-
+document.getElementById("characterPanel");
 
 const characterButton =
-document.getElementById(
-    "characterButton"
-);
+document.getElementById("characterButton");
 
+const closeCharacterPanel =
+document.getElementById("closeCharacterPanel");
 
-const closeCharacters =
-document.getElementById(
-    "closeCharacters"
-);
-
+const headerCharacter =
+document.getElementById("headerCharacter");
 
 const characterName =
-document.getElementById(
-    "characterName"
-);
+document.getElementById("characterName");
 
 
 /* =====================================================
-   CHARACTER PANEL
+   CHARACTER
 ===================================================== */
 
-characterButton.onclick =
-function(){
+let selectedCharacter =
+"Chaty AI";
 
-    characterPanel.style.display =
+
+let selectedImage =
+"https://ui-avatars.com/api/?name=Chaty&background=222&color=fff";
+
+
+/* =====================================================
+   ERROR SYSTEM
+===================================================== */
+
+function showError(title,details){
+
+    errorBox.style.display =
         "block";
 
-};
+
+    errorBox.innerHTML =
+        "<b>" +
+        escapeHTML(title) +
+        "</b>\n\n" +
+
+        escapeHTML(details) +
+
+        "\n\n" +
+
+        "<button class='clearError' " +
+        "onclick='clearError()'>" +
+
+        "پاک کردن خطا" +
+
+        "</button>";
+
+}
 
 
-closeCharacters.onclick =
-function(){
+function clearError(){
 
-    characterPanel.style.display =
+    errorBox.style.display =
         "none";
 
-};
+    errorBox.textContent =
+        "";
+
+}
 
 
 /* =====================================================
-   SELECT CHARACTER
-===================================================== */
-
-document
-.querySelectorAll(
-    ".character"
-)
-.forEach(
-function(button){
-
-    button.onclick =
-    function(){
-
-        selectedCharacter =
-            this.dataset.character;
-
-
-        characterName.textContent =
-            selectedCharacter +
-            " • Gemma 4 31B";
-
-
-        addBotMessage(
-            "🎭 شخصیت «" +
-            escapeHTML(
-                selectedCharacter
-            ) +
-            "» انتخاب شد."
-        );
-
-
-        characterPanel.style.display =
-            "none";
-
-
-        input.focus();
-
-    };
-
-});
-
-
-/* =====================================================
-   ESCAPE HTML
+   ESCAPE
 ===================================================== */
 
 function escapeHTML(text){
 
     return String(text)
 
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
 
 /* =====================================================
-   ADD USER MESSAGE
+   MESSAGE
 ===================================================== */
 
-function addUserMessage(text){
+function addMessage(
+    text,
+    type
+){
 
     const div =
-        document.createElement(
-            "div"
-        );
-
+    document.createElement("div");
 
     div.className =
-        "message user";
-
-
-    div.innerHTML =
-        escapeHTML(text)
-        .replace(
-            /\n/g,
-            "<br>"
-        );
-
-
-    messages.appendChild(
-        div
+    "message " +
+    (
+        type === "user"
+        ? "userMessage"
+        : "aiMessage"
     );
 
 
-    scrollBottom();
+    if(type !== "user"){
 
-}
+        div.innerHTML =
+        "<div class='messageName'>" +
 
+        escapeHTML(
+            selectedCharacter
+        ) +
 
-/* =====================================================
-   ADD BOT MESSAGE
-===================================================== */
+        "</div>" +
 
-function addBotMessage(text){
+        escapeHTML(text);
 
-    const div =
-        document.createElement(
-            "div"
-        );
+    }else{
 
-
-    div.className =
-        "message bot";
-
-
-    div.innerHTML =
+        div.textContent =
         text;
 
+    }
 
-    messages.appendChild(
-        div
+
+    chat.insertBefore(
+        div,
+        typing
     );
 
 
@@ -1402,68 +1157,103 @@ function addBotMessage(text){
 
 function scrollBottom(){
 
-    requestAnimationFrame(
+    setTimeout(
         function(){
 
-            messages.scrollTop =
-                messages.scrollHeight;
+            chat.scrollTop =
+            chat.scrollHeight;
 
-        }
+        },
+        50
     );
 
 }
 
 
 /* =====================================================
-   CHATY API
+   CHARACTER PANEL
 ===================================================== */
 
-async function askChaty(message){
+characterButton.addEventListener(
+"click",
+function(){
 
-    const response =
-        await fetch(
-            CHATY_API,
-            {
+    characterPanel.style.display =
+    "block";
 
-                method:"POST",
+});
 
-                headers:{
-                    "Content-Type":
-                        "application/json"
-                },
 
-                body:JSON.stringify({
+closeCharacterPanel.addEventListener(
+"click",
+function(){
 
-                    message:
-                        message,
+    characterPanel.style.display =
+    "none";
 
-                    character:
-                        selectedCharacter,
+});
 
-                    model:
-                        MODEL
 
-                })
+document
+.querySelectorAll(".characterCard")
+.forEach(
+function(card){
 
-            }
+    card.addEventListener(
+    "click",
+    function(){
+
+        selectedCharacter =
+        this.dataset.name;
+
+        selectedImage =
+        this.dataset.image;
+
+
+        characterName.textContent =
+        selectedCharacter;
+
+        headerCharacter.src =
+        selectedImage;
+
+
+        characterPanel.style.display =
+        "none";
+
+
+        addMessage(
+            "شخصیت «" +
+            selectedCharacter +
+            "» انتخاب شد.",
+            "ai"
         );
 
+    });
 
-    if(!response.ok){
-
-        const errorText =
-            await response.text();
+});
 
 
-        throw new Error(
-            errorText ||
-            "API Error"
-        );
+/* =====================================================
+   SYSTEM PROMPT
+===================================================== */
 
-    }
+function getSystemPrompt(){
 
+    return `تو Chaty AI هستی.
 
-    return await response.json();
+شخصیت انتخاب شده:
+${selectedCharacter}
+
+مدل:
+${AI_MODEL}
+
+اگر کاربر شخصیت خاصی انتخاب کرده است، پاسخ‌هایت را با لحن مناسب همان شخصیت تنظیم کن.
+
+به زبان کاربر پاسخ بده.
+
+اگر کاربر فارسی صحبت کرد، فارسی پاسخ بده.
+
+پاسخ‌ها طبیعی، مفید و کوتاه باشند.`;
 
 }
 
@@ -1475,7 +1265,7 @@ async function askChaty(message){
 async function sendMessage(){
 
     const text =
-        input.value.trim();
+    messageInput.value.trim();
 
 
     if(!text){
@@ -1485,102 +1275,342 @@ async function sendMessage(){
     }
 
 
-    input.value =
-        "";
-
-    input.style.height =
-        "44px";
+    clearError();
 
 
-    addUserMessage(
-        text
+    addMessage(
+        text,
+        "user"
     );
 
 
+    messageInput.value =
+    "";
+
+    messageInput.style.height =
+    "auto";
+
+
+    sendButton.disabled =
+    true;
+
+
     typing.style.display =
-        "block";
+    "block";
 
 
     scrollBottom();
 
 
-    sendButton.disabled =
-        true;
-
-
     try{
 
-        const data =
-            await askChaty(
-                text
+        const response =
+        await fetch(
+            EDGE_FUNCTION_URL,
+            {
+
+                method:"POST",
+
+                headers:{
+
+                    "Content-Type":
+                    "application/json",
+
+                    "Authorization":
+                    "Bearer " +
+                    SUPABASE_ANON_KEY,
+
+                    "apikey":
+                    SUPABASE_ANON_KEY
+
+                },
+
+                body:JSON.stringify({
+
+                    name:text,
+
+                    message:text,
+
+                    prompt:text,
+
+                    model:AI_MODEL,
+
+                    character:selectedCharacter,
+
+                    system:getSystemPrompt()
+
+                })
+
+            }
+        );
+
+
+        /* =========================
+           HTTP ERROR
+        ========================= */
+
+        if(!response.ok){
+
+            let serverText =
+            "";
+
+            try{
+
+                serverText =
+                await response.text();
+
+            }catch(e){
+
+                serverText =
+                "بدون متن پاسخ";
+
+            }
+
+
+            throw new Error(
+
+                "HTTP " +
+                response.status +
+                " " +
+                response.statusText +
+
+                "\n\n" +
+
+                "Edge Function URL:\n" +
+                EDGE_FUNCTION_URL +
+
+                "\n\n" +
+
+                "Server response:\n" +
+                serverText
+
             );
 
+        }
+
+
+        /* =========================
+           RESPONSE
+        ========================= */
+
+        const raw =
+        await response.text();
+
+
+        if(!raw){
+
+            throw new Error(
+                "Edge Function پاسخ خالی برگرداند."
+            );
+
+        }
+
+
+        let data;
+
+
+        try{
+
+            data =
+            JSON.parse(raw);
+
+        }catch(e){
+
+            throw new Error(
+
+                "پاسخ Edge Function JSON معتبر نیست.\n\n" +
+
+                "Raw response:\n" +
+                raw
+
+            );
+
+        }
+
+
+        console.log(
+            "Chaty response:",
+            data
+        );
+
+
+        /* =========================
+           POSSIBLE ANSWERS
+        ========================= */
 
         let answer =
-            data.answer ||
-            data.message ||
-            data.response ||
+        null;
+
+
+        if(typeof data === "string"){
+
+            answer =
+            data;
+
+        }
+
+
+        else if(
+            data.answer
+        ){
+
+            answer =
+            data.answer;
+
+        }
+
+
+        else if(
+            data.message &&
+            typeof data.message === "string"
+        ){
+
+            answer =
+            data.message;
+
+        }
+
+
+        else if(
+            data.response
+        ){
+
+            answer =
+            data.response;
+
+        }
+
+
+        else if(
+            data.content
+        ){
+
+            answer =
             data.content;
 
+        }
 
-        if(
+
+        else if(
+            data.text
+        ){
+
+            answer =
+            data.text;
+
+        }
+
+
+        /* OpenAI style */
+
+        else if(
             data.choices &&
             data.choices[0] &&
             data.choices[0].message
         ){
 
             answer =
-                data.choices[0]
-                .message
-                .content;
+            data.choices[0]
+            .message
+            .content;
 
         }
 
+
+        /* =========================
+           NO ANSWER
+        ========================= */
 
         if(!answer){
 
-            answer =
-                "پاسخی از Chaty دریافت نشد.";
+            throw new Error(
+
+                "پاسخ هوش مصنوعی در داده دریافتی پیدا نشد.\n\n" +
+
+                "JSON دریافت شده:\n" +
+
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                )
+
+            );
 
         }
 
 
-        addBotMessage(
-            escapeHTML(
-                answer
-            )
-            .replace(
-                /\n/g,
-                "<br>"
-            )
+        typing.style.display =
+        "none";
+
+
+        addMessage(
+            answer,
+            "ai"
         );
 
 
     }catch(error){
 
         console.error(
-            "Chaty error:",
+            "CHATY ERROR:",
             error
         );
 
 
-        addBotMessage(
-            "❌ خطا در اتصال به Chaty AI.<br><br>" +
-            "لطفاً Edge Function با نام bright-endpoint را بررسی کن."
+        typing.style.display =
+        "none";
+
+
+        let message =
+        "";
+
+
+        if(
+            error.name ===
+            "TypeError"
+        ){
+
+            message =
+            "احتمالاً مشکل اتصال اینترنت، CORS یا در دسترس نبودن Edge Function وجود دارد.";
+
+        }
+
+
+        showError(
+
+            "❌ خطا در اتصال به Chaty AI",
+
+            message +
+
+            "\n\nخطای اصلی:\n" +
+
+            (
+                error.message ||
+                String(error)
+            ) +
+
+            "\n\nEndpoint:\n" +
+
+            EDGE_FUNCTION_URL +
+
+            "\n\nModel:\n" +
+
+            AI_MODEL
+
+        );
+
+
+        addMessage(
+            "❌ پاسخ دریافت نشد. جزئیات خطا را در بخش خطا ببین.",
+            "ai"
         );
 
     }
 
 
-    typing.style.display =
-        "none";
-
-
     sendButton.disabled =
-        false;
-
-
-    input.focus();
+    false;
 
 }
 
@@ -1589,79 +1619,82 @@ async function sendMessage(){
    SEND BUTTON
 ===================================================== */
 
-sendButton.onclick =
-sendMessage;
+sendButton.addEventListener(
+"click",
+sendMessage
+);
 
 
 /* =====================================================
    ENTER
 ===================================================== */
 
-input.addEventListener(
-    "keydown",
-    function(event){
+messageInput.addEventListener(
+"keydown",
+function(event){
 
-        if(
-            event.key === "Enter" &&
-            !event.shiftKey
-        ){
+    if(
+        event.key === "Enter" &&
+        !event.shiftKey
+    ){
 
-            event.preventDefault();
+        event.preventDefault();
 
-            sendMessage();
-
-        }
+        sendMessage();
 
     }
-);
+
+});
 
 
 /* =====================================================
    AUTO RESIZE
 ===================================================== */
 
-input.addEventListener(
-    "input",
-    function(){
+messageInput.addEventListener(
+"input",
+function(){
 
-        this.style.height =
-            "44px";
+    this.style.height =
+    "auto";
 
+    this.style.height =
+    Math.min(
+        this.scrollHeight,
+        110
+    ) + "px";
 
-        this.style.height =
-            Math.min(
-                this.scrollHeight,
-                120
-            ) + "px";
-
-    }
-);
+});
 
 
 /* =====================================================
-   KEYBOARD / MOBILE
+   TEST CONNECTION
 ===================================================== */
 
-window.addEventListener(
-    "resize",
-    function(){
+async function testEdgeFunction(){
 
-        setTimeout(
-            scrollBottom,
-            100
-        );
+    console.log(
+        "Testing Chaty Edge Function..."
+    );
 
-    }
-);
+    console.log(
+        "URL:",
+        EDGE_FUNCTION_URL
+    );
+
+    console.log(
+        "Model:",
+        AI_MODEL
+    );
+
+}
 
 
 /* =====================================================
-   INITIAL
+   START
 ===================================================== */
 
-scrollBottom();
-
-input.focus();
+testEdgeFunction();
 
 </script>
 
