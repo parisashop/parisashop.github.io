@@ -83,6 +83,269 @@ button{
     color:#9da8c5;
 }
 
+
+/* =====================================================
+   AHOORA AI / CHATY AI SWITCHER
+===================================================== */
+
+.aiSwitcher{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin-top:8px;
+    margin-bottom:4px;
+    position:relative;
+    z-index:30;
+}
+
+.aiCard{
+    position:relative;
+    min-width:135px;
+    padding:11px 18px;
+    border-radius:20px;
+    border:1px solid #ffffff12;
+    background:#ffffff08;
+    color:#9da8c5;
+    text-align:center;
+    font-size:15px;
+    font-weight:bold;
+    overflow:hidden;
+
+    transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    background .25s ease;
+}
+
+.aiCard.active{
+    color:white;
+
+    background:
+    linear-gradient(
+        135deg,
+        #0066ff22,
+        #7200ff22,
+        #ff6fd822
+    );
+
+    box-shadow:
+    0 0 25px #0066ff22;
+}
+
+.aiCard:active{
+    transform:scale(.94);
+}
+
+.aiCard::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+
+    background:
+    linear-gradient(
+        90deg,
+        transparent,
+        #00d4ff66,
+        #7b2ffc66,
+        #ff6fd866,
+        transparent
+    );
+
+    transform:translateX(-100%);
+    transition:transform .5s ease;
+}
+
+.aiCard:hover::before{
+    transform:translateX(100%);
+}
+
+.aiIcon{
+    display:block;
+    font-size:22px;
+    margin-bottom:3px;
+}
+
+.aiName{
+    display:block;
+}
+
+
+/* =====================================================
+   CHATY TRANSITION
+===================================================== */
+
+#chatyTransition{
+    position:fixed;
+    inset:0;
+
+    z-index:10000;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:
+    radial-gradient(
+        circle at center,
+        #24105c,
+        #080812 65%
+    );
+
+    overflow:hidden;
+}
+
+.chatyTransitionContent{
+    text-align:center;
+
+    animation:
+    chatyEnter
+    .8s
+    cubic-bezier(.2,.8,.2,1)
+    forwards;
+}
+
+.chatyLogo{
+    width:125px;
+    height:125px;
+
+    margin:auto;
+
+    border-radius:35px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:58px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #00d4ff,
+        #7b2ffc,
+        #ff4fd8
+    );
+
+    box-shadow:
+    0 0 50px #0066ff88,
+    0 0 110px #7b2ffc55;
+
+    animation:
+    chatyLogoPulse
+    .8s
+    ease-in-out
+    infinite alternate;
+}
+
+.chatyText{
+    margin-top:22px;
+
+    font-size:34px;
+    font-weight:bold;
+
+    background:
+    linear-gradient(
+        135deg,
+        #00d4ff,
+        #7b2ffc,
+        #ff6fd8
+    );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.chatyLoading{
+    margin-top:12px;
+
+    color:#9da8c5;
+
+    font-size:14px;
+}
+
+.chatyLoading::after{
+    content:"";
+
+    animation:
+    chatyDots
+    1.2s
+    infinite;
+}
+
+@keyframes chatyEnter{
+
+    0%{
+        opacity:0;
+
+        transform:
+        scale(.35)
+        translateY(40px);
+
+        filter:blur(15px);
+    }
+
+    60%{
+        opacity:1;
+
+        transform:
+        scale(1.08)
+        translateY(0);
+
+        filter:blur(0);
+    }
+
+    100%{
+        opacity:1;
+
+        transform:scale(1);
+    }
+
+}
+
+@keyframes chatyLogoPulse{
+
+    from{
+        transform:scale(1);
+
+        box-shadow:
+        0 0 50px #0066ff88,
+        0 0 110px #7b2ffc55;
+    }
+
+    to{
+        transform:scale(1.08);
+
+        box-shadow:
+        0 0 80px #00d4ffbb,
+        0 0 150px #ff4fd866;
+    }
+
+}
+
+@keyframes chatyDots{
+
+    0%{
+        content:"";
+    }
+
+    33%{
+        content:".";
+    }
+
+    66%{
+        content:"..";
+    }
+
+    100%{
+        content:"...";
+    }
+
+}
+
+
 .mainPage{
     width:100%;
     height:100%;
@@ -721,6 +984,44 @@ button{
     </div>
 
 
+    <!-- =========================================
+         AHOORA AI / CHATY AI
+    ========================================= -->
+
+    <div class="aiSwitcher">
+
+        <div
+            class="aiCard active"
+            id="ahooraAiCard">
+
+            <span class="aiIcon">
+                ✦
+            </span>
+
+            <span class="aiName">
+                Ahoora AI
+            </span>
+
+        </div>
+
+
+        <div
+            class="aiCard"
+            id="chatyAiCard">
+
+            <span class="aiIcon">
+                💬
+            </span>
+
+            <span class="aiName">
+                Chaty AI
+            </span>
+
+        </div>
+
+    </div>
+
+
     <div class="orb-wrapper">
 
         <div class="orb" id="orb">
@@ -1021,33 +1322,43 @@ button{
 </div>
 
 
+<!-- =========================================
+     CHATY TRANSITION
+========================================= -->
+
+<div id="chatyTransition">
+
+    <div class="chatyTransitionContent">
+
+        <div class="chatyLogo">
+            💬
+        </div>
+
+        <div class="chatyText">
+            Chaty AI
+        </div>
+
+        <div class="chatyLoading">
+            در حال ورود به Chaty AI
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
 
 /* =====================================================
    SUPABASE
 ===================================================== */
 
-/*
-   مهم:
-   این مقدار را از:
-
-   Supabase
-   → Project Settings
-   → API
-
-   بردار.
-
-   Publishable key یا anon public key
-
-   service_role را هرگز اینجا قرار نده.
-*/
-
 const SUPABASE_URL =
 "https://vkqmlfumodqmmylchgdx.supabase.co";
 
 
 const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4IiwiaWF0IjoxNzM4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
 
 
 const supabaseClient =
@@ -4087,6 +4398,137 @@ mic.addEventListener(
             startListening();
 
         }
+
+    }
+);
+
+
+/* =====================================================
+   CHATY AI
+===================================================== */
+
+var chatyAiCard =
+    document.getElementById(
+        "chatyAiCard"
+    );
+
+var ahooraAiCard =
+    document.getElementById(
+        "ahooraAiCard"
+    );
+
+var chatyTransition =
+    document.getElementById(
+        "chatyTransition"
+    );
+
+
+var chatyLoadingStarted =
+    false;
+
+
+chatyAiCard.addEventListener(
+    "click",
+    function(){
+
+        if(!isLoggedIn){
+
+            return;
+
+        }
+
+
+        if(chatyLoadingStarted){
+
+            return;
+
+        }
+
+
+        chatyLoadingStarted =
+            true;
+
+
+        /*
+           اجرای انیمیشن Chaty
+        */
+
+        chatyTransition.style.display =
+            "flex";
+
+
+        /*
+           لود همزمان chaty.html
+        */
+
+        var chatyPage =
+            document.createElement(
+                "iframe"
+            );
+
+
+        chatyPage.style.position =
+            "fixed";
+
+        chatyPage.style.width =
+            "100%";
+
+        chatyPage.style.height =
+            "100%";
+
+        chatyPage.style.border =
+            "0";
+
+        chatyPage.style.left =
+            "0";
+
+        chatyPage.style.top =
+            "0";
+
+        chatyPage.style.opacity =
+            "0";
+
+        chatyPage.style.pointerEvents =
+            "none";
+
+        chatyPage.style.zIndex =
+            "-1";
+
+
+        chatyPage.src =
+            "chaty.html";
+
+
+        document.body.appendChild(
+            chatyPage
+        );
+
+
+        /*
+           بعد از پایان انیمیشن
+           Chaty نمایش داده می‌شود.
+        */
+
+        setTimeout(
+            function(){
+
+                chatyPage.style.opacity =
+                    "1";
+
+                chatyPage.style.pointerEvents =
+                    "auto";
+
+                chatyPage.style.zIndex =
+                    "10001";
+
+
+                chatyTransition.style.display =
+                    "none";
+
+
+            },
+            1400
+        );
 
     }
 );
