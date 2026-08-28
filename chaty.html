@@ -5,530 +5,1811 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Chaty AI</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden}
 body{font-family:Arial,Tahoma,sans-serif;background:#000;color:#fff}
 button,input,textarea{font-family:inherit}
 button{cursor:pointer}
-.app{width:100%;max-width:600px;height:100dvh;min-height:100vh;margin:auto;background:#000;display:flex;flex-direction:column;position:relative}
-.header{height:64px;min-height:64px;background:#000;border-bottom:1px solid #222;display:flex;align-items:center;justify-content:space-between;padding:6px 14px;position:relative;z-index:10}
-.headerRight{display:flex;align-items:center;gap:10px}
-.character{width:43px;height:43px;border-radius:50%;background:#222;object-fit:cover;border:1px solid #444}
-.characterInfo{display:flex;flex-direction:column;gap:3px}
-.characterName{font-size:16px;font-weight:bold}
-.characterModel{font-size:11px;color:#888}
-.headerButton{width:40px;height:40px;border:1px solid #333;border-radius:50%;background:#111;color:#fff;font-size:20px}
 
-/* =========================
-   AI SWITCHER
-========================= */
-.aiSwitcher{position:absolute;left:50%;transform:translateX(-50%);top:9px;height:46px;padding:4px;border:1px solid #292929;background:#111;border-radius:24px;display:flex;align-items:center;gap:3px;z-index:50;box-shadow:0 5px 20px #000}
-.aiSwitch{height:36px;padding:0 12px;border:0;border-radius:19px;background:transparent;color:#777;font-size:12px;font-weight:bold;white-space:nowrap;transition:.25s}
-.aiSwitch.active{background:#fff;color:#000}
-.aiSwitch:active{transform:scale(.96)}
-#ahooraSwitch.loading{background:#222;color:#fff}
-.switchLoader{display:none;width:13px;height:13px;border:2px solid #555;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-left:4px}
-#ahooraSwitch.loading .switchLoader{display:inline-block}
-@keyframes spin{to{transform:rotate(360deg)}}
+.app{
+width:100%;
+max-width:600px;
+height:100dvh;
+min-height:100vh;
+margin:auto;
+background:#000;
+display:flex;
+flex-direction:column;
+position:relative
+}
 
-.chat{flex:1;overflow-y:auto;padding:12px 12px 92px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
-.message{max-width:84%;padding:11px 14px;border-radius:18px;line-height:1.8;font-size:15px;word-wrap:break-word;white-space:pre-wrap}
-.userMessage{align-self:flex-start;background:#fff;color:#000;border-bottom-left-radius:5px}
-.aiMessage{align-self:flex-end;background:#181818;color:#fff;border:1px solid #292929;border-bottom-right-radius:5px}
-.messageName{font-size:10px;color:#777;margin-bottom:3px}
-.typing{display:none;align-self:flex-end;background:#181818;border:1px solid #292929;border-radius:18px;padding:10px 15px;color:#aaa}
-.dot{display:inline-block;width:6px;height:6px;background:#aaa;border-radius:50%;margin:0 2px;animation:blink 1s infinite}
-.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
-.inputArea{position:absolute;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));min-height:56px;background:#111;border:1px solid #2b2b2b;border-radius:30px;display:flex;align-items:flex-end;gap:8px;padding:6px;z-index:20;box-shadow:0 5px 30px #000}
-#messageInput{flex:1;min-width:0;max-height:100px;resize:none;border:0;outline:none;background:transparent;color:#fff;font-size:15px;line-height:1.6;padding:8px}
-#messageInput::placeholder{color:#777}
-.sendButton{width:44px;height:44px;flex-shrink:0;border:0;border-radius:50%;background:#fff;color:#000;font-size:20px;display:flex;align-items:center;justify-content:center}
-.sendButton:disabled{opacity:.4}
-.panel{position:fixed;inset:0;z-index:100;display:none;background:#000;padding:calc(10px + env(safe-area-inset-top)) 12px 20px;overflow-y:auto}
-.panelHeader{height:55px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.panelTitle{font-size:20px;font-weight:bold}
-.closeButton{width:40px;height:40px;border-radius:50%;border:1px solid #333;background:#111;color:white;font-size:20px}
-.characterGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding-bottom:20px}
-.characterCard{min-height:120px;border:1px solid #292929;border-radius:18px;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#fff;padding:10px}
-.characterCard img{width:62px;height:62px;border-radius:50%;object-fit:cover;border:1px solid #444}
-.characterCard span{font-size:13px}
-.errorBox{display:none;margin:8px 10px 86px;padding:12px;border:1px solid #552222;background:#180909;border-radius:15px;color:#ff9999;font-size:12px;line-height:1.8;direction:ltr;text-align:left;white-space:pre-wrap;max-height:220px;overflow:auto;position:absolute;bottom:0;left:0;right:0;z-index:30}
-.clearError{margin-top:8px;padding:7px 12px;border:1px solid #555;background:#111;color:white;border-radius:10px}
-#loginScreen{position:fixed;inset:0;z-index:9999;background:#000;display:none;align-items:center;justify-content:center;padding:20px}
-.loginBox{width:100%;max-width:400px;background:#111;border:1px solid #292929;border-radius:25px;padding:25px;text-align:center}
-.loginTitle{font-size:28px;font-weight:bold;margin-bottom:10px}
-.loginText{color:#888;line-height:1.8;margin-bottom:20px}
-.loginInput{width:100%;padding:14px;background:#080808;border:1px solid #333;border-radius:15px;color:white;outline:none;margin-bottom:10px;font-size:15px;direction:ltr}
-.loginButton{width:100%;padding:14px;border:0;border-radius:15px;background:white;color:black;font-size:15px}
+.header{
+height:64px;
+min-height:64px;
+background:#000;
+border-bottom:1px solid #222;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:6px 14px;
+position:relative;
+z-index:10
+}
 
-/* =========================
-   AHOORA LOADING
-========================= */
-#ahooraLoading{position:fixed;inset:0;z-index:9998;background:#000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;opacity:0;transition:opacity .25s}
-.ahooraLoadingCircle{width:58px;height:58px;border:4px solid #222;border-top-color:#fff;border-right-color:#aaa;border-radius:50%;animation:spin .8s linear infinite}
-.ahooraLoadingText{font-size:15px;color:#aaa}
-.ahooraLoadingSub{font-size:11px;color:#555}
+.headerRight{
+display:flex;
+align-items:center;
+gap:10px
+}
 
-#ahooraFrame{position:fixed;inset:0;width:100%;height:100%;border:0;background:#000;display:none;z-index:9997}
+.character{
+width:43px;
+height:43px;
+border-radius:50%;
+background:#222;
+object-fit:cover;
+border:1px solid #444
+}
+
+.characterInfo{
+display:flex;
+flex-direction:column;
+gap:3px
+}
+
+.characterName{
+font-size:16px;
+font-weight:bold
+}
+
+.characterModel{
+font-size:11px;
+color:#888
+}
+
+.headerButton{
+width:40px;
+height:40px;
+border:1px solid #333;
+border-radius:50%;
+background:#111;
+color:#fff;
+font-size:20px
+}
+
+/* AI SWITCHER */
+
+.aiSwitcher{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+top:9px;
+height:46px;
+padding:4px;
+border:1px solid #292929;
+background:#111;
+border-radius:24px;
+display:flex;
+align-items:center;
+gap:3px;
+z-index:50;
+box-shadow:0 5px 20px #000
+}
+
+.aiSwitch{
+height:36px;
+padding:0 12px;
+border:0;
+border-radius:19px;
+background:transparent;
+color:#777;
+font-size:12px;
+font-weight:bold;
+white-space:nowrap;
+transition:.25s
+}
+
+.aiSwitch.active{
+background:#fff;
+color:#000
+}
+
+.aiSwitch:active{
+transform:scale(.96)
+}
+
+#ahooraSwitch.loading{
+background:#222;
+color:#fff
+}
+
+.switchLoader{
+display:none;
+width:13px;
+height:13px;
+border:2px solid #555;
+border-top-color:#fff;
+border-radius:50%;
+animation:spin .7s linear infinite;
+vertical-align:-2px;
+margin-left:4px
+}
+
+#ahooraSwitch.loading .switchLoader{
+display:inline-block
+}
+
+@keyframes spin{
+to{transform:rotate(360deg)}
+}
+
+/* CHAT */
+
+.chat{
+flex:1;
+overflow-y:auto;
+padding:12px 12px 92px;
+display:flex;
+flex-direction:column;
+gap:12px;
+scroll-behavior:smooth;
+-webkit-overflow-scrolling:touch
+}
+
+.message{
+max-width:84%;
+padding:11px 14px;
+border-radius:18px;
+line-height:1.8;
+font-size:15px;
+word-wrap:break-word;
+white-space:pre-wrap
+}
+
+.userMessage{
+align-self:flex-start;
+background:#fff;
+color:#000;
+border-bottom-left-radius:5px
+}
+
+.aiMessage{
+align-self:flex-end;
+background:#181818;
+color:#fff;
+border:1px solid #292929;
+border-bottom-right-radius:5px
+}
+
+.messageName{
+font-size:10px;
+color:#777;
+margin-bottom:3px
+}
+
+.typing{
+display:none;
+align-self:flex-end;
+background:#181818;
+border:1px solid #292929;
+border-radius:18px;
+padding:10px 15px;
+color:#aaa
+}
+
+.dot{
+display:inline-block;
+width:6px;
+height:6px;
+background:#aaa;
+border-radius:50%;
+margin:0 2px;
+animation:blink 1s infinite
+}
+
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+
+@keyframes blink{
+0%,100%{opacity:.2}
+50%{opacity:1}
+}
+
+/* INPUT */
+
+.inputArea{
+position:absolute;
+left:10px;
+right:10px;
+bottom:calc(10px + env(safe-area-inset-bottom));
+min-height:56px;
+background:#111;
+border:1px solid #2b2b2b;
+border-radius:30px;
+display:flex;
+align-items:flex-end;
+gap:8px;
+padding:6px;
+z-index:20;
+box-shadow:0 5px 30px #000
+}
+
+#messageInput{
+flex:1;
+min-width:0;
+max-height:100px;
+resize:none;
+border:0;
+outline:none;
+background:transparent;
+color:#fff;
+font-size:15px;
+line-height:1.6;
+padding:8px
+}
+
+#messageInput::placeholder{
+color:#777
+}
+
+.sendButton{
+width:44px;
+height:44px;
+flex-shrink:0;
+border:0;
+border-radius:50%;
+background:#fff;
+color:#000;
+font-size:20px;
+display:flex;
+align-items:center;
+justify-content:center
+}
+
+.sendButton:disabled{
+opacity:.4
+}
+
+/* PANEL */
+
+.panel{
+position:fixed;
+inset:0;
+z-index:100;
+display:none;
+background:#000;
+padding:calc(10px + env(safe-area-inset-top)) 12px 20px;
+overflow-y:auto
+}
+
+.panelHeader{
+height:55px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:10px
+}
+
+.panelTitle{
+font-size:20px;
+font-weight:bold
+}
+
+.closeButton{
+width:40px;
+height:40px;
+border-radius:50%;
+border:1px solid #333;
+background:#111;
+color:white;
+font-size:20px
+}
+
+.characterGrid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+padding-bottom:20px
+}
+
+.characterCard{
+min-height:120px;
+border:1px solid #292929;
+border-radius:18px;
+background:#111;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:8px;
+color:#fff;
+padding:10px
+}
+
+.characterCard img{
+width:62px;
+height:62px;
+border-radius:50%;
+object-fit:cover;
+border:1px solid #444
+}
+
+.characterCard span{
+font-size:13px
+}
+
+/* ERROR */
+
+.errorBox{
+display:none;
+margin:8px 10px 86px;
+padding:12px;
+border:1px solid #552222;
+background:#180909;
+border-radius:15px;
+color:#ff9999;
+font-size:12px;
+line-height:1.8;
+direction:ltr;
+text-align:left;
+white-space:pre-wrap;
+max-height:220px;
+overflow:auto;
+position:absolute;
+bottom:0;
+left:0;
+right:0;
+z-index:30
+}
+
+.clearError{
+margin-top:8px;
+padding:7px 12px;
+border:1px solid #555;
+background:#111;
+color:white;
+border-radius:10px
+}
+
+/* LOGIN */
+
+#loginScreen{
+position:fixed;
+inset:0;
+z-index:9999;
+background:#000;
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px
+}
+
+.loginBox{
+width:100%;
+max-width:400px;
+background:#111;
+border:1px solid #292929;
+border-radius:25px;
+padding:25px;
+text-align:center
+}
+
+.loginTitle{
+font-size:28px;
+font-weight:bold;
+margin-bottom:10px
+}
+
+.loginText{
+color:#888;
+line-height:1.8;
+margin-bottom:20px
+}
+
+.loginInput{
+width:100%;
+padding:14px;
+background:#080808;
+border:1px solid #333;
+border-radius:15px;
+color:white;
+outline:none;
+margin-bottom:10px;
+font-size:15px;
+direction:ltr
+}
+
+.loginButton{
+width:100%;
+padding:14px;
+border:0;
+border-radius:15px;
+background:white;
+color:black;
+font-size:15px
+}
+
+/* AHOORA */
+
+#ahooraLoading{
+position:fixed;
+inset:0;
+z-index:9998;
+background:#000;
+display:none;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+gap:18px;
+opacity:0;
+transition:opacity .25s
+}
+
+.ahooraLoadingCircle{
+width:58px;
+height:58px;
+border:4px solid #222;
+border-top-color:#fff;
+border-right-color:#aaa;
+border-radius:50%;
+animation:spin .8s linear infinite
+}
+
+.ahooraLoadingText{
+font-size:15px;
+color:#aaa
+}
+
+.ahooraLoadingSub{
+font-size:11px;
+color:#555
+}
+
+#ahooraFrame{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+border:0;
+background:#000;
+display:none;
+z-index:9997
+}
 
 @media(max-height:650px){
-.header{height:58px;min-height:58px}
-.character{width:38px;height:38px}
-.headerButton{width:38px;height:38px}
-.chat{padding-bottom:88px}
-.aiSwitcher{top:6px;height:43px}
-.aiSwitch{height:33px;padding:0 9px;font-size:11px}
+
+.header{
+height:58px;
+min-height:58px
 }
+
+.character{
+width:38px;
+height:38px
+}
+
+.headerButton{
+width:38px;
+height:38px
+}
+
+.chat{
+padding-bottom:88px
+}
+
+.aiSwitcher{
+top:6px;
+height:43px
+}
+
+.aiSwitch{
+height:33px;
+padding:0 9px;
+font-size:11px
+}
+
+}
+
 @media(min-width:601px){
-.inputArea{left:50%;right:auto;transform:translateX(-50%);width:min(580px,calc(100% - 20px))}
+
+.inputArea{
+left:50%;
+right:auto;
+transform:translateX(-50%);
+width:min(580px,calc(100% - 20px))
+}
+
 }
 </style>
 </head>
+
 <body>
 
+<!-- LOGIN -->
+
 <div id="loginScreen">
+
 <div class="loginBox">
+
 <div class="loginTitle">✦ Chaty AI</div>
-<div class="loginText">برای استفاده از Chaty AI وارد حساب خود شوید.</div>
-<input id="emailInput" class="loginInput" type="email" placeholder="Email" autocomplete="email">
-<button id="loginButton" class="loginButton">📩 دریافت کد ورود</button>
+
+<div class="loginText">
+برای استفاده از Chaty AI وارد حساب خود شوید.
+</div>
+
+<input
+id="emailInput"
+class="loginInput"
+type="email"
+placeholder="Email"
+autocomplete="email">
+
+<button id="loginButton" class="loginButton">
+📩 دریافت کد ورود
+</button>
+
 <div id="otpArea" style="display:none">
-<input id="otpInput" class="loginInput" inputmode="numeric" maxlength="6" placeholder="کد ۶ رقمی">
-<button id="verifyButton" class="loginButton">🔐 ورود</button>
+
+<input
+id="otpInput"
+class="loginInput"
+inputmode="numeric"
+maxlength="6"
+placeholder="کد ۶ رقمی">
+
+<button id="verifyButton" class="loginButton">
+🔐 ورود
+</button>
+
 </div>
-<div id="loginMessage" style="color:#888;margin-top:12px;line-height:1.7"></div>
+
+<div
+id="loginMessage"
+style="color:#888;margin-top:12px;line-height:1.7">
+</div>
+
 </div>
 </div>
+
+
+<!-- AHOORA LOADING -->
 
 <div id="ahooraLoading">
+
 <div class="ahooraLoadingCircle"></div>
-<div class="ahooraLoadingText">در حال ورود به Ahoora AI...</div>
-<div class="ahooraLoadingSub">لطفاً چند لحظه صبر کنید</div>
+
+<div class="ahooraLoadingText">
+در حال ورود به Ahoora AI...
 </div>
 
-<iframe id="ahooraFrame" src="about:blank"></iframe>
+<div class="ahooraLoadingSub">
+لطفاً چند لحظه صبر کنید
+</div>
+
+</div>
+
+<iframe
+id="ahooraFrame"
+src="about:blank">
+</iframe>
+
+
+<!-- APP -->
 
 <div class="app">
+
 <div class="header">
+
 <div class="headerRight">
-<img id="headerCharacter" class="character" src="https://ui-avatars.com/api/?name=Chaty&background=222&color=fff">
+
+<img
+id="headerCharacter"
+class="character"
+src="https://ui-avatars.com/api/?name=Chaty&background=222&color=fff">
+
 <div class="characterInfo">
-<div id="characterName" class="characterName">Chaty AI</div>
-<div class="characterModel">Gemma 4 31B</div>
+
+<div
+id="characterName"
+class="characterName">
+Chaty AI
+</div>
+
+<div class="characterModel">
+OpenRouter Free
+</div>
+
 </div>
 </div>
+
+
+<!-- SWITCHER -->
 
 <div class="aiSwitcher">
-<button id="chatySwitch" class="aiSwitch active">Chaty AI</button>
-<button id="ahooraSwitch" class="aiSwitch">Ahoora AI <span class="switchLoader"></span></button>
+
+<button
+id="chatySwitch"
+class="aiSwitch active">
+Chaty AI
+</button>
+
+<button
+id="ahooraSwitch"
+class="aiSwitch">
+Ahoora AI
+<span class="switchLoader"></span>
+</button>
+
 </div>
 
-<button id="characterButton" class="headerButton">☰</button>
+
+<button
+id="characterButton"
+class="headerButton">
+☰
+</button>
+
 </div>
+
+
+<!-- CHAT -->
 
 <div id="chat" class="chat">
+
 <div class="message aiMessage">
-<div class="messageName">Chaty AI</div>
+
+<div class="messageName">
+Chaty AI
+</div>
+
 سلام 👋
 من Chaty AI هستم.
 هر چیزی می‌خواهی بپرس.
+
 </div>
-<div id="typing" class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+
+<div id="typing" class="typing">
+
+<span class="dot"></span>
+<span class="dot"></span>
+<span class="dot"></span>
+
 </div>
+
+</div>
+
 
 <div id="errorBox" class="errorBox"></div>
 
+
+<!-- INPUT -->
+
 <div class="inputArea">
-<textarea id="messageInput" rows="1" placeholder="پیامت را بنویس..."></textarea>
-<button id="sendButton" class="sendButton">➤</button>
+
+<textarea
+id="messageInput"
+rows="1"
+placeholder="پیامت را بنویس...">
+</textarea>
+
+<button
+id="sendButton"
+class="sendButton">
+➤
+</button>
+
 </div>
+
 </div>
+
+
+<!-- CHARACTER PANEL -->
 
 <div id="characterPanel" class="panel">
+
 <div class="panelHeader">
-<div class="panelTitle">انتخاب شخصیت Chaty AI</div>
-<button id="closeCharacterPanel" class="closeButton">×</button>
+
+<div class="panelTitle">
+انتخاب شخصیت Chaty AI
 </div>
+
+<button
+id="closeCharacterPanel"
+class="closeButton">
+×
+</button>
+
+</div>
+
+
 <div class="characterGrid">
 
-<button class="characterCard" data-name="مسی" data-image="https://ui-avatars.com/api/?name=Messi&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Messi&background=222&color=fff"><span>⚽ مسی</span></button>
-<button class="characterCard" data-name="رونالدو" data-image="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff"><span>⚽ رونالدو</span></button>
-<button class="characterCard" data-name="پرسپولیس" data-image="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff"><span>🔴 پرسپولیس</span></button>
-<button class="characterCard" data-name="استقلال" data-image="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff"><span>🔵 استقلال</span></button>
-<button class="characterCard" data-name="بریکینگ بد" data-image="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff"><span>🧪 بریکینگ بد</span></button>
-<button class="characterCard" data-name="باب اسفنجی" data-image="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff"><span>🧽 باب اسفنجی</span></button>
-<button class="characterCard" data-name="BTS" data-image="https://ui-avatars.com/api/?name=BTS&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=BTS&background=222&color=fff"><span>🎤 BTS</span></button>
-<button class="characterCard" data-name="دیوید بکام" data-image="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff"><span>⚽ دیوید بکام</span></button>
-<button class="characterCard" data-name="هکر" data-image="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff"><span>💻 هکر</span></button>
-<button class="characterCard" data-name="شاعر" data-image="https://ui-avatars.com/api/?name=Poet&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Poet&background=222&color=fff"><span>📜 شاعر</span></button>
-<button class="characterCard" data-name="آشپز" data-image="https://ui-avatars.com/api/?name=Chef&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Chef&background=222&color=fff"><span>👨‍🍳 آشپز</span></button>
-<button class="characterCard" data-name="تراپیست" data-image="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff"><img src="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff"><span>🧠 تراپیست</span></button>
+<button
+class="characterCard"
+data-name="مسی"
+data-image="https://ui-avatars.com/api/?name=Messi&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Messi&background=222&color=fff">
+
+<span>⚽ مسی</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="رونالدو"
+data-image="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff">
+
+<span>⚽ رونالدو</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="پرسپولیس"
+data-image="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff">
+
+<span>🔴 پرسپولیس</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="استقلال"
+data-image="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff">
+
+<span>🔵 استقلال</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="بریکینگ بد"
+data-image="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff">
+
+<span>🧪 بریکینگ بد</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="باب اسفنجی"
+data-image="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff">
+
+<span>🧽 باب اسفنجی</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="BTS"
+data-image="https://ui-avatars.com/api/?name=BTS&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=BTS&background=222&color=fff">
+
+<span>🎤 BTS</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="دیوید بکام"
+data-image="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff">
+
+<span>⚽ دیوید بکام</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="هکر"
+data-image="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff">
+
+<span>💻 هکر</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="شاعر"
+data-image="https://ui-avatars.com/api/?name=Poet&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Poet&background=222&color=fff">
+
+<span>📜 شاعر</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="آشپز"
+data-image="https://ui-avatars.com/api/?name=Chef&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Chef&background=222&color=fff">
+
+<span>👨‍🍳 آشپز</span>
+
+</button>
+
+
+<button
+class="characterCard"
+data-name="تراپیست"
+data-image="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff">
+
+<img src="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff">
+
+<span>🧠 تراپیست</span>
+
+</button>
 
 </div>
 </div>
+
 
 <script>
-/* =========================
-   SUPABASE
-========================= */
-const SUPABASE_URL="https://vkqmlfumodqmmylchgdx.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 /* =========================
-   EDGE FUNCTION / MODEL
+SUPABASE
 ========================= */
-const EDGE_FUNCTION_URL="https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
-const AI_MODEL="google/gemma-4-31b-it";
+
+const SUPABASE_URL=
+"https://vkqmlfumodqmmylchgdx.supabase.co";
+
+const SUPABASE_ANON_KEY=
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4IiwiaWF0IjoxNzYwMzY1MTIsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+
+const supabaseClient=
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
+);
+
 
 /* =========================
-   ELEMENTS
+EDGE FUNCTION
 ========================= */
-const chat=document.getElementById("chat");
-const messageInput=document.getElementById("messageInput");
-const sendButton=document.getElementById("sendButton");
-const typing=document.getElementById("typing");
-const errorBox=document.getElementById("errorBox");
-const characterPanel=document.getElementById("characterPanel");
-const characterButton=document.getElementById("characterButton");
-const closeCharacterPanel=document.getElementById("closeCharacterPanel");
-const headerCharacter=document.getElementById("headerCharacter");
-const characterName=document.getElementById("characterName");
-const loginScreen=document.getElementById("loginScreen");
-const emailInput=document.getElementById("emailInput");
-const loginButton=document.getElementById("loginButton");
-const verifyButton=document.getElementById("verifyButton");
-const otpInput=document.getElementById("otpInput");
-const otpArea=document.getElementById("otpArea");
-const loginMessage=document.getElementById("loginMessage");
 
-const chatySwitch=document.getElementById("chatySwitch");
-const ahooraSwitch=document.getElementById("ahooraSwitch");
-const ahooraLoading=document.getElementById("ahooraLoading");
-const ahooraFrame=document.getElementById("ahooraFrame");
+const EDGE_FUNCTION_URL=
+"https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
 
-let selectedCharacter="Chaty AI";
-let selectedImage="https://ui-avatars.com/api/?name=Chaty&background=222&color=fff";
+
+/*
+ * مهم:
+ * این مدل باید توسط Edge Function
+ * مستقیماً به OpenRouter ارسال شود.
+ */
+
+const AI_MODEL=
+"openrouter/free";
+
+
+/* =========================
+ELEMENTS
+========================= */
+
+const chat=
+document.getElementById("chat");
+
+const messageInput=
+document.getElementById("messageInput");
+
+const sendButton=
+document.getElementById("sendButton");
+
+const typing=
+document.getElementById("typing");
+
+const errorBox=
+document.getElementById("errorBox");
+
+const characterPanel=
+document.getElementById("characterPanel");
+
+const characterButton=
+document.getElementById("characterButton");
+
+const closeCharacterPanel=
+document.getElementById("closeCharacterPanel");
+
+const headerCharacter=
+document.getElementById("headerCharacter");
+
+const characterName=
+document.getElementById("characterName");
+
+const loginScreen=
+document.getElementById("loginScreen");
+
+const emailInput=
+document.getElementById("emailInput");
+
+const loginButton=
+document.getElementById("loginButton");
+
+const verifyButton=
+document.getElementById("verifyButton");
+
+const otpInput=
+document.getElementById("otpInput");
+
+const otpArea=
+document.getElementById("otpArea");
+
+const loginMessage=
+document.getElementById("loginMessage");
+
+const chatySwitch=
+document.getElementById("chatySwitch");
+
+const ahooraSwitch=
+document.getElementById("ahooraSwitch");
+
+const ahooraLoading=
+document.getElementById("ahooraLoading");
+
+const ahooraFrame=
+document.getElementById("ahooraFrame");
+
+
+let selectedCharacter=
+"Chaty AI";
+
+let selectedImage=
+"https://ui-avatars.com/api/?name=Chaty&background=222&color=fff";
+
 let loginEmail="";
+
 let ahooraLoaded=false;
+
 let ahooraLoadingStarted=false;
 
+
 /* =========================
-   HELPERS
+HELPERS
 ========================= */
+
 function escapeHTML(text){
-return String(text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+
+return String(text)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
 }
+
+
 function showError(title,details){
+
 errorBox.style.display="block";
-errorBox.innerHTML="<b>"+escapeHTML(title)+"</b>\n\n"+escapeHTML(details)+"\n\n<button class='clearError' onclick='clearError()'>پاک کردن خطا</button>";
+
+errorBox.innerHTML=
+"<b>"+
+escapeHTML(title)+
+"</b>\n\n"+
+escapeHTML(details)+
+"\n\n<button class='clearError' onclick='clearError()'>پاک کردن خطا</button>";
+
 scrollBottom();
+
 }
+
+
 function clearError(){
+
 errorBox.style.display="none";
+
 errorBox.innerHTML="";
+
 }
+
+
 function scrollBottom(){
-setTimeout(()=>{chat.scrollTop=chat.scrollHeight},50);
+
+setTimeout(()=>{
+
+chat.scrollTop=
+chat.scrollHeight;
+
+},50);
+
 }
+
+
 function addMessage(text,type){
-const div=document.createElement("div");
-div.className="message "+(type==="user"?"userMessage":"aiMessage");
+
+const div=
+document.createElement("div");
+
+div.className=
+"message "+
+(type==="user"?
+"userMessage":
+"aiMessage");
+
 if(type!=="user"){
-div.innerHTML="<div class='messageName'>"+escapeHTML(selectedCharacter)+"</div>"+escapeHTML(text);
-}else div.textContent=text;
-chat.insertBefore(div,typing);
-scrollBottom();
+
+div.innerHTML=
+"<div class='messageName'>"+
+escapeHTML(selectedCharacter)+
+"</div>"+
+escapeHTML(text);
+
+}else{
+
+div.textContent=text;
+
 }
 
-/* =========================
-   CHARACTER
-========================= */
-characterButton.addEventListener("click",()=>characterPanel.style.display="block");
-closeCharacterPanel.addEventListener("click",()=>characterPanel.style.display="none");
-document.querySelectorAll(".characterCard").forEach(card=>{
-card.addEventListener("click",function(){
-selectedCharacter=this.dataset.name;
-selectedImage=this.dataset.image;
-characterName.textContent=selectedCharacter;
-headerCharacter.src=selectedImage;
-characterPanel.style.display="none";
-addMessage("شخصیت «"+selectedCharacter+"» انتخاب شد.","ai");
-});
-});
+chat.insertBefore(div,typing);
+
+scrollBottom();
+
+}
+
 
 /* =========================
-   PROMPT
+CHARACTER
 ========================= */
+
+characterButton.addEventListener(
+"click",
+()=>{
+characterPanel.style.display="block";
+}
+);
+
+
+closeCharacterPanel.addEventListener(
+"click",
+()=>{
+characterPanel.style.display="none";
+}
+);
+
+
+document
+.querySelectorAll(".characterCard")
+.forEach(card=>{
+
+card.addEventListener(
+"click",
+function(){
+
+selectedCharacter=
+this.dataset.name;
+
+selectedImage=
+this.dataset.image;
+
+characterName.textContent=
+selectedCharacter;
+
+headerCharacter.src=
+selectedImage;
+
+characterPanel.style.display=
+"none";
+
+addMessage(
+"شخصیت «"+
+selectedCharacter+
+"» انتخاب شد.",
+"ai"
+);
+
+}
+);
+
+});
+
+
+/* =========================
+PROMPT
+========================= */
+
 function getSystemPrompt(){
+
 return `تو Chaty AI هستی.
 شخصیت انتخاب شده: ${selectedCharacter}
-مدل: ${AI_MODEL}
+سیستم مدل: OpenRouter Free
 
 اگر شخصیت خاصی انتخاب شده، لحن پاسخ را متناسب با همان شخصیت تنظیم کن.
 به زبان کاربر پاسخ بده.
 اگر فارسی صحبت کرد، فارسی پاسخ بده.
 پاسخ‌ها طبیعی، مفید و تا حد امکان کوتاه باشند.`;
+
 }
 
+
 /* =========================
-   EXTRACT AI REPLY
+EXTRACT REPLY
 ========================= */
+
 function extractReply(data){
-if(typeof data==="string" && data.trim()) return data.trim();
-if(data && typeof data.reply==="string" && data.reply.trim()) return data.reply.trim();
-if(data && typeof data.answer==="string" && data.answer.trim()) return data.answer.trim();
-if(data && typeof data.message==="string" && data.message.trim()) return data.message.trim();
-if(data && typeof data.response==="string" && data.response.trim()) return data.response.trim();
-if(data && typeof data.content==="string" && data.content.trim()) return data.content.trim();
-if(data && typeof data.text==="string" && data.text.trim()) return data.text.trim();
-if(data && data.choices && data.choices[0]){
-if(data.choices[0].message && typeof data.choices[0].message.content==="string") return data.choices[0].message.content.trim();
-if(typeof data.choices[0].text==="string") return data.choices[0].text.trim();
-}
-return null;
+
+if(typeof data==="string" && data.trim())
+return data.trim();
+
+if(data &&
+typeof data.reply==="string" &&
+data.reply.trim())
+return data.reply.trim();
+
+if(data &&
+typeof data.answer==="string" &&
+data.answer.trim())
+return data.answer.trim();
+
+if(data &&
+typeof data.message==="string" &&
+data.message.trim())
+return data.message.trim();
+
+if(data &&
+typeof data.response==="string" &&
+data.response.trim())
+return data.response.trim();
+
+if(data &&
+typeof data.content==="string" &&
+data.content.trim())
+return data.content.trim();
+
+if(data &&
+typeof data.text==="string" &&
+data.text.trim())
+return data.text.trim();
+
+if(
+data &&
+data.choices &&
+data.choices[0]
+){
+
+if(
+data.choices[0].message &&
+typeof data.choices[0].message.content==="string"
+)
+return data.choices[0].message.content.trim();
+
+if(
+typeof data.choices[0].text==="string"
+)
+return data.choices[0].text.trim();
+
 }
 
+return null;
+
+}
+
+
 /* =========================
-   SEND
+SEND
 ========================= */
+
 async function sendMessage(){
-const text=messageInput.value.trim();
-if(!text || sendButton.disabled)return;
+
+const text=
+messageInput.value.trim();
+
+if(!text || sendButton.disabled)
+return;
 
 clearError();
+
 addMessage(text,"user");
+
 messageInput.value="";
+
 messageInput.style.height="auto";
+
 sendButton.disabled=true;
+
 typing.style.display="block";
+
 scrollBottom();
 
+
 try{
-const response=await fetch(EDGE_FUNCTION_URL,{
+
+const response=
+await fetch(
+EDGE_FUNCTION_URL,
+{
+
 method:"POST",
+
 headers:{
 "Content-Type":"application/json",
-"Authorization":"Bearer "+SUPABASE_ANON_KEY,
-"apikey":SUPABASE_ANON_KEY
+"Authorization":
+"Bearer "+
+SUPABASE_ANON_KEY,
+"apikey":
+SUPABASE_ANON_KEY
 },
+
 body:JSON.stringify({
+
 name:text,
+
 message:text,
+
 prompt:text,
+
 model:AI_MODEL,
+
 character:selectedCharacter,
+
 system:getSystemPrompt()
+
 })
-});
 
-const raw=await response.text();
-
-if(!response.ok){
-throw new Error("HTTP "+response.status+" "+(response.statusText||"")+"\n\nServer response:\n"+raw);
 }
-if(!raw.trim()) throw new Error("Edge Function پاسخ خالی برگرداند.");
-
-let data;
-try{
-data=JSON.parse(raw);
-}catch(e){
-throw new Error("پاسخ Edge Function JSON معتبر نیست.\n\nRaw response:\n"+raw);
-}
-
-console.log("Chaty response:",data);
-const answer=extractReply(data);
-
-if(!answer){
-throw new Error("پاسخ هوش مصنوعی در داده دریافتی پیدا نشد.\n\nJSON دریافت شده:\n"+JSON.stringify(data,null,2));
-}
-
-typing.style.display="none";
-addMessage(answer,"ai");
-
-}catch(error){
-console.error("CHATY ERROR:",error);
-typing.style.display="none";
-
-let details="";
-if(error instanceof TypeError){
-details="احتمالاً مشکل اتصال اینترنت، CORS، SSL یا در دسترس نبودن Edge Function وجود دارد.";
-}
-
-showError(
-"❌ خطا در اتصال به Chaty AI",
-(details?details+"\n\n":"")+"خطای اصلی:\n"+(error.message||String(error))+
-"\n\nEndpoint:\n"+EDGE_FUNCTION_URL+
-"\n\nModel:\n"+AI_MODEL
 );
 
-addMessage("❌ پاسخ دریافت نشد. جزئیات خطا را در بخش خطا ببین.","ai");
+
+const raw=
+await response.text();
+
+
+if(!response.ok){
+
+throw new Error(
+"HTTP "+
+response.status+
+" "+
+(response.statusText||"")+
+"\n\nServer response:\n"+
+raw
+);
+
 }
+
+
+if(!raw.trim())
+throw new Error(
+"Edge Function پاسخ خالی برگرداند."
+);
+
+
+let data;
+
+try{
+
+data=
+JSON.parse(raw);
+
+}catch(e){
+
+throw new Error(
+"پاسخ Edge Function JSON معتبر نیست.\n\nRaw response:\n"+
+raw
+);
+
+}
+
+
+console.log(
+"Chaty response:",
+data
+);
+
+
+const answer=
+extractReply(data);
+
+
+if(!answer){
+
+throw new Error(
+"پاسخ هوش مصنوعی در داده دریافتی پیدا نشد.\n\nJSON دریافت شده:\n"+
+JSON.stringify(
+data,
+null,
+2
+)
+);
+
+}
+
+
+typing.style.display="none";
+
+addMessage(
+answer,
+"ai"
+);
+
+
+}catch(error){
+
+console.error(
+"CHATY ERROR:",
+error
+);
+
+typing.style.display="none";
+
+
+let details="";
+
+
+if(error instanceof TypeError){
+
+details=
+"احتمالاً مشکل اتصال اینترنت، CORS، SSL یا در دسترس نبودن Edge Function وجود دارد.";
+
+}
+
+
+showError(
+
+"❌ خطا در اتصال به Chaty AI",
+
+(details?
+details+
+"\n\n":
+"")+
+
+"خطای اصلی:\n"+
+(error.message||
+String(error))+
+
+"\n\nEndpoint:\n"+
+EDGE_FUNCTION_URL+
+
+"\n\nModel:\n"+
+AI_MODEL
+
+);
+
+
+addMessage(
+"❌ پاسخ دریافت نشد. جزئیات خطا را در بخش خطا ببین.",
+"ai"
+);
+
+}
+
 
 sendButton.disabled=false;
+
 }
 
+
 /* =========================
-   INPUT
+INPUT
 ========================= */
-sendButton.addEventListener("click",sendMessage);
-messageInput.addEventListener("keydown",function(e){
-if(e.key==="Enter" && !e.shiftKey){
+
+sendButton.addEventListener(
+"click",
+sendMessage
+);
+
+
+messageInput.addEventListener(
+"keydown",
+function(e){
+
+if(
+e.key==="Enter" &&
+!e.shiftKey
+){
+
 e.preventDefault();
+
 sendMessage();
+
 }
-});
-messageInput.addEventListener("input",function(){
+
+}
+);
+
+
+messageInput.addEventListener(
+"input",
+function(){
+
 this.style.height="auto";
-this.style.height=Math.min(this.scrollHeight,100)+"px";
-});
+
+this.style.height=
+Math.min(
+this.scrollHeight,
+100
+)+
+"px";
+
+}
+);
+
 
 /* =========================
-   AHOORA AI SWITCH
-   Ai.html باید کنار index.html باشد.
+AHOORA AI
 ========================= */
+
 function openAhooraAI(){
-if(ahooraLoadingStarted)return;
+
+if(ahooraLoadingStarted)
+return;
 
 ahooraLoadingStarted=true;
+
 ahooraSwitch.classList.add("loading");
+
 chatySwitch.classList.remove("active");
+
 ahooraSwitch.classList.add("active");
 
 ahooraLoading.style.display="flex";
+
 requestAnimationFrame(()=>{
+
 ahooraLoading.style.opacity="1";
+
 });
+
 
 if(!ahooraLoaded){
-ahooraFrame.onload=function(){
+
+ahooraFrame.onload=
+function(){
+
 ahooraLoaded=true;
+
 setTimeout(()=>{
+
 ahooraLoading.style.opacity="0";
+
 setTimeout(()=>{
+
 ahooraLoading.style.display="none";
+
 ahooraFrame.style.display="block";
+
 ahooraSwitch.classList.remove("loading");
+
 },250);
+
 },300);
+
 };
 
-ahooraFrame.onerror=function(){
+
+ahooraFrame.onerror=
+function(){
+
 ahooraLoading.style.opacity="0";
+
 setTimeout(()=>{
+
 ahooraLoading.style.display="none";
+
 ahooraSwitch.classList.remove("loading");
+
 chatySwitch.classList.add("active");
+
 ahooraSwitch.classList.remove("active");
+
 ahooraLoadingStarted=false;
-alert("❌ فایل Ai.html پیدا نشد یا قابل بارگذاری نیست.");
+
+alert(
+"❌ فایل Ai.html پیدا نشد یا قابل بارگذاری نیست."
+);
+
 },250);
+
 };
+
 
 ahooraFrame.src="Ai.html";
+
+
 }else{
+
 ahooraLoading.style.opacity="0";
+
 setTimeout(()=>{
+
 ahooraLoading.style.display="none";
+
 ahooraFrame.style.display="block";
+
 ahooraSwitch.classList.remove("loading");
+
 },250);
+
 }
+
 }
+
 
 function openChatyAI(){
+
 ahooraFrame.style.display="none";
+
 ahooraLoading.style.opacity="0";
+
 ahooraLoading.style.display="none";
+
 ahooraSwitch.classList.remove("loading");
+
 ahooraSwitch.classList.remove("active");
+
 chatySwitch.classList.add("active");
+
 ahooraLoadingStarted=false;
+
 }
 
-chatySwitch.addEventListener("click",openChatyAI);
-ahooraSwitch.addEventListener("click",openAhooraAI);
+
+chatySwitch.addEventListener(
+"click",
+openChatyAI
+);
+
+ahooraSwitch.addEventListener(
+"click",
+openAhooraAI
+);
+
 
 /* =========================
-   LOGIN
+LOGIN
 ========================= */
+
 async function checkSession(){
+
 try{
-const {data,error}=await supabaseClient.auth.getSession();
-if(error) throw error;
+
+const {
+data,
+error
+}=
+await supabaseClient.auth.getSession();
+
+if(error)
+throw error;
+
 if(data.session){
+
 loginScreen.style.display="none";
+
 }else{
+
 loginScreen.style.display="flex";
-}
-}catch(e){
-loginScreen.style.display="flex";
-loginMessage.textContent="خطا در بررسی ورود: "+e.message;
-}
+
 }
 
-loginButton.addEventListener("click",async()=>{
-const email=emailInput.value.trim().toLowerCase();
-if(!email || !email.includes("@")){
-loginMessage.textContent="لطفاً ایمیل معتبر وارد کن.";
-return;
+}catch(e){
+
+loginScreen.style.display="flex";
+
+loginMessage.textContent=
+"خطا در بررسی ورود: "+
+e.message;
+
 }
+
+}
+
+
+loginButton.addEventListener(
+"click",
+async()=>{
+
+const email=
+emailInput.value
+.trim()
+.toLowerCase();
+
+
+if(
+!email ||
+!email.includes("@")
+){
+
+loginMessage.textContent=
+"لطفاً ایمیل معتبر وارد کن.";
+
+return;
+
+}
+
+
 loginEmail=email;
+
 loginButton.disabled=true;
-loginButton.textContent="در حال ارسال...";
+
+loginButton.textContent=
+"در حال ارسال...";
+
 loginMessage.textContent="";
+
+
 try{
-const {error}=await supabaseClient.auth.signInWithOtp({
+
+const {
+error
+}=
+await supabaseClient.auth.signInWithOtp({
+
 email:email,
-options:{shouldCreateUser:true}
+
+options:{
+shouldCreateUser:true
+}
+
 });
-if(error)throw error;
-otpArea.style.display="block";
-loginButton.style.display="none";
-loginMessage.textContent="✅ کد ورود ارسال شد.";
+
+
+if(error)
+throw error;
+
+
+otpArea.style.display=
+"block";
+
+loginButton.style.display=
+"none";
+
+loginMessage.textContent=
+"✅ کد ورود ارسال شد.";
+
 otpInput.focus();
+
+
 }catch(e){
-loginMessage.textContent="❌ "+e.message;
+
+loginMessage.textContent=
+"❌ "+
+e.message;
+
 loginButton.disabled=false;
-loginButton.textContent="📩 دریافت کد ورود";
-}
-});
 
-verifyButton.addEventListener("click",async()=>{
-const token=otpInput.value.replace(/[^0-9]/g,"");
+loginButton.textContent=
+"📩 دریافت کد ورود";
+
+}
+
+}
+);
+
+
+verifyButton.addEventListener(
+"click",
+async()=>{
+
+const token=
+otpInput.value
+.replace(/[^0-9]/g,"");
+
+
 if(token.length!==6){
-loginMessage.textContent="❌ کد باید ۶ رقمی باشد.";
+
+loginMessage.textContent=
+"❌ کد باید ۶ رقمی باشد.";
+
 return;
+
 }
+
+
 verifyButton.disabled=true;
-verifyButton.textContent="در حال بررسی...";
+
+verifyButton.textContent=
+"در حال بررسی...";
+
+
 try{
-const {data,error}=await supabaseClient.auth.verifyOtp({
+
+const {
+data,
+error
+}=
+await supabaseClient.auth.verifyOtp({
+
 email:loginEmail,
+
 token:token,
+
 type:"email"
+
 });
-if(error)throw error;
-if(data.session)loginScreen.style.display="none";
-else throw new Error("ورود انجام نشد؛ Session دریافت نشد.");
-}catch(e){
-loginMessage.textContent="❌ "+e.message;
-verifyButton.disabled=false;
-verifyButton.textContent="🔐 ورود";
+
+
+if(error)
+throw error;
+
+
+if(data.session){
+
+loginScreen.style.display=
+"none";
+
+}else{
+
+throw new Error(
+"ورود انجام نشد؛ Session دریافت نشد."
+);
+
 }
-});
 
-otpInput.addEventListener("input",function(){
-this.value=this.value.replace(/[^0-9]/g,"").slice(0,6);
-});
 
-supabaseClient.auth.onAuthStateChange((event,session)=>{
-loginScreen.style.display=session?"none":"flex";
-});
+}catch(e){
+
+loginMessage.textContent=
+"❌ "+
+e.message;
+
+verifyButton.disabled=false;
+
+verifyButton.textContent=
+"🔐 ورود";
+
+}
+
+}
+);
+
+
+otpInput.addEventListener(
+"input",
+function(){
+
+this.value=
+this.value
+.replace(/[^0-9]/g,"")
+.slice(0,6);
+
+}
+);
+
+
+supabaseClient.auth.onAuthStateChange(
+(event,session)=>{
+
+loginScreen.style.display=
+session?
+"none":
+"flex";
+
+}
+);
+
 
 checkSession();
+
 </script>
+
 </body>
 </html>
