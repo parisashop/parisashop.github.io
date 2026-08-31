@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>🔥 خرید شعله</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: Arial, Tahoma, sans-serif;
+    background: #080812;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 520px;
+    background: radial-gradient(circle at 50% 15%, #20204b, #080812 70%);
+    border: 1px solid #292929;
+    border-radius: 30px;
+    padding: 30px 25px;
+    box-shadow: 0 20px 80px #00000088;
+}
+
+.header { text-align: center; margin-bottom: 20px; }
+.logo {
+    font-size: 38px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #ff6b35, #ff2d55, #ff6fd8);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.subtitle { color: #9da8c5; font-size: 13px; margin-top: 4px; }
+
+/* CARD INFO */
+.card-info {
+    background: linear-gradient(135deg, #1a1a2e, #0a0a18);
+    border: 1px solid #ff6b3544;
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+.card-info .card-number {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ff6b35;
+    letter-spacing: 3px;
+    direction: ltr;
+    font-family: 'Courier New', monospace;
+    padding: 8px 14px;
+    border-radius: 12px;
+    display: inline-block;
+}
+.card-info .card-name { color: #66aaff; font-size: 14px; margin-top: 6px; }
+.card-info .card-time {
+    color: #888;
+    font-size: 11px;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: #ff224411;
+    border-radius: 10px;
+    border: 1px solid #ff224422;
+}
+
+/* USER INFO */
+.user-info {
+    background: #0a0a18;
+    border-radius: 16px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #1a1a2e;
+}
+.user-info .email { color: #9da8c5; font-size: 13px; direction: ltr; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-info .flames { display: flex; align-items: center; gap: 6px; font-size: 18px; font-weight: bold; color: #ff6b35; }
+
+/* PACKAGES */
+.packages {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+.package-btn {
+    background: #111122;
+    border: 2px solid #292939;
+    border-radius: 14px;
+    padding: 14px 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    color: white;
+}
+.package-btn:hover { border-color: #ff6b3544; background: #16162a; }
+.package-btn.selected { border-color: #ff6b35; background: #1a1a2e; box-shadow: 0 0 30px #ff6b3522; }
+.package-btn .flame-num { font-size: 22px; font-weight: bold; color: #ff6b35; }
+.package-btn .flame-label { font-size: 11px; color: #888; }
+.package-btn .flame-price { font-size: 12px; color: #66aaff; margin-top: 4px; }
+.package-btn .bonus-tag { font-size: 10px; color: #00ff99; background: #00ff9915; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 3px; }
+
+/* CUSTOM COUNT */
+.custom-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #0a0a18;
+    border: 1px solid #292939;
+    border-radius: 14px;
+    padding: 8px 14px;
+    margin-bottom: 14px;
+}
+.custom-count label { color: #9da8c5; font-size: 13px; white-space: nowrap; }
+.custom-count input {
+    flex: 1;
+    padding: 8px 6px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    outline: none;
+    min-width: 60px;
+}
+.custom-count .price-display { color: #ff6b35; font-size: 16px; font-weight: bold; direction: ltr; white-space: nowrap; }
+
+/* BUTTONS */
+.btn-buy {
+    width: 100%;
+    padding: 16px;
+    border: 0;
+    border-radius: 16px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #ff6b35, #ff2d55);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-buy:hover { transform: scale(1.02); box-shadow: 0 0 40px #ff6b3544; }
+.btn-buy:active { transform: scale(0.97); }
+.btn-buy:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-buy .loader {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #ffffff33;
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: auto;
+}
+.btn-buy.loading .loader { display: block; }
+.btn-buy.loading .btn-text { display: none; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* STATUS OVERLAY */
+#statusOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(8, 8, 18, 0.92);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+#statusOverlay.show { display: flex; }
+
+.status-box {
+    width: 100%;
+    max-width: 420px;
+    background: #151526;
+    border: 1px solid #292939;
+    border-radius: 25px;
+    padding: 35px 25px;
+    text-align: center;
+}
+.status-box .status-icon { font-size: 64px; margin-bottom: 15px; animation: statusPulse 1.5s infinite; }
+@keyframes statusPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+.status-box .status-title { font-size: 22px; font-weight: bold; color: #ff6b35; margin-bottom: 8px; }
+.status-box .status-desc { color: #9da8c5; font-size: 15px; line-height: 1.8; }
+.status-box .status-time { color: #ff6b35; font-size: 14px; margin-top: 12px; padding: 10px; background: #1a1a2e; border-radius: 12px; border: 1px solid #292939; }
+.status-box .status-loading { margin-top: 18px; }
+.status-box .status-loading .bar { width: 100%; height: 4px; background: #292939; border-radius: 2px; overflow: hidden; margin-top: 8px; }
+.status-box .status-loading .bar .fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ff6b35, #ff2d55); border-radius: 2px; animation: progressBar 300s linear forwards; }
+@keyframes progressBar { 0% { width: 0%; } 100% { width: 100%; } }
+
+/* MESSAGE */
+.message { margin-top: 14px; padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.8; display: none; text-align: center; }
+.message.success { display: block; background: #00ff9915; border: 1px solid #00ff9944; color: #00ff99; }
+.message.error { display: block; background: #ff224415; border: 1px solid #ff224444; color: #ff6688; }
+.message.info { display: block; background: #0066ff15; border: 1px solid #0066ff44; color: #66aaff; }
+
+/* LOGIN */
+#loginOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(8, 8, 18, 0.95);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+#loginOverlay.show { display: flex; }
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: #151526;
+    border: 1px solid #292939;
+    border-radius: 25px;
+    padding: 30px 25px;
+    text-align: center;
+}
+.login-box .title { font-size: 28px; font-weight: bold; margin-bottom: 6px; background: linear-gradient(135deg, #ff6b35, #ff2d55); -webkit-background-clip: text; color: transparent; }
+.login-box .desc { color: #9da8c5; font-size: 14px; margin-bottom: 18px; }
+.login-box input { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #292939; background: #0a0a18; color: white; font-size: 15px; outline: none; margin-bottom: 10px; direction: ltr; }
+.login-box input:focus { border-color: #ff6b35; }
+.login-box .btn-login { width: 100%; padding: 14px; border: 0; border-radius: 14px; background: linear-gradient(135deg, #ff6b35, #ff2d55); color: white; font-size: 16px; cursor: pointer; }
+.login-box .btn-login:disabled { opacity: 0.5; }
+.login-box .otp-area { display: none; margin-top: 12px; }
+.login-box .otp-area input { margin-bottom: 8px; }
+.login-box .otp-area .btn-verify { width: 100%; padding: 14px; border: 0; border-radius: 14px; background: #0066ff; color: white; font-size: 16px; cursor: pointer; }
+.login-box .login-message { color: #9da8c5; font-size: 13px; margin-top: 12px; min-height: 20px; }
+.login-box .back-email { background: none; border: none; color: #666; cursor: pointer; font-size: 13px; margin-top: 10px; }
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+    .container { padding: 18px 14px; border-radius: 20px; }
+    .packages { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+    .package-btn { padding: 10px 6px; }
+    .package-btn .flame-num { font-size: 18px; }
+    .logo { font-size: 30px; }
+    .card-info .card-number { font-size: 18px; letter-spacing: 2px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay">
+    <div class="login-box">
+        <div class="title">🔥 خرید شعله</div>
+        <div class="desc">برای خرید شعله وارد حساب خود شوید.</div>
+        
+        <div id="loginEmailArea">
+            <input id="loginEmailInput" type="email" placeholder="ایمیل خود را وارد کنید">
+            <button class="btn-login" id="loginSendOtp">📩 دریافت کد ورود</button>
+        </div>
+        
+        <div class="otp-area" id="loginOtpArea">
+            <input id="loginOtpInput" type="text" maxlength="6" inputmode="numeric" placeholder="کد ۶ رقمی">
+            <button class="btn-verify" id="loginVerifyOtp">🔐 تأیید و ورود</button>
+            <button class="back-email" id="loginBackEmail">← تغییر ایمیل</button>
+        </div>
+        
+        <div class="login-message" id="loginMessage"></div>
+    </div>
+</div>
+
+<!-- STATUS OVERLAY -->
+<div id="statusOverlay">
+    <div class="status-box">
+        <div class="status-icon">⏳</div>
+        <div class="status-title">در انتظار تأیید ادمین</div>
+        <div class="status-desc">
+            لطفاً مبلغ را به شماره کارت زیر واریز کنید<br>
+            پس از تأیید ادمین، شعله‌ها اضافه می‌شود
+        </div>
+        <div style="margin:15px 0;padding:15px;background:#1a1a2e;border-radius:14px;border:1px solid #ff6b3544;">
+            <div style="color:#9da8c5;font-size:12px;">شماره کارت</div>
+            <div style="font-size:24px;font-weight:bold;color:#ff6b35;direction:ltr;font-family:'Courier New',monospace;letter-spacing:3px;">
+                6219 8619 2115 8506
+            </div>
+            <div style="color:#66aaff;font-size:14px;margin-top:4px;">به نام جعفر ملکی</div>
+        </div>
+        <div class="status-loading">
+            <div style="color:#888;font-size:13px;">منتظر تأیید ادمین<span>...</span></div>
+            <div class="bar"><div class="fill"></div></div>
+        </div>
+        <button class="btn-buy" id="closeStatusBtn" style="margin-top:18px;background:#444;font-size:14px;padding:12px;">✖ بستن</button>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+    <div class="header">
+        <div class="logo">🔥 خرید شعله</div>
+        <div class="subtitle">هر شعله = ۱,۰۰۰ تومان</div>
+    </div>
+
+    <div class="card-info">
+        <div class="card-number">6219 8619 2115 8506</div>
+        <div class="card-name">به نام جعفر ملکی</div>
+        <div class="card-time">🕐 زمان واریز: ۹ صبح تا ۱۲ شب (به جز ۱۲ تا ۹ شب)</div>
+    </div>
+
+    <div class="user-info" id="userInfo" style="display:none;">
+        <span class="email" id="userEmail">---</span>
+        <span class="flames"><span>🔥</span><span id="userFlames">0</span></span>
+    </div>
+
+    <div class="packages" id="packagesContainer">
+        <button class="package-btn selected" data-flames="10">
+            <div class="flame-num">۱۰</div>
+            <div class="flame-label">شعله</div>
+            <div class="flame-price">۱۰,۰۰۰</div>
+        </button>
+        <button class="package-btn" data-flames="50">
+            <div class="flame-num">۵۰</div>
+            <div class="flame-label">شعله</div>
+            <div class="flame-price">۵۰,۰۰۰</div>
+            <div class="bonus-tag">🎁 +۵</div>
+        </button>
+        <button class="package-btn" data-flames="100">
+            <div class="flame-num">۱۰۰</div>
+            <div class="flame-label">شعله</div>
+            <div class="flame-price">۱۰۰,۰۰۰</div>
+            <div class="bonus-tag">🎁 +۱۵</div>
+        </button>
+        <button class="package-btn" data-flames="250">
+            <div class="flame-num">۲۵۰</div>
+            <div class="flame-label">شعله</div>
+            <div class="flame-price">۲۵۰,۰۰۰</div>
+            <div class="bonus-tag">🎁 +۵۰</div>
+        </button>
+        <button class="package-btn" data-flames="500">
+            <div class="flame-num">۵۰۰</div>
+            <div class="flame-label">شعله</div>
+            <div class="flame-price">۵۰۰,۰۰۰</div>
+            <div class="bonus-tag">🎁 +۱۵۰</div>
+        </button>
+        <button class="package-btn" data-flames="1000">
+            <div class="flame-num">۱,۰۰۰</div>
+            <div class="flame-label">شعله</div>
+            <div class="flame-price">۱,۰۰۰,۰۰۰</div>
+            <div class="bonus-tag">🎁 +۴۰۰</div>
+        </button>
+    </div>
+
+    <div class="custom-count">
+        <label>تعداد دلخواه:</label>
+        <input type="number" id="flameCountInput" min="1" max="10000" value="10">
+        <span class="price-display" id="priceDisplay">۱۰,۰۰۰ تومان</span>
+    </div>
+
+    <button class="btn-buy" id="buyButton">
+        <span class="btn-text">🔥 خرید شعله</span>
+        <span class="loader"></span>
+    </button>
+
+    <div class="message" id="message"></div>
+    <div style="text-align:center;margin-top:16px;">
+        <a href="Ai.html" style="color:#666;text-decoration:none;font-size:13px;">← بازگشت به Ahoora AI</a>
+    </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://vkqmlfumodqmmylchgdx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const PRICE_PER_FLAME = 1000;
+let currentUser = null;
+let isLoggedIn = false;
+let selectedFlames = 10;
+
+// DOM Elements
+const packagesContainer = document.getElementById('packagesContainer');
+const flameCountInput = document.getElementById('flameCountInput');
+const priceDisplay = document.getElementById('priceDisplay');
+const buyButton = document.getElementById('buyButton');
+const messageDiv = document.getElementById('message');
+const userInfo = document.getElementById('userInfo');
+const userEmail = document.getElementById('userEmail');
+const userFlames = document.getElementById('userFlames');
+const statusOverlay = document.getElementById('statusOverlay');
+const closeStatusBtn = document.getElementById('closeStatusBtn');
+
+// Login Elements
+const loginOverlay = document.getElementById('loginOverlay');
+const loginEmailInput = document.getElementById('loginEmailInput');
+const loginSendOtp = document.getElementById('loginSendOtp');
+const loginOtpArea = document.getElementById('loginOtpArea');
+const loginOtpInput = document.getElementById('loginOtpInput');
+const loginVerifyOtp = document.getElementById('loginVerifyOtp');
+const loginBackEmail = document.getElementById('loginBackEmail');
+const loginMessage = document.getElementById('loginMessage');
+const loginEmailArea = document.getElementById('loginEmailArea');
+let loginEmail = '';
+
+function formatPrice(amount) { return amount.toLocaleString() + ' تومان'; }
+
+function showMessage(text, type = 'info') {
+    messageDiv.className = 'message ' + type;
+    messageDiv.textContent = text;
+    messageDiv.style.display = 'block';
+    setTimeout(() => { messageDiv.style.display = 'none'; }, 6000);
+}
+
+function updatePrice() {
+    const count = parseInt(flameCountInput.value) || 0;
+    priceDisplay.textContent = formatPrice(count * PRICE_PER_FLAME);
+}
+
+function checkTime() {
+    const hours = new Date().getHours();
+    return !(hours >= 12 && hours < 21);
+}
+
+// =====================================================
+// FLAME FUNCTIONS
+// =====================================================
+
+async function fetchUserFlames(email) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('user_flames')
+            .select('flames')
+            .eq('email', email)
+            .single();
+        if (error && error.code !== 'PGRST116') return 0;
+        return data ? data.flames : 0;
+    } catch { return 0; }
+}
+
+async function addFlamesToUser(email, flames) {
+    try {
+        let { data, error } = await supabaseClient
+            .from('user_flames')
+            .select('flames')
+            .eq('email', email)
+            .single();
+        
+        if (error && error.code === 'PGRST116') {
+            const { error: insertError } = await supabaseClient
+                .from('user_flames')
+                .insert({ email: email, flames: flames });
+            if (insertError) throw insertError;
+            return { success: true, newFlames: flames };
+        }
+        
+        if (error) throw error;
+        
+        const newFlames = (data.flames || 0) + flames;
+        const { error: updateError } = await supabaseClient
+            .from('user_flames')
+            .update({ flames: newFlames })
+            .eq('email', email);
+        
+        if (updateError) throw updateError;
+        return { success: true, newFlames: newFlames };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// =====================================================
+// PURCHASE REQUEST
+// =====================================================
+
+async function savePurchaseRequest(email, flames, amount) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('purchase_requests')
+            .insert({
+                email: email,
+                flames: flames,
+                amount: amount,
+                status: 'pending'
+            })
+            .select();
+        
+        if (error) throw error;
+        return { success: true, data: data };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// =====================================================
+// BUY
+// =====================================================
+
+async function handleBuy() {
+    if (!isLoggedIn) {
+        showMessage('لطفاً ابتدا وارد حساب خود شوید.', 'error');
+        loginOverlay.classList.add('show');
+        return;
+    }
+    
+    if (!checkTime()) {
+        showMessage('⏰ امکان خرید در ساعت ۱۲ تا ۹ شب وجود ندارد.', 'error');
+        return;
+    }
+    
+    const count = parseInt(flameCountInput.value) || 0;
+    if (count < 1) { showMessage('تعداد شعله باید حداقل ۱ باشد.', 'error'); return; }
+    if (count > 10000) { showMessage('حداکثر ۱۰,۰۰۰ شعله قابل خرید است.', 'error'); return; }
+    
+    const totalPrice = count * PRICE_PER_FLAME;
+    
+    if (!confirm(`🔥 خرید ${count.toLocaleString()} شعله به مبلغ ${totalPrice.toLocaleString()} تومان؟`)) return;
+    
+    buyButton.disabled = true;
+    buyButton.classList.add('loading');
+    
+    try {
+        const result = await savePurchaseRequest(currentUser.email, count, totalPrice);
+        if (!result.success) throw new Error(result.error);
+        
+        statusOverlay.classList.add('show');
+        showMessage('✅ درخواست خرید ثبت شد. منتظر تأیید ادمین باشید.', 'success');
+        
+    } catch (error) {
+        showMessage('❌ ' + error.message, 'error');
+    }
+    
+    buyButton.disabled = false;
+    buyButton.classList.remove('loading');
+}
+
+closeStatusBtn.addEventListener('click', () => statusOverlay.classList.remove('show'));
+
+// =====================================================
+// PACKAGES
+// =====================================================
+
+function selectPackage(flames) {
+    document.querySelectorAll('.package-btn').forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.flames) === flames);
+    });
+    selectedFlames = flames;
+    flameCountInput.value = flames;
+    updatePrice();
+}
+
+packagesContainer.addEventListener('click', function(e) {
+    const btn = e.target.closest('.package-btn');
+    if (btn) selectPackage(parseInt(btn.dataset.flames));
+});
+
+flameCountInput.addEventListener('input', function() {
+    let val = parseInt(this.value) || 0;
+    if (val < 1) val = 1;
+    if (val > 10000) val = 10000;
+    this.value = val;
+    document.querySelectorAll('.package-btn').forEach(btn => {
+        btn.classList.toggle('selected', parseInt(btn.dataset.flames) === val);
+    });
+    updatePrice();
+});
+
+// =====================================================
+// LOGIN
+// =====================================================
+
+async function sendLoginOTP() {
+    const email = loginEmailInput.value.trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+        loginMessage.textContent = 'لطفاً ایمیل معتبر وارد کنید.';
+        return;
+    }
+    loginEmail = email;
+    loginSendOtp.disabled = true;
+    loginSendOtp.textContent = 'در حال ارسال...';
+    
+    try {
+        const { error } = await supabaseClient.auth.signInWithOtp({
+            email: email,
+            options: { shouldCreateUser: true }
+        });
+        if (error) throw error;
+        loginEmailArea.style.display = 'none';
+        loginOtpArea.style.display = 'block';
+        loginMessage.textContent = '✅ کد ورود ارسال شد.';
+        loginOtpInput.focus();
+    } catch (error) {
+        loginMessage.textContent = '❌ ' + error.message;
+    }
+    loginSendOtp.disabled = false;
+    loginSendOtp.textContent = '📩 دریافت کد ورود';
+}
+
+async function verifyLoginOTP() {
+    const token = loginOtpInput.value.replace(/[^0-9]/g, '');
+    if (token.length !== 6) {
+        loginMessage.textContent = '❌ کد باید ۶ رقمی باشد.';
+        return;
+    }
+    loginVerifyOtp.disabled = true;
+    loginVerifyOtp.textContent = 'در حال بررسی...';
+    
+    try {
+        const { data, error } = await supabaseClient.auth.verifyOtp({
+            email: loginEmail,
+            token: token,
+            type: 'email'
+        });
+        if (error) throw error;
+        
+        if (data.session) {
+            currentUser = data.session.user;
+            isLoggedIn = true;
+            loginOverlay.classList.remove('show');
+            loginOtpArea.style.display = 'none';
+            loginEmailArea.style.display = 'block';
+            loginOtpInput.value = '';
+            loginMessage.textContent = '';
+            
+            userInfo.style.display = 'flex';
+            userEmail.textContent = currentUser.email;
+            const flames = await fetchUserFlames(currentUser.email);
+            userFlames.textContent = flames || 0;
+            showMessage('✅ ورود موفق!', 'success');
+        }
+    } catch (error) {
+        loginMessage.textContent = '❌ ' + (error.message || 'خطا در تأیید کد');
+    }
+    loginVerifyOtp.disabled = false;
+    loginVerifyOtp.textContent = '🔐 تأیید و ورود';
+}
+
+function backToEmail() {
+    loginOtpArea.style.display = 'none';
+    loginEmailArea.style.display = 'block';
+    loginOtpInput.value = '';
+    loginMessage.textContent = '';
+}
+
+loginSendOtp.addEventListener('click', sendLoginOTP);
+loginVerifyOtp.addEventListener('click', verifyLoginOTP);
+loginBackEmail.addEventListener('click', backToEmail);
+buyButton.addEventListener('click', handleBuy);
+
+loginOtpInput.addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+});
+loginOtpInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') verifyLoginOTP(); });
+loginEmailInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') sendLoginOTP(); });
+
+// =====================================================
+// CHECK SESSION
+// =====================================================
+
+async function checkSession() {
+    try {
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+        if (data.session) {
+            currentUser = data.session.user;
+            isLoggedIn = true;
+            loginOverlay.classList.remove('show');
+            userInfo.style.display = 'flex';
+            userEmail.textContent = currentUser.email;
+            const flames = await fetchUserFlames(currentUser.email);
+            userFlames.textContent = flames || 0;
+        } else {
+            loginOverlay.classList.add('show');
+        }
+    } catch { loginOverlay.classList.add('show'); }
+}
+
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    if (session) {
+        currentUser = session.user;
+        isLoggedIn = true;
+        loginOverlay.classList.remove('show');
+        userInfo.style.display = 'flex';
+        userEmail.textContent = currentUser.email;
+        const flames = await fetchUserFlames(currentUser.email);
+        userFlames.textContent = flames || 0;
+    } else {
+        isLoggedIn = false;
+        currentUser = null;
+        loginOverlay.classList.add('show');
+        userInfo.style.display = 'none';
+    }
+});
+
+selectPackage(10);
+checkSession();
+</script>
+</body>
+</html>
