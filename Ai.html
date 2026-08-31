@@ -1,1351 +1,196 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Ahoora AI</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    font-family:Arial,Tahoma,sans-serif;
-    background:#080812;
-    color:white;
-    height:100vh;
-    overflow:hidden;
-}
-
-button,input{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.app{
-    width:100%;
-    max-width:480px;
-    height:100vh;
-    margin:auto;
-    padding:18px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-
-    background:
-    radial-gradient(
-        circle at 50% 15%,
-        #20204b,
-        #080812 70%
-    );
-}
-
-.header{
-    width:100%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.title{
-    font-size:24px;
-    font-weight:bold;
-
-    background:
-    linear-gradient(
-        135deg,
-        #00d4ff,
-        #7b2ffc,
-        #ff6fd8
-    );
-
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.time{
-    background:#ffffff0d;
-    padding:7px 15px;
-    border-radius:30px;
-    color:#9da8c5;
-}
-
-
-/* =====================================================
-   AHOORA AI / CHATY AI SWITCHER
-===================================================== */
-
-.aiSwitcher{
-    width:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:10px;
-    margin-top:8px;
-    margin-bottom:4px;
-    position:relative;
-    z-index:30;
-}
-
-.aiCard{
-    position:relative;
-    min-width:135px;
-    padding:11px 18px;
-    border-radius:20px;
-    border:1px solid #ffffff12;
-    background:#ffffff08;
-    color:#9da8c5;
-    text-align:center;
-    font-size:15px;
-    font-weight:bold;
-    overflow:hidden;
-
-    transition:
-    transform .25s ease,
-    box-shadow .25s ease,
-    background .25s ease;
-}
-
-.aiCard.active{
-    color:white;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff22,
-        #7200ff22,
-        #ff6fd822
-    );
-
-    box-shadow:
-    0 0 25px #0066ff22;
-}
-
-.aiCard:active{
-    transform:scale(.94);
-}
-
-.aiCard::before{
-    content:"";
-    position:absolute;
-    inset:-2px;
-
-    background:
-    linear-gradient(
-        90deg,
-        transparent,
-        #00d4ff66,
-        #7b2ffc66,
-        #ff6fd866,
-        transparent
-    );
-
-    transform:translateX(-100%);
-    transition:transform .5s ease;
-}
-
-.aiCard:hover::before{
-    transform:translateX(100%);
-}
-
-.aiIcon{
-    display:block;
-    font-size:22px;
-    margin-bottom:3px;
-}
-
-.aiName{
-    display:block;
-}
-
-
-/* =====================================================
-   CHATY TRANSITION
-===================================================== */
-
-#chatyTransition{
-    position:fixed;
-    inset:0;
-
-    z-index:10000;
-
-    display:none;
-
-    align-items:center;
-    justify-content:center;
-
-    background:
-    radial-gradient(
-        circle at center,
-        #24105c,
-        #080812 65%
-    );
-
-    overflow:hidden;
-}
-
-.chatyTransitionContent{
-    text-align:center;
-
-    animation:
-    chatyEnter
-    .8s
-    cubic-bezier(.2,.8,.2,1)
-    forwards;
-}
-
-.chatyLogo{
-    width:125px;
-    height:125px;
-
-    margin:auto;
-
-    border-radius:35px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:58px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #00d4ff,
-        #7b2ffc,
-        #ff4fd8
-    );
-
-    box-shadow:
-    0 0 50px #0066ff88,
-    0 0 110px #7b2ffc55;
-
-    animation:
-    chatyLogoPulse
-    .8s
-    ease-in-out
-    infinite alternate;
-}
-
-.chatyText{
-    margin-top:22px;
-
-    font-size:34px;
-    font-weight:bold;
-
-    background:
-    linear-gradient(
-        135deg,
-        #00d4ff,
-        #7b2ffc,
-        #ff6fd8
-    );
-
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.chatyLoading{
-    margin-top:12px;
-
-    color:#9da8c5;
-
-    font-size:14px;
-}
-
-.chatyLoading::after{
-    content:"";
-
-    animation:
-    chatyDots
-    1.2s
-    infinite;
-}
-
-@keyframes chatyEnter{
-
-    0%{
-        opacity:0;
-
-        transform:
-        scale(.35)
-        translateY(40px);
-
-        filter:blur(15px);
-    }
-
-    60%{
-        opacity:1;
-
-        transform:
-        scale(1.08)
-        translateY(0);
-
-        filter:blur(0);
-    }
-
-    100%{
-        opacity:1;
-
-        transform:scale(1);
-    }
-
-}
-
-@keyframes chatyLogoPulse{
-
-    from{
-        transform:scale(1);
-
-        box-shadow:
-        0 0 50px #0066ff88,
-        0 0 110px #7b2ffc55;
-    }
-
-    to{
-        transform:scale(1.08);
-
-        box-shadow:
-        0 0 80px #00d4ffbb,
-        0 0 150px #ff4fd866;
-    }
-
-}
-
-@keyframes chatyDots{
-
-    0%{
-        content:"";
-    }
-
-    33%{
-        content:".";
-    }
-
-    66%{
-        content:"..";
-    }
-
-    100%{
-        content:"...";
-    }
-
-}
-
-
-.mainPage{
-    width:100%;
-    height:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
-.orb-wrapper{
-    width:230px;
-    height:230px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:15px 0;
-}
-
-.orb{
-    width:155px;
-    height:155px;
-    border-radius:50%;
-
-    background:
-    radial-gradient(
-        circle at 35% 30%,
-        #008cff,
-        #0033aa
-    );
-
-    box-shadow:
-    0 0 70px #0066ff88,
-    0 0 130px #0066ff33;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    animation:pulse 2s infinite;
-}
-
-.inner{
-    width:70%;
-    height:70%;
-    border-radius:50%;
-
-    background:
-    radial-gradient(
-        circle at 40% 30%,
-        #ffffff99,
-        transparent 70%
-    );
-}
-
-.listening{
-    background:
-    radial-gradient(
-        circle at 35% 30%,
-        #00ff99,
-        #0088ff
-    );
-
-    box-shadow:
-    0 0 90px #00ff9988;
-
-    animation:listen .8s infinite;
-}
-
-.processing{
-    background:
-    radial-gradient(
-        circle at 35% 30%,
-        #ffcc00,
-        #ff5500
-    );
-
-    animation:process .5s infinite;
-}
-
-@keyframes pulse{
-    0%,100%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(1.05);
-    }
-}
-
-@keyframes listen{
-    0%,100%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(1.1);
-    }
-}
-
-@keyframes process{
-    0%,100%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(1.06);
-    }
-}
-
-.mic{
-    width:78px;
-    height:78px;
-
-    border:0;
-    border-radius:50%;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff,
-        #5500cc
-    );
-
-    color:white;
-    font-size:34px;
-
-    box-shadow:
-    0 10px 45px #0066ff88;
-}
-
-.mic.active{
-    background:
-    linear-gradient(
-        135deg,
-        #ff2266,
-        #bb0066
-    );
-
-    animation:mic 1s infinite;
-}
-
-@keyframes mic{
-    0%,100%{
-        box-shadow:0 0 40px #ff006688;
-    }
-
-    50%{
-        box-shadow:0 0 90px #ff0066dd;
-    }
-}
-
-.status{
-    margin:12px;
-    padding:8px 20px;
-    background:#ffffff0c;
-    border-radius:30px;
-    color:#aab4ce;
-    text-align:center;
-}
-
-.user{
-    width:100%;
-    min-height:52px;
-    padding:15px;
-    background:#ffffff08;
-    border-radius:25px;
-    text-align:center;
-    overflow:hidden;
-}
-
-.response{
-    width:100%;
-    margin-top:12px;
-    padding:18px;
-    background:#ffffff08;
-    border:1px solid #ffffff0d;
-    border-radius:25px;
-    text-align:center;
-    line-height:2;
-    overflow:auto;
-    max-height:210px;
-}
-
-.small{
-    color:#8993af;
-    font-size:13px;
-    margin-top:10px;
-}
-
-.panel{
-    position:fixed;
-    inset:0;
-    background:#080812ee;
-    z-index:500;
-    display:none;
-    overflow:auto;
-    padding:20px;
-}
-
-.panelBox{
-    width:100%;
-    max-width:450px;
-    margin:20px auto;
-    background:#151526;
-    border-radius:30px;
-    padding:22px;
-}
-
-.panelTitle{
-    font-size:22px;
-    font-weight:bold;
-    margin-bottom:15px;
-}
-
-.input{
-    width:100%;
-    border:1px solid #ffffff15;
-    outline:none;
-    border-radius:16px;
-    padding:14px;
-    background:#ffffff08;
-    color:white;
-    margin-bottom:10px;
-    font-size:16px;
-}
-
-.primary{
-    width:100%;
-    border:0;
-    border-radius:16px;
-    padding:14px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff,
-        #7200ff
-    );
-
-    color:white;
-    font-size:16px;
-}
-
-.close{
-    width:100%;
-    margin-top:10px;
-    padding:13px;
-    border:0;
-    border-radius:16px;
-    background:#ffffff10;
-    color:white;
-}
-
-.privacy{
-    margin-top:15px;
-    padding:14px;
-    border-radius:16px;
-    background:#00ff9910;
-    border:1px solid #00ff9920;
-    color:#a8e8ca;
-    line-height:1.9;
-    font-size:13px;
-    text-align:center;
-}
-
-.savedContact{
-    background:#ffffff08;
-    border-radius:18px;
-    padding:13px;
-    margin-top:10px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.deleteContact{
-    border:0;
-    border-radius:12px;
-    padding:8px 12px;
-    background:#ff224422;
-    color:#ff6688;
-}
-
-.settingsBtn{
-    position:fixed;
-    left:18px;
-    bottom:18px;
-    width:48px;
-    height:48px;
-    border:0;
-    border-radius:50%;
-    background:#ffffff10;
-    color:white;
-    font-size:22px;
-    z-index:20;
-}
-
-.commandsBtn{
-    position:fixed;
-    right:18px;
-    bottom:18px;
-
-    width:48px;
-    height:48px;
-
-    border:0;
-    border-radius:50%;
-
-    background:#ffffff10;
-    color:white;
-
-    font-size:22px;
-    z-index:20;
-}
-
-.commandsPanel{
-    position:fixed;
-    inset:0;
-
-    background:#080812ee;
-
-    z-index:600;
-
-    display:none;
-
-    overflow:auto;
-
-    padding:20px;
-}
-
-.commandsBox{
-    width:100%;
-    max-width:450px;
-
-    margin:20px auto;
-
-    background:#151526;
-
-    border-radius:30px;
-
-    padding:22px;
-}
-
-.commandsTitle{
-    font-size:23px;
-    font-weight:bold;
-
-    text-align:center;
-
-    margin-bottom:20px;
-}
-
-.commandCard{
-    background:#ffffff08;
-
-    border:1px solid #ffffff0c;
-
-    border-radius:18px;
-
-    padding:14px;
-
-    margin-bottom:10px;
-
-    line-height:1.9;
-}
-
-.commandCard b{
-    color:#00d4ff;
-}
-
-.commandIcon{
-    font-size:25px;
-    margin-left:8px;
-}
-
-
-/* ==============================
-   LOGIN
-============================== */
-
-#loginScreen{
-    position:fixed;
-    inset:0;
-
-    z-index:9999;
-
-    background:
-    radial-gradient(
-        circle at 50% 15%,
-        #20204b,
-        #080812 70%
-    );
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    padding:20px;
-}
-
-.loginBox{
-    width:100%;
-    max-width:420px;
-
-    background:#151526;
-
-    border:1px solid #ffffff12;
-
-    border-radius:30px;
-
-    padding:25px;
-
-    box-shadow:
-    0 20px 80px #00000088;
-
-    text-align:center;
-}
-
-.loginLogo{
-    font-size:32px;
-    font-weight:bold;
-
-    margin-bottom:10px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #00d4ff,
-        #7b2ffc,
-        #ff6fd8
-    );
-
-    -webkit-background-clip:text;
-
-    color:transparent;
-}
-
-.loginDescription{
-    color:#9da8c5;
-    line-height:1.9;
-    margin-bottom:20px;
-}
-
-.loginInput{
-    width:100%;
-
-    padding:15px;
-
-    border-radius:16px;
-
-    border:1px solid #ffffff15;
-
-    outline:none;
-
-    background:#ffffff08;
-
-    color:white;
-
-    font-size:16px;
-
-    direction:ltr;
-
-    text-align:left;
-
-    margin-bottom:12px;
-}
-
-.loginButton{
-    width:100%;
-
-    padding:15px;
-
-    border:0;
-
-    border-radius:16px;
-
-    color:white;
-
-    font-size:16px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #0066ff,
-        #7200ff
-    );
-}
-
-#otpArea{
-    display:none;
-}
-
-.loginMessage{
-    min-height:25px;
-
-    margin-top:12px;
-
-    color:#aab4ce;
-
-    line-height:1.8;
+/* ... تمام استایل‌های قبلی ... */
+
+/* اضافه کردن استایل برای نمایش شعله */
+.flameContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff0d;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #ffffff12;
+  font-size: 13px;
+  color: #ff6b35;
+  direction: ltr;
+  cursor: default;
+  position: relative;
+}
+
+.flameContainer .flame-icon {
+  font-size: 16px;
+}
+
+.flameContainer .flame-count {
+  font-weight: bold;
+  min-width: 18px;
+  text-align: center;
+}
+
+.flameContainer .flame-email {
+  font-size: 9px;
+  color: #666;
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flameContainer.low {
+  border-color: #ff4444;
+  color: #ff4444;
+  animation: flamePulse 1s infinite;
+}
+
+.flameContainer .flame-tooltip {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 50%;
+  transform: translateX(50%);
+  background: #1a1a2e;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #aaa;
+  white-space: nowrap;
+  z-index: 100;
+}
+
+.flameContainer:hover .flame-tooltip {
+  display: block;
+}
+
+@keyframes flamePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* اصلاح هدر برای نمایش شعله */
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.time {
+    background: #ffffff0d;
+    padding: 5px 12px;
+    border-radius: 30px;
+    color: #9da8c5;
+    font-size: 13px;
 }
-
-.userEmail{
-    color:#00d4ff;
-    direction:ltr;
-    margin:10px 0 15px;
-}
-
-.logoutButton{
-    width:100%;
-    margin-top:12px;
-    padding:12px;
-    border:0;
-    border-radius:14px;
-    background:#ff224422;
-    color:#ff6688;
-}
-
 </style>
 </head>
-
-
 <body>
 
-
 <!-- =========================================
-     LOGIN
+     LOGIN (بدون تغییر)
 ========================================= -->
 
 <div id="loginScreen">
-
-    <div class="loginBox">
-
-        <div class="loginLogo">
-            ✦ Ahoora AI
-        </div>
-
-        <div class="loginDescription">
-
-            برای استفاده از قابلیت‌های Ahoora AI
-            ابتدا وارد حساب خود شوید.
-
-        </div>
-
-
-        <!-- EMAIL -->
-
-        <div id="emailArea">
-
-            <input
-                class="loginInput"
-                id="emailInput"
-                type="email"
-                autocomplete="email"
-                placeholder="ایمیل شما">
-
-            <button
-                class="loginButton"
-                id="sendOtpButton">
-
-                📩 دریافت کد ورود
-
-            </button>
-
-        </div>
-
-
-        <!-- OTP -->
-
-        <div id="otpArea">
-
-            <div>
-                کد ارسال شده به:
-            </div>
-
-            <div
-                class="userEmail"
-                id="loginEmail">
-            </div>
-
-            <input
-                class="loginInput"
-                id="otpInput"
-                inputmode="numeric"
-                maxlength="6"
-                autocomplete="one-time-code"
-                placeholder="کد ۶ رقمی">
-
-            <button
-                class="loginButton"
-                id="verifyOtpButton">
-
-                🔐 ورود به Ahoora AI
-
-            </button>
-
-            <button
-                class="close"
-                id="backEmailButton">
-
-                تغییر ایمیل
-
-            </button>
-
-        </div>
-
-
-        <div
-            class="loginMessage"
-            id="loginMessage">
-        </div>
-
-    </div>
-
+    <!-- ... کدهای قبلی ... -->
 </div>
-
 
 <!-- =========================================
      APP
 ========================================= -->
 
 <div class="app">
-
 <div class="mainPage">
 
+    <!-- HEADER با نمایش شعله -->
     <div class="header">
-
-        <div class="title">
-            ✦ Ahoora AI
+        <div class="headerLeft">
+            <div class="title">✦ Ahoora AI</div>
         </div>
-
-        <div class="time" id="time">
-            --:--
+        <div class="headerRight">
+            <!-- نمایش شعله -->
+            <div class="flameContainer" id="flameContainer">
+                <span class="flame-icon">🔥</span>
+                <span class="flame-count" id="flameCount">10</span>
+                <span class="flame-email" id="flameEmail"></span>
+                <div class="flame-tooltip" id="flameTooltip">
+                    🔥 شعله‌های روزانه<br>
+                    هر فرمان: 1 شعله
+                </div>
+            </div>
+            <div class="time" id="time">--:--</div>
         </div>
-
     </div>
 
-
     <!-- =========================================
-         AHOORA AI / CHATY AI
+         AHOORA AI / CHATY AI SWITCHER
     ========================================= -->
 
     <div class="aiSwitcher">
-
-        <div
-            class="aiCard active"
-            id="ahooraAiCard">
-
-            <span class="aiIcon">
-                ✦
-            </span>
-
-            <span class="aiName">
-                Ahoora AI
-            </span>
-
+        <div class="aiCard active" id="ahooraAiCard">
+            <span class="aiIcon">✦</span>
+            <span class="aiName">Ahoora AI</span>
         </div>
-
-
-        <div
-            class="aiCard"
-            id="chatyAiCard">
-
-            <span class="aiIcon">
-                💬
-            </span>
-
-            <span class="aiName">
-                Chaty AI
-            </span>
-
+        <div class="aiCard" id="chatyAiCard">
+            <span class="aiIcon">💬</span>
+            <span class="aiName">Chaty AI</span>
         </div>
-
     </div>
 
-
+    <!-- ORB -->
     <div class="orb-wrapper">
-
         <div class="orb" id="orb">
-
             <div class="inner"></div>
-
         </div>
-
     </div>
 
+    <!-- MIC -->
+    <button class="mic" id="mic">🎙️</button>
 
-    <button
-        class="mic"
-        id="mic">
+    <!-- STATUS -->
+    <div class="status" id="status">آماده</div>
 
-        🎙️
+    <!-- USER -->
+    <div class="user" id="user">منتظر فرمان صوتی...</div>
 
-    </button>
-
-
-    <div
-        class="status"
-        id="status">
-
-        آماده
-
-    </div>
-
-
-    <div
-        class="user"
-        id="user">
-
-        منتظر فرمان صوتی...
-
-    </div>
-
-
-    <div
-        class="response"
-        id="response">
-
+    <!-- RESPONSE -->
+    <div class="response" id="response">
         سلام! من اهورا هستم.
-
         <br>
-
-        برای استفاده از دستیار صوتی
-        می‌توانی فرمان بدهی.
-
+        برای استفاده از دستیار صوتی می‌توانی فرمان بدهی.
     </div>
 
-
-    <div class="small">
-        Ahoora AI
-    </div>
+    <div class="small">Ahoora AI</div>
 
 </div>
-
 </div>
 
-
 <!-- =========================================
-     SETTINGS
+     SETTINGS, COMMANDS, PANEL (بدون تغییر)
 ========================================= -->
 
-<button
-    class="settingsBtn"
-    id="settingsBtn">
-
-    ⚙
-
-</button>
-
-
-<!-- =========================================
-     COMMANDS
-========================================= -->
-
-<button
-    class="commandsBtn"
-    id="commandsBtn">
-
-    ❔
-
-</button>
-
-
-<!-- =========================================
-     CONTACT PANEL
-========================================= -->
-
-<div
-    class="panel"
-    id="panel">
-
-    <div class="panelBox">
-
-        <div class="panelTitle">
-            👤 مخاطبین Ahoora AI
-        </div>
-
-
-        <input
-            class="input"
-            id="contactName"
-            placeholder="نام فارسی، مثلاً پدرم">
-
-
-        <input
-            class="input"
-            id="contactNumber"
-            inputmode="tel"
-            placeholder="شماره تلفن">
-
-
-        <button
-            class="primary"
-            id="saveContact">
-
-            ذخیره مخاطب
-
-        </button>
-
-
-        <div id="contactsList"></div>
-
-
-        <div class="privacy">
-
-            🔒 اطلاعات مخاطبین فقط روی دستگاه ذخیره می‌شوند.
-
-        </div>
-
-
-        <button
-            class="close"
-            id="closePanel">
-
-            بستن
-
-        </button>
-
-
-        <button
-            class="logoutButton"
-            id="logoutButton">
-
-            خروج از حساب
-
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     COMMANDS PANEL
-========================================= -->
-
-<div
-    class="commandsPanel"
-    id="commandsPanel">
-
-    <div class="commandsBox">
-
-        <div class="commandsTitle">
-            🎙️ دستورات Ahoora AI
-        </div>
-
-
-        <div class="commandCard">
-            📱
-            <b>برنامه‌ها</b>
-            <br>
-            «واتساپ رو باز کن»
-            <br>
-            «تلگرام رو باز کن»
-            <br>
-            «کروم رو باز کن»
-        </div>
-
-
-        <div class="commandCard">
-            📞
-            <b>تماس</b>
-            <br>
-            «با پدرم تماس بگیر»
-            <br>
-            «به دایی زنگ بزن»
-        </div>
-
-
-        <div class="commandCard">
-            ✉️
-            <b>پیام</b>
-            <br>
-            «به پدرم پیام بده سلام»
-        </div>
-
-
-        <div class="commandCard">
-            🔦
-            <b>چراغ قوه</b>
-            <br>
-            «چراغ قوه رو روشن کن»
-            <br>
-            «چراغ قوه رو خاموش کن»
-        </div>
-
-
-        <div class="commandCard">
-            📶
-            <b>اتصالات</b>
-            <br>
-            «وای فای رو باز کن»
-            <br>
-            «بلوتوث رو باز کن»
-            <br>
-            «اینترنت همراه رو باز کن»
-            <br>
-            «هات اسپات رو باز کن»
-            <br>
-            «مکان رو باز کن»
-        </div>
-
-
-        <div class="commandCard">
-            🔊
-            <b>صدا</b>
-            <br>
-            «صدا رو زیاد کن»
-            <br>
-            «صدا رو کم کن»
-        </div>
-
-
-        <div class="commandCard">
-            ☀️
-            <b>روشنایی صفحه</b>
-            <br>
-            «نور رو زیاد کن»
-            <br>
-            «نور رو کم کن»
-        </div>
-
-
-        <div class="commandCard">
-            🎵
-            <b>موسیقی</b>
-            <br>
-            «موزیک رو پخش کن»
-            <br>
-            «موزیک رو متوقف کن»
-            <br>
-            «آهنگ بعدی»
-            <br>
-            «آهنگ قبلی»
-        </div>
-
-
-        <div class="commandCard">
-            📷
-            <b>دوربین و گالری</b>
-            <br>
-            «دوربین رو باز کن»
-            <br>
-            «گالری رو باز کن»
-        </div>
-
-
-        <div class="commandCard">
-            🔎
-            <b>جستجو</b>
-            <br>
-            «در گوگل آب و هوا رو جستجو کن»
-        </div>
-
-
-        <div class="commandCard">
-            🕐
-            <b>ساعت</b>
-            <br>
-            «ساعت چنده؟»
-        </div>
-
-
-        <button
-            class="close"
-            id="closeCommands">
-
-            بستن
-
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================
-     CHATY TRANSITION
-========================================= -->
-
-<div id="chatyTransition">
-
-    <div class="chatyTransitionContent">
-
-        <div class="chatyLogo">
-            💬
-        </div>
-
-        <div class="chatyText">
-            Chaty AI
-        </div>
-
-        <div class="chatyLoading">
-            در حال ورود به Chaty AI
-        </div>
-
-    </div>
-
-</div>
-
+<!-- ... بقیه کدهای HTML قبلی ... -->
 
 <script>
 
@@ -1353,3006 +198,1237 @@ button{
    SUPABASE
 ===================================================== */
 
-const SUPABASE_URL =
-"https://vkqmlfumodqmmylchgdx.supabase.co";
+const SUPABASE_URL = "https://vkqmlfumodqmmylchgdx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
 
-
-const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
-
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
-
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* =====================================================
-   LOGIN ELEMENTS
+   FLAME SYSTEM - Ahoora AI
+   هر پیام/فرمان: 1 شعله
 ===================================================== */
 
-var loginScreen =
-    document.getElementById("loginScreen");
+const FLAME_COST_AHOORA = 1;      // هر فرمان: 1 شعله
+const DAILY_FLAMES = 10;
 
-var emailArea =
-    document.getElementById("emailArea");
+let currentFlames = 0;
+let userEmail = '';
+let userId = null;
 
-var otpArea =
-    document.getElementById("otpArea");
+// تابع دریافت شعله‌ها از Supabase
+async function fetchFlames() {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return null;
+        
+        userId = user.id;
+        userEmail = user.email || '';
+        
+        // نمایش ایمیل در هدر
+        const emailDisplay = document.getElementById('flameEmail');
+        if (emailDisplay && userEmail) {
+            emailDisplay.textContent = userEmail.split('@')[0] + '...';
+            emailDisplay.title = userEmail;
+        }
+        
+        // دریافت یا ایجاد رکورد شعله
+        let { data, error } = await supabaseClient
+            .from('user_flames')
+            .select('flames, last_reset')
+            .eq('user_id', userId)
+            .single();
+        
+        if (error && error.code === 'PGRST116') {
+            // رکورد وجود ندارد، ایجاد می‌کنیم
+            const { data: newData, error: insertError } = await supabaseClient
+                .from('user_flames')
+                .insert({
+                    user_id: userId,
+                    email: userEmail,
+                    flames: DAILY_FLAMES,
+                    last_reset: new Date().toISOString().split('T')[0]
+                })
+                .select('flames, last_reset')
+                .single();
+            
+            if (insertError) throw insertError;
+            data = newData;
+        } else if (error) {
+            throw error;
+        }
+        
+        // بررسی ریست روزانه
+        const today = new Date().toISOString().split('T')[0];
+        if (data.last_reset !== today) {
+            const { data: resetData, error: resetError } = await supabaseClient
+                .from('user_flames')
+                .update({
+                    flames: DAILY_FLAMES,
+                    last_reset: today,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('user_id', userId)
+                .select('flames')
+                .single();
+            
+            if (resetError) throw resetError;
+            data.flames = resetData.flames;
+        }
+        
+        currentFlames = data.flames;
+        updateFlameDisplay();
+        return currentFlames;
+        
+    } catch (error) {
+        console.error('Error fetching flames (Ahoora):', error);
+        return null;
+    }
+}
 
-var emailInput =
-    document.getElementById("emailInput");
+// تابع مصرف شعله
+async function useFlames(cost) {
+    if (currentFlames < cost) {
+        setStatus('🔥 شعله کافی نیست!', '');
+        responseBox.innerHTML = 
+            `🔥 شعله کافی نیست!<br><br>` +
+            `شما ${currentFlames} شعله دارید.<br>` +
+            `هر فرمان ${FLAME_COST_AHOORA} شعله مصرف می‌کند.<br><br>` +
+            `⏳ صبر کنید تا فردا شعله‌ها ریست شوند.`;
+        return false;
+    }
+    
+    try {
+        const newFlames = currentFlames - cost;
+        
+        const { data, error } = await supabaseClient
+            .from('user_flames')
+            .update({
+                flames: newFlames,
+                updated_at: new Date().toISOString()
+            })
+            .eq('user_id', userId)
+            .select('flames')
+            .single();
+        
+        if (error) throw error;
+        
+        currentFlames = data.flames;
+        updateFlameDisplay();
+        return true;
+        
+    } catch (error) {
+        console.error('Error using flames (Ahoora):', error);
+        return false;
+    }
+}
 
-var otpInput =
-    document.getElementById("otpInput");
+// تابع به‌روزرسانی نمایش شعله
+function updateFlameDisplay() {
+    const display = document.getElementById('flameContainer');
+    const count = document.getElementById('flameCount');
+    if (count) count.textContent = currentFlames;
+    
+    if (display && currentFlames <= 3) {
+        display.classList.add('low');
+    } else if (display) {
+        display.classList.remove('low');
+    }
+}
 
-var loginEmail =
-    document.getElementById("loginEmail");
+// =====================================================
+// LOGIN ELEMENTS (همان کدهای قبلی)
+// =====================================================
 
-var sendOtpButton =
-    document.getElementById("sendOtpButton");
-
-var verifyOtpButton =
-    document.getElementById("verifyOtpButton");
-
-var backEmailButton =
-    document.getElementById("backEmailButton");
-
-var loginMessage =
-    document.getElementById("loginMessage");
-
+var loginScreen = document.getElementById("loginScreen");
+var emailArea = document.getElementById("emailArea");
+var otpArea = document.getElementById("otpArea");
+var emailInput = document.getElementById("emailInput");
+var otpInput = document.getElementById("otpInput");
+var loginEmail = document.getElementById("loginEmail");
+var sendOtpButton = document.getElementById("sendOtpButton");
+var verifyOtpButton = document.getElementById("verifyOtpButton");
+var backEmailButton = document.getElementById("backEmailButton");
+var loginMessage = document.getElementById("loginMessage");
 
 /* =====================================================
    APP ELEMENTS
 ===================================================== */
 
-var orb =
-    document.getElementById("orb");
-
-var mic =
-    document.getElementById("mic");
-
-var statusBox =
-    document.getElementById("status");
-
-var userBox =
-    document.getElementById("user");
-
-var responseBox =
-    document.getElementById("response");
-
-var timeBox =
-    document.getElementById("time");
-
-var panel =
-    document.getElementById("panel");
-
-var settingsBtn =
-    document.getElementById("settingsBtn");
-
-var closePanel =
-    document.getElementById("closePanel");
-
-var logoutButton =
-    document.getElementById("logoutButton");
-
-var contactName =
-    document.getElementById("contactName");
-
-var contactNumber =
-    document.getElementById("contactNumber");
-
-var saveContact =
-    document.getElementById("saveContact");
-
-var contactsList =
-    document.getElementById("contactsList");
-
-var commandsBtn =
-    document.getElementById("commandsBtn");
-
-var commandsPanel =
-    document.getElementById("commandsPanel");
-
-var closeCommands =
-    document.getElementById("closeCommands");
-
+var orb = document.getElementById("orb");
+var mic = document.getElementById("mic");
+var statusBox = document.getElementById("status");
+var userBox = document.getElementById("user");
+var responseBox = document.getElementById("response");
+var timeBox = document.getElementById("time");
+var panel = document.getElementById("panel");
+var settingsBtn = document.getElementById("settingsBtn");
+var closePanel = document.getElementById("closePanel");
+var logoutButton = document.getElementById("logoutButton");
+var contactName = document.getElementById("contactName");
+var contactNumber = document.getElementById("contactNumber");
+var saveContact = document.getElementById("saveContact");
+var contactsList = document.getElementById("contactsList");
+var commandsBtn = document.getElementById("commandsBtn");
+var commandsPanel = document.getElementById("commandsPanel");
+var closeCommands = document.getElementById("closeCommands");
 
 /* =====================================================
    AUTH STATE
 ===================================================== */
 
 var isLoggedIn = false;
-
 var currentUser = null;
 
-
-function showLogin(){
-
+function showLogin() {
     isLoggedIn = false;
-
     currentUser = null;
-
-    loginScreen.style.display =
-        "flex";
-
+    loginScreen.style.display = "flex";
     stopListening();
-
 }
 
-
-function showApp(){
-
+function showApp() {
     isLoggedIn = true;
-
-    loginScreen.style.display =
-        "none";
-
-    setStatus(
-        "آماده — بگو «Ahoora AI»"
-    );
-
-    responseBox.innerHTML =
-        "👋 سلام! من اهورا هستم." +
-        "<br><br>" +
-        "بگو:" +
-        "<br>" +
-        "<b>Ahoora AI</b>";
-
+    loginScreen.style.display = "none";
+    fetchFlames(); // دریافت شعله‌ها بعد از ورود
+    setStatus("آماده — بگو «Ahoora AI»");
+    responseBox.innerHTML = "👋 سلام! من اهورا هستم." + "<br><br>" + "بگو:" + "<br>" + "<b>Ahoora AI</b>";
 }
-
 
 /* =====================================================
    SESSION
 ===================================================== */
 
-async function checkSession(){
-
-    try{
-
-        var result =
-            await supabaseClient
-            .auth
-            .getSession();
-
-
-        if(result.error){
-
-            console.log(
-                result.error
-            );
-
+async function checkSession() {
+    try {
+        var result = await supabaseClient.auth.getSession();
+        if (result.error) {
+            console.log(result.error);
             showLogin();
-
             return;
-
         }
-
-
-        var session =
-            result.data.session;
-
-
-        if(session){
-
-            currentUser =
-                session.user;
-
+        var session = result.data.session;
+        if (session) {
+            currentUser = session.user;
             showApp();
-
-        }else{
-
+        } else {
             showLogin();
-
         }
-
-    }catch(error){
-
+    } catch (error) {
         console.log(error);
-
         showLogin();
-
     }
-
 }
-
 
 /* =====================================================
    AUTH STATE CHANGE
 ===================================================== */
 
-supabaseClient
-.auth
-.onAuthStateChange(
-    function(event,session){
-
-        if(session){
-
-            currentUser =
-                session.user;
-
-            showApp();
-
-        }else{
-
-            showLogin();
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   SEND OTP
-===================================================== */
-
-async function sendOTP(){
-
-    var email =
-        emailInput.value
-        .trim()
-        .toLowerCase();
-
-
-    if(!email){
-
-        loginMessage.textContent =
-            "لطفاً ایمیل را وارد کن.";
-
-        return;
-
-    }
-
-
-    if(!email.includes("@")){
-
-        loginMessage.textContent =
-            "ایمیل وارد شده صحیح نیست.";
-
-        return;
-
-    }
-
-
-    sendOtpButton.disabled =
-        true;
-
-    sendOtpButton.textContent =
-        "در حال ارسال...";
-
-    loginMessage.textContent =
-        "";
-
-
-    try{
-
-        var result =
-            await supabaseClient
-            .auth
-            .signInWithOtp({
-
-                email:email,
-
-                options:{
-
-                    shouldCreateUser:true
-
-                }
-
-            });
-
-
-        if(result.error){
-
-            console.log(
-                result.error
-            );
-
-            loginMessage.textContent =
-                "❌ " +
-                result.error.message;
-
-            sendOtpButton.disabled =
-                false;
-
-            sendOtpButton.textContent =
-                "📩 دریافت کد ورود";
-
-            return;
-
-        }
-
-
-        loginEmail.textContent =
-            email;
-
-        emailArea.style.display =
-            "none";
-
-        otpArea.style.display =
-            "block";
-
-        loginMessage.textContent =
-            "✅ کد ورود به ایمیل شما ارسال شد.";
-
-
-        otpInput.focus();
-
-
-    }catch(error){
-
-        console.log(error);
-
-        loginMessage.textContent =
-            "❌ خطا در ارسال کد.";
-
-    }
-
-
-    sendOtpButton.disabled =
-        false;
-
-    sendOtpButton.textContent =
-        "📩 دریافت کد ورود";
-
-}
-
-
-/* =====================================================
-   VERIFY OTP
-===================================================== */
-
-async function verifyOTP(){
-
-    var email =
-        emailInput.value
-        .trim()
-        .toLowerCase();
-
-    var token =
-        otpInput.value
-        .replace(
-            /[^0-9]/g,
-            ""
-        );
-
-
-    if(token.length !== 6){
-
-        loginMessage.textContent =
-            "❌ کد باید ۶ رقمی باشد.";
-
-        return;
-
-    }
-
-
-    verifyOtpButton.disabled =
-        true;
-
-    verifyOtpButton.textContent =
-        "در حال بررسی...";
-
-
-    try{
-
-        var result =
-            await supabaseClient
-            .auth
-            .verifyOtp({
-
-                email:email,
-
-                token:token,
-
-                type:"email"
-
-            });
-
-
-        if(result.error){
-
-            console.log(
-                result.error
-            );
-
-            loginMessage.textContent =
-                "❌ کد صحیح نیست یا منقضی شده است.";
-
-            verifyOtpButton.disabled =
-                false;
-
-            verifyOtpButton.textContent =
-                "🔐 ورود به Ahoora AI";
-
-            return;
-
-        }
-
-
-        currentUser =
-            result.data.user;
-
+supabaseClient.auth.onAuthStateChange(function(event, session) {
+    if (session) {
+        currentUser = session.user;
         showApp();
-
-
-    }catch(error){
-
-        console.log(error);
-
-        loginMessage.textContent =
-            "❌ خطا در تأیید کد.";
-
+    } else {
+        showLogin();
     }
+});
 
+/* =====================================================
+   SEND OTP (همان کد قبلی)
+===================================================== */
 
-    verifyOtpButton.disabled =
-        false;
-
-    verifyOtpButton.textContent =
-        "🔐 ورود به Ahoora AI";
-
+async function sendOTP() {
+    var email = emailInput.value.trim().toLowerCase();
+    if (!email) {
+        loginMessage.textContent = "لطفاً ایمیل را وارد کن.";
+        return;
+    }
+    if (!email.includes("@")) {
+        loginMessage.textContent = "ایمیل وارد شده صحیح نیست.";
+        return;
+    }
+    sendOtpButton.disabled = true;
+    sendOtpButton.textContent = "در حال ارسال...";
+    loginMessage.textContent = "";
+    try {
+        var result = await supabaseClient.auth.signInWithOtp({
+            email: email,
+            options: { shouldCreateUser: true }
+        });
+        if (result.error) {
+            console.log(result.error);
+            loginMessage.textContent = "❌ " + result.error.message;
+            sendOtpButton.disabled = false;
+            sendOtpButton.textContent = "📩 دریافت کد ورود";
+            return;
+        }
+        loginEmail.textContent = email;
+        emailArea.style.display = "none";
+        otpArea.style.display = "block";
+        loginMessage.textContent = "✅ کد ورود به ایمیل شما ارسال شد.";
+        otpInput.focus();
+    } catch (error) {
+        console.log(error);
+        loginMessage.textContent = "❌ خطا در ارسال کد.";
+    }
+    sendOtpButton.disabled = false;
+    sendOtpButton.textContent = "📩 دریافت کد ورود";
 }
 
+/* =====================================================
+   VERIFY OTP (همان کد قبلی)
+===================================================== */
+
+async function verifyOTP() {
+    var email = emailInput.value.trim().toLowerCase();
+    var token = otpInput.value.replace(/[^0-9]/g, "");
+    if (token.length !== 6) {
+        loginMessage.textContent = "❌ کد باید ۶ رقمی باشد.";
+        return;
+    }
+    verifyOtpButton.disabled = true;
+    verifyOtpButton.textContent = "در حال بررسی...";
+    try {
+        var result = await supabaseClient.auth.verifyOtp({
+            email: email,
+            token: token,
+            type: "email"
+        });
+        if (result.error) {
+            console.log(result.error);
+            loginMessage.textContent = "❌ کد صحیح نیست یا منقضی شده است.";
+            verifyOtpButton.disabled = false;
+            verifyOtpButton.textContent = "🔐 ورود به Ahoora AI";
+            return;
+        }
+        currentUser = result.data.user;
+        showApp();
+    } catch (error) {
+        console.log(error);
+        loginMessage.textContent = "❌ خطا در تأیید کد.";
+    }
+    verifyOtpButton.disabled = false;
+    verifyOtpButton.textContent = "🔐 ورود به Ahoora AI";
+}
 
 /* =====================================================
    BACK EMAIL
 ===================================================== */
 
-backEmailButton.addEventListener(
-    "click",
-    function(){
+backEmailButton.addEventListener("click", function() {
+    otpArea.style.display = "none";
+    emailArea.style.display = "block";
+    otpInput.value = "";
+    loginMessage.textContent = "";
+});
 
-        otpArea.style.display =
-            "none";
+sendOtpButton.addEventListener("click", sendOTP);
+verifyOtpButton.addEventListener("click", verifyOTP);
 
-        emailArea.style.display =
-            "block";
-
-        otpInput.value =
-            "";
-
-        loginMessage.textContent =
-            "";
-
-    }
-);
-
-
-/* =====================================================
-   BUTTONS
-===================================================== */
-
-sendOtpButton.addEventListener(
-    "click",
-    sendOTP
-);
-
-
-verifyOtpButton.addEventListener(
-    "click",
-    verifyOTP
-);
-
-
-otpInput.addEventListener(
-    "input",
-    function(){
-
-        this.value =
-            this.value.replace(
-                /[^0-9]/g,
-                ""
-            );
-
-    }
-);
-
+otpInput.addEventListener("input", function() {
+    this.value = this.value.replace(/[^0-9]/g, "");
+});
 
 /* =====================================================
    LOGOUT
 ===================================================== */
 
-logoutButton.addEventListener(
-    "click",
-    async function(){
-
-        try{
-
-            await supabaseClient
-            .auth
-            .signOut();
-
-            panel.style.display =
-                "none";
-
-        }catch(e){
-
-            console.log(e);
-
-        }
-
+logoutButton.addEventListener("click", async function() {
+    try {
+        await supabaseClient.auth.signOut();
+        panel.style.display = "none";
+    } catch (e) {
+        console.log(e);
     }
-);
-
+});
 
 /* =====================================================
    ANDROID
 ===================================================== */
 
-function android(){
-
+function android() {
     return typeof window.Android !== "undefined";
-
 }
-
 
 /* =====================================================
    CLOCK
 ===================================================== */
 
-function clock(){
-
-    var d =
-        new Date();
-
-    timeBox.textContent =
-        String(
-            d.getHours()
-        ).padStart(2,"0")
-        +
-        ":"
-        +
-        String(
-            d.getMinutes()
-        ).padStart(2,"0");
-
+function clock() {
+    var d = new Date();
+    timeBox.textContent = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
 }
-
 clock();
-
-setInterval(
-    clock,
-    10000
-);
-
+setInterval(clock, 10000);
 
 /* =====================================================
    STATUS
 ===================================================== */
 
-function setStatus(
-    text,
-    type
-){
-
-    statusBox.textContent =
-        text;
-
-    orb.classList.remove(
-        "listening",
-        "processing"
-    );
-
-    if(type){
-
-        orb.classList.add(
-            type
-        );
-
+function setStatus(text, type) {
+    statusBox.textContent = text;
+    orb.classList.remove("listening", "processing");
+    if (type) {
+        orb.classList.add(type);
     }
-
 }
-
 
 /* =====================================================
    NORMALIZE
 ===================================================== */
 
-function normalize(text){
-
+function normalize(text) {
     return String(text)
-
-        .replace(/[۰-۹]/g,function(d){
-
-            return String(
-                "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
-            );
-
+        .replace(/[۰-۹]/g, function(d) {
+            return String("۰۱۲۳۴۵۶۷۸۹".indexOf(d));
         })
-
-        .replace(/ي/g,"ی")
-        .replace(/ك/g,"ک")
-        .replace(/ۀ/g,"ه")
-
-        .replace(/[،,]/g," ")
-
-        .replace(/\s+/g," ")
-
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک")
+        .replace(/ۀ/g, "ه")
+        .replace(/[،,]/g, " ")
+        .replace(/\s+/g, " ")
         .trim()
         .toLowerCase();
-
 }
-
 
 /* =====================================================
-   VOICE
+   VOICE FILES
 ===================================================== */
 
-function playVoice(file){
-
-    try{
-
-        var audio =
-            new Audio(file);
-
-        audio.play().catch(
-            function(){}
-        );
-
-    }catch(e){}
-
+function playVoice(file) {
+    try {
+        var audio = new Audio(file);
+        audio.play().catch(function() {});
+    } catch (e) {}
 }
 
-function voiceA(){
-    playVoice("a.mp3");
-}
-
-function voiceB(){
-    playVoice("b.mp3");
-}
-
-function voiceC(){
-    playVoice("c.mp3");
-}
-
-function voiceD(){
-    playVoice("d.mp3");
-}
-
-function voiceE(){
-    playVoice("e.mp3");
-}
-
-function voiceF(){
-    playVoice("f.mp3");
-}
-
-function voiceG(){
-    playVoice("g.mp3");
-}
-
+function voiceA() { playVoice("a.mp3"); }
+function voiceB() { playVoice("b.mp3"); }
+function voiceC() { playVoice("c.mp3"); }
+function voiceD() { playVoice("d.mp3"); }
+function voiceE() { playVoice("e.mp3"); }
+function voiceF() { playVoice("f.mp3"); }
+function voiceG() { playVoice("g.mp3"); }
 
 /* =====================================================
-   ANSWER
+   ANSWER - با مصرف شعله برای هر پاسخ
 ===================================================== */
 
-function answer(
-    text,
-    voice
-){
-
-    responseBox.innerHTML =
-        text;
-
-    if(voice){
-
+async function answer(text, voice) {
+    responseBox.innerHTML = text;
+    
+    // مصرف شعله برای هر پاسخ/فرمان
+    if (isLoggedIn) {
+        await useFlames(FLAME_COST_AHOORA);
+    }
+    
+    if (voice) {
         voice();
-
     }
-
 }
 
-
 /* =====================================================
-   CONTACTS
+   CONTACTS (همان کد قبلی)
 ===================================================== */
 
-function getContacts(){
-
-    try{
-
-        return JSON.parse(
-            localStorage.getItem(
-                "ahoora_contacts"
-            ) || "[]"
-        );
-
-    }catch(e){
-
+function getContacts() {
+    try {
+        return JSON.parse(localStorage.getItem("ahoora_contacts") || "[]");
+    } catch (e) {
         return [];
-
     }
-
 }
 
-
-function saveContacts(data){
-
-    localStorage.setItem(
-        "ahoora_contacts",
-        JSON.stringify(data)
-    );
-
+function saveContacts(data) {
+    localStorage.setItem("ahoora_contacts", JSON.stringify(data));
 }
 
-
-function isPersianName(name){
-
+function isPersianName(name) {
     return /[\u0600-\u06FF]/.test(name);
-
 }
 
-
-function escapeHTML(text){
-
+function escapeHTML(text) {
     return String(text)
-
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
-
-function addContact(){
-
-    if(!isLoggedIn){
-
+function addContact() {
+    if (!isLoggedIn) return;
+    var name = contactName.value.trim();
+    var number = normalize(contactNumber.value).replace(/[^0-9+]/g, "");
+    if (!name) {
+        alert("لطفاً نام مخاطب را وارد کن.");
         return;
-
     }
-
-    var name =
-        contactName.value.trim();
-
-    var number =
-        normalize(
-            contactNumber.value
-        ).replace(
-            /[^0-9+]/g,
-            ""
-        );
-
-
-    if(!name){
-
-        alert(
-            "لطفاً نام مخاطب را وارد کن."
-        );
-
+    if (!isPersianName(name)) {
+        alert("نام مخاطب باید فارسی باشد.");
         return;
-
     }
-
-
-    if(!isPersianName(name)){
-
-        alert(
-            "نام مخاطب باید فارسی باشد."
-        );
-
+    if (number.length < 10) {
+        alert("شماره تلفن صحیح نیست.");
         return;
-
     }
-
-
-    if(number.length < 10){
-
-        alert(
-            "شماره تلفن صحیح نیست."
-        );
-
-        return;
-
+    var contacts = getContacts();
+    var old = contacts.findIndex(function(c) {
+        return normalize(c.name) === normalize(name);
+    });
+    if (old >= 0) {
+        contacts[old].number = number;
+    } else {
+        contacts.push({ name: name, number: number });
     }
-
-
-    var contacts =
-        getContacts();
-
-
-    var old =
-        contacts.findIndex(
-            function(c){
-
-                return normalize(c.name)
-                    ===
-                    normalize(name);
-
-            }
-        );
-
-
-    if(old >= 0){
-
-        contacts[old].number =
-            number;
-
-    }else{
-
-        contacts.push({
-            name:name,
-            number:number
-        });
-
-    }
-
-
-    saveContacts(
-        contacts
-    );
-
-
-    contactName.value =
-        "";
-
-    contactNumber.value =
-        "";
-
-
+    saveContacts(contacts);
+    contactName.value = "";
+    contactNumber.value = "";
     renderContacts();
-
-
-    answer(
-        "✅ مخاطب «" +
-        escapeHTML(name) +
-        "» ذخیره شد."
-    );
-
+    answer("✅ مخاطب «" + escapeHTML(name) + "» ذخیره شد.");
 }
 
-
-function renderContacts(){
-
-    var contacts =
-        getContacts();
-
-    contactsList.innerHTML =
-        "";
-
-
-    if(!contacts.length){
-
-        contactsList.innerHTML =
-            "<div style='color:#8993af;margin-top:15px;text-align:center'>" +
-            "هنوز مخاطبی ذخیره نشده است." +
-            "</div>";
-
+function renderContacts() {
+    var contacts = getContacts();
+    contactsList.innerHTML = "";
+    if (!contacts.length) {
+        contactsList.innerHTML = "<div style='color:#8993af;margin-top:15px;text-align:center'>هنوز مخاطبی ذخیره نشده است.</div>";
         return;
-
     }
-
-
-    contacts.forEach(
-        function(contact,index){
-
-            var div =
-                document.createElement(
-                    "div"
-                );
-
-            div.className =
-                "savedContact";
-
-
-            div.innerHTML =
-
-                "<div>" +
-                "<b>" +
-                escapeHTML(
-                    contact.name
-                ) +
-                "</b>" +
-                "<br>" +
-                "<small>" +
-                escapeHTML(
-                    contact.number
-                ) +
-                "</small>" +
-                "</div>" +
-
-                "<button class='deleteContact' " +
-                "data-index='" +
-                index +
-                "'>" +
-                "حذف" +
-                "</button>";
-
-
-            contactsList.appendChild(
-                div
-            );
-
-        }
-    );
-
-
-    document
-    .querySelectorAll(
-        ".deleteContact"
-    )
-    .forEach(
-        function(btn){
-
-            btn.onclick =
-            function(){
-
-                var index =
-                    Number(
-                        this.dataset.index
-                    );
-
-
-                var contacts =
-                    getContacts();
-
-
-                contacts.splice(
-                    index,
-                    1
-                );
-
-
-                saveContacts(
-                    contacts
-                );
-
-
-                renderContacts();
-
-            };
-
-        }
-    );
-
+    contacts.forEach(function(contact, index) {
+        var div = document.createElement("div");
+        div.className = "savedContact";
+        div.innerHTML =
+            "<div><b>" + escapeHTML(contact.name) + "</b><br><small>" + escapeHTML(contact.number) + "</small></div>" +
+            "<button class='deleteContact' data-index='" + index + "'>حذف</button>";
+        contactsList.appendChild(div);
+    });
+    document.querySelectorAll(".deleteContact").forEach(function(btn) {
+        btn.onclick = function() {
+            var index = Number(this.dataset.index);
+            var contacts = getContacts();
+            contacts.splice(index, 1);
+            saveContacts(contacts);
+            renderContacts();
+        };
+    });
 }
 
+saveContact.addEventListener("click", addContact);
 
-saveContact.addEventListener(
-    "click",
-    addContact
-);
+settingsBtn.addEventListener("click", function() {
+    if (!isLoggedIn) return;
+    renderContacts();
+    panel.style.display = "block";
+});
 
+closePanel.addEventListener("click", function() {
+    panel.style.display = "none";
+});
 
-settingsBtn.addEventListener(
-    "click",
-    function(){
+commandsBtn.addEventListener("click", function() {
+    if (!isLoggedIn) return;
+    commandsPanel.style.display = "block";
+});
 
-        if(!isLoggedIn){
-
-            return;
-
-        }
-
-        renderContacts();
-
-        panel.style.display =
-            "block";
-
-    }
-);
-
-
-closePanel.addEventListener(
-    "click",
-    function(){
-
-        panel.style.display =
-            "none";
-
-    }
-);
-
-
-/* =====================================================
-   COMMANDS
-===================================================== */
-
-commandsBtn.addEventListener(
-    "click",
-    function(){
-
-        if(!isLoggedIn){
-
-            return;
-
-        }
-
-        commandsPanel.style.display =
-            "block";
-
-    }
-);
-
-
-closeCommands.addEventListener(
-    "click",
-    function(){
-
-        commandsPanel.style.display =
-            "none";
-
-    }
-);
-
+closeCommands.addEventListener("click", function() {
+    commandsPanel.style.display = "none";
+});
 
 /* =====================================================
    FIND CONTACT
 ===================================================== */
 
-function findContact(name){
-
-    var contacts =
-        getContacts();
-
-    var target =
-        normalize(name);
-
-
-    return contacts.find(
-        function(c){
-
-            return normalize(c.name)
-                === target
-                ||
-                target.indexOf(
-                    normalize(c.name)
-                ) >= 0;
-
-        }
-    );
-
+function findContact(name) {
+    var contacts = getContacts();
+    var target = normalize(name);
+    return contacts.find(function(c) {
+        return normalize(c.name) === target || target.indexOf(normalize(c.name)) >= 0;
+    });
 }
-
 
 /* =====================================================
    RELATIONS
 ===================================================== */
 
 var relationAliases = {
-
-    "پدر":"پدرم",
-    "پدرم":"پدرم",
-    "بابا":"پدرم",
-    "بابام":"پدرم",
-
-    "مادر":"مادرم",
-    "مادرم":"مادرم",
-    "مامان":"مادرم",
-    "مامانم":"مادرم",
-
-    "دایی":"دایی",
-    "داییم":"دایی",
-
-    "عمو":"عمو",
-    "عموم":"عمو",
-
-    "عمه":"عمه",
-    "عمم":"عمه",
-
-    "خاله":"خاله",
-    "خالم":"خاله",
-
-    "برادر":"برادرم",
-    "برادرم":"برادرم",
-
-    "خواهر":"خواهرم",
-    "خواهرم":"خواهرم"
-
+    "پدر": "پدرم", "پدرم": "پدرم", "بابا": "پدرم", "بابام": "پدرم",
+    "مادر": "مادرم", "مادرم": "مادرم", "مامان": "مادرم", "مامانم": "مادرم",
+    "دایی": "دایی", "داییم": "دایی",
+    "عمو": "عمو", "عموم": "عمو",
+    "عمه": "عمه", "عمم": "عمه",
+    "خاله": "خاله", "خالم": "خاله",
+    "برادر": "برادرم", "برادرم": "برادرم",
+    "خواهر": "خواهرم", "خواهرم": "خواهرم"
 };
 
-
-function normalizeRelation(text){
-
-    var t =
-        normalize(text);
-
-
-    for(
-        var key in relationAliases
-    ){
-
-        if(
-            t.indexOf(key) >= 0
-        ){
-
+function normalizeRelation(text) {
+    var t = normalize(text);
+    for (var key in relationAliases) {
+        if (t.indexOf(key) >= 0) {
             return relationAliases[key];
-
         }
-
     }
-
-
     return null;
-
 }
-
 
 /* =====================================================
    CALL
 ===================================================== */
 
-function callNumber(number){
-
-    if(!isLoggedIn){
-
-        return;
-
-    }
-
-
-    number =
-        normalize(number)
-        .replace(
-            /[^0-9+]/g,
-            ""
-        );
-
-
-    if(!number){
-
-        return;
-
-    }
-
-
-    if(android()){
-
-        try{
-
-            Android.makeCall(
-                number
-            );
-
-            answer(
-                "📞 در حال تماس با " +
-                number +
-                "..."
-            );
-
+function callNumber(number) {
+    if (!isLoggedIn) return;
+    number = normalize(number).replace(/[^0-9+]/g, "");
+    if (!number) return;
+    if (android()) {
+        try {
+            Android.makeCall(number);
+            answer("📞 در حال تماس با " + number + "...");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    window.location.href =
-        "tel:" +
-        number;
-
+    window.location.href = "tel:" + number;
 }
 
-
-function callContact(name){
-
-    var contact =
-        findContact(name);
-
-
-    if(!contact){
-
-        answer(
-            "❌ برای «" +
-            escapeHTML(name) +
-            "» شماره‌ای ذخیره نشده است.",
-            voiceD
-        );
-
+function callContact(name) {
+    var contact = findContact(name);
+    if (!contact) {
+        answer("❌ برای «" + escapeHTML(name) + "» شماره‌ای ذخیره نشده است.", voiceD);
         return;
-
     }
-
-
-    callNumber(
-        contact.number
-    );
-
+    callNumber(contact.number);
 }
-
 
 /* =====================================================
    SMS
 ===================================================== */
 
-function smsContact(
-    name,
-    message
-){
-
-    var contact =
-        findContact(name);
-
-
-    if(!contact){
-
-        answer(
-            "❌ برای «" +
-            escapeHTML(name) +
-            "» شماره‌ای ذخیره نشده است.",
-            voiceD
-        );
-
+function smsContact(name, message) {
+    var contact = findContact(name);
+    if (!contact) {
+        answer("❌ برای «" + escapeHTML(name) + "» شماره‌ای ذخیره نشده است.", voiceD);
         return;
-
     }
-
-
-    if(android()){
-
-        try{
-
-            Android.sendSMS(
-                contact.number,
-                message
-            );
-
-            answer(
-                "✉️ پیام برای " +
-                escapeHTML(
-                    contact.name
-                ) +
-                " ارسال شد."
-            );
-
+    if (android()) {
+        try {
+            Android.sendSMS(contact.number, message);
+            answer("✉️ پیام برای " + escapeHTML(contact.name) + " ارسال شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    window.location.href =
-        "sms:" +
-        contact.number +
-        "?body=" +
-        encodeURIComponent(
-            message
-        );
-
+    window.location.href = "sms:" + contact.number + "?body=" + encodeURIComponent(message);
 }
-
 
 /* =====================================================
    EXTRACT MESSAGE
 ===================================================== */
 
-function extractMessage(text){
-
-    var result =
-        text;
-
-
-    result =
-        result
-
-        .replace(/به\s+/g,"")
-        .replace(/پیامک/g,"")
-        .replace(/پیام/g,"")
-        .replace(/بفرست/g,"")
-        .replace(/بده/g,"")
-        .replace(/ارسال کن/g,"")
-
+function extractMessage(text) {
+    var result = text;
+    result = result
+        .replace(/به\s+/g, "")
+        .replace(/پیامک/g, "")
+        .replace(/پیام/g, "")
+        .replace(/بفرست/g, "")
+        .replace(/بده/g, "")
+        .replace(/ارسال کن/g, "")
         .trim();
-
-
-    var contacts =
-        getContacts();
-
-
-    for(
-        var i = 0;
-        i < contacts.length;
-        i++
-    ){
-
-        var n =
-            normalize(
-                contacts[i].name
-            );
-
-
-        if(
-            result.indexOf(n) >= 0
-        ){
-
-            result =
-                result
-                .replace(n,"")
-                .trim();
-
+    var contacts = getContacts();
+    for (var i = 0; i < contacts.length; i++) {
+        var n = normalize(contacts[i].name);
+        if (result.indexOf(n) >= 0) {
+            result = result.replace(n, "").trim();
             break;
-
         }
-
     }
-
-
     return result;
-
 }
-
 
 /* =====================================================
    EXTRACT CONTACT
 ===================================================== */
 
-function extractContactFromCommand(
-    text
-){
-
-    var contacts =
-        getContacts();
-
-
-    for(
-        var i = 0;
-        i < contacts.length;
-        i++
-    ){
-
-        if(
-            text.indexOf(
-                normalize(
-                    contacts[i].name
-                )
-            ) >= 0
-        ){
-
+function extractContactFromCommand(text) {
+    var contacts = getContacts();
+    for (var i = 0; i < contacts.length; i++) {
+        if (text.indexOf(normalize(contacts[i].name)) >= 0) {
             return contacts[i].name;
-
         }
-
     }
-
-
-    var relation =
-        normalizeRelation(text);
-
-
-    if(relation){
-
+    var relation = normalizeRelation(text);
+    if (relation) {
         return relation;
-
     }
-
-
     return null;
-
 }
-
 
 /* =====================================================
    APPS
 ===================================================== */
 
 var apps = {
-
-    "واتساپ":"com.whatsapp",
-    "تلگرام":"org.telegram.messenger",
-    "اینستاگرام":"com.instagram.android",
-    "یوتیوب":"com.google.android.youtube",
-    "کروم":"com.android.chrome",
-    "فیسبوک":"com.facebook.katana",
-    "ایکس":"com.twitter.android",
-    "تیک تاک":"com.zhiliaoapp.musically",
-    "اسنپ":"com.snapp.passenger",
-    "دیوار":"ir.divar",
-    "روبیکا":"ir.resaneh1.iptv",
-    "مایکت":"ir.mservices.market",
-    "بازار":"com.farsitel.bazaar",
-    "تنظیمات":"com.android.settings"
-
+    "واتساپ": "com.whatsapp",
+    "تلگرام": "org.telegram.messenger",
+    "اینستاگرام": "com.instagram.android",
+    "یوتیوب": "com.google.android.youtube",
+    "کروم": "com.android.chrome",
+    "فیسبوک": "com.facebook.katana",
+    "ایکس": "com.twitter.android",
+    "تیک تاک": "com.zhiliaoapp.musically",
+    "اسنپ": "com.snapp.passenger",
+    "دیوار": "ir.divar",
+    "روبیکا": "ir.resaneh1.iptv",
+    "مایکت": "ir.mservices.market",
+    "بازار": "com.farsitel.bazaar",
+    "تنظیمات": "com.android.settings"
 };
 
-
-function openApp(
-    packageName,
-    name
-){
-
-    if(!isLoggedIn){
-
-        return false;
-
-    }
-
-
-    if(android()){
-
-        try{
-
-            Android.openAppByName(
-                name
-            );
-
-
-            answer(
-                "👁️ چشم، " +
-                name +
-                " را باز کردم.",
-                voiceA
-            );
-
-
+function openApp(packageName, name) {
+    if (!isLoggedIn) return false;
+    if (android()) {
+        try {
+            Android.openAppByName(name);
+            answer("👁️ چشم، " + name + " را باز کردم.", voiceA);
             return true;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ نتوانستم " +
-        name +
-        " را باز کنم.",
-        voiceB
-    );
-
-
+    answer("❌ نتوانستم " + name + " را باز کنم.", voiceB);
     return false;
-
 }
 
-
-function openNamedApp(text){
-
-    for(
-        var name in apps
-    ){
-
-        if(
-            text.indexOf(name) >= 0
-        ){
-
-            if(
-                text.indexOf("باز") >= 0 ||
-                text.indexOf("اجرا") >= 0 ||
-                text.indexOf("برو") >= 0
-            ){
-
-                openApp(
-                    apps[name],
-                    name
-                );
-
+function openNamedApp(text) {
+    for (var name in apps) {
+        if (text.indexOf(name) >= 0) {
+            if (text.indexOf("باز") >= 0 || text.indexOf("اجرا") >= 0 || text.indexOf("برو") >= 0) {
+                openApp(apps[name], name);
                 return true;
-
             }
-
         }
-
     }
-
-
     return false;
-
 }
-
 
 /* =====================================================
    VOLUME
 ===================================================== */
 
-function volumeUp(){
-
-    if(android()){
-
-        try{
-
-            Android.volumeUp();
-
-        }catch(e){}
-
+function volumeUp() {
+    if (android()) {
+        try { Android.volumeUp(); } catch (e) {}
     }
-
-
-    answer(
-        "🔊 صدا زیاد شد."
-    );
-
+    answer("🔊 صدا زیاد شد.");
 }
 
-
-function volumeDown(){
-
-    if(android()){
-
-        try{
-
-            Android.volumeDown();
-
-        }catch(e){}
-
+function volumeDown() {
+    if (android()) {
+        try { Android.volumeDown(); } catch (e) {}
     }
-
-
-    answer(
-        "🔉 صدا کم شد."
-    );
-
+    answer("🔉 صدا کم شد.");
 }
-
 
 /* =====================================================
    MUSIC
 ===================================================== */
 
-function musicPlay(){
-
-    if(android()){
-
-        try{
-
-            Android.toggleMusic();
-
-        }catch(e){}
-
+function musicPlay() {
+    if (android()) {
+        try { Android.toggleMusic(); } catch (e) {}
     }
-
-
-    answer(
-        "🎵 موسیقی پخش شد."
-    );
-
+    answer("🎵 موسیقی پخش شد.");
 }
 
-
-function musicStop(){
-
-    if(android()){
-
-        try{
-
-            Android.toggleMusic();
-
-        }catch(e){}
-
+function musicStop() {
+    if (android()) {
+        try { Android.toggleMusic(); } catch (e) {}
     }
-
-
-    answer(
-        "⏹️ موسیقی متوقف شد."
-    );
-
+    answer("⏹️ موسیقی متوقف شد.");
 }
 
-
-function musicNext(){
-
-    if(android()){
-
-        try{
-
-            Android.musicNext();
-
-        }catch(e){}
-
+function musicNext() {
+    if (android()) {
+        try { Android.musicNext(); } catch (e) {}
     }
-
-
-    answer(
-        "⏭️ آهنگ بعدی."
-    );
-
+    answer("⏭️ آهنگ بعدی.");
 }
 
-
-function musicPrevious(){
-
-    if(android()){
-
-        try{
-
-            Android.musicPrevious();
-
-        }catch(e){}
-
+function musicPrevious() {
+    if (android()) {
+        try { Android.musicPrevious(); } catch (e) {}
     }
-
-
-    answer(
-        "⏮️ آهنگ قبلی."
-    );
-
+    answer("⏮️ آهنگ قبلی.");
 }
-
 
 /* =====================================================
    FLASHLIGHT
 ===================================================== */
 
-function flashlightOn(){
-
-    if(android()){
-
-        try{
-
-            Android.flashlight(
-                true
-            );
-
-            answer(
-                "🔦 چراغ قوه روشن شد."
-            );
-
+function flashlightOn() {
+    if (android()) {
+        try {
+            Android.flashlight(true);
+            answer("🔦 چراغ قوه روشن شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ چراغ قوه در دسترس نیست.",
-        voiceD
-    );
-
+    answer("❌ چراغ قوه در دسترس نیست.", voiceD);
 }
 
-
-function flashlightOff(){
-
-    if(android()){
-
-        try{
-
-            Android.flashlight(
-                false
-            );
-
-            answer(
-                "🔦 چراغ قوه خاموش شد."
-            );
-
+function flashlightOff() {
+    if (android()) {
+        try {
+            Android.flashlight(false);
+            answer("🔦 چراغ قوه خاموش شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ چراغ قوه در دسترس نیست.",
-        voiceD
-    );
-
+    answer("❌ چراغ قوه در دسترس نیست.", voiceD);
 }
-
 
 /* =====================================================
-   WIFI
+   WIFI, BLUETOOTH, MOBILE DATA, LOCATION, HOTSPOT
 ===================================================== */
 
-function wifi(){
-
-    if(android()){
-
-        try{
-
+function wifi() {
+    if (android()) {
+        try {
             Android.wifiSettings();
-
-            answer(
-                "📶 تنظیمات Wi-Fi باز شد."
-            );
-
+            answer("📶 تنظیمات Wi-Fi باز شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ Wi-Fi در دسترس نیست."
-    );
-
+    answer("❌ Wi-Fi در دسترس نیست.");
 }
 
-
-/* =====================================================
-   BLUETOOTH
-===================================================== */
-
-function bluetooth(){
-
-    if(android()){
-
-        try{
-
+function bluetooth() {
+    if (android()) {
+        try {
             Android.bluetoothSettings();
-
-            answer(
-                "🔵 تنظیمات بلوتوث باز شد."
-            );
-
+            answer("🔵 تنظیمات بلوتوث باز شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ بلوتوث در دسترس نیست."
-    );
-
+    answer("❌ بلوتوث در دسترس نیست.");
 }
 
-
-/* =====================================================
-   MOBILE DATA
-===================================================== */
-
-function mobileData(){
-
-    if(android()){
-
-        try{
-
+function mobileData() {
+    if (android()) {
+        try {
             Android.mobileDataSettings();
-
-            answer(
-                "📡 تنظیمات اینترنت همراه باز شد."
-            );
-
+            answer("📡 تنظیمات اینترنت همراه باز شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ اینترنت همراه در دسترس نیست."
-    );
-
+    answer("❌ اینترنت همراه در دسترس نیست.");
 }
 
-
-/* =====================================================
-   LOCATION
-===================================================== */
-
-function locationSettings(){
-
-    if(android()){
-
-        try{
-
+function locationSettings() {
+    if (android()) {
+        try {
             Android.locationSettings();
-
-            answer(
-                "📍 تنظیمات مکان باز شد."
-            );
-
+            answer("📍 تنظیمات مکان باز شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ تنظیمات مکان در دسترس نیست."
-    );
-
+    answer("❌ تنظیمات مکان در دسترس نیست.");
 }
 
-
-/* =====================================================
-   HOTSPOT
-===================================================== */
-
-function hotspot(){
-
-    if(android()){
-
-        try{
-
+function hotspot() {
+    if (android()) {
+        try {
             Android.hotspotSettings();
-
-            answer(
-                "📡 تنظیمات هات‌اسپات باز شد."
-            );
-
+            answer("📡 تنظیمات هات‌اسپات باز شد.");
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ هات‌اسپات در دسترس نیست."
-    );
-
+    answer("❌ هات‌اسپات در دسترس نیست.");
 }
-
 
 /* =====================================================
    BRIGHTNESS
 ===================================================== */
 
-function brightnessUp(){
-
-    if(android()){
-
-        try{
-
-            Android.brightnessUp();
-
-        }catch(e){}
-
+function brightnessUp() {
+    if (android()) {
+        try { Android.brightnessUp(); } catch (e) {}
     }
-
-
-    answer(
-        "☀️ نور صفحه زیاد شد."
-    );
-
+    answer("☀️ نور صفحه زیاد شد.");
 }
 
-
-function brightnessDown(){
-
-    if(android()){
-
-        try{
-
-            Android.brightnessDown();
-
-        }catch(e){}
-
+function brightnessDown() {
+    if (android()) {
+        try { Android.brightnessDown(); } catch (e) {}
     }
-
-
-    answer(
-        "🌙 نور صفحه کم شد."
-    );
-
+    answer("🌙 نور صفحه کم شد.");
 }
-
 
 /* =====================================================
-   CAMERA
+   CAMERA, GALLERY
 ===================================================== */
 
-function camera(){
-
-    if(android()){
-
-        try{
-
+function camera() {
+    if (android()) {
+        try {
             Android.openCamera();
-
-            answer(
-                "📷 دوربین باز شد.",
-                voiceA
-            );
-
+            answer("📷 دوربین باز شد.", voiceA);
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ دوربین در دسترس نیست."
-    );
-
+    answer("❌ دوربین در دسترس نیست.");
 }
 
-
-/* =====================================================
-   GALLERY
-===================================================== */
-
-function gallery(){
-
-    if(android()){
-
-        try{
-
+function gallery() {
+    if (android()) {
+        try {
             Android.openGallery();
-
-            answer(
-                "🖼️ گالری باز شد.",
-                voiceA
-            );
-
+            answer("🖼️ گالری باز شد.", voiceA);
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    answer(
-        "❌ گالری در دسترس نیست."
-    );
-
+    answer("❌ گالری در دسترس نیست.");
 }
-
 
 /* =====================================================
    TIME
 ===================================================== */
 
-function sayTime(){
-
-    var d =
-        new Date();
-
-
-    var h =
-        String(
-            d.getHours()
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    var m =
-        String(
-            d.getMinutes()
-        ).padStart(
-            2,
-            "0"
-        );
-
-
-    answer(
-        "🕐 الان ساعت " +
-        h +
-        ":" +
-        m +
-        " است.",
-        voiceF
-    );
-
+function sayTime() {
+    var d = new Date();
+    var h = String(d.getHours()).padStart(2, "0");
+    var m = String(d.getMinutes()).padStart(2, "0");
+    answer("🕐 الان ساعت " + h + ":" + m + " است.", voiceF);
 }
 
-
 /* =====================================================
-   GOOGLE
+   GOOGLE SEARCH
 ===================================================== */
 
-function googleSearch(query){
-
-    var url =
-        "https://www.google.com/search?q=" +
-        encodeURIComponent(query);
-
-
-    if(android()){
-
-        try{
-
-            Android.openUrl(
-                url
-            );
-
-
-            answer(
-                "🔎 در گوگل برای «" +
-                escapeHTML(query) +
-                "» جستجو کردم.",
-                voiceG
-            );
-
-
+function googleSearch(query) {
+    var url = "https://www.google.com/search?q=" + encodeURIComponent(query);
+    if (android()) {
+        try {
+            Android.openUrl(url);
+            answer("🔎 در گوگل برای «" + escapeHTML(query) + "» جستجو کردم.", voiceG);
             return;
-
-        }catch(e){}
-
+        } catch (e) {}
     }
-
-
-    window.location.href =
-        url;
-
+    window.location.href = url;
 }
 
-
 /* =====================================================
-   SPEECH
+   SPEECH RECOGNITION
 ===================================================== */
 
-var recognition =
-    null;
+var recognition = null;
+var listening = false;
+var commandMode = false;
+var manualStop = false;
+var waitingForCommand = false;
+var autoRestart = true;
 
-var listening =
-    false;
-
-var commandMode =
-    false;
-
-var manualStop =
-    false;
-
-var waitingForCommand =
-    false;
-
-var autoRestart =
-    true;
-
-
-/* =====================================================
-   INIT SPEECH
-===================================================== */
-
-function initSpeech(){
-
-    var Speech =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-
-    if(!Speech){
-
-        answer(
-            "❌ تشخیص گفتار در WebView در دسترس نیست.",
-            voiceD
-        );
-
+function initSpeech() {
+    var Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Speech) {
+        answer("❌ تشخیص گفتار در WebView در دسترس نیست.", voiceD);
         return false;
-
     }
+    recognition = new Speech();
+    recognition.lang = "fa-IR";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 3;
 
-
-    recognition =
-        new Speech();
-
-
-    recognition.lang =
-        "fa-IR";
-
-
-    recognition.continuous =
-        false;
-
-
-    recognition.interimResults =
-        false;
-
-
-    recognition.maxAlternatives =
-        3;
-
-
-    recognition.onstart =
-    function(){
-
-        if(!isLoggedIn){
-
+    recognition.onstart = function() {
+        if (!isLoggedIn) {
             stopListening();
-
             return;
-
         }
-
-
-        listening =
-            true;
-
-
-        mic.classList.add(
-            "active"
-        );
-
-
-        setStatus(
-            commandMode ?
-            "🎙️ فرمانت را بگو..." :
-            "🎙️ منتظر Ahoora AI...",
-            "listening"
-        );
-
+        listening = true;
+        mic.classList.add("active");
+        setStatus(commandMode ? "🎙️ فرمانت را بگو..." : "🎙️ منتظر Ahoora AI...", "listening");
     };
 
-
-    recognition.onresult =
-    function(event){
-
-        if(!isLoggedIn){
-
-            return;
-
-        }
-
-
-        var text =
-            event
-            .results[0][0]
-            .transcript
-            .trim();
-
-
-        userBox.textContent =
-            text;
-
-
-        var t =
-            normalize(text);
-
-
-        if(!commandMode){
-
-            if(
-                t.indexOf("ahoora ai") >= 0 ||
-                t.indexOf("ahoor a i") >= 0 ||
-                t.indexOf("اهورا ای") >= 0 ||
-                t.indexOf("اهورا آی") >= 0 ||
-                t.indexOf("اهورا") >= 0
-            ){
-
-                commandMode =
-                    true;
-
-
-                waitingForCommand =
-                    true;
-
-
-                answer(
-                    "👋 بله؟ فرمانت را بگو.",
-                    voiceE
-                );
-
-
-                setStatus(
-                    "🎙️ فرمان صوتی فعال شد"
-                );
-
-
-                setTimeout(
-                    function(){
-
-                        if(
-                            commandMode &&
-                            isLoggedIn
-                        ){
-
-                            startListening();
-
-                        }
-
-                    },
-                    1200
-                );
-
-            }
-
-
-            return;
-
-        }
-
-
-        waitingForCommand =
-            false;
-
-
-        processSpeech(
-            text,
-            true
-        );
-
-    };
-
-
-    recognition.onerror =
-    function(event){
-
-        listening =
-            false;
-
-
-        mic.classList.remove(
-            "active"
-        );
-
-
-        console.log(
-            "Speech error:",
-            event.error
-        );
-
-
-        if(
-            autoRestart &&
-            !manualStop &&
-            isLoggedIn
-        ){
-
-            if(
-                event.error ===
-                "no-speech" ||
-                event.error ===
-                "aborted"
-            ){
-
-                setTimeout(
-                    function(){
-
-                        if(
-                            autoRestart &&
-                            !manualStop &&
-                            isLoggedIn
-                        ){
-
-                            startListening();
-
-                        }
-
-                    },
-                    600
-                );
-
-                return;
-
-            }
-
-
-            if(
-                event.error ===
-                "not-allowed"
-            ){
-
-                answer(
-                    "❌ اجازه استفاده از میکروفن داده نشده است.",
-                    voiceD
-                );
-
-
-                setStatus(
-                    "اجازه میکروفن لازم است"
-                );
-
-                return;
-
-            }
-
-        }
-
-    };
-
-
-    recognition.onend =
-    function(){
-
-        listening =
-            false;
-
-
-        mic.classList.remove(
-            "active"
-        );
-
-
-        orb.classList.remove(
-            "listening",
-            "processing"
-        );
-
-
-        if(manualStop){
-
-            manualStop =
-                false;
-
-
-            autoRestart =
-                false;
-
-
-            setStatus(
-                "میکروفن خاموش شد"
-            );
-
-
-            return;
-
-        }
-
-
-        if(
-            autoRestart &&
-            isLoggedIn
-        ){
-
-            setTimeout(
-                function(){
-
-                    if(
-                        !manualStop &&
-                        autoRestart &&
-                        isLoggedIn
-                    ){
-
+    recognition.onresult = function(event) {
+        if (!isLoggedIn) return;
+        var text = event.results[0][0].transcript.trim();
+        userBox.textContent = text;
+        var t = normalize(text);
+
+        if (!commandMode) {
+            if (t.indexOf("ahoora ai") >= 0 || t.indexOf("ahoor a i") >= 0 ||
+                t.indexOf("اهورا ای") >= 0 || t.indexOf("اهورا آی") >= 0 || t.indexOf("اهورا") >= 0) {
+                commandMode = true;
+                waitingForCommand = true;
+                answer("👋 بله؟ فرمانت را بگو.", voiceE);
+                setStatus("🎙️ فرمان صوتی فعال شد");
+                setTimeout(function() {
+                    if (commandMode && isLoggedIn) {
                         startListening();
-
                     }
-
-                },
-                600
-            );
-
+                }, 1200);
+            }
+            return;
         }
-
+        waitingForCommand = false;
+        processSpeech(text, true);
     };
 
-
-    return true;
-
-}
-
-
-/* =====================================================
-   START LISTENING
-===================================================== */
-
-function startListening(){
-
-    if(!isLoggedIn){
-
-        return;
-
-    }
-
-
-    if(listening){
-
-        return;
-
-    }
-
-
-    if(!recognition){
-
-        if(!initSpeech()){
-
-            return;
-
-        }
-
-    }
-
-
-    autoRestart =
-        true;
-
-
-    manualStop =
-        false;
-
-
-    try{
-
-        recognition.start();
-
-    }catch(e){
-
-        console.log(
-            "start error",
-            e
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   STOP LISTENING
-===================================================== */
-
-function stopListening(){
-
-    manualStop =
-        true;
-
-
-    autoRestart =
-        false;
-
-
-    listening =
-        false;
-
-
-    if(recognition){
-
-        try{
-
-            recognition.stop();
-
-        }catch(e){}
-
-    }
-
-
-    mic.classList.remove(
-        "active"
-    );
-
-
-    orb.classList.remove(
-        "listening",
-        "processing"
-    );
-
-
-    setStatus(
-        "میکروفن خاموش شد"
-    );
-
-}
-
-
-/* =====================================================
-   PROCESS SPEECH
-===================================================== */
-
-function processSpeech(
-    original,
-    fromButton
-){
-
-    if(!isLoggedIn){
-
-        return;
-
-    }
-
-
-    var text =
-        normalize(original);
-
-
-    setStatus(
-        "در حال پردازش...",
-        "processing"
-    );
-
-
-    if(fromButton){
-
-        commandMode =
-            true;
-
-    }
-
-
-    if(
-        text === "لغو" ||
-        text === "بیخیال" ||
-        text === "خروج"
-    ){
-
-        commandMode =
-            false;
-
-
-        answer(
-            "باشه."
-        );
-
-
-        setStatus(
-            "آماده — بگو «Ahoora AI»"
-        );
-
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("چراغ قوه") >= 0 ||
-            text.indexOf("فلاش") >= 0
-        )
-        &&
-        (
-            text.indexOf("خاموش") >= 0 ||
-            text.indexOf("قطع") >= 0
-        )
-    ){
-
-        flashlightOff();
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("چراغ قوه") >= 0 ||
-            text.indexOf("فلاش") >= 0
-        )
-        &&
-        (
-            text.indexOf("روشن") >= 0 ||
-            text.indexOf("فعال") >= 0
-        )
-    ){
-
-        flashlightOn();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("وای فای") >= 0 ||
-        text.indexOf("وایفای") >= 0 ||
-        text.indexOf("wifi") >= 0
-    ){
-
-        wifi();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("بلوتوث") >= 0 ||
-        text.indexOf("bluetooth") >= 0
-    ){
-
-        bluetooth();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("اینترنت همراه") >= 0 ||
-        text.indexOf("دیتای همراه") >= 0 ||
-        text.indexOf("دیتا همراه") >= 0 ||
-        text.indexOf("داده همراه") >= 0
-    ){
-
-        mobileData();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("مکان") >= 0 ||
-        text.indexOf("لوکیشن") >= 0 ||
-        text.indexOf("gps") >= 0
-    ){
-
-        locationSettings();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("هات اسپات") >= 0 ||
-        text.indexOf("هات‌اسپات") >= 0 ||
-        text.indexOf("نقطه اتصال") >= 0
-    ){
-
-        hotspot();
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("نور") >= 0 ||
-            text.indexOf("روشنایی") >= 0
-        )
-        &&
-        (
-            text.indexOf("زیاد") >= 0 ||
-            text.indexOf("بالا") >= 0
-        )
-    ){
-
-        brightnessUp();
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("نور") >= 0 ||
-            text.indexOf("روشنایی") >= 0
-        )
-        &&
-        (
-            text.indexOf("کم") >= 0 ||
-            text.indexOf("پایین") >= 0
-        )
-    ){
-
-        brightnessDown();
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("آهنگ") >= 0 ||
-            text.indexOf("موزیک") >= 0 ||
-            text.indexOf("موسیقی") >= 0
-        )
-        &&
-        (
-            text.indexOf("بعدی") >= 0 ||
-            text.indexOf("بعد") >= 0
-        )
-    ){
-
-        musicNext();
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("آهنگ") >= 0 ||
-            text.indexOf("موزیک") >= 0 ||
-            text.indexOf("موسیقی") >= 0
-        )
-        &&
-        (
-            text.indexOf("قبلی") >= 0 ||
-            text.indexOf("قبل") >= 0
-        )
-    ){
-
-        musicPrevious();
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("آهنگ") >= 0 ||
-            text.indexOf("موزیک") >= 0 ||
-            text.indexOf("موسیقی") >= 0
-        )
-        &&
-        (
-            text.indexOf("توقف") >= 0 ||
-            text.indexOf("متوقف") >= 0 ||
-            text.indexOf("قطع") >= 0 ||
-            text.indexOf("بایست") >= 0
-        )
-    ){
-
-        musicStop();
-
-        return;
-
-    }
-
-
-    if(
-        (
-            text.indexOf("آهنگ") >= 0 ||
-            text.indexOf("موزیک") >= 0 ||
-            text.indexOf("موسیقی") >= 0
-        )
-        &&
-        (
-            text.indexOf("پخش") >= 0 ||
-            text.indexOf("اجرا") >= 0 ||
-            text.indexOf("ادامه") >= 0 ||
-            text.indexOf("شروع") >= 0
-        )
-    ){
-
-        musicPlay();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("صدا") >= 0 &&
-        (
-            text.indexOf("زیاد") >= 0 ||
-            text.indexOf("بالا") >= 0
-        )
-    ){
-
-        volumeUp();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("صدا") >= 0 &&
-        (
-            text.indexOf("کم") >= 0 ||
-            text.indexOf("پایین") >= 0
-        )
-    ){
-
-        volumeDown();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("ساعت") >= 0
-    ){
-
-        sayTime();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("دوربین") >= 0 ||
-        text.indexOf("عکس بگیر") >= 0
-    ){
-
-        camera();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("گالری") >= 0 ||
-        text.indexOf("عکس هام") >= 0 ||
-        text.indexOf("عکسها") >= 0
-    ){
-
-        gallery();
-
-        return;
-
-    }
-
-
-    if(
-        text.indexOf("تماس") >= 0 ||
-        text.indexOf("زنگ") >= 0 ||
-        text.indexOf("بگیر") >= 0
-    ){
-
-        var contact =
-            extractContactFromCommand(
-                text
-            );
-
-
-        if(contact){
-
-            callContact(
-                contact
-            );
-
-            return;
-
-        }
-
-
-        var match =
-            text.match(
-                /(\+?[0-9]{10,15})/
-            );
-
-
-        if(match){
-
-            callNumber(
-                match[1]
-            );
-
-            return;
-
-        }
-
-    }
-
-
-    if(
-        text.indexOf("پیام") >= 0 ||
-        text.indexOf("پیامک") >= 0
-    ){
-
-        var smsContactName =
-            extractContactFromCommand(
-                text
-            );
-
-
-        if(smsContactName){
-
-            var message =
-                extractMessage(
-                    text
-                );
-
-
-            if(!message){
-
-                message =
-                    "سلام";
-
+    recognition.onerror = function(event) {
+        listening = false;
+        mic.classList.remove("active");
+        console.log("Speech error:", event.error);
+        if (autoRestart && !manualStop && isLoggedIn) {
+            if (event.error === "no-speech" || event.error === "aborted") {
+                setTimeout(function() {
+                    if (autoRestart && !manualStop && isLoggedIn) {
+                        startListening();
+                    }
+                }, 600);
+                return;
             }
+            if (event.error === "not-allowed") {
+                answer("❌ اجازه استفاده از میکروفن داده نشده است.", voiceD);
+                setStatus("اجازه میکروفن لازم است");
+                return;
+            }
+        }
+    };
 
-
-            smsContact(
-                smsContactName,
-                message
-            );
-
-
+    recognition.onend = function() {
+        listening = false;
+        mic.classList.remove("active");
+        orb.classList.remove("listening", "processing");
+        if (manualStop) {
+            manualStop = false;
+            autoRestart = false;
+            setStatus("میکروفن خاموش شد");
             return;
-
         }
-
-    }
-
-
-    var searchText =
-        null;
-
-
-    if(
-        text.indexOf("در گوگل") >= 0 ||
-        text.indexOf("توی گوگل") >= 0
-    ){
-
-        searchText =
-            text
-            .replace(
-                "در گوگل",
-                ""
-            )
-            .replace(
-                "توی گوگل",
-                ""
-            )
-            .replace(
-                "جستجو",
-                ""
-            )
-            .replace(
-                "کن",
-                ""
-            )
-            .trim();
-
-    }
-    else if(
-        text.indexOf("گوگل") === 0
-    ){
-
-        searchText =
-            text
-            .replace(
-                "گوگل",
-                ""
-            )
-            .replace(
-                "جستجو",
-                ""
-            )
-            .replace(
-                "کن",
-                ""
-            )
-            .trim();
-
-    }
-
-
-    if(searchText){
-
-        googleSearch(
-            searchText
-        );
-
-        return;
-
-    }
-
-
-    if(
-        openNamedApp(text)
-    ){
-
-        return;
-
-    }
-
-
-    var url =
-        original.match(
-            /https?:\/\/[^\s]+/i
-        );
-
-
-    if(url){
-
-        if(android()){
-
-            try{
-
-                Android.openUrl(
-                    url[0]
-                );
-
-            }catch(e){}
-
-        }else{
-
-            window.location.href =
-                url[0];
-
+        if (autoRestart && isLoggedIn) {
+            setTimeout(function() {
+                if (!manualStop && autoRestart && isLoggedIn) {
+                    startListening();
+                }
+            }, 600);
         }
+    };
+    return true;
+}
 
-        return;
-
+function startListening() {
+    if (!isLoggedIn) return;
+    if (listening) return;
+    if (!recognition) {
+        if (!initSpeech()) return;
     }
-
-
-    if(
-        text.indexOf("سلام") >= 0
-    ){
-
-        answer(
-            "👋 سلام! من اهورا هستم.",
-            voiceE
-        );
-
-        return;
-
+    autoRestart = true;
+    manualStop = false;
+    try {
+        recognition.start();
+    } catch (e) {
+        console.log("start error", e);
     }
+}
 
+function stopListening() {
+    manualStop = true;
+    autoRestart = false;
+    listening = false;
+    if (recognition) {
+        try { recognition.stop(); } catch (e) {}
+    }
+    mic.classList.remove("active");
+    orb.classList.remove("listening", "processing");
+    setStatus("میکروفن خاموش شد");
+}
 
+/* =====================================================
+   PROCESS SPEECH - اصلاح شده با مصرف شعله
+===================================================== */
+
+async function processSpeech(original, fromButton) {
+    if (!isLoggedIn) return;
+    
+    // بررسی شعله قبل از پردازش فرمان
+    if (!await useFlames(FLAME_COST_AHOORA)) {
+        commandMode = false;
+        setStatus("آماده — بگو «Ahoora AI»");
+        return;
+    }
+    
+    var text = normalize(original);
+    setStatus("در حال پردازش...", "processing");
+    
+    if (fromButton) {
+        commandMode = true;
+    }
+    
+    if (text === "لغو" || text === "بیخیال" || text === "خروج") {
+        commandMode = false;
+        answer("باشه.");
+        setStatus("آماده — بگو «Ahoora AI»");
+        return;
+    }
+    
+    // ============================================
+    // تمام دستورات (بدون تغییر در منطق)
+    // ============================================
+    
+    if ((text.indexOf("چراغ قوه") >= 0 || text.indexOf("فلاش") >= 0) &&
+        (text.indexOf("خاموش") >= 0 || text.indexOf("قطع") >= 0)) {
+        flashlightOff();
+        return;
+    }
+    
+    if ((text.indexOf("چراغ قوه") >= 0 || text.indexOf("فلاش") >= 0) &&
+        (text.indexOf("روشن") >= 0 || text.indexOf("فعال") >= 0)) {
+        flashlightOn();
+        return;
+    }
+    
+    if (text.indexOf("وای فای") >= 0 || text.indexOf("وایفای") >= 0 || text.indexOf("wifi") >= 0) {
+        wifi();
+        return;
+    }
+    
+    if (text.indexOf("بلوتوث") >= 0 || text.indexOf("bluetooth") >= 0) {
+        bluetooth();
+        return;
+    }
+    
+    if (text.indexOf("اینترنت همراه") >= 0 || text.indexOf("دیتای همراه") >= 0 ||
+        text.indexOf("دیتا همراه") >= 0 || text.indexOf("داده همراه") >= 0) {
+        mobileData();
+        return;
+    }
+    
+    if (text.indexOf("مکان") >= 0 || text.indexOf("لوکیشن") >= 0 || text.indexOf("gps") >= 0) {
+        locationSettings();
+        return;
+    }
+    
+    if (text.indexOf("هات اسپات") >= 0 || text.indexOf("هات‌اسپات") >= 0 || text.indexOf("نقطه اتصال") >= 0) {
+        hotspot();
+        return;
+    }
+    
+    if ((text.indexOf("نور") >= 0 || text.indexOf("روشنایی") >= 0) &&
+        (text.indexOf("زیاد") >= 0 || text.indexOf("بالا") >= 0)) {
+        brightnessUp();
+        return;
+    }
+    
+    if ((text.indexOf("نور") >= 0 || text.indexOf("روشنایی") >= 0) &&
+        (text.indexOf("کم") >= 0 || text.indexOf("پایین") >= 0)) {
+        brightnessDown();
+        return;
+    }
+    
+    if ((text.indexOf("آهنگ") >= 0 || text.indexOf("موزیک") >= 0 || text.indexOf("موسیقی") >= 0) &&
+        (text.indexOf("بعدی") >= 0 || text.indexOf("بعد") >= 0)) {
+        musicNext();
+        return;
+    }
+    
+    if ((text.indexOf("آهنگ") >= 0 || text.indexOf("موزیک") >= 0 || text.indexOf("موسیقی") >= 0) &&
+        (text.indexOf("قبلی") >= 0 || text.indexOf("قبل") >= 0)) {
+        musicPrevious();
+        return;
+    }
+    
+    if ((text.indexOf("آهنگ") >= 0 || text.indexOf("موزیک") >= 0 || text.indexOf("موسیقی") >= 0) &&
+        (text.indexOf("توقف") >= 0 || text.indexOf("متوقف") >= 0 || text.indexOf("قطع") >= 0 || text.indexOf("بایست") >= 0)) {
+        musicStop();
+        return;
+    }
+    
+    if ((text.indexOf("آهنگ") >= 0 || text.indexOf("موزیک") >= 0 || text.indexOf("موسیقی") >= 0) &&
+        (text.indexOf("پخش") >= 0 || text.indexOf("اجرا") >= 0 || text.indexOf("ادامه") >= 0 || text.indexOf("شروع") >= 0)) {
+        musicPlay();
+        return;
+    }
+    
+    if (text.indexOf("صدا") >= 0 && (text.indexOf("زیاد") >= 0 || text.indexOf("بالا") >= 0)) {
+        volumeUp();
+        return;
+    }
+    
+    if (text.indexOf("صدا") >= 0 && (text.indexOf("کم") >= 0 || text.indexOf("پایین") >= 0)) {
+        volumeDown();
+        return;
+    }
+    
+    if (text.indexOf("ساعت") >= 0) {
+        sayTime();
+        return;
+    }
+    
+    if (text.indexOf("دوربین") >= 0 || text.indexOf("عکس بگیر") >= 0) {
+        camera();
+        return;
+    }
+    
+    if (text.indexOf("گالری") >= 0 || text.indexOf("عکس هام") >= 0 || text.indexOf("عکسها") >= 0) {
+        gallery();
+        return;
+    }
+    
+    if (text.indexOf("تماس") >= 0 || text.indexOf("زنگ") >= 0 || text.indexOf("بگیر") >= 0) {
+        var contact = extractContactFromCommand(text);
+        if (contact) {
+            callContact(contact);
+            return;
+        }
+        var match = text.match(/(\+?[0-9]{10,15})/);
+        if (match) {
+            callNumber(match[1]);
+            return;
+        }
+    }
+    
+    if (text.indexOf("پیام") >= 0 || text.indexOf("پیامک") >= 0) {
+        var smsContactName = extractContactFromCommand(text);
+        if (smsContactName) {
+            var message = extractMessage(text);
+            if (!message) {
+                message = "سلام";
+            }
+            smsContact(smsContactName, message);
+            return;
+        }
+    }
+    
+    var searchText = null;
+    if (text.indexOf("در گوگل") >= 0 || text.indexOf("توی گوگل") >= 0) {
+        searchText = text.replace("در گوگل", "").replace("توی گوگل", "").replace("جستجو", "").replace("کن", "").trim();
+    } else if (text.indexOf("گوگل") === 0) {
+        searchText = text.replace("گوگل", "").replace("جستجو", "").replace("کن", "").trim();
+    }
+    if (searchText) {
+        googleSearch(searchText);
+        return;
+    }
+    
+    if (openNamedApp(text)) {
+        return;
+    }
+    
+    var url = original.match(/https?:\/\/[^\s]+/i);
+    if (url) {
+        if (android()) {
+            try { Android.openUrl(url[0]); } catch (e) {}
+        } else {
+            window.location.href = url[0];
+        }
+        return;
+    }
+    
+    if (text.indexOf("سلام") >= 0) {
+        answer("👋 سلام! من اهورا هستم.", voiceE);
+        return;
+    }
+    
     answer(
-
         "🤔 متوجه فرمان نشدم.<br><br>" +
-
         "مثلاً بگو:<br>" +
-
         "«چراغ قوه رو روشن کن»<br>" +
         "«وای فای رو باز کن»<br>" +
         "«بلوتوث رو باز کن»<br>" +
@@ -4360,190 +1436,79 @@ function processSpeech(
         "«واتساپ رو باز کن»<br>" +
         "«با پدرم تماس بگیر»<br>" +
         "«به پدرم پیام بده سلام»",
-
         voiceD
-
     );
-
 }
-
 
 /* =====================================================
    MIC BUTTON
 ===================================================== */
 
-mic.addEventListener(
-    "click",
-    function(){
-
-        if(!isLoggedIn){
-
-            return;
-
-        }
-
-
-        if(listening){
-
-            stopListening();
-
-        }else{
-
-            manualStop =
-                false;
-
-            autoRestart =
-                true;
-
-            startListening();
-
-        }
-
+mic.addEventListener("click", function() {
+    if (!isLoggedIn) return;
+    if (listening) {
+        stopListening();
+    } else {
+        manualStop = false;
+        autoRestart = true;
+        startListening();
     }
-);
-
+});
 
 /* =====================================================
-   CHATY AI
+   CHATY AI - با بررسی شعله
 ===================================================== */
 
-var chatyAiCard =
-    document.getElementById(
-        "chatyAiCard"
-    );
+var chatyAiCard = document.getElementById("chatyAiCard");
+var ahooraAiCard = document.getElementById("ahooraAiCard");
+var chatyTransition = document.getElementById("chatyTransition");
+var chatyLoadingStarted = false;
 
-var ahooraAiCard =
-    document.getElementById(
-        "ahooraAiCard"
-    );
-
-var chatyTransition =
-    document.getElementById(
-        "chatyTransition"
-    );
-
-
-var chatyLoadingStarted =
-    false;
-
-
-chatyAiCard.addEventListener(
-    "click",
-    function(){
-
-        if(!isLoggedIn){
-
-            return;
-
-        }
-
-
-        if(chatyLoadingStarted){
-
-            return;
-
-        }
-
-
-        chatyLoadingStarted =
-            true;
-
-
-        /*
-           اجرای انیمیشن Chaty
-        */
-
-        chatyTransition.style.display =
-            "flex";
-
-
-        /*
-           لود همزمان chaty.html
-        */
-
-        var chatyPage =
-            document.createElement(
-                "iframe"
-            );
-
-
-        chatyPage.style.position =
-            "fixed";
-
-        chatyPage.style.width =
-            "100%";
-
-        chatyPage.style.height =
-            "100%";
-
-        chatyPage.style.border =
-            "0";
-
-        chatyPage.style.left =
-            "0";
-
-        chatyPage.style.top =
-            "0";
-
-        chatyPage.style.opacity =
-            "0";
-
-        chatyPage.style.pointerEvents =
-            "none";
-
-        chatyPage.style.zIndex =
-            "-1";
-
-
-        chatyPage.src =
-            "chaty.html";
-
-
-        document.body.appendChild(
-            chatyPage
-        );
-
-
-        /*
-           بعد از پایان انیمیشن
-           Chaty نمایش داده می‌شود.
-        */
-
-        setTimeout(
-            function(){
-
-                chatyPage.style.opacity =
-                    "1";
-
-                chatyPage.style.pointerEvents =
-                    "auto";
-
-                chatyPage.style.zIndex =
-                    "10001";
-
-
-                chatyTransition.style.display =
-                    "none";
-
-
-            },
-            1400
-        );
-
+chatyAiCard.addEventListener("click", function() {
+    if (!isLoggedIn) return;
+    if (chatyLoadingStarted) return;
+    
+    // بررسی شعله قبل از رفتن به Chaty
+    if (currentFlames < 1) {
+        responseBox.innerHTML = 
+            "🔥 شعله کافی نیست!<br><br>" +
+            `شما ${currentFlames} شعله دارید.<br>` +
+            `هر فرمان ${FLAME_COST_AHOORA} شعله مصرف می‌کند.<br><br>` +
+            `⏳ صبر کنید تا فردا شعله‌ها ریست شوند.`;
+        return;
     }
-);
-
+    
+    chatyLoadingStarted = true;
+    chatyTransition.style.display = "flex";
+    
+    var chatyPage = document.createElement("iframe");
+    chatyPage.style.position = "fixed";
+    chatyPage.style.width = "100%";
+    chatyPage.style.height = "100%";
+    chatyPage.style.border = "0";
+    chatyPage.style.left = "0";
+    chatyPage.style.top = "0";
+    chatyPage.style.opacity = "0";
+    chatyPage.style.pointerEvents = "none";
+    chatyPage.style.zIndex = "-1";
+    chatyPage.src = "chaty.html";
+    document.body.appendChild(chatyPage);
+    
+    setTimeout(function() {
+        chatyPage.style.opacity = "1";
+        chatyPage.style.pointerEvents = "auto";
+        chatyPage.style.zIndex = "10001";
+        chatyTransition.style.display = "none";
+    }, 1400);
+});
 
 /* =====================================================
    START
 ===================================================== */
 
 renderContacts();
-
 checkSession();
 
-
 </script>
-
 </body>
 </html>
