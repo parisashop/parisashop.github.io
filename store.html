@@ -70,6 +70,50 @@ body {
     border: 1px solid #ff224422;
 }
 
+/* ESTIMATED TIME - جدید */
+.estimated-box {
+    background: #1a1a2e;
+    border: 1px solid #00ff9944;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    text-align: center;
+    display: none;
+}
+.estimated-box.show {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.estimated-box .est-label {
+    color: #9da8c5;
+    font-size: 12px;
+}
+.estimated-box .est-time {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ff99;
+    direction: ltr;
+    margin-top: 4px;
+}
+.estimated-box .est-date {
+    color: #66aaff;
+    font-size: 14px;
+    margin-top: 2px;
+}
+.estimated-box .est-note {
+    color: #ffaa00;
+    font-size: 12px;
+    margin-top: 6px;
+    padding: 6px 12px;
+    background: #ffaa0015;
+    border-radius: 8px;
+    border: 1px solid #ffaa0044;
+}
+
 /* USER INFO */
 .user-info {
     background: #0a0a18;
@@ -192,7 +236,20 @@ body {
 @keyframes statusPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 .status-box .status-title { font-size: 22px; font-weight: bold; color: #ff6b35; margin-bottom: 8px; }
 .status-box .status-desc { color: #9da8c5; font-size: 15px; line-height: 1.8; }
-.status-box .status-time { color: #ff6b35; font-size: 14px; margin-top: 12px; padding: 10px; background: #1a1a2e; border-radius: 12px; border: 1px solid #292939; }
+.status-box .status-time {
+    color: #00ff99;
+    font-size: 16px;
+    margin-top: 12px;
+    padding: 12px;
+    background: #1a1a2e;
+    border-radius: 12px;
+    border: 1px solid #00ff9944;
+}
+.status-box .status-time .time-display {
+    font-weight: bold;
+    font-size: 20px;
+    direction: ltr;
+}
 .status-box .status-loading { margin-top: 18px; }
 .status-box .status-loading .bar { width: 100%; height: 4px; background: #292939; border-radius: 2px; overflow: hidden; margin-top: 8px; }
 .status-box .status-loading .bar .fill { width: 0%; height: 100%; background: linear-gradient(90deg, #ff6b35, #ff2d55); border-radius: 2px; animation: progressBar 300s linear forwards; }
@@ -246,6 +303,7 @@ body {
     .package-btn .flame-num { font-size: 18px; }
     .logo { font-size: 30px; }
     .card-info .card-number { font-size: 18px; letter-spacing: 2px; }
+    .estimated-box .est-time { font-size: 18px; }
 }
 </style>
 </head>
@@ -279,14 +337,19 @@ body {
         <div class="status-title">در انتظار تأیید ادمین</div>
         <div class="status-desc">
             لطفاً مبلغ را به شماره کارت زیر واریز کنید<br>
-            پس از تأیید ادمین، شعله‌ها اضافه می‌شود
+            زمان پیش‌بینی واریز:
         </div>
-        <div style="margin:15px 0;padding:15px;background:#1a1a2e;border-radius:14px;border:1px solid #ff6b3544;">
-            <div style="color:#9da8c5;font-size:12px;">شماره کارت</div>
-            <div style="font-size:24px;font-weight:bold;color:#ff6b35;direction:ltr;font-family:'Courier New',monospace;letter-spacing:3px;">
+        <div class="status-time">
+            ⏰ <span class="time-display" id="statusEstTime">--:--</span>
+            <br>
+            <span style="font-size:12px;color:#9da8c5;" id="statusEstDate">---</span>
+        </div>
+        <div style="margin:12px 0;padding:12px;background:#1a1a2e;border-radius:12px;border:1px solid #ff6b3544;">
+            <div style="color:#9da8c5;font-size:11px;">شماره کارت</div>
+            <div style="font-size:20px;font-weight:bold;color:#ff6b35;direction:ltr;font-family:'Courier New',monospace;letter-spacing:2px;">
                 6219 8619 2115 8506
             </div>
-            <div style="color:#66aaff;font-size:14px;margin-top:4px;">به نام جعفر ملکی</div>
+            <div style="color:#66aaff;font-size:13px;margin-top:4px;">به نام جعفر ملکی</div>
         </div>
         <div class="status-loading">
             <div style="color:#888;font-size:13px;">منتظر تأیید ادمین<span>...</span></div>
@@ -307,6 +370,14 @@ body {
         <div class="card-number">6219 8619 2115 8506</div>
         <div class="card-name">به نام جعفر ملکی</div>
         <div class="card-time">🕐 زمان واریز: ۹ صبح تا ۱۲ شب (به جز ۱۲ تا ۹ شب)</div>
+    </div>
+
+    <!-- ESTIMATED TIME - جدید -->
+    <div class="estimated-box" id="estimatedBox">
+        <div class="est-label">⏰ زمان پیش‌بینی واریز</div>
+        <div class="est-time" id="estTimeDisplay">--:--</div>
+        <div class="est-date" id="estDateDisplay">---</div>
+        <div class="est-note" id="estNoteDisplay">📌 در ساعت غیرفعال، واریز در روز بعد انجام می‌شود</div>
     </div>
 
     <div class="user-info" id="userInfo" style="display:none;">
@@ -378,6 +449,8 @@ const PRICE_PER_FLAME = 1000;
 let currentUser = null;
 let isLoggedIn = false;
 let selectedFlames = 10;
+let estimatedTime = null;
+let estimatedDate = null;
 
 // DOM Elements
 const packagesContainer = document.getElementById('packagesContainer');
@@ -390,6 +463,14 @@ const userEmail = document.getElementById('userEmail');
 const userFlames = document.getElementById('userFlames');
 const statusOverlay = document.getElementById('statusOverlay');
 const closeStatusBtn = document.getElementById('closeStatusBtn');
+const statusEstTime = document.getElementById('statusEstTime');
+const statusEstDate = document.getElementById('statusEstDate');
+
+// Estimated Time Elements
+const estimatedBox = document.getElementById('estimatedBox');
+const estTimeDisplay = document.getElementById('estTimeDisplay');
+const estDateDisplay = document.getElementById('estDateDisplay');
+const estNoteDisplay = document.getElementById('estNoteDisplay');
 
 // Login Elements
 const loginOverlay = document.getElementById('loginOverlay');
@@ -402,6 +483,97 @@ const loginBackEmail = document.getElementById('loginBackEmail');
 const loginMessage = document.getElementById('loginMessage');
 const loginEmailArea = document.getElementById('loginEmailArea');
 let loginEmail = '';
+
+// =====================================================
+// محاسبه زمان پیش‌بینی واریز
+// =====================================================
+
+function calculateEstimatedTime() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    
+    // ساعت‌های غیرفعال: ۱۲ شب تا ۹ صبح (0 تا 8)
+    const isOffTime = (currentHour >= 0 && currentHour < 9);
+    
+    let estDate = new Date(now);
+    let estHour, estMinute;
+    let note = '';
+    
+    if (isOffTime) {
+        // ساعت غیرفعال: ۱۲ شب تا ۹ صبح → ۴۵ دقیقه بعد از ۹ صبح
+        estDate.setHours(9, 45, 0, 0);
+        // اگر الان قبل از ۹ صبح است، امروز ۹:۴۵
+        // اگر الان بین ۱۲ شب تا ۹ صبح است
+        note = '⏰ ساعت غیرفعال (۱۲ شب تا ۹ صبح) - واریز در ۹:۴۵ صبح';
+        
+        // اگر الان بین ۱۲ شب تا ۹ صبح است
+        if (currentHour >= 0 && currentHour < 9) {
+            // امروز ۹:۴۵
+            estDate.setHours(9, 45, 0, 0);
+        }
+    } else {
+        // ساعت فعال: ۹ صبح تا ۱۲ شب
+        // زمان واریز = زمان فعلی + ۴۵ دقیقه
+        estDate = new Date(now.getTime() + 45 * 60000);
+        estHour = estDate.getHours();
+        estMinute = estDate.getMinutes();
+        
+        // اگر زمان جدید در ساعت غیرفعال (۱۲ شب تا ۹ صبح) افتاد
+        if (estDate.getHours() >= 0 && estDate.getHours() < 9) {
+            // برو به ۹:۴۵ صبح روز بعد
+            estDate.setDate(estDate.getDate() + 1);
+            estDate.setHours(9, 45, 0, 0);
+            note = '⏰ زمان واریز به روز بعد موکول شد (۹:۴۵ صبح)';
+        } else {
+            note = '⏱️ ۴۵ دقیقه پس از خرید';
+        }
+    }
+    
+    // فرمت زمان
+    const hours = String(estDate.getHours()).padStart(2, '0');
+    const minutes = String(estDate.getMinutes()).padStart(2, '0');
+    const timeStr = `${hours}:${minutes}`;
+    
+    // فرمت تاریخ
+    const year = estDate.getFullYear();
+    const month = String(estDate.getMonth() + 1).padStart(2, '0');
+    const day = String(estDate.getDate()).padStart(2, '0');
+    const dateStr = `${year}/${month}/${day}`;
+    
+    // نام روز هفته
+    const weekdays = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+    const dayName = weekdays[estDate.getDay()];
+    const fullDateStr = `${dayName} ${dateStr}`;
+    
+    return {
+        time: timeStr,
+        date: dateStr,
+        fullDate: fullDateStr,
+        note: note,
+        timestamp: estDate.getTime()
+    };
+}
+
+function updateEstimatedDisplay() {
+    const est = calculateEstimatedTime();
+    estimatedBox.classList.add('show');
+    estTimeDisplay.textContent = est.time;
+    estDateDisplay.textContent = est.fullDate;
+    estNoteDisplay.textContent = est.note;
+    
+    // ذخیره برای استفاده در خرید
+    estimatedTime = est.time;
+    estimatedDate = est.fullDate;
+}
+
+// به‌روزرسانی هر ۳۰ ثانیه
+updateEstimatedDisplay();
+setInterval(updateEstimatedDisplay, 30000);
+
+// =====================================================
+// فرمت قیمت
+// =====================================================
 
 function formatPrice(amount) { return amount.toLocaleString() + ' تومان'; }
 
@@ -438,42 +610,11 @@ async function fetchUserFlames(email) {
     } catch { return 0; }
 }
 
-async function addFlamesToUser(email, flames) {
-    try {
-        let { data, error } = await supabaseClient
-            .from('user_flames')
-            .select('flames')
-            .eq('email', email)
-            .single();
-        
-        if (error && error.code === 'PGRST116') {
-            const { error: insertError } = await supabaseClient
-                .from('user_flames')
-                .insert({ email: email, flames: flames });
-            if (insertError) throw insertError;
-            return { success: true, newFlames: flames };
-        }
-        
-        if (error) throw error;
-        
-        const newFlames = (data.flames || 0) + flames;
-        const { error: updateError } = await supabaseClient
-            .from('user_flames')
-            .update({ flames: newFlames })
-            .eq('email', email);
-        
-        if (updateError) throw updateError;
-        return { success: true, newFlames: newFlames };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-}
-
 // =====================================================
-// PURCHASE REQUEST
+// PURCHASE REQUEST با زمان پیش‌بینی
 // =====================================================
 
-async function savePurchaseRequest(email, flames, amount) {
+async function savePurchaseRequest(email, flames, amount, estTime, estDate) {
     try {
         const { data, error } = await supabaseClient
             .from('purchase_requests')
@@ -481,7 +622,9 @@ async function savePurchaseRequest(email, flames, amount) {
                 email: email,
                 flames: flames,
                 amount: amount,
-                status: 'pending'
+                status: 'pending',
+                estimated_time: estTime,
+                estimated_date: estDate
             })
             .select();
         
@@ -514,17 +657,37 @@ async function handleBuy() {
     
     const totalPrice = count * PRICE_PER_FLAME;
     
-    if (!confirm(`🔥 خرید ${count.toLocaleString()} شعله به مبلغ ${totalPrice.toLocaleString()} تومان؟`)) return;
+    // دریافت زمان پیش‌بینی
+    const est = calculateEstimatedTime();
+    
+    if (!confirm(
+        `🔥 خرید ${count.toLocaleString()} شعله به مبلغ ${totalPrice.toLocaleString()} تومان\n` +
+        `⏰ زمان پیش‌بینی واریز: ${est.time} - ${est.fullDate}\n` +
+        `📌 ${est.note}\n\n` +
+        `💳 شماره کارت: 6219 8619 2115 8506\n` +
+        `به نام: جعفر ملکی`
+    )) return;
     
     buyButton.disabled = true;
     buyButton.classList.add('loading');
     
     try {
-        const result = await savePurchaseRequest(currentUser.email, count, totalPrice);
+        const result = await savePurchaseRequest(
+            currentUser.email, 
+            count, 
+            totalPrice,
+            est.time,
+            est.fullDate
+        );
+        
         if (!result.success) throw new Error(result.error);
         
+        // نمایش در وضعیت
+        statusEstTime.textContent = est.time;
+        statusEstDate.textContent = est.fullDate;
         statusOverlay.classList.add('show');
-        showMessage('✅ درخواست خرید ثبت شد. منتظر تأیید ادمین باشید.', 'success');
+        
+        showMessage(`✅ درخواست خرید ثبت شد.\n⏰ زمان پیش‌بینی واریز: ${est.time}`, 'success');
         
     } catch (error) {
         showMessage('❌ ' + error.message, 'error');
