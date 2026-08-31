@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -215,6 +216,88 @@ animation:blink 1s infinite
 @keyframes blink{
 0%,100%{opacity:.2}
 50%{opacity:1}
+}
+
+/* TTS + VOICE */
+
+.ttsButton{
+margin-top:9px;
+width:34px;
+height:34px;
+border:1px solid #333;
+border-radius:50%;
+background:#111;
+color:#fff;
+font-size:16px;
+display:flex;
+align-items:center;
+justify-content:center;
+transition:.2s
+}
+
+.ttsButton:active{
+transform:scale(.9)
+}
+
+.ttsButton.loading{
+animation:ttsPulse 1s infinite;
+}
+
+@keyframes ttsPulse{
+0%,100%{
+opacity:.55;
+transform:scale(1)
+}
+50%{
+opacity:1;
+transform:scale(1.08)
+}
+}
+
+.voiceButton{
+width:44px;
+height:44px;
+flex-shrink:0;
+border:0;
+border-radius:50%;
+background:#222;
+color:#fff;
+font-size:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+transition:.2s
+}
+
+.voiceButton.listening{
+background:#fff;
+color:#000;
+animation:voicePulse 1s infinite
+}
+
+@keyframes voicePulse{
+0%,100%{
+transform:scale(1)
+}
+50%{
+transform:scale(1.12)
+}
+}
+
+.voiceStatus{
+position:absolute;
+bottom:70px;
+right:18px;
+background:#181818;
+border:1px solid #333;
+border-radius:20px;
+padding:8px 13px;
+font-size:12px;
+color:#aaa;
+display:none;
+z-index:50;
+white-space:nowrap
 }
 
 /* INPUT */
@@ -520,8 +603,8 @@ right:auto;
 transform:translateX(-50%);
 width:min(580px,calc(100% - 20px))
 }
-
 }
+
 </style>
 </head>
 
@@ -664,9 +747,18 @@ class="headerButton">
 Chaty AI
 </div>
 
+<div class="messageText">
 سلام 👋
 من Chaty AI هستم.
 هر چیزی می‌خواهی بپرس.
+</div>
+
+<button
+class="ttsButton"
+type="button"
+onclick="speakText('سلام. من چتی ای آی هستم. هر چیزی می‌خواهی بپرس.',this)">
+🔊
+</button>
 
 </div>
 
@@ -695,11 +787,23 @@ placeholder="پیامت را بنویس...">
 </textarea>
 
 <button
+id="voiceButton"
+class="voiceButton"
+type="button"
+title="صحبت کردن">
+🎙️
+</button>
+
+<button
 id="sendButton"
 class="sendButton">
 ➤
 </button>
 
+</div>
+
+<div id="voiceStatus" class="voiceStatus">
+🎙️ در حال گوش دادن...
 </div>
 
 </div>
@@ -911,6 +1015,22 @@ const AI_MODEL=
 
 
 /* =========================
+TTS MODEL
+========================= */
+
+const TTS_MODEL=
+"fish-audio/s2.1-pro-free:free";
+
+let currentAudio=null;
+
+let recognition=null;
+
+let isListening=false;
+
+let speechFinalText="";
+
+
+/* =========================
 ELEMENTS
 ========================= */
 
@@ -976,6 +1096,12 @@ document.getElementById("ahooraLoading");
 
 const ahooraFrame=
 document.getElementById("ahooraFrame");
+
+const voiceButton=
+document.getElementById("voiceButton");
+
+const voiceStatus=
+document.getElementById("voiceStatus");
 
 
 let selectedCharacter=
@@ -1057,11 +1183,50 @@ div.className=
 
 if(type!=="user"){
 
-div.innerHTML=
-"<div class='messageName'>"+
-escapeHTML(selectedCharacter)+
-"</div>"+
-escapeHTML(text);
+const name=
+document.createElement("div");
+
+name.className="messageName";
+
+name.textContent=
+selectedCharacter;
+
+const content=
+document.createElement("div");
+
+content.className=
+"messageText";
+
+content.textContent=text;
+
+const ttsButton=
+document.createElement("button");
+
+ttsButton.className=
+"ttsButton";
+
+ttsButton.type=
+"button";
+
+ttsButton.textContent=
+"🔊";
+
+ttsButton.title=
+"خواندن پاسخ";
+
+ttsButton.addEventListener(
+"click",
+()=>speakText(
+text,
+ttsButton
+)
+);
+
+div.appendChild(name);
+
+div.appendChild(content);
+
+div.appendChild(ttsButton);
 
 }else{
 
@@ -1073,7 +1238,591 @@ chat.insertBefore(div,typing);
 
 scrollBottom();
 
+return div;
+
 }
+
+
+/* =========================
+TEXT TO SPEECH
+========================= */
+
+function stopAudio(){
+
+if(currentAudio){
+
+currentAudio.pause();
+
+currentAudio.currentTime=0;
+
+currentAudio=null;
+
+}
+
+document
+.querySelectorAll(".ttsButton")
+.forEach(button=>{
+
+button.textContent="🔊";
+
+button.classList.remove(
+"loading"
+);
+
+});
+
+}
+
+
+async function speakText(
+text,
+button
+){
+
+if(!text)
+return;
+
+
+if(
+currentAudio &&
+!currentAudio.paused
+){
+
+stopAudio();
+
+return;
+
+}
+
+
+stopAudio();
+
+
+if(button){
+
+button.textContent="⏳";
+
+button.classList.add(
+"loading"
+);
+
+}
+
+
+try{
+
+const response=
+await fetch(
+EDGE_FUNCTION_URL,
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json",
+
+"Authorization":
+"Bearer "+
+SUPABASE_ANON_KEY,
+
+"apikey":
+SUPABASE_ANON_KEY
+
+},
+
+body:JSON.stringify({
+
+action:"tts",
+
+text:text,
+
+message:text,
+
+model:TTS_MODEL,
+
+voice:"default"
+
+})
+
+}
+);
+
+
+if(!response.ok){
+
+const errorText=
+await response.text();
+
+throw new Error(
+"HTTP "+
+response.status+
+"\n"+
+errorText
+);
+
+}
+
+
+/*
+اگر Edge Function
+فایل صوتی مستقیم برگرداند
+*/
+
+const contentType=
+response.headers.get(
+"content-type"
+)||
+"";
+
+
+if(
+contentType.includes("audio")
+){
+
+const blob=
+await response.blob();
+
+const audioURL=
+URL.createObjectURL(
+blob
+);
+
+currentAudio=
+new Audio(
+audioURL
+);
+
+
+}else{
+
+/*
+اگر Edge Function
+JSON با audio_url یا audio_base64
+برگرداند
+*/
+
+const data=
+await response.json();
+
+
+let audioURL=
+data.audio_url ||
+data.url ||
+data.audio ||
+null;
+
+
+if(
+!audioURL &&
+data.audio_base64
+){
+
+const binary=
+atob(
+data.audio_base64
+);
+
+const bytes=
+new Uint8Array(
+binary.length
+);
+
+for(
+let i=0;
+i<binary.length;
+i++
+){
+
+bytes[i]=
+binary.charCodeAt(i);
+
+}
+
+const blob=
+new Blob(
+[bytes],
+{
+type:
+data.mime_type ||
+"audio/mpeg"
+}
+);
+
+audioURL=
+URL.createObjectURL(
+blob
+);
+
+}
+
+
+if(!audioURL){
+
+throw new Error(
+"آدرس یا فایل صوتی در پاسخ پیدا نشد."
+);
+
+}
+
+
+currentAudio=
+new Audio(
+audioURL
+);
+
+}
+
+
+currentAudio.onplay=
+()=>{
+
+if(button){
+
+button.textContent=
+"⏹️";
+
+button.classList.remove(
+"loading"
+);
+
+}
+
+};
+
+
+currentAudio.onended=
+()=>{
+
+if(button){
+
+button.textContent=
+"🔊";
+
+button.classList.remove(
+"loading"
+);
+
+}
+
+currentAudio=null;
+
+};
+
+
+currentAudio.onerror=
+()=>{
+
+if(button){
+
+button.textContent=
+"🔊";
+
+button.classList.remove(
+"loading"
+);
+
+}
+
+showError(
+"❌ خطا در پخش صدا",
+"فایل صوتی قابل پخش نیست."
+);
+
+};
+
+
+await currentAudio.play();
+
+
+}catch(error){
+
+console.error(
+"TTS ERROR:",
+error
+);
+
+if(button){
+
+button.textContent=
+"🔊";
+
+button.classList.remove(
+"loading"
+);
+
+}
+
+showError(
+
+"❌ خطا در تبدیل متن به صدا",
+
+error.message ||
+String(error)
+
+);
+
+}
+
+}
+
+
+/* =========================
+VOICE TO TEXT
+========================= */
+
+function setupSpeechRecognition(){
+
+const SpeechRecognition=
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+
+if(!SpeechRecognition){
+
+voiceButton.style.display=
+"none";
+
+console.warn(
+"SpeechRecognition not supported"
+);
+
+return;
+
+}
+
+
+recognition=
+new SpeechRecognition();
+
+recognition.lang=
+"fa-IR";
+
+recognition.continuous=
+false;
+
+recognition.interimResults=
+true;
+
+recognition.maxAlternatives=
+1;
+
+
+recognition.onstart=
+()=>{
+
+isListening=true;
+
+speechFinalText="";
+
+voiceButton.classList.add(
+"listening"
+);
+
+voiceButton.textContent=
+"🔴";
+
+voiceStatus.style.display=
+"block";
+
+voiceStatus.textContent=
+"🎙️ در حال گوش دادن...";
+
+};
+
+
+recognition.onresult=
+event=>{
+
+let interimText="";
+
+let finalText="";
+
+
+for(
+let i=event.resultIndex;
+i<event.results.length;
+i++
+){
+
+const resultText=
+event.results[i][0].transcript;
+
+if(
+event.results[i].isFinal
+){
+
+finalText+=
+resultText;
+
+}else{
+
+interimText+=
+resultText;
+
+}
+
+}
+
+
+if(finalText){
+
+speechFinalText+=
+finalText;
+
+}
+
+
+messageInput.value=
+(
+speechFinalText+
+interimText
+).trim();
+
+
+messageInput.dispatchEvent(
+new Event("input")
+);
+
+
+voiceStatus.textContent=
+"📝 "+
+messageInput.value;
+
+};
+
+
+recognition.onerror=
+event=>{
+
+console.error(
+"VOICE ERROR:",
+event.error
+);
+
+
+if(
+event.error==="not-allowed" ||
+event.error==="service-not-allowed"
+){
+
+showError(
+
+"❌ دسترسی میکروفون",
+
+"اجازه استفاده از میکروفون داده نشده است."
+
+);
+
+}
+
+
+};
+
+
+recognition.onend=
+()=>{
+
+isListening=false;
+
+voiceButton.classList.remove(
+"listening"
+);
+
+voiceButton.textContent=
+"🎙️";
+
+voiceStatus.style.display=
+"none";
+
+
+const text=
+speechFinalText.trim();
+
+
+speechFinalText="";
+
+
+if(text){
+
+messageInput.value=text;
+
+messageInput.dispatchEvent(
+new Event("input")
+);
+
+
+/*
+بعد از پایان صحبت
+پیام خودکار ارسال می‌شود
+*/
+
+setTimeout(
+()=>{
+
+sendMessage();
+
+},
+400
+);
+
+}
+
+};
+
+}
+
+
+function toggleVoiceInput(){
+
+if(!recognition){
+
+showError(
+
+"❌ میکروفون پشتیبانی نمی‌شود",
+
+"این نسخه WebView از تبدیل گفتار به متن پشتیبانی نمی‌کند."
+
+);
+
+return;
+
+}
+
+
+if(isListening){
+
+recognition.stop();
+
+return;
+
+}
+
+
+try{
+
+recognition.start();
+
+}catch(error){
+
+console.error(
+"Recognition start error:",
+error
+);
+
+}
+
+}
+
+
+voiceButton.addEventListener(
+"click",
+toggleVoiceInput
+);
+
+
+setupSpeechRecognition();
 
 
 /* =========================
