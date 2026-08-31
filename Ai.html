@@ -1053,7 +1053,7 @@ button{
                 <span class="flame-email" id="flameEmail"></span>
                 <div class="flame-tooltip" id="flameTooltip">
                     🔥 شعله‌های روزانه<br>
-                    هر فرمان: 1 شعله
+                    هر فرمان موفق: 1 شعله
                 </div>
             </div>
             <div class="time" id="time">
@@ -1449,7 +1449,7 @@ const supabaseClient =
 
 /* =====================================================
    FLAME SYSTEM - اضافه شده
-   هر فرمان: 1 شعله
+   هر فرمان موفق: 1 شعله
 ===================================================== */
 
 const FLAME_COST_AHOORA = 1;
@@ -1530,7 +1530,7 @@ async function useFlames(cost) {
         responseBox.innerHTML = 
             `🔥 شعله کافی نیست!<br><br>` +
             `شما ${currentFlames} شعله دارید.<br>` +
-            `هر فرمان ${FLAME_COST_AHOORA} شعله مصرف می‌کند.<br><br>` +
+            `هر فرمان موفق ${FLAME_COST_AHOORA} شعله مصرف می‌کند.<br><br>` +
             `⏳ صبر کنید تا فردا شعله‌ها ریست شوند.`;
         return false;
     }
@@ -2233,14 +2233,14 @@ function voiceG(){
 
 
 /* =====================================================
-   ANSWER - با مصرف شعله
+   ANSWER - با مصرف شعله فقط در صورت پاسخ موفق
 ===================================================== */
 
 async function answer(text, voice) {
     responseBox.innerHTML = text;
     
-    // مصرف شعله برای هر پاسخ
-    if (isLoggedIn) {
+    // مصرف شعله فقط در صورت پاسخ موفق (متن خالی نباشد)
+    if (isLoggedIn && text && text.trim() !== '') {
         await useFlames(FLAME_COST_AHOORA);
     }
     
@@ -2681,7 +2681,7 @@ function normalizeRelation(text){
    CALL
 ===================================================== */
 
-function callNumber(number){
+async function callNumber(number){
 
     if(!isLoggedIn){
 
@@ -2713,7 +2713,7 @@ function callNumber(number){
                 number
             );
 
-            answer(
+            await answer(
                 "📞 در حال تماس با " +
                 number +
                 "..."
@@ -2733,7 +2733,7 @@ function callNumber(number){
 }
 
 
-function callContact(name){
+async function callContact(name){
 
     var contact =
         findContact(name);
@@ -2741,19 +2741,19 @@ function callContact(name){
 
     if(!contact){
 
-        answer(
+        responseBox.innerHTML =
             "❌ برای «" +
             escapeHTML(name) +
-            "» شماره‌ای ذخیره نشده است.",
-            voiceD
-        );
+            "» شماره‌ای ذخیره نشده است.";
+        
+        if (voiceD) voiceD();
 
         return;
 
     }
 
 
-    callNumber(
+    await callNumber(
         contact.number
     );
 
@@ -2764,7 +2764,7 @@ function callContact(name){
    SMS
 ===================================================== */
 
-function smsContact(
+async function smsContact(
     name,
     message
 ){
@@ -2775,12 +2775,12 @@ function smsContact(
 
     if(!contact){
 
-        answer(
+        responseBox.innerHTML =
             "❌ برای «" +
             escapeHTML(name) +
-            "» شماره‌ای ذخیره نشده است.",
-            voiceD
-        );
+            "» شماره‌ای ذخیره نشده است.";
+        
+        if (voiceD) voiceD();
 
         return;
 
@@ -2796,7 +2796,7 @@ function smsContact(
                 message
             );
 
-            answer(
+            await answer(
                 "✉️ پیام برای " +
                 escapeHTML(
                     contact.name
@@ -2955,7 +2955,7 @@ var apps = {
 };
 
 
-function openApp(
+async function openApp(
     packageName,
     name
 ){
@@ -2976,7 +2976,7 @@ function openApp(
             );
 
 
-            answer(
+            await answer(
                 "👁️ چشم، " +
                 name +
                 " را باز کردم.",
@@ -2991,12 +2991,12 @@ function openApp(
     }
 
 
-    answer(
+    responseBox.innerHTML =
         "❌ نتوانستم " +
         name +
-        " را باز کنم.",
-        voiceB
-    );
+        " را باز کنم.";
+    
+    if (voiceB) voiceB();
 
 
     return false;
@@ -3043,7 +3043,7 @@ function openNamedApp(text){
    VOLUME
 ===================================================== */
 
-function volumeUp(){
+async function volumeUp(){
 
     if(android()){
 
@@ -3056,14 +3056,14 @@ function volumeUp(){
     }
 
 
-    answer(
+    await answer(
         "🔊 صدا زیاد شد."
     );
 
 }
 
 
-function volumeDown(){
+async function volumeDown(){
 
     if(android()){
 
@@ -3076,7 +3076,7 @@ function volumeDown(){
     }
 
 
-    answer(
+    await answer(
         "🔉 صدا کم شد."
     );
 
@@ -3087,7 +3087,7 @@ function volumeDown(){
    MUSIC
 ===================================================== */
 
-function musicPlay(){
+async function musicPlay(){
 
     if(android()){
 
@@ -3100,14 +3100,14 @@ function musicPlay(){
     }
 
 
-    answer(
+    await answer(
         "🎵 موسیقی پخش شد."
     );
 
 }
 
 
-function musicStop(){
+async function musicStop(){
 
     if(android()){
 
@@ -3120,14 +3120,14 @@ function musicStop(){
     }
 
 
-    answer(
+    await answer(
         "⏹️ موسیقی متوقف شد."
     );
 
 }
 
 
-function musicNext(){
+async function musicNext(){
 
     if(android()){
 
@@ -3140,14 +3140,14 @@ function musicNext(){
     }
 
 
-    answer(
+    await answer(
         "⏭️ آهنگ بعدی."
     );
 
 }
 
 
-function musicPrevious(){
+async function musicPrevious(){
 
     if(android()){
 
@@ -3160,7 +3160,7 @@ function musicPrevious(){
     }
 
 
-    answer(
+    await answer(
         "⏮️ آهنگ قبلی."
     );
 
@@ -3171,7 +3171,7 @@ function musicPrevious(){
    FLASHLIGHT
 ===================================================== */
 
-function flashlightOn(){
+async function flashlightOn(){
 
     if(android()){
 
@@ -3181,7 +3181,7 @@ function flashlightOn(){
                 true
             );
 
-            answer(
+            await answer(
                 "🔦 چراغ قوه روشن شد."
             );
 
@@ -3192,15 +3192,15 @@ function flashlightOn(){
     }
 
 
-    answer(
-        "❌ چراغ قوه در دسترس نیست.",
-        voiceD
-    );
+    responseBox.innerHTML =
+        "❌ چراغ قوه در دسترس نیست.";
+    
+    if (voiceD) voiceD();
 
 }
 
 
-function flashlightOff(){
+async function flashlightOff(){
 
     if(android()){
 
@@ -3210,7 +3210,7 @@ function flashlightOff(){
                 false
             );
 
-            answer(
+            await answer(
                 "🔦 چراغ قوه خاموش شد."
             );
 
@@ -3221,10 +3221,10 @@ function flashlightOff(){
     }
 
 
-    answer(
-        "❌ چراغ قوه در دسترس نیست.",
-        voiceD
-    );
+    responseBox.innerHTML =
+        "❌ چراغ قوه در دسترس نیست.";
+    
+    if (voiceD) voiceD();
 
 }
 
@@ -3233,7 +3233,7 @@ function flashlightOff(){
    WIFI
 ===================================================== */
 
-function wifi(){
+async function wifi(){
 
     if(android()){
 
@@ -3241,7 +3241,7 @@ function wifi(){
 
             Android.wifiSettings();
 
-            answer(
+            await answer(
                 "📶 تنظیمات Wi-Fi باز شد."
             );
 
@@ -3252,9 +3252,8 @@ function wifi(){
     }
 
 
-    answer(
-        "❌ Wi-Fi در دسترس نیست."
-    );
+    responseBox.innerHTML =
+        "❌ Wi-Fi در دسترس نیست.";
 
 }
 
@@ -3263,7 +3262,7 @@ function wifi(){
    BLUETOOTH
 ===================================================== */
 
-function bluetooth(){
+async function bluetooth(){
 
     if(android()){
 
@@ -3271,7 +3270,7 @@ function bluetooth(){
 
             Android.bluetoothSettings();
 
-            answer(
+            await answer(
                 "🔵 تنظیمات بلوتوث باز شد."
             );
 
@@ -3282,9 +3281,8 @@ function bluetooth(){
     }
 
 
-    answer(
-        "❌ بلوتوث در دسترس نیست."
-    );
+    responseBox.innerHTML =
+        "❌ بلوتوث در دسترس نیست.";
 
 }
 
@@ -3293,7 +3291,7 @@ function bluetooth(){
    MOBILE DATA
 ===================================================== */
 
-function mobileData(){
+async function mobileData(){
 
     if(android()){
 
@@ -3301,7 +3299,7 @@ function mobileData(){
 
             Android.mobileDataSettings();
 
-            answer(
+            await answer(
                 "📡 تنظیمات اینترنت همراه باز شد."
             );
 
@@ -3312,9 +3310,8 @@ function mobileData(){
     }
 
 
-    answer(
-        "❌ اینترنت همراه در دسترس نیست."
-    );
+    responseBox.innerHTML =
+        "❌ اینترنت همراه در دسترس نیست.";
 
 }
 
@@ -3323,7 +3320,7 @@ function mobileData(){
    LOCATION
 ===================================================== */
 
-function locationSettings(){
+async function locationSettings(){
 
     if(android()){
 
@@ -3331,7 +3328,7 @@ function locationSettings(){
 
             Android.locationSettings();
 
-            answer(
+            await answer(
                 "📍 تنظیمات مکان باز شد."
             );
 
@@ -3342,9 +3339,8 @@ function locationSettings(){
     }
 
 
-    answer(
-        "❌ تنظیمات مکان در دسترس نیست."
-    );
+    responseBox.innerHTML =
+        "❌ تنظیمات مکان در دسترس نیست.";
 
 }
 
@@ -3353,7 +3349,7 @@ function locationSettings(){
    HOTSPOT
 ===================================================== */
 
-function hotspot(){
+async function hotspot(){
 
     if(android()){
 
@@ -3361,7 +3357,7 @@ function hotspot(){
 
             Android.hotspotSettings();
 
-            answer(
+            await answer(
                 "📡 تنظیمات هات‌اسپات باز شد."
             );
 
@@ -3372,9 +3368,8 @@ function hotspot(){
     }
 
 
-    answer(
-        "❌ هات‌اسپات در دسترس نیست."
-    );
+    responseBox.innerHTML =
+        "❌ هات‌اسپات در دسترس نیست.";
 
 }
 
@@ -3383,7 +3378,7 @@ function hotspot(){
    BRIGHTNESS
 ===================================================== */
 
-function brightnessUp(){
+async function brightnessUp(){
 
     if(android()){
 
@@ -3396,14 +3391,14 @@ function brightnessUp(){
     }
 
 
-    answer(
+    await answer(
         "☀️ نور صفحه زیاد شد."
     );
 
 }
 
 
-function brightnessDown(){
+async function brightnessDown(){
 
     if(android()){
 
@@ -3416,7 +3411,7 @@ function brightnessDown(){
     }
 
 
-    answer(
+    await answer(
         "🌙 نور صفحه کم شد."
     );
 
@@ -3427,7 +3422,7 @@ function brightnessDown(){
    CAMERA
 ===================================================== */
 
-function camera(){
+async function camera(){
 
     if(android()){
 
@@ -3435,7 +3430,7 @@ function camera(){
 
             Android.openCamera();
 
-            answer(
+            await answer(
                 "📷 دوربین باز شد.",
                 voiceA
             );
@@ -3447,9 +3442,8 @@ function camera(){
     }
 
 
-    answer(
-        "❌ دوربین در دسترس نیست."
-    );
+    responseBox.innerHTML =
+        "❌ دوربین در دسترس نیست.";
 
 }
 
@@ -3458,7 +3452,7 @@ function camera(){
    GALLERY
 ===================================================== */
 
-function gallery(){
+async function gallery(){
 
     if(android()){
 
@@ -3466,7 +3460,7 @@ function gallery(){
 
             Android.openGallery();
 
-            answer(
+            await answer(
                 "🖼️ گالری باز شد.",
                 voiceA
             );
@@ -3478,9 +3472,8 @@ function gallery(){
     }
 
 
-    answer(
-        "❌ گالری در دسترس نیست."
-    );
+    responseBox.innerHTML =
+        "❌ گالری در دسترس نیست.";
 
 }
 
@@ -3489,7 +3482,7 @@ function gallery(){
    TIME
 ===================================================== */
 
-function sayTime(){
+async function sayTime(){
 
     var d =
         new Date();
@@ -3513,7 +3506,7 @@ function sayTime(){
         );
 
 
-    answer(
+    await answer(
         "🕐 الان ساعت " +
         h +
         ":" +
@@ -3529,7 +3522,7 @@ function sayTime(){
    GOOGLE
 ===================================================== */
 
-function googleSearch(query){
+async function googleSearch(query){
 
     var url =
         "https://www.google.com/search?q=" +
@@ -3545,7 +3538,7 @@ function googleSearch(query){
             );
 
 
-            answer(
+            await answer(
                 "🔎 در گوگل برای «" +
                 escapeHTML(query) +
                 "» جستجو کردم.",
@@ -3602,10 +3595,10 @@ function initSpeech(){
 
     if(!Speech){
 
-        answer(
-            "❌ تشخیص گفتار در WebView در دسترس نیست.",
-            voiceD
-        );
+        responseBox.innerHTML =
+            "❌ تشخیص گفتار در WebView در دسترس نیست.";
+        
+        if (voiceD) voiceD();
 
         return false;
 
@@ -3811,10 +3804,10 @@ function initSpeech(){
                 "not-allowed"
             ){
 
-                answer(
-                    "❌ اجازه استفاده از میکروفن داده نشده است.",
-                    voiceD
-                );
+                responseBox.innerHTML =
+                    "❌ اجازه استفاده از میکروفن داده نشده است.";
+                
+                if (voiceD) voiceD();
 
 
                 setStatus(
@@ -4003,7 +3996,7 @@ function stopListening(){
 
 
 /* =====================================================
-   PROCESS SPEECH - با بررسی شعله
+   PROCESS SPEECH - با مصرف شعله فقط در صورت تشخیص فرمان
 ===================================================== */
 
 async function processSpeech(
@@ -4017,22 +4010,13 @@ async function processSpeech(
 
     }
 
-    // بررسی شعله قبل از پردازش فرمان
-    if (!await useFlames(FLAME_COST_AHOORA)) {
-        commandMode = false;
-        setStatus("آماده — بگو «Ahoora AI»");
-        return;
-    }
-
     var text =
         normalize(original);
-
 
     setStatus(
         "در حال پردازش...",
         "processing"
     );
-
 
     if(fromButton){
 
@@ -4041,7 +4025,7 @@ async function processSpeech(
 
     }
 
-
+    // لغو فرمان - بدون مصرف شعله
     if(
         text === "لغو" ||
         text === "بیخیال" ||
@@ -4051,22 +4035,23 @@ async function processSpeech(
         commandMode =
             false;
 
-
-        answer(
+        await answer(
             "باشه."
         );
-
 
         setStatus(
             "آماده — بگو «Ahoora AI»"
         );
 
-
         return;
 
     }
 
+    // ============================================
+    // تمام دستورات - در صورت تشخیص، شعله مصرف می‌شود
+    // ============================================
 
+    // چراغ قوه
     if(
         (
             text.indexOf("چراغ قوه") >= 0 ||
@@ -4079,12 +4064,11 @@ async function processSpeech(
         )
     ){
 
-        flashlightOff();
+        await flashlightOff();
 
         return;
 
     }
-
 
     if(
         (
@@ -4098,38 +4082,38 @@ async function processSpeech(
         )
     ){
 
-        flashlightOn();
+        await flashlightOn();
 
         return;
 
     }
 
-
+    // وای فای
     if(
         text.indexOf("وای فای") >= 0 ||
         text.indexOf("وایفای") >= 0 ||
         text.indexOf("wifi") >= 0
     ){
 
-        wifi();
+        await wifi();
 
         return;
 
     }
 
-
+    // بلوتوث
     if(
         text.indexOf("بلوتوث") >= 0 ||
         text.indexOf("bluetooth") >= 0
     ){
 
-        bluetooth();
+        await bluetooth();
 
         return;
 
     }
 
-
+    // اینترنت همراه
     if(
         text.indexOf("اینترنت همراه") >= 0 ||
         text.indexOf("دیتای همراه") >= 0 ||
@@ -4137,39 +4121,39 @@ async function processSpeech(
         text.indexOf("داده همراه") >= 0
     ){
 
-        mobileData();
+        await mobileData();
 
         return;
 
     }
 
-
+    // مکان
     if(
         text.indexOf("مکان") >= 0 ||
         text.indexOf("لوکیشن") >= 0 ||
         text.indexOf("gps") >= 0
     ){
 
-        locationSettings();
+        await locationSettings();
 
         return;
 
     }
 
-
+    // هات اسپات
     if(
         text.indexOf("هات اسپات") >= 0 ||
         text.indexOf("هات‌اسپات") >= 0 ||
         text.indexOf("نقطه اتصال") >= 0
     ){
 
-        hotspot();
+        await hotspot();
 
         return;
 
     }
 
-
+    // نور/روشنایی - زیاد
     if(
         (
             text.indexOf("نور") >= 0 ||
@@ -4182,13 +4166,13 @@ async function processSpeech(
         )
     ){
 
-        brightnessUp();
+        await brightnessUp();
 
         return;
 
     }
 
-
+    // نور/روشنایی - کم
     if(
         (
             text.indexOf("نور") >= 0 ||
@@ -4201,13 +4185,13 @@ async function processSpeech(
         )
     ){
 
-        brightnessDown();
+        await brightnessDown();
 
         return;
 
     }
 
-
+    // موسیقی - بعدی
     if(
         (
             text.indexOf("آهنگ") >= 0 ||
@@ -4221,13 +4205,13 @@ async function processSpeech(
         )
     ){
 
-        musicNext();
+        await musicNext();
 
         return;
 
     }
 
-
+    // موسیقی - قبلی
     if(
         (
             text.indexOf("آهنگ") >= 0 ||
@@ -4241,13 +4225,13 @@ async function processSpeech(
         )
     ){
 
-        musicPrevious();
+        await musicPrevious();
 
         return;
 
     }
 
-
+    // موسیقی - توقف
     if(
         (
             text.indexOf("آهنگ") >= 0 ||
@@ -4263,13 +4247,13 @@ async function processSpeech(
         )
     ){
 
-        musicStop();
+        await musicStop();
 
         return;
 
     }
 
-
+    // موسیقی - پخش
     if(
         (
             text.indexOf("آهنگ") >= 0 ||
@@ -4285,13 +4269,13 @@ async function processSpeech(
         )
     ){
 
-        musicPlay();
+        await musicPlay();
 
         return;
 
     }
 
-
+    // صدا - زیاد
     if(
         text.indexOf("صدا") >= 0 &&
         (
@@ -4300,13 +4284,13 @@ async function processSpeech(
         )
     ){
 
-        volumeUp();
+        await volumeUp();
 
         return;
 
     }
 
-
+    // صدا - کم
     if(
         text.indexOf("صدا") >= 0 &&
         (
@@ -4315,49 +4299,49 @@ async function processSpeech(
         )
     ){
 
-        volumeDown();
+        await volumeDown();
 
         return;
 
     }
 
-
+    // ساعت
     if(
         text.indexOf("ساعت") >= 0
     ){
 
-        sayTime();
+        await sayTime();
 
         return;
 
     }
 
-
+    // دوربین
     if(
         text.indexOf("دوربین") >= 0 ||
         text.indexOf("عکس بگیر") >= 0
     ){
 
-        camera();
+        await camera();
 
         return;
 
     }
 
-
+    // گالری
     if(
         text.indexOf("گالری") >= 0 ||
         text.indexOf("عکس هام") >= 0 ||
         text.indexOf("عکسها") >= 0
     ){
 
-        gallery();
+        await gallery();
 
         return;
 
     }
 
-
+    // تماس
     if(
         text.indexOf("تماس") >= 0 ||
         text.indexOf("زنگ") >= 0 ||
@@ -4369,10 +4353,9 @@ async function processSpeech(
                 text
             );
 
-
         if(contact){
 
-            callContact(
+            await callContact(
                 contact
             );
 
@@ -4380,16 +4363,14 @@ async function processSpeech(
 
         }
 
-
         var match =
             text.match(
                 /(\+?[0-9]{10,15})/
             );
 
-
         if(match){
 
-            callNumber(
+            await callNumber(
                 match[1]
             );
 
@@ -4399,7 +4380,7 @@ async function processSpeech(
 
     }
 
-
+    // پیام
     if(
         text.indexOf("پیام") >= 0 ||
         text.indexOf("پیامک") >= 0
@@ -4410,14 +4391,12 @@ async function processSpeech(
                 text
             );
 
-
         if(smsContactName){
 
             var message =
                 extractMessage(
                     text
                 );
-
 
             if(!message){
 
@@ -4426,12 +4405,10 @@ async function processSpeech(
 
             }
 
-
-            smsContact(
+            await smsContact(
                 smsContactName,
                 message
             );
-
 
             return;
 
@@ -4439,10 +4416,9 @@ async function processSpeech(
 
     }
 
-
+    // جستجوی گوگل
     var searchText =
         null;
-
 
     if(
         text.indexOf("در گوگل") >= 0 ||
@@ -4492,10 +4468,9 @@ async function processSpeech(
 
     }
 
-
     if(searchText){
 
-        googleSearch(
+        await googleSearch(
             searchText
         );
 
@@ -4503,7 +4478,7 @@ async function processSpeech(
 
     }
 
-
+    // باز کردن برنامه
     if(
         openNamedApp(text)
     ){
@@ -4512,12 +4487,11 @@ async function processSpeech(
 
     }
 
-
+    // باز کردن لینک
     var url =
         original.match(
             /https?:\/\/[^\s]+/i
         );
-
 
     if(url){
 
@@ -4542,22 +4516,25 @@ async function processSpeech(
 
     }
 
-
+    // سلام - بدون مصرف شعله
     if(
         text.indexOf("سلام") >= 0
     ){
 
-        answer(
-            "👋 سلام! من اهورا هستم.",
-            voiceE
-        );
+        responseBox.innerHTML =
+            "👋 سلام! من اهورا هستم.";
+        
+        if (voiceE) voiceE();
 
         return;
 
     }
 
+    // ============================================
+    // فرمان شناسایی نشد - بدون مصرف شعله
+    // ============================================
 
-    answer(
+    responseBox.innerHTML =
 
         "🤔 متوجه فرمان نشدم.<br><br>" +
 
@@ -4569,11 +4546,12 @@ async function processSpeech(
         "«آهنگ بعدی»<br>" +
         "«واتساپ رو باز کن»<br>" +
         "«با پدرم تماس بگیر»<br>" +
-        "«به پدرم پیام بده سلام»",
+        "«به پدرم پیام بده سلام»";
 
-        voiceD
+    if (voiceD) voiceD();
 
-    );
+    // خروج بدون مصرف شعله
+    return;
 
 }
 
@@ -4647,7 +4625,6 @@ chatyAiCard.addEventListener(
 
         }
 
-
         if(chatyLoadingStarted){
 
             return;
@@ -4659,7 +4636,7 @@ chatyAiCard.addEventListener(
             responseBox.innerHTML = 
                 "🔥 شعله کافی نیست!<br><br>" +
                 `شما ${currentFlames} شعله دارید.<br>` +
-                `هر فرمان ${FLAME_COST_AHOORA} شعله مصرف می‌کند.<br><br>` +
+                `هر فرمان موفق ${FLAME_COST_AHOORA} شعله مصرف می‌کند.<br><br>` +
                 `⏳ صبر کنید تا فردا شعله‌ها ریست شوند.`;
             return;
         }
@@ -4667,24 +4644,13 @@ chatyAiCard.addEventListener(
         chatyLoadingStarted =
             true;
 
-
-        /*
-           اجرای انیمیشن Chaty
-        */
-
         chatyTransition.style.display =
             "flex";
-
-
-        /*
-           لود همزمان chaty.html
-        */
 
         var chatyPage =
             document.createElement(
                 "iframe"
             );
-
 
         chatyPage.style.position =
             "fixed";
@@ -4713,20 +4679,12 @@ chatyAiCard.addEventListener(
         chatyPage.style.zIndex =
             "-1";
 
-
         chatyPage.src =
             "chaty.html";
-
 
         document.body.appendChild(
             chatyPage
         );
-
-
-        /*
-           بعد از پایان انیمیشن
-           Chaty نمایش داده می‌شود.
-        */
 
         setTimeout(
             function(){
@@ -4740,10 +4698,8 @@ chatyAiCard.addEventListener(
                 chatyPage.style.zIndex =
                     "10001";
 
-
                 chatyTransition.style.display =
                     "none";
-
 
             },
             1400
