@@ -932,6 +932,99 @@ button{
     color:#ff6688;
 }
 
+/* =====================================================
+   STORE TRANSITION
+===================================================== */
+#storeTransition {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #24105c, #080812 65%);
+    overflow: hidden;
+}
+
+.storeTransitionContent {
+    text-align: center;
+    animation: storeEnter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.storeLogo {
+    width: 125px;
+    height: 125px;
+    margin: auto;
+    border-radius: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 58px;
+    background: linear-gradient(135deg, #ff6fd8, #7b2ffc, #00d4ff);
+    box-shadow: 0 0 50px #ff6fd888, 0 0 110px #7b2ffc55;
+    animation: storeLogoPulse 0.8s ease-in-out infinite alternate;
+}
+
+.storeText {
+    margin-top: 22px;
+    font-size: 34px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #00d4ff, #7b2ffc, #ff6fd8);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.storeLoading {
+    margin-top: 12px;
+    color: #9da8c5;
+    font-size: 14px;
+}
+
+.storeLoading::after {
+    content: "";
+    animation: storeDots 1.2s infinite;
+}
+
+@keyframes storeEnter {
+    0% { opacity: 0; transform: scale(0.35) translateY(40px); filter: blur(15px); }
+    60% { opacity: 1; transform: scale(1.08) translateY(0); filter: blur(0); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes storeLogoPulse {
+    from { transform: scale(1); box-shadow: 0 0 50px #ff6fd888, 0 0 110px #7b2ffc55; }
+    to { transform: scale(1.08); box-shadow: 0 0 80px #00d4ffbb, 0 0 150px #ff4fd866; }
+}
+
+@keyframes storeDots {
+    0% { content: ""; }
+    33% { content: "."; }
+    66% { content: ".."; }
+    100% { content: "..."; }
+}
+
+/* دکمه فروشگاه */
+.storeBtn {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 80px;
+    width: 56px;
+    height: 56px;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6fd8, #7b2ffc);
+    color: white;
+    font-size: 28px;
+    z-index: 20;
+    box-shadow: 0 0 30px #7b2ffc66;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.storeBtn:active {
+    transform: translateX(-50%) scale(0.9);
+}
+
 </style>
 </head>
 
@@ -1187,6 +1280,28 @@ button{
     ❔
 
 </button>
+
+
+<!-- =========================================
+     STORE BUTTON - دکمه فروشگاه
+========================================= -->
+
+<button class="storeBtn" id="storeBtn">
+    🛒
+</button>
+
+
+<!-- =========================================
+     STORE TRANSITION - انیمیشن ورود به فروشگاه
+========================================= -->
+
+<div id="storeTransition">
+    <div class="storeTransitionContent">
+        <div class="storeLogo">🛒</div>
+        <div class="storeText">Ahoora Store</div>
+        <div class="storeLoading">در حال ورود به فروشگاه</div>
+    </div>
+</div>
 
 
 <!-- =========================================
@@ -4707,6 +4822,56 @@ chatyAiCard.addEventListener(
 
     }
 );
+
+
+/* =====================================================
+   STORE BUTTON - دکمه فروشگاه با انیمیشن
+===================================================== */
+
+var storeBtn = document.getElementById("storeBtn");
+var storeTransition = document.getElementById("storeTransition");
+var storeLoadingStarted = false;
+
+storeBtn.addEventListener("click", function() {
+
+    if (!isLoggedIn) {
+        return;
+    }
+
+    if (storeLoadingStarted) {
+        return;
+    }
+
+    storeLoadingStarted = true;
+
+    // نمایش انیمیشن ورود به فروشگاه
+    storeTransition.style.display = "flex";
+
+    // ساخت iframe برای فروشگاه
+    var storePage = document.createElement("iframe");
+    storePage.style.position = "fixed";
+    storePage.style.width = "100%";
+    storePage.style.height = "100%";
+    storePage.style.border = "0";
+    storePage.style.left = "0";
+    storePage.style.top = "0";
+    storePage.style.opacity = "0";
+    storePage.style.pointerEvents = "none";
+    storePage.style.zIndex = "-1";
+    storePage.src = "store.html";
+
+    document.body.appendChild(storePage);
+
+    // بعد از انیمیشن، iframe را نمایش بده
+    setTimeout(function() {
+        storePage.style.opacity = "1";
+        storePage.style.pointerEvents = "auto";
+        storePage.style.zIndex = "20001";
+        storeTransition.style.display = "none";
+        storeLoadingStarted = false;
+    }, 1400);
+
+});
 
 
 /* =====================================================
