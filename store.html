@@ -94,6 +94,20 @@ body {
 .user-info .email { color: #9da8c5; font-size: 13px; direction: ltr; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .user-info .flames { display: flex; align-items: center; gap: 6px; font-size: 18px; font-weight: bold; color: #ff6b35; }
 
+/* ESTIMATED BOX */
+.estimated-box {
+    background: #1a1a2e;
+    border: 1px solid #00ff9944;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+.estimated-box .est-label { color: #9da8c5; font-size: 12px; }
+.estimated-box .est-time { font-size: 24px; font-weight: bold; color: #00ff99; direction: ltr; margin-top: 4px; }
+.estimated-box .est-date { color: #66aaff; font-size: 14px; margin-top: 2px; }
+.estimated-box .est-note { color: #ffaa00; font-size: 12px; margin-top: 6px; padding: 6px 12px; background: #ffaa0015; border-radius: 8px; border: 1px solid #ffaa0044; }
+
 /* PACKAGES */
 .packages {
     display: grid;
@@ -176,7 +190,7 @@ body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* CONFIRM MODAL - جدید */
+/* CONFIRM MODAL */
 .modal-overlay {
     display: none;
     position: fixed;
@@ -441,7 +455,15 @@ body {
         <div class="card-label">💳 شماره کارت جهت واریز</div>
         <div class="card-number">6219 8619 2115 8506</div>
         <div class="card-name">به نام جعفر ملکی</div>
-        <div class="card-time">🕐 زمان واریز: ۹ صبح تا ۱۲ شب (به جز ۱۲ تا ۹ شب)</div>
+        <div class="card-time">🕐 واریز ۴۵ دقیقه پس از خرید انجام می‌شود</div>
+    </div>
+
+    <!-- ESTIMATED TIME -->
+    <div class="estimated-box">
+        <div class="est-label">⏰ زمان پیش‌بینی واریز</div>
+        <div class="est-time" id="estTimeDisplay">--:--</div>
+        <div class="est-date" id="estDateDisplay">---</div>
+        <div class="est-note" id="estNoteDisplay">⏱️ ۴۵ دقیقه پس از خرید</div>
     </div>
 
     <div class="user-info" id="userInfo" style="display:none;">
@@ -525,6 +547,11 @@ const userInfo = document.getElementById('userInfo');
 const userEmail = document.getElementById('userEmail');
 const userFlames = document.getElementById('userFlames');
 
+// Estimated Time Elements
+const estTimeDisplay = document.getElementById('estTimeDisplay');
+const estDateDisplay = document.getElementById('estDateDisplay');
+const estNoteDisplay = document.getElementById('estNoteDisplay');
+
 // Modal Elements
 const confirmModal = document.getElementById('confirmModal');
 const modalFlames = document.getElementById('modalFlames');
@@ -551,30 +578,13 @@ const loginEmailArea = document.getElementById('loginEmailArea');
 let loginEmail = '';
 
 // =====================================================
-// محاسبه زمان پیش‌بینی
+// محاسبه زمان پیش‌بینی (بدون محدودیت ساعت)
 // =====================================================
 
 function calculateEstimatedTime() {
     const now = new Date();
-    const currentHour = now.getHours();
-    const isOffTime = (currentHour >= 0 && currentHour < 9);
-    
-    let estDate = new Date(now);
-    let note = '';
-    
-    if (isOffTime) {
-        estDate.setHours(9, 45, 0, 0);
-        note = '⏰ ساعت غیرفعال (۱۲ شب تا ۹ صبح) - واریز در ۹:۴۵ صبح';
-    } else {
-        estDate = new Date(now.getTime() + 45 * 60000);
-        if (estDate.getHours() >= 0 && estDate.getHours() < 9) {
-            estDate.setDate(estDate.getDate() + 1);
-            estDate.setHours(9, 45, 0, 0);
-            note = '⏰ زمان واریز به روز بعد موکول شد (۹:۴۵ صبح)';
-        } else {
-            note = '⏱️ ۴۵ دقیقه پس از خرید';
-        }
-    }
+    // 45 دقیقه به زمان فعلی اضافه می‌شود
+    const estDate = new Date(now.getTime() + 45 * 60000);
     
     const hours = String(estDate.getHours()).padStart(2, '0');
     const minutes = String(estDate.getMinutes()).padStart(2, '0');
@@ -587,10 +597,22 @@ function calculateEstimatedTime() {
     return {
         time: `${hours}:${minutes}`,
         date: `${dayName} ${year}/${month}/${day}`,
-        note: note,
+        note: '⏱️ ۴۵ دقیقه پس از خرید',
         fullDate: `${year}/${month}/${day}`
     };
 }
+
+// به‌روزرسانی نمایش زمان
+function updateEstimatedDisplay() {
+    const est = calculateEstimatedTime();
+    estTimeDisplay.textContent = est.time;
+    estDateDisplay.textContent = est.date;
+    estNoteDisplay.textContent = est.note;
+}
+
+// هر ۳۰ ثانیه به‌روزرسانی
+updateEstimatedDisplay();
+setInterval(updateEstimatedDisplay, 30000);
 
 // =====================================================
 // فرمت قیمت
@@ -608,11 +630,6 @@ function showMessage(text, type = 'info') {
 function updatePrice() {
     const count = parseInt(flameCountInput.value) || 0;
     priceDisplay.textContent = formatPrice(count * PRICE_PER_FLAME);
-}
-
-function checkTime() {
-    const hours = new Date().getHours();
-    return !(hours >= 12 && hours < 21);
 }
 
 // =====================================================
@@ -716,7 +733,7 @@ async function confirmPurchase() {
 }
 
 // =====================================================
-// BUY - باز کردن مودال
+// BUY - بدون محدودیت ساعت
 // =====================================================
 
 function handleBuy() {
@@ -726,14 +743,17 @@ function handleBuy() {
         return;
     }
     
-    if (!checkTime()) {
-        showMessage('⏰ امکان خرید در ساعت ۱۲ تا ۹ شب وجود ندارد.', 'error');
-        return;
-    }
+    // محدودیت ساعت حذف شده - خرید در تمام ساعات فعال است
     
     const count = parseInt(flameCountInput.value) || 0;
-    if (count < 1) { showMessage('تعداد شعله باید حداقل ۱ باشد.', 'error'); return; }
-    if (count > 10000) { showMessage('حداکثر ۱۰,۰۰۰ شعله قابل خرید است.', 'error'); return; }
+    if (count < 1) { 
+        showMessage('تعداد شعله باید حداقل ۱ باشد.', 'error'); 
+        return; 
+    }
+    if (count > 10000) { 
+        showMessage('حداکثر ۱۰,۰۰۰ شعله قابل خرید است.', 'error'); 
+        return; 
+    }
     
     openConfirmModal();
 }
