@@ -79,8 +79,74 @@ color:#fff;
 font-size:20px
 }
 
-/* AI SWITCHER */
+/* FLAME DISPLAY */
+.flameDisplay {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1a1a1a;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #333;
+  font-size: 14px;
+  color: #ff6b35;
+  direction: ltr;
+  cursor: default;
+  position: relative;
+}
 
+.flameDisplay .flame-icon {
+  font-size: 18px;
+}
+
+.flameDisplay .flame-count {
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
+
+.flameDisplay .flame-email {
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flameDisplay.low {
+  border-color: #ff4444;
+  color: #ff4444;
+  animation: flamePulse 1s infinite;
+}
+
+.flameDisplay .flame-tooltip {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #aaa;
+  white-space: nowrap;
+  z-index: 100;
+}
+
+.flameDisplay:hover .flame-tooltip {
+  display: block;
+}
+
+@keyframes flamePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* AI SWITCHER */
 .aiSwitcher{
 position:absolute;
 left:50%;
@@ -146,7 +212,6 @@ to{transform:rotate(360deg)}
 }
 
 /* CHAT */
-
 .chat{
 flex:1;
 overflow-y:auto;
@@ -218,7 +283,6 @@ animation:blink 1s infinite
 }
 
 /* TTS + VOICE */
-
 .ttsButton{
 margin-top:9px;
 width:34px;
@@ -300,7 +364,6 @@ white-space:nowrap
 }
 
 /* INPUT */
-
 .inputArea{
 position:absolute;
 left:10px;
@@ -355,7 +418,6 @@ opacity:.4
 }
 
 /* PANEL */
-
 .panel{
 position:fixed;
 inset:0;
@@ -423,7 +485,6 @@ font-size:13px
 }
 
 /* ERROR */
-
 .errorBox{
 display:none;
 margin:8px 10px 86px;
@@ -456,7 +517,6 @@ border-radius:10px
 }
 
 /* LOGIN */
-
 #loginScreen{
 position:fixed;
 inset:0;
@@ -514,7 +574,6 @@ font-size:15px
 }
 
 /* AHOORA */
-
 #ahooraLoading{
 position:fixed;
 inset:0;
@@ -561,41 +620,33 @@ z-index:9997
 }
 
 @media(max-height:650px){
-
 .header{
 height:58px;
 min-height:58px
 }
-
 .character{
 width:38px;
 height:38px
 }
-
 .headerButton{
 width:38px;
 height:38px
 }
-
 .chat{
 padding-bottom:88px
 }
-
 .aiSwitcher{
 top:6px;
 height:43px
 }
-
 .aiSwitch{
 height:33px;
 padding:0 9px;
 font-size:11px
 }
-
 }
 
 @media(min-width:601px){
-
 .inputArea{
 left:50%;
 right:auto;
@@ -603,1290 +654,614 @@ transform:translateX(-50%);
 width:min(580px,calc(100% - 20px))
 }
 }
-
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-
 <div id="loginScreen">
-
 <div class="loginBox">
-
 <div class="loginTitle">✦ Chaty AI</div>
-
 <div class="loginText">
 برای استفاده از Chaty AI وارد حساب خود شوید.
 </div>
-
-<input
-id="emailInput"
-class="loginInput"
-type="email"
-placeholder="Email"
-autocomplete="email">
-
-<button id="loginButton" class="loginButton">
-📩 دریافت کد ورود
-</button>
-
+<input id="emailInput" class="loginInput" type="email" placeholder="Email" autocomplete="email">
+<button id="loginButton" class="loginButton">📩 دریافت کد ورود</button>
 <div id="otpArea" style="display:none">
-
-<input
-id="otpInput"
-class="loginInput"
-inputmode="numeric"
-maxlength="6"
-placeholder="کد ۶ رقمی">
-
-<button id="verifyButton" class="loginButton">
-🔐 ورود
-</button>
-
+<input id="otpInput" class="loginInput" inputmode="numeric" maxlength="6" placeholder="کد ۶ رقمی">
+<button id="verifyButton" class="loginButton">🔐 ورود</button>
 </div>
-
-<div
-id="loginMessage"
-style="color:#888;margin-top:12px;line-height:1.7">
-</div>
-
+<div id="loginMessage" style="color:#888;margin-top:12px;line-height:1.7"></div>
 </div>
 </div>
-
 
 <!-- AHOORA LOADING -->
-
 <div id="ahooraLoading">
-
 <div class="ahooraLoadingCircle"></div>
-
-<div class="ahooraLoadingText">
-در حال ورود به Ahoora AI...
+<div class="ahooraLoadingText">در حال ورود به Ahoora AI...</div>
+<div class="ahooraLoadingSub">لطفاً چند لحظه صبر کنید</div>
 </div>
 
-<div class="ahooraLoadingSub">
-لطفاً چند لحظه صبر کنید
-</div>
-
-</div>
-
-<iframe
-id="ahooraFrame"
-src="about:blank">
-</iframe>
-
+<iframe id="ahooraFrame" src="about:blank"></iframe>
 
 <!-- APP -->
-
 <div class="app">
 
 <div class="header">
-
 <div class="headerRight">
-
-<img
-id="headerCharacter"
-class="character"
-src="https://ui-avatars.com/api/?name=Chaty&background=222&color=fff">
-
+<img id="headerCharacter" class="character" src="https://ui-avatars.com/api/?name=Chaty&background=222&color=fff">
 <div class="characterInfo">
-
-<div
-id="characterName"
-class="characterName">
-Chaty AI
-</div>
-
-<div class="characterModel">
-OpenRouter Free
-</div>
-
+<div id="characterName" class="characterName">Chaty AI</div>
+<div class="characterModel">OpenRouter Free</div>
 </div>
 </div>
 
+<!-- FLAME DISPLAY -->
+<div class="flameDisplay" id="flameDisplay">
+  <span class="flame-icon">🔥</span>
+  <span class="flame-count" id="flameCount">10</span>
+  <span class="flame-email" id="flameEmail"></span>
+  <div class="flame-tooltip" id="flameTooltip">
+    🔥 شعله‌های روزانه<br>
+    هر پیام: 1 شعله | هر خواندن متن: 2 شعله
+  </div>
+</div>
 
 <!-- SWITCHER -->
-
 <div class="aiSwitcher">
-
-<button
-id="chatySwitch"
-class="aiSwitch active">
-Chaty AI
-</button>
-
-<button
-id="ahooraSwitch"
-class="aiSwitch">
-Ahoora AI
-<span class="switchLoader"></span>
-</button>
-
+<button id="chatySwitch" class="aiSwitch active">Chaty AI</button>
+<button id="ahooraSwitch" class="aiSwitch">Ahoora AI<span class="switchLoader"></span></button>
 </div>
 
-
-<button
-id="characterButton"
-class="headerButton">
-☰
-</button>
-
+<button id="characterButton" class="headerButton">☰</button>
 </div>
-
 
 <!-- CHAT -->
-
 <div id="chat" class="chat">
-
 <div class="message aiMessage">
-
-<div class="messageName">
-Chaty AI
+<div class="messageName">Chaty AI</div>
+<div class="messageText">سلام 👋 من Chaty AI هستم. هر چیزی می‌خواهی بپرس.</div>
+<button class="ttsButton" type="button" onclick="speakText('سلام. من چتی ای آی هستم. هر چیزی می‌خواهی بپرس.',this)">🔊</button>
 </div>
-
-<div class="messageText">
-سلام 👋
-من Chaty AI هستم.
-هر چیزی می‌خواهی بپرس.
+<div id="typing" class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
 </div>
-
-<button
-class="ttsButton"
-type="button"
-onclick="speakText('سلام. من چتی ای آی هستم. هر چیزی می‌خواهی بپرس.',this)">
-🔊
-</button>
-
-</div>
-
-<div id="typing" class="typing">
-
-<span class="dot"></span>
-<span class="dot"></span>
-<span class="dot"></span>
-
-</div>
-
-</div>
-
 
 <div id="errorBox" class="errorBox"></div>
 
-
 <!-- INPUT -->
-
 <div class="inputArea">
-
-<textarea
-id="messageInput"
-rows="1"
-placeholder="پیامت را بنویس...">
-</textarea>
-
-<button
-id="voiceButton"
-class="voiceButton"
-type="button"
-title="صحبت کردن">
-🎙️
-</button>
-
-<button
-id="sendButton"
-class="sendButton">
-➤
-</button>
-
+<textarea id="messageInput" rows="1" placeholder="پیامت را بنویس..."></textarea>
+<button id="voiceButton" class="voiceButton" type="button" title="صحبت کردن">🎙️</button>
+<button id="sendButton" class="sendButton">➤</button>
 </div>
 
-<div id="voiceStatus" class="voiceStatus">
-🎙️ در حال گوش دادن...
+<div id="voiceStatus" class="voiceStatus">🎙️ در حال گوش دادن...</div>
 </div>
-
-</div>
-
 
 <!-- CHARACTER PANEL -->
-
 <div id="characterPanel" class="panel">
-
 <div class="panelHeader">
-
-<div class="panelTitle">
-انتخاب شخصیت Chaty AI
+<div class="panelTitle">انتخاب شخصیت Chaty AI</div>
+<button id="closeCharacterPanel" class="closeButton">×</button>
 </div>
-
-<button
-id="closeCharacterPanel"
-class="closeButton">
-×
-</button>
-
-</div>
-
-
 <div class="characterGrid">
-
-<button
-class="characterCard"
-data-name="مسی"
-data-image="https://ui-avatars.com/api/?name=Messi&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Messi&background=222&color=fff">
-
-<span>⚽ مسی</span>
-
+<!-- ... کارت‌های شخصیت قبلی ... -->
+<button class="characterCard" data-name="مسی" data-image="https://ui-avatars.com/api/?name=Messi&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Messi&background=222&color=fff"><span>⚽ مسی</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="رونالدو"
-data-image="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff">
-
-<span>⚽ رونالدو</span>
-
+<button class="characterCard" data-name="رونالدو" data-image="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Ronaldo&background=222&color=fff"><span>⚽ رونالدو</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="پرسپولیس"
-data-image="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff">
-
-<span>🔴 پرسپولیس</span>
-
+<button class="characterCard" data-name="پرسپولیس" data-image="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Persepolis&background=222&color=fff"><span>🔴 پرسپولیس</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="استقلال"
-data-image="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff">
-
-<span>🔵 استقلال</span>
-
+<button class="characterCard" data-name="استقلال" data-image="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Esteghlal&background=222&color=fff"><span>🔵 استقلال</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="بریکینگ بد"
-data-image="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff">
-
-<span>🧪 بریکینگ بد</span>
-
+<button class="characterCard" data-name="بریکینگ بد" data-image="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Breaking+Bad&background=222&color=fff"><span>🧪 بریکینگ بد</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="باب اسفنجی"
-data-image="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff">
-
-<span>🧽 باب اسفنجی</span>
-
+<button class="characterCard" data-name="باب اسفنجی" data-image="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=SpongeBob&background=222&color=fff"><span>🧽 باب اسفنجی</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="BTS"
-data-image="https://ui-avatars.com/api/?name=BTS&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=BTS&background=222&color=fff">
-
-<span>🎤 BTS</span>
-
+<button class="characterCard" data-name="BTS" data-image="https://ui-avatars.com/api/?name=BTS&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=BTS&background=222&color=fff"><span>🎤 BTS</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="دیوید بکام"
-data-image="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff">
-
-<span>⚽ دیوید بکام</span>
-
+<button class="characterCard" data-name="دیوید بکام" data-image="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Beckham&background=222&color=fff"><span>⚽ دیوید بکام</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="هکر"
-data-image="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff">
-
-<span>💻 هکر</span>
-
+<button class="characterCard" data-name="هکر" data-image="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Hacker&background=222&color=fff"><span>💻 هکر</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="شاعر"
-data-image="https://ui-avatars.com/api/?name=Poet&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Poet&background=222&color=fff">
-
-<span>📜 شاعر</span>
-
+<button class="characterCard" data-name="شاعر" data-image="https://ui-avatars.com/api/?name=Poet&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Poet&background=222&color=fff"><span>📜 شاعر</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="آشپز"
-data-image="https://ui-avatars.com/api/?name=Chef&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Chef&background=222&color=fff">
-
-<span>👨‍🍳 آشپز</span>
-
+<button class="characterCard" data-name="آشپز" data-image="https://ui-avatars.com/api/?name=Chef&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Chef&background=222&color=fff"><span>👨‍🍳 آشپز</span>
 </button>
-
-
-<button
-class="characterCard"
-data-name="تراپیست"
-data-image="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff">
-
-<img src="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff">
-
-<span>🧠 تراپیست</span>
-
+<button class="characterCard" data-name="تراپیست" data-image="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff">
+<img src="https://ui-avatars.com/api/?name=Therapist&background=222&color=fff"><span>🧠 تراپیست</span>
 </button>
-
 </div>
 </div>
-
 
 <script>
+/* =========================
+   SUPABASE
+========================= */
+const SUPABASE_URL = "https://vkqmlfumodqmmylchgdx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const EDGE_FUNCTION_URL = "https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
+const AI_MODEL = "openrouter/free";
+const TTS_MODEL = "fish-audio/s2.1-pro-free:free";
 
 /* =========================
-SUPABASE
+   FLAME SYSTEM - با اتصال به ایمیل
 ========================= */
+const FLAME_COST_CHATY = 1;
+const FLAME_COST_TTS = 2;
+const DAILY_FLAMES = 10;
 
-const SUPABASE_URL=
-"https://vkqmlfumodqmmylchgdx.supabase.co";
+let currentFlames = 0;
+let userEmail = '';
+let userId = null;
 
-const SUPABASE_ANON_KEY=
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+async function fetchFlames() {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return null;
+    
+    userId = user.id;
+    userEmail = user.email || '';
+    
+    // نمایش ایمیل در هدر
+    const emailDisplay = document.getElementById('flameEmail');
+    if (emailDisplay && userEmail) {
+      emailDisplay.textContent = userEmail.split('@')[0] + '...';
+      emailDisplay.title = userEmail;
+    }
+    
+    // بررسی وجود رکورد شعله برای این کاربر
+    let { data, error } = await supabaseClient
+      .from('user_flames')
+      .select('flames, last_reset')
+      .eq('user_id', userId)
+      .single();
+    
+    if (error && error.code === 'PGRST116') {
+      // رکورد وجود ندارد، ایجاد می‌کنیم
+      const { data: newData, error: insertError } = await supabaseClient
+        .from('user_flames')
+        .insert({
+          user_id: userId,
+          email: userEmail,
+          flames: DAILY_FLAMES,
+          last_reset: new Date().toISOString().split('T')[0]
+        })
+        .select('flames, last_reset')
+        .single();
+      
+      if (insertError) throw insertError;
+      data = newData;
+    } else if (error) {
+      throw error;
+    }
+    
+    // بررسی ریست روزانه
+    const today = new Date().toISOString().split('T')[0];
+    if (data.last_reset !== today) {
+      const { data: resetData, error: resetError } = await supabaseClient
+        .from('user_flames')
+        .update({
+          flames: DAILY_FLAMES,
+          last_reset: today,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', userId)
+        .select('flames')
+        .single();
+      
+      if (resetError) throw resetError;
+      data.flames = resetData.flames;
+    }
+    
+    currentFlames = data.flames;
+    updateFlameDisplay();
+    return currentFlames;
+    
+  } catch (error) {
+    console.error('Error fetching flames:', error);
+    return null;
+  }
+}
 
-const supabaseClient=
-window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_ANON_KEY
-);
+async function useFlames(cost) {
+  if (currentFlames < cost) {
+    showError('🔥 شعله کافی نیست!', 
+      `شما ${currentFlames} شعله دارید.\nهر استفاده از Chaty AI ${FLAME_COST_CHATY} شعله مصرف می‌کند.\nهر خواندن متن ${FLAME_COST_TTS} شعله مصرف می‌کند.\n\n⏳ صبر کنید تا فردا شعله‌ها ریست شوند.`);
+    return false;
+  }
+  
+  try {
+    const newFlames = currentFlames - cost;
+    
+    const { data, error } = await supabaseClient
+      .from('user_flames')
+      .update({
+        flames: newFlames,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', userId)
+      .select('flames')
+      .single();
+    
+    if (error) throw error;
+    
+    currentFlames = data.flames;
+    updateFlameDisplay();
+    return true;
+    
+  } catch (error) {
+    console.error('Error using flames:', error);
+    showError('❌ خطا در مصرف شعله', error.message);
+    return false;
+  }
+}
 
+function updateFlameDisplay() {
+  const display = document.getElementById('flameDisplay');
+  const count = document.getElementById('flameCount');
+  count.textContent = currentFlames;
+  
+  if (currentFlames <= 3) {
+    display.classList.add('low');
+  } else {
+    display.classList.remove('low');
+  }
+}
 
 /* =========================
-EDGE FUNCTION
+   TTS + VOICE
 ========================= */
-
-const EDGE_FUNCTION_URL=
-"https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
-
-
-/*
- * مهم:
- * این مدل باید توسط Edge Function
- * مستقیماً به OpenRouter ارسال شود.
- */
-
-const AI_MODEL=
-"openrouter/free";
-
+let currentAudio = null;
+let recognition = null;
+let isListening = false;
+let speechFinalText = "";
 
 /* =========================
-TTS MODEL
+   ELEMENTS
 ========================= */
+const chat = document.getElementById("chat");
+const messageInput = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const typing = document.getElementById("typing");
+const errorBox = document.getElementById("errorBox");
+const characterPanel = document.getElementById("characterPanel");
+const characterButton = document.getElementById("characterButton");
+const closeCharacterPanel = document.getElementById("closeCharacterPanel");
+const headerCharacter = document.getElementById("headerCharacter");
+const characterName = document.getElementById("characterName");
+const loginScreen = document.getElementById("loginScreen");
+const emailInput = document.getElementById("emailInput");
+const loginButton = document.getElementById("loginButton");
+const verifyButton = document.getElementById("verifyButton");
+const otpInput = document.getElementById("otpInput");
+const otpArea = document.getElementById("otpArea");
+const loginMessage = document.getElementById("loginMessage");
+const chatySwitch = document.getElementById("chatySwitch");
+const ahooraSwitch = document.getElementById("ahooraSwitch");
+const ahooraLoading = document.getElementById("ahooraLoading");
+const ahooraFrame = document.getElementById("ahooraFrame");
+const voiceButton = document.getElementById("voiceButton");
+const voiceStatus = document.getElementById("voiceStatus");
 
-const TTS_MODEL=
-"fish-audio/s2.1-pro-free:free";
-
-let currentAudio=null;
-
-let recognition=null;
-
-let isListening=false;
-
-let speechFinalText="";
-
+let selectedCharacter = "Chaty AI";
+let selectedImage = "https://ui-avatars.com/api/?name=Chaty&background=222&color=fff";
+let loginEmail = "";
+let ahooraLoaded = false;
+let ahooraLoadingStarted = false;
 
 /* =========================
-ELEMENTS
+   HELPERS
 ========================= */
+function escapeHTML(text) {
+  return String(text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
 
-const chat=
-document.getElementById("chat");
+function showError(title, details) {
+  errorBox.style.display = "block";
+  errorBox.innerHTML = "<b>" + escapeHTML(title) + "</b>\n\n" + escapeHTML(details) + "\n\n<button class='clearError' onclick='clearError()'>پاک کردن خطا</button>";
+  scrollBottom();
+}
 
-const messageInput=
-document.getElementById("messageInput");
+function clearError() {
+  errorBox.style.display = "none";
+  errorBox.innerHTML = "";
+}
 
-const sendButton=
-document.getElementById("sendButton");
+function scrollBottom() {
+  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 50);
+}
 
-const typing=
-document.getElementById("typing");
-
-const errorBox=
-document.getElementById("errorBox");
-
-const characterPanel=
-document.getElementById("characterPanel");
-
-const characterButton=
-document.getElementById("characterButton");
-
-const closeCharacterPanel=
-document.getElementById("closeCharacterPanel");
-
-const headerCharacter=
-document.getElementById("headerCharacter");
-
-const characterName=
-document.getElementById("characterName");
-
-const loginScreen=
-document.getElementById("loginScreen");
-
-const emailInput=
-document.getElementById("emailInput");
-
-const loginButton=
-document.getElementById("loginButton");
-
-const verifyButton=
-document.getElementById("verifyButton");
-
-const otpInput=
-document.getElementById("otpInput");
-
-const otpArea=
-document.getElementById("otpArea");
-
-const loginMessage=
-document.getElementById("loginMessage");
-
-const chatySwitch=
-document.getElementById("chatySwitch");
-
-const ahooraSwitch=
-document.getElementById("ahooraSwitch");
-
-const ahooraLoading=
-document.getElementById("ahooraLoading");
-
-const ahooraFrame=
-document.getElementById("ahooraFrame");
-
-const voiceButton=
-document.getElementById("voiceButton");
-
-const voiceStatus=
-document.getElementById("voiceStatus");
-
-
-let selectedCharacter=
-"Chaty AI";
-
-let selectedImage=
-"https://ui-avatars.com/api/?name=Chaty&background=222&color=fff";
-
-let loginEmail="";
-
-let ahooraLoaded=false;
-
-let ahooraLoadingStarted=false;
-
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = "message " + (type === "user" ? "userMessage" : "aiMessage");
+  
+  if (type !== "user") {
+    const name = document.createElement("div");
+    name.className = "messageName";
+    name.textContent = selectedCharacter;
+    
+    const content = document.createElement("div");
+    content.className = "messageText";
+    content.textContent = text;
+    
+    const ttsButton = document.createElement("button");
+    ttsButton.className = "ttsButton";
+    ttsButton.type = "button";
+    ttsButton.textContent = "🔊";
+    ttsButton.title = "خواندن پاسخ";
+    ttsButton.addEventListener("click", () => speakText(text, ttsButton));
+    
+    div.appendChild(name);
+    div.appendChild(content);
+    div.appendChild(ttsButton);
+  } else {
+    div.textContent = text;
+  }
+  
+  chat.insertBefore(div, typing);
+  scrollBottom();
+  return div;
+}
 
 /* =========================
-HELPERS
+   TEXT TO SPEECH
 ========================= */
-
-function escapeHTML(text){
-
-return String(text)
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
+function stopAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  document.querySelectorAll(".ttsButton").forEach(button => {
+    button.textContent = "🔊";
+    button.classList.remove("loading");
+  });
 }
 
-
-function showError(title,details){
-
-errorBox.style.display="block";
-
-errorBox.innerHTML=
-"<b>"+
-escapeHTML(title)+
-"</b>\n\n"+
-escapeHTML(details)+
-"\n\n<button class='clearError' onclick='clearError()'>پاک کردن خطا</button>";
-
-scrollBottom();
-
+async function speakText(text, button) {
+  if (!text) return;
+  
+  // بررسی شعله قبل از پخش
+  if (!await useFlames(FLAME_COST_TTS)) {
+    return;
+  }
+  
+  if (currentAudio && !currentAudio.paused) {
+    stopAudio();
+    return;
+  }
+  
+  stopAudio();
+  
+  if (button) {
+    button.textContent = "⏳";
+    button.classList.add("loading");
+  }
+  
+  try {
+    const response = await fetch(EDGE_FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "apikey": SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({
+        action: "tts",
+        text: text,
+        message: text,
+        model: TTS_MODEL,
+        voice: "default"
+      })
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error("HTTP " + response.status + "\n" + errorText);
+    }
+    
+    const contentType = response.headers.get("content-type") || "";
+    
+    if (contentType.includes("audio")) {
+      const blob = await response.blob();
+      const audioURL = URL.createObjectURL(blob);
+      currentAudio = new Audio(audioURL);
+    } else {
+      const data = await response.json();
+      let audioURL = data.audio_url || data.url || data.audio || null;
+      
+      if (!audioURL && data.audio_base64) {
+        const binary = atob(data.audio_base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: data.mime_type || "audio/mpeg" });
+        audioURL = URL.createObjectURL(blob);
+      }
+      
+      if (!audioURL) {
+        // در صورت خطا، شعله برگردانده می‌شود
+        currentFlames += FLAME_COST_TTS;
+        updateFlameDisplay();
+        throw new Error("آدرس یا فایل صوتی در پاسخ پیدا نشد.");
+      }
+      
+      currentAudio = new Audio(audioURL);
+    }
+    
+    currentAudio.onplay = () => {
+      if (button) {
+        button.textContent = "⏹️";
+        button.classList.remove("loading");
+      }
+    };
+    
+    currentAudio.onended = () => {
+      if (button) {
+        button.textContent = "🔊";
+        button.classList.remove("loading");
+      }
+      currentAudio = null;
+    };
+    
+    currentAudio.onerror = () => {
+      if (button) {
+        button.textContent = "🔊";
+        button.classList.remove("loading");
+      }
+      // در صورت خطا، شعله برگردانده می‌شود
+      currentFlames += FLAME_COST_TTS;
+      updateFlameDisplay();
+      showError("❌ خطا در پخش صدا", "فایل صوتی قابل پخش نیست.");
+    };
+    
+    await currentAudio.play();
+    
+  } catch (error) {
+    console.error("TTS ERROR:", error);
+    if (button) {
+      button.textContent = "🔊";
+      button.classList.remove("loading");
+    }
+    // در صورت خطا، شعله برگردانده می‌شود
+    currentFlames += FLAME_COST_TTS;
+    updateFlameDisplay();
+    showError("❌ خطا در تبدیل متن به صدا", error.message || String(error));
+  }
 }
-
-
-function clearError(){
-
-errorBox.style.display="none";
-
-errorBox.innerHTML="";
-
-}
-
-
-function scrollBottom(){
-
-setTimeout(()=>{
-
-chat.scrollTop=
-chat.scrollHeight;
-
-},50);
-
-}
-
-
-function addMessage(text,type){
-
-const div=
-document.createElement("div");
-
-div.className=
-"message "+
-(type==="user"?
-"userMessage":
-"aiMessage");
-
-if(type!=="user"){
-
-const name=
-document.createElement("div");
-
-name.className="messageName";
-
-name.textContent=
-selectedCharacter;
-
-const content=
-document.createElement("div");
-
-content.className=
-"messageText";
-
-content.textContent=text;
-
-const ttsButton=
-document.createElement("button");
-
-ttsButton.className=
-"ttsButton";
-
-ttsButton.type=
-"button";
-
-ttsButton.textContent=
-"🔊";
-
-ttsButton.title=
-"خواندن پاسخ";
-
-ttsButton.addEventListener(
-"click",
-()=>speakText(
-text,
-ttsButton
-)
-);
-
-div.appendChild(name);
-
-div.appendChild(content);
-
-div.appendChild(ttsButton);
-
-}else{
-
-div.textContent=text;
-
-}
-
-chat.insertBefore(div,typing);
-
-scrollBottom();
-
-return div;
-
-}
-
 
 /* =========================
-TEXT TO SPEECH
+   VOICE TO TEXT
 ========================= */
-
-function stopAudio(){
-
-if(currentAudio){
-
-currentAudio.pause();
-
-currentAudio.currentTime=0;
-
-currentAudio=null;
-
+function setupSpeechRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    voiceButton.style.display = "none";
+    console.warn("SpeechRecognition not supported");
+    return;
+  }
+  
+  recognition = new SpeechRecognition();
+  recognition.lang = "fa-IR";
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+  
+  recognition.onstart = () => {
+    isListening = true;
+    speechFinalText = "";
+    voiceButton.classList.add("listening");
+    voiceButton.textContent = "🔴";
+    voiceStatus.style.display = "block";
+    voiceStatus.textContent = "🎙️ در حال گوش دادن...";
+  };
+  
+  recognition.onresult = event => {
+    let interimText = "";
+    let finalText = "";
+    
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const resultText = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalText += resultText;
+      } else {
+        interimText += resultText;
+      }
+    }
+    
+    if (finalText) {
+      speechFinalText += finalText;
+    }
+    
+    messageInput.value = (speechFinalText + interimText).trim();
+    messageInput.dispatchEvent(new Event("input"));
+    voiceStatus.textContent = "📝 " + messageInput.value;
+  };
+  
+  recognition.onerror = event => {
+    console.error("VOICE ERROR:", event.error);
+    if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+      showError("❌ دسترسی میکروفون", "اجازه استفاده از میکروفون داده نشده است.");
+    }
+  };
+  
+  recognition.onend = () => {
+    isListening = false;
+    voiceButton.classList.remove("listening");
+    voiceButton.textContent = "🎙️";
+    voiceStatus.style.display = "none";
+    
+    const text = speechFinalText.trim();
+    speechFinalText = "";
+    
+    if (text) {
+      messageInput.value = text;
+      messageInput.dispatchEvent(new Event("input"));
+      setTimeout(() => { sendMessage(); }, 400);
+    }
+  };
 }
 
-document
-.querySelectorAll(".ttsButton")
-.forEach(button=>{
-
-button.textContent="🔊";
-
-button.classList.remove(
-"loading"
-);
-
-});
-
+function toggleVoiceInput() {
+  if (!recognition) {
+    showError("❌ میکروفون پشتیبانی نمی‌شود", "این نسخه WebView از تبدیل گفتار به متن پشتیبانی نمی‌کند.");
+    return;
+  }
+  
+  if (isListening) {
+    recognition.stop();
+    return;
+  }
+  
+  try {
+    recognition.start();
+  } catch (error) {
+    console.error("Recognition start error:", error);
+  }
 }
 
-
-async function speakText(
-text,
-button
-){
-
-if(!text)
-return;
-
-
-if(
-currentAudio &&
-!currentAudio.paused
-){
-
-stopAudio();
-
-return;
-
-}
-
-
-stopAudio();
-
-
-if(button){
-
-button.textContent="⏳";
-
-button.classList.add(
-"loading"
-);
-
-}
-
-
-try{
-
-const response=
-await fetch(
-EDGE_FUNCTION_URL,
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json",
-
-"Authorization":
-"Bearer "+
-SUPABASE_ANON_KEY,
-
-"apikey":
-SUPABASE_ANON_KEY
-
-},
-
-body:JSON.stringify({
-
-action:"tts",
-
-text:text,
-
-message:text,
-
-model:TTS_MODEL,
-
-voice:"default"
-
-})
-
-}
-);
-
-
-if(!response.ok){
-
-const errorText=
-await response.text();
-
-throw new Error(
-"HTTP "+
-response.status+
-"\n"+
-errorText
-);
-
-}
-
-
-/*
-اگر Edge Function
-فایل صوتی مستقیم برگرداند
-*/
-
-const contentType=
-response.headers.get(
-"content-type"
-)||
-"";
-
-
-if(
-contentType.includes("audio")
-){
-
-const blob=
-await response.blob();
-
-const audioURL=
-URL.createObjectURL(
-blob
-);
-
-currentAudio=
-new Audio(
-audioURL
-);
-
-
-}else{
-
-/*
-اگر Edge Function
-JSON با audio_url یا audio_base64
-برگرداند
-*/
-
-const data=
-await response.json();
-
-
-let audioURL=
-data.audio_url ||
-data.url ||
-data.audio ||
-null;
-
-
-if(
-!audioURL &&
-data.audio_base64
-){
-
-const binary=
-atob(
-data.audio_base64
-);
-
-const bytes=
-new Uint8Array(
-binary.length
-);
-
-for(
-let i=0;
-i<binary.length;
-i++
-){
-
-bytes[i]=
-binary.charCodeAt(i);
-
-}
-
-const blob=
-new Blob(
-[bytes],
-{
-type:
-data.mime_type ||
-"audio/mpeg"
-}
-);
-
-audioURL=
-URL.createObjectURL(
-blob
-);
-
-}
-
-
-if(!audioURL){
-
-throw new Error(
-"آدرس یا فایل صوتی در پاسخ پیدا نشد."
-);
-
-}
-
-
-currentAudio=
-new Audio(
-audioURL
-);
-
-}
-
-
-currentAudio.onplay=
-()=>{
-
-if(button){
-
-button.textContent=
-"⏹️";
-
-button.classList.remove(
-"loading"
-);
-
-}
-
-};
-
-
-currentAudio.onended=
-()=>{
-
-if(button){
-
-button.textContent=
-"🔊";
-
-button.classList.remove(
-"loading"
-);
-
-}
-
-currentAudio=null;
-
-};
-
-
-currentAudio.onerror=
-()=>{
-
-if(button){
-
-button.textContent=
-"🔊";
-
-button.classList.remove(
-"loading"
-);
-
-}
-
-showError(
-"❌ خطا در پخش صدا",
-"فایل صوتی قابل پخش نیست."
-);
-
-};
-
-
-await currentAudio.play();
-
-
-}catch(error){
-
-console.error(
-"TTS ERROR:",
-error
-);
-
-if(button){
-
-button.textContent=
-"🔊";
-
-button.classList.remove(
-"loading"
-);
-
-}
-
-showError(
-
-"❌ خطا در تبدیل متن به صدا",
-
-error.message ||
-String(error)
-
-);
-
-}
-
-}
-
-
-/* =========================
-VOICE TO TEXT
-========================= */
-
-function setupSpeechRecognition(){
-
-const SpeechRecognition=
-window.SpeechRecognition ||
-window.webkitSpeechRecognition;
-
-
-if(!SpeechRecognition){
-
-voiceButton.style.display=
-"none";
-
-console.warn(
-"SpeechRecognition not supported"
-);
-
-return;
-
-}
-
-
-recognition=
-new SpeechRecognition();
-
-recognition.lang=
-"fa-IR";
-
-recognition.continuous=
-false;
-
-recognition.interimResults=
-true;
-
-recognition.maxAlternatives=
-1;
-
-
-recognition.onstart=
-()=>{
-
-isListening=true;
-
-speechFinalText="";
-
-voiceButton.classList.add(
-"listening"
-);
-
-voiceButton.textContent=
-"🔴";
-
-voiceStatus.style.display=
-"block";
-
-voiceStatus.textContent=
-"🎙️ در حال گوش دادن...";
-
-};
-
-
-recognition.onresult=
-event=>{
-
-let interimText="";
-
-let finalText="";
-
-
-for(
-let i=event.resultIndex;
-i<event.results.length;
-i++
-){
-
-const resultText=
-event.results[i][0].transcript;
-
-if(
-event.results[i].isFinal
-){
-
-finalText+=
-resultText;
-
-}else{
-
-interimText+=
-resultText;
-
-}
-
-}
-
-
-if(finalText){
-
-speechFinalText+=
-finalText;
-
-}
-
-
-messageInput.value=
-(
-speechFinalText+
-interimText
-).trim();
-
-
-messageInput.dispatchEvent(
-new Event("input")
-);
-
-
-voiceStatus.textContent=
-"📝 "+
-messageInput.value;
-
-};
-
-
-recognition.onerror=
-event=>{
-
-console.error(
-"VOICE ERROR:",
-event.error
-);
-
-
-if(
-event.error==="not-allowed" ||
-event.error==="service-not-allowed"
-){
-
-showError(
-
-"❌ دسترسی میکروفون",
-
-"اجازه استفاده از میکروفون داده نشده است."
-
-);
-
-}
-
-
-};
-
-
-recognition.onend=
-()=>{
-
-isListening=false;
-
-voiceButton.classList.remove(
-"listening"
-);
-
-voiceButton.textContent=
-"🎙️";
-
-voiceStatus.style.display=
-"none";
-
-
-const text=
-speechFinalText.trim();
-
-
-speechFinalText="";
-
-
-if(text){
-
-messageInput.value=text;
-
-messageInput.dispatchEvent(
-new Event("input")
-);
-
-
-/*
-بعد از پایان صحبت
-پیام خودکار ارسال می‌شود
-*/
-
-setTimeout(
-()=>{
-
-sendMessage();
-
-},
-400
-);
-
-}
-
-};
-
-}
-
-
-function toggleVoiceInput(){
-
-if(!recognition){
-
-showError(
-
-"❌ میکروفون پشتیبانی نمی‌شود",
-
-"این نسخه WebView از تبدیل گفتار به متن پشتیبانی نمی‌کند."
-
-);
-
-return;
-
-}
-
-
-if(isListening){
-
-recognition.stop();
-
-return;
-
-}
-
-
-try{
-
-recognition.start();
-
-}catch(error){
-
-console.error(
-"Recognition start error:",
-error
-);
-
-}
-
-}
-
-
-voiceButton.addEventListener(
-"click",
-toggleVoiceInput
-);
-
-
+voiceButton.addEventListener("click", toggleVoiceInput);
 setupSpeechRecognition();
 
-
 /* =========================
-CHARACTER
+   CHARACTER
 ========================= */
+characterButton.addEventListener("click", () => { characterPanel.style.display = "block"; });
+closeCharacterPanel.addEventListener("click", () => { characterPanel.style.display = "none"; });
 
-characterButton.addEventListener(
-"click",
-()=>{
-characterPanel.style.display="block";
-}
-);
-
-
-closeCharacterPanel.addEventListener(
-"click",
-()=>{
-characterPanel.style.display="none";
-}
-);
-
-
-document
-.querySelectorAll(".characterCard")
-.forEach(card=>{
-
-card.addEventListener(
-"click",
-function(){
-
-selectedCharacter=
-this.dataset.name;
-
-selectedImage=
-this.dataset.image;
-
-characterName.textContent=
-selectedCharacter;
-
-headerCharacter.src=
-selectedImage;
-
-characterPanel.style.display=
-"none";
-
-addMessage(
-"شخصیت «"+
-selectedCharacter+
-"» انتخاب شد.",
-"ai"
-);
-
-}
-);
-
+document.querySelectorAll(".characterCard").forEach(card => {
+  card.addEventListener("click", function() {
+    selectedCharacter = this.dataset.name;
+    selectedImage = this.dataset.image;
+    characterName.textContent = selectedCharacter;
+    headerCharacter.src = selectedImage;
+    characterPanel.style.display = "none";
+    addMessage("شخصیت «" + selectedCharacter + "» انتخاب شد.", "ai");
+  });
 });
 
-
 /* =========================
-PROMPT
+   PROMPT
 ========================= */
-
-function getSystemPrompt(){
-
-return `تو Chaty AI هستی.
+function getSystemPrompt() {
+  return `تو Chaty AI هستی.
 شخصیت انتخاب شده: ${selectedCharacter}
 سیستم مدل: OpenRouter Free
 
@@ -1894,670 +1269,292 @@ return `تو Chaty AI هستی.
 به زبان کاربر پاسخ بده.
 اگر فارسی صحبت کرد، فارسی پاسخ بده.
 پاسخ‌ها طبیعی، مفید و تا حد امکان کوتاه باشند.`;
-
 }
-
 
 /* =========================
-EXTRACT REPLY
+   EXTRACT REPLY
 ========================= */
-
-function extractReply(data){
-
-if(typeof data==="string" && data.trim())
-return data.trim();
-
-if(data &&
-typeof data.reply==="string" &&
-data.reply.trim())
-return data.reply.trim();
-
-if(data &&
-typeof data.answer==="string" &&
-data.answer.trim())
-return data.answer.trim();
-
-if(data &&
-typeof data.message==="string" &&
-data.message.trim())
-return data.message.trim();
-
-if(data &&
-typeof data.response==="string" &&
-data.response.trim())
-return data.response.trim();
-
-if(data &&
-typeof data.content==="string" &&
-data.content.trim())
-return data.content.trim();
-
-if(data &&
-typeof data.text==="string" &&
-data.text.trim())
-return data.text.trim();
-
-if(
-data &&
-data.choices &&
-data.choices[0]
-){
-
-if(
-data.choices[0].message &&
-typeof data.choices[0].message.content==="string"
-)
-return data.choices[0].message.content.trim();
-
-if(
-typeof data.choices[0].text==="string"
-)
-return data.choices[0].text.trim();
-
+function extractReply(data) {
+  if (typeof data === "string" && data.trim()) return data.trim();
+  if (data && typeof data.reply === "string" && data.reply.trim()) return data.reply.trim();
+  if (data && typeof data.answer === "string" && data.answer.trim()) return data.answer.trim();
+  if (data && typeof data.message === "string" && data.message.trim()) return data.message.trim();
+  if (data && typeof data.response === "string" && data.response.trim()) return data.response.trim();
+  if (data && typeof data.content === "string" && data.content.trim()) return data.content.trim();
+  if (data && typeof data.text === "string" && data.text.trim()) return data.text.trim();
+  if (data && data.choices && data.choices[0]) {
+    if (data.choices[0].message && typeof data.choices[0].message.content === "string")
+      return data.choices[0].message.content.trim();
+    if (typeof data.choices[0].text === "string")
+      return data.choices[0].text.trim();
+  }
+  return null;
 }
-
-return null;
-
-}
-
 
 /* =========================
-SEND
+   SEND
 ========================= */
-
-async function sendMessage(){
-
-const text=
-messageInput.value.trim();
-
-if(!text || sendButton.disabled)
-return;
-
-clearError();
-
-addMessage(text,"user");
-
-messageInput.value="";
-
-messageInput.style.height="auto";
-
-sendButton.disabled=true;
-
-typing.style.display="block";
-
-scrollBottom();
-
-
-try{
-
-const response=
-await fetch(
-EDGE_FUNCTION_URL,
-{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json",
-"Authorization":
-"Bearer "+
-SUPABASE_ANON_KEY,
-"apikey":
-SUPABASE_ANON_KEY
-},
-
-body:JSON.stringify({
-
-name:text,
-
-message:text,
-
-prompt:text,
-
-model:AI_MODEL,
-
-character:selectedCharacter,
-
-system:getSystemPrompt()
-
-})
-
+async function sendMessage() {
+  const text = messageInput.value.trim();
+  if (!text || sendButton.disabled) return;
+  
+  // بررسی شعله قبل از ارسال
+  if (!await useFlames(FLAME_COST_CHATY)) {
+    return;
+  }
+  
+  clearError();
+  addMessage(text, "user");
+  messageInput.value = "";
+  messageInput.style.height = "auto";
+  sendButton.disabled = true;
+  typing.style.display = "block";
+  scrollBottom();
+  
+  try {
+    const response = await fetch(EDGE_FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "apikey": SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({
+        name: text,
+        message: text,
+        prompt: text,
+        model: AI_MODEL,
+        character: selectedCharacter,
+        system: getSystemPrompt()
+      })
+    });
+    
+    const raw = await response.text();
+    
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status + " " + (response.statusText || "") + "\n\nServer response:\n" + raw);
+    }
+    
+    if (!raw.trim()) throw new Error("Edge Function پاسخ خالی برگرداند.");
+    
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (e) {
+      throw new Error("پاسخ Edge Function JSON معتبر نیست.\n\nRaw response:\n" + raw);
+    }
+    
+    console.log("Chaty response:", data);
+    const answer = extractReply(data);
+    
+    if (!answer) {
+      throw new Error("پاسخ هوش مصنوعی در داده دریافتی پیدا نشد.\n\nJSON دریافت شده:\n" + JSON.stringify(data, null, 2));
+    }
+    
+    typing.style.display = "none";
+    addMessage(answer, "ai");
+    
+  } catch (error) {
+    console.error("CHATY ERROR:", error);
+    typing.style.display = "none";
+    
+    // در صورت خطا، شعله برگردانده می‌شود
+    currentFlames += FLAME_COST_CHATY;
+    updateFlameDisplay();
+    
+    let details = "";
+    if (error instanceof TypeError) {
+      details = "احتمالاً مشکل اتصال اینترنت، CORS، SSL یا در دسترس نبودن Edge Function وجود دارد.";
+    }
+    
+    showError("❌ خطا در اتصال به Chaty AI", 
+      (details ? details + "\n\n" : "") +
+      "خطای اصلی:\n" + (error.message || String(error)) +
+      "\n\nEndpoint:\n" + EDGE_FUNCTION_URL +
+      "\n\nModel:\n" + AI_MODEL
+    );
+    
+    addMessage("❌ پاسخ دریافت نشد. جزئیات خطا را در بخش خطا ببین.", "ai");
+  }
+  
+  sendButton.disabled = false;
 }
-);
-
-
-const raw=
-await response.text();
-
-
-if(!response.ok){
-
-throw new Error(
-"HTTP "+
-response.status+
-" "+
-(response.statusText||"")+
-"\n\nServer response:\n"+
-raw
-);
-
-}
-
-
-if(!raw.trim())
-throw new Error(
-"Edge Function پاسخ خالی برگرداند."
-);
-
-
-let data;
-
-try{
-
-data=
-JSON.parse(raw);
-
-}catch(e){
-
-throw new Error(
-"پاسخ Edge Function JSON معتبر نیست.\n\nRaw response:\n"+
-raw
-);
-
-}
-
-
-console.log(
-"Chaty response:",
-data
-);
-
-
-const answer=
-extractReply(data);
-
-
-if(!answer){
-
-throw new Error(
-"پاسخ هوش مصنوعی در داده دریافتی پیدا نشد.\n\nJSON دریافت شده:\n"+
-JSON.stringify(
-data,
-null,
-2
-)
-);
-
-}
-
-
-typing.style.display="none";
-
-addMessage(
-answer,
-"ai"
-);
-
-
-}catch(error){
-
-console.error(
-"CHATY ERROR:",
-error
-);
-
-typing.style.display="none";
-
-
-let details="";
-
-
-if(error instanceof TypeError){
-
-details=
-"احتمالاً مشکل اتصال اینترنت، CORS، SSL یا در دسترس نبودن Edge Function وجود دارد.";
-
-}
-
-
-showError(
-
-"❌ خطا در اتصال به Chaty AI",
-
-(details?
-details+
-"\n\n":
-"")+
-
-"خطای اصلی:\n"+
-(error.message||
-String(error))+
-
-"\n\nEndpoint:\n"+
-EDGE_FUNCTION_URL+
-
-"\n\nModel:\n"+
-AI_MODEL
-
-);
-
-
-addMessage(
-"❌ پاسخ دریافت نشد. جزئیات خطا را در بخش خطا ببین.",
-"ai"
-);
-
-}
-
-
-sendButton.disabled=false;
-
-}
-
 
 /* =========================
-INPUT
+   INPUT
 ========================= */
-
-sendButton.addEventListener(
-"click",
-sendMessage
-);
-
-
-messageInput.addEventListener(
-"keydown",
-function(e){
-
-if(
-e.key==="Enter" &&
-!e.shiftKey
-){
-
-e.preventDefault();
-
-sendMessage();
-
-}
-
-}
-);
-
-
-messageInput.addEventListener(
-"input",
-function(){
-
-this.style.height="auto";
-
-this.style.height=
-Math.min(
-this.scrollHeight,
-100
-)+
-"px";
-
-}
-);
-
-
-/* =========================
-AHOORA AI
-========================= */
-
-function openAhooraAI(){
-
-if(ahooraLoadingStarted)
-return;
-
-ahooraLoadingStarted=true;
-
-ahooraSwitch.classList.add("loading");
-
-chatySwitch.classList.remove("active");
-
-ahooraSwitch.classList.add("active");
-
-ahooraLoading.style.display="flex";
-
-requestAnimationFrame(()=>{
-
-ahooraLoading.style.opacity="1";
-
+sendButton.addEventListener("click", sendMessage);
+messageInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+messageInput.addEventListener("input", function() {
+  this.style.height = "auto";
+  this.style.height = Math.min(this.scrollHeight, 100) + "px";
 });
 
-
-if(!ahooraLoaded){
-
-ahooraFrame.onload=
-function(){
-
-ahooraLoaded=true;
-
-setTimeout(()=>{
-
-ahooraLoading.style.opacity="0";
-
-setTimeout(()=>{
-
-ahooraLoading.style.display="none";
-
-ahooraFrame.style.display="block";
-
-ahooraSwitch.classList.remove("loading");
-
-},250);
-
-},300);
-
-};
-
-
-ahooraFrame.onerror=
-function(){
-
-ahooraLoading.style.opacity="0";
-
-setTimeout(()=>{
-
-ahooraLoading.style.display="none";
-
-ahooraSwitch.classList.remove("loading");
-
-chatySwitch.classList.add("active");
-
-ahooraSwitch.classList.remove("active");
-
-ahooraLoadingStarted=false;
-
-alert(
-"❌ فایل Ai.html پیدا نشد یا قابل بارگذاری نیست."
-);
-
-},250);
-
-};
-
-
-ahooraFrame.src="Ai.html";
-
-
-}else{
-
-ahooraLoading.style.opacity="0";
-
-setTimeout(()=>{
-
-ahooraLoading.style.display="none";
-
-ahooraFrame.style.display="block";
-
-ahooraSwitch.classList.remove("loading");
-
-},250);
-
+/* =========================
+   AHOORA AI
+========================= */
+function openAhooraAI() {
+  if (ahooraLoadingStarted) return;
+  ahooraLoadingStarted = true;
+  ahooraSwitch.classList.add("loading");
+  chatySwitch.classList.remove("active");
+  ahooraSwitch.classList.add("active");
+  ahooraLoading.style.display = "flex";
+  requestAnimationFrame(() => { ahooraLoading.style.opacity = "1"; });
+  
+  if (!ahooraLoaded) {
+    ahooraFrame.onload = function() {
+      ahooraLoaded = true;
+      setTimeout(() => {
+        ahooraLoading.style.opacity = "0";
+        setTimeout(() => {
+          ahooraLoading.style.display = "none";
+          ahooraFrame.style.display = "block";
+          ahooraSwitch.classList.remove("loading");
+        }, 250);
+      }, 300);
+    };
+    ahooraFrame.onerror = function() {
+      ahooraLoading.style.opacity = "0";
+      setTimeout(() => {
+        ahooraLoading.style.display = "none";
+        ahooraSwitch.classList.remove("loading");
+        chatySwitch.classList.add("active");
+        ahooraSwitch.classList.remove("active");
+        ahooraLoadingStarted = false;
+        alert("❌ فایل Ai.html پیدا نشد یا قابل بارگذاری نیست.");
+      }, 250);
+    };
+    ahooraFrame.src = "Ai.html";
+  } else {
+    ahooraLoading.style.opacity = "0";
+    setTimeout(() => {
+      ahooraLoading.style.display = "none";
+      ahooraFrame.style.display = "block";
+      ahooraSwitch.classList.remove("loading");
+    }, 250);
+  }
 }
 
+function openChatyAI() {
+  ahooraFrame.style.display = "none";
+  ahooraLoading.style.opacity = "0";
+  ahooraLoading.style.display = "none";
+  ahooraSwitch.classList.remove("loading");
+  ahooraSwitch.classList.remove("active");
+  chatySwitch.classList.add("active");
+  ahooraLoadingStarted = false;
 }
 
-
-function openChatyAI(){
-
-ahooraFrame.style.display="none";
-
-ahooraLoading.style.opacity="0";
-
-ahooraLoading.style.display="none";
-
-ahooraSwitch.classList.remove("loading");
-
-ahooraSwitch.classList.remove("active");
-
-chatySwitch.classList.add("active");
-
-ahooraLoadingStarted=false;
-
-}
-
-
-chatySwitch.addEventListener(
-"click",
-openChatyAI
-);
-
-ahooraSwitch.addEventListener(
-"click",
-openAhooraAI
-);
-
+chatySwitch.addEventListener("click", openChatyAI);
+ahooraSwitch.addEventListener("click", openAhooraAI);
 
 /* =========================
-LOGIN
+   LOGIN
 ========================= */
-
-async function checkSession(){
-
-try{
-
-const {
-data,
-error
-}=
-await supabaseClient.auth.getSession();
-
-if(error)
-throw error;
-
-if(data.session){
-
-loginScreen.style.display="none";
-
-}else{
-
-loginScreen.style.display="flex";
-
+async function checkSession() {
+  try {
+    const { data, error } = await supabaseClient.auth.getSession();
+    if (error) throw error;
+    
+    if (data.session) {
+      loginScreen.style.display = "none";
+      await fetchFlames();
+    } else {
+      loginScreen.style.display = "flex";
+    }
+  } catch (e) {
+    loginScreen.style.display = "flex";
+    loginMessage.textContent = "خطا در بررسی ورود: " + e.message;
+  }
 }
 
-}catch(e){
-
-loginScreen.style.display="flex";
-
-loginMessage.textContent=
-"خطا در بررسی ورود: "+
-e.message;
-
-}
-
-}
-
-
-loginButton.addEventListener(
-"click",
-async()=>{
-
-const email=
-emailInput.value
-.trim()
-.toLowerCase();
-
-
-if(
-!email ||
-!email.includes("@")
-){
-
-loginMessage.textContent=
-"لطفاً ایمیل معتبر وارد کن.";
-
-return;
-
-}
-
-
-loginEmail=email;
-
-loginButton.disabled=true;
-
-loginButton.textContent=
-"در حال ارسال...";
-
-loginMessage.textContent="";
-
-
-try{
-
-const {
-error
-}=
-await supabaseClient.auth.signInWithOtp({
-
-email:email,
-
-options:{
-shouldCreateUser:true
-}
-
+loginButton.addEventListener("click", async () => {
+  const email = emailInput.value.trim().toLowerCase();
+  if (!email || !email.includes("@")) {
+    loginMessage.textContent = "لطفاً ایمیل معتبر وارد کن.";
+    return;
+  }
+  
+  loginEmail = email;
+  loginButton.disabled = true;
+  loginButton.textContent = "در حال ارسال...";
+  loginMessage.textContent = "";
+  
+  try {
+    const { error } = await supabaseClient.auth.signInWithOtp({
+      email: email,
+      options: { shouldCreateUser: true }
+    });
+    
+    if (error) throw error;
+    
+    otpArea.style.display = "block";
+    loginButton.style.display = "none";
+    loginMessage.textContent = "✅ کد ورود ارسال شد.";
+    otpInput.focus();
+    
+  } catch (e) {
+    loginMessage.textContent = "❌ " + e.message;
+    loginButton.disabled = false;
+    loginButton.textContent = "📩 دریافت کد ورود";
+  }
 });
 
-
-if(error)
-throw error;
-
-
-otpArea.style.display=
-"block";
-
-loginButton.style.display=
-"none";
-
-loginMessage.textContent=
-"✅ کد ورود ارسال شد.";
-
-otpInput.focus();
-
-
-}catch(e){
-
-loginMessage.textContent=
-"❌ "+
-e.message;
-
-loginButton.disabled=false;
-
-loginButton.textContent=
-"📩 دریافت کد ورود";
-
-}
-
-}
-);
-
-
-verifyButton.addEventListener(
-"click",
-async()=>{
-
-const token=
-otpInput.value
-.replace(/[^0-9]/g,"");
-
-
-if(token.length!==6){
-
-loginMessage.textContent=
-"❌ کد باید ۶ رقمی باشد.";
-
-return;
-
-}
-
-
-verifyButton.disabled=true;
-
-verifyButton.textContent=
-"در حال بررسی...";
-
-
-try{
-
-const {
-data,
-error
-}=
-await supabaseClient.auth.verifyOtp({
-
-email:loginEmail,
-
-token:token,
-
-type:"email"
-
+verifyButton.addEventListener("click", async () => {
+  const token = otpInput.value.replace(/[^0-9]/g, "");
+  if (token.length !== 6) {
+    loginMessage.textContent = "❌ کد باید ۶ رقمی باشد.";
+    return;
+  }
+  
+  verifyButton.disabled = true;
+  verifyButton.textContent = "در حال بررسی...";
+  
+  try {
+    const { data, error } = await supabaseClient.auth.verifyOtp({
+      email: loginEmail,
+      token: token,
+      type: "email"
+    });
+    
+    if (error) throw error;
+    
+    if (data.session) {
+      loginScreen.style.display = "none";
+      await fetchFlames();
+    } else {
+      throw new Error("ورود انجام نشد؛ Session دریافت نشد.");
+    }
+    
+  } catch (e) {
+    loginMessage.textContent = "❌ " + e.message;
+    verifyButton.disabled = false;
+    verifyButton.textContent = "🔐 ورود";
+  }
 });
 
+otpInput.addEventListener("input", function() {
+  this.value = this.value.replace(/[^0-9]/g, "").slice(0, 6);
+});
 
-if(error)
-throw error;
-
-
-if(data.session){
-
-loginScreen.style.display=
-"none";
-
-}else{
-
-throw new Error(
-"ورود انجام نشد؛ Session دریافت نشد."
-);
-
-}
-
-
-}catch(e){
-
-loginMessage.textContent=
-"❌ "+
-e.message;
-
-verifyButton.disabled=false;
-
-verifyButton.textContent=
-"🔐 ورود";
-
-}
-
-}
-);
-
-
-otpInput.addEventListener(
-"input",
-function(){
-
-this.value=
-this.value
-.replace(/[^0-9]/g,"")
-.slice(0,6);
-
-}
-);
-
-
-supabaseClient.auth.onAuthStateChange(
-(event,session)=>{
-
-loginScreen.style.display=
-session?
-"none":
-"flex";
-
-}
-);
-
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+  if (session) {
+    loginScreen.style.display = "none";
+    await fetchFlames();
+  } else {
+    loginScreen.style.display = "flex";
+    currentFlames = 0;
+    updateFlameDisplay();
+  }
+});
 
 checkSession();
-
 </script>
-
 </body>
 </html>
