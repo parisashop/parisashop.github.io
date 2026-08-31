@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>🔥 پنل ادمین</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: Arial, Tahoma, sans-serif;
+    background: #080812;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* LOGIN */
+#loginOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(8, 8, 18, 0.95);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+#loginOverlay.show { display: flex; }
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: #151526;
+    border: 1px solid #292939;
+    border-radius: 25px;
+    padding: 30px 25px;
+    text-align: center;
+}
+.login-box .title { font-size: 28px; font-weight: bold; margin-bottom: 6px; background: linear-gradient(135deg, #ff6b35, #ff2d55); -webkit-background-clip: text; color: transparent; }
+.login-box .desc { color: #9da8c5; font-size: 14px; margin-bottom: 18px; }
+.login-box input { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #292939; background: #0a0a18; color: white; font-size: 15px; outline: none; margin-bottom: 10px; direction: ltr; }
+.login-box input:focus { border-color: #ff6b35; }
+.login-box .btn-login { width: 100%; padding: 14px; border: 0; border-radius: 14px; background: linear-gradient(135deg, #ff6b35, #ff2d55); color: white; font-size: 16px; cursor: pointer; }
+.login-box .btn-login:disabled { opacity: 0.5; }
+.login-box .otp-area { display: none; margin-top: 12px; }
+.login-box .otp-area input { margin-bottom: 8px; }
+.login-box .otp-area .btn-verify { width: 100%; padding: 14px; border: 0; border-radius: 14px; background: #0066ff; color: white; font-size: 16px; cursor: pointer; }
+.login-box .login-message { color: #9da8c5; font-size: 13px; margin-top: 12px; min-height: 20px; }
+.login-box .back-email { background: none; border: none; color: #666; cursor: pointer; font-size: 13px; margin-top: 10px; }
+
+/* ADMIN PANEL */
+.container { max-width: 1000px; margin: auto; }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #111122;
+    border: 1px solid #292939;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.header .title { font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #ff6b35, #ff2d55); -webkit-background-clip: text; color: transparent; }
+.header .admin-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.header .admin-info .email { color: #9da8c5; font-size: 14px; direction: ltr; }
+.header .admin-info .logout-btn { padding: 8px 16px; border: 0; border-radius: 12px; background: #ff224422; color: #ff6688; cursor: pointer; font-size: 13px; }
+.header .admin-info .logout-btn:hover { background: #ff224466; }
+
+/* STATS */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.stat-card {
+    background: #111122;
+    border: 1px solid #292939;
+    border-radius: 16px;
+    padding: 16px 18px;
+    text-align: center;
+}
+.stat-card .stat-number { font-size: 28px; font-weight: bold; color: #ff6b35; }
+.stat-card .stat-label { color: #9da8c5; font-size: 12px; margin-top: 4px; }
+.stat-card.pending .stat-number { color: #ffaa00; }
+.stat-card.confirmed .stat-number { color: #00ff99; }
+
+/* FILTERS */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.filter-btn {
+    padding: 8px 18px;
+    border: 1px solid #292939;
+    border-radius: 20px;
+    background: transparent;
+    color: #9da8c5;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.3s;
+}
+.filter-btn.active { background: #ff6b35; border-color: #ff6b35; color: white; }
+.filter-btn:hover:not(.active) { border-color: #ff6b3544; }
+
+/* TABLE */
+.table-container {
+    background: #111122;
+    border: 1px solid #292939;
+    border-radius: 18px;
+    overflow: hidden;
+}
+.table-header {
+    display: grid;
+    grid-template-columns: 60px 1fr 70px 90px 110px 130px 140px;
+    padding: 14px 16px;
+    background: #0a0a18;
+    border-bottom: 1px solid #292939;
+    font-size: 12px;
+    color: #9da8c5;
+    font-weight: bold;
+}
+.request-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 70px 90px 110px 130px 140px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #1a1a2e;
+    align-items: center;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.request-row:hover { background: #1a1a2e; }
+
+.request-row .status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+}
+.request-row .status-badge.pending { background: #ffaa0022; color: #ffaa00; border: 1px solid #ffaa0044; }
+.request-row .status-badge.confirmed { background: #00ff9922; color: #00ff99; border: 1px solid #00ff9944; }
+
+.request-row .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.request-row .actions button {
+    padding: 6px 14px;
+    border: 0;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.request-row .actions .btn-confirm { background: #00ff9922; color: #00ff99; border: 1px solid #00ff9944; }
+.request-row .actions .btn-confirm:hover { background: #00ff9944; }
+.request-row .actions .btn-reject { background: #ff224422; color: #ff6688; border: 1px solid #ff224444; }
+.request-row .actions .btn-reject:hover { background: #ff224466; }
+.request-row .actions .btn-done { background: #0066ff22; color: #66aaff; border: 1px solid #0066ff44; opacity: 0.6; cursor: default; }
+
+.request-row .email-cell { color: #66aaff; direction: ltr; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #666; }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+/* TOAST */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-size: 14px;
+    z-index: 2000;
+    display: none;
+    max-width: 400px;
+}
+.toast.success { display: block; background: #00ff9922; border: 1px solid #00ff9944; color: #00ff99; }
+.toast.error { display: block; background: #ff224422; border: 1px solid #ff224444; color: #ff6688; }
+.toast.info { display: block; background: #0066ff22; border: 1px solid #0066ff44; color: #66aaff; }
+
+/* MODAL */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(8, 8, 18, 0.9);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+
+.modal-box {
+    width: 100%;
+    max-width: 420px;
+    background: #151526;
+    border: 1px solid #292939;
+    border-radius: 25px;
+    padding: 30px 25px;
+    text-align: center;
+}
+.modal-box .modal-icon { font-size: 48px; margin-bottom: 12px; }
+.modal-box .modal-title { font-size: 22px; font-weight: bold; margin-bottom: 8px; }
+.modal-box .modal-desc { color: #9da8c5; font-size: 14px; line-height: 1.8; margin-bottom: 18px; }
+.modal-box .modal-desc .highlight { color: #ff6b35; font-weight: bold; }
+.modal-box .modal-actions { display: flex; gap: 10px; }
+.modal-box .modal-actions button {
+    flex: 1;
+    padding: 14px;
+    border: 0;
+    border-radius: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.modal-box .modal-actions .btn-confirm-modal { background: #00ff99; color: #000; }
+.modal-box .modal-actions .btn-confirm-modal:hover { background: #66ffbb; }
+.modal-box .modal-actions .btn-cancel-modal { background: #444; color: white; }
+.modal-box .modal-actions .btn-cancel-modal:hover { background: #555; }
+
+@media (max-width: 768px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .table-header { display: none; }
+    .request-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 12px 16px;
+        border-bottom: 2px solid #1a1a2e;
+    }
+    .request-row .field-label { display: inline-block; color: #9da8c5; font-size: 11px; margin-left: 6px; }
+    .request-row .actions { margin-top: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginOverlay">
+    <div class="login-box">
+        <div class="title">🔐 ورود ادمین</div>
+        <div class="desc">فقط ادمین‌ها دسترسی دارند</div>
+        <div id="loginEmailArea">
+            <input id="loginEmailInput" type="email" placeholder="ایمیل ادمین">
+            <button class="btn-login" id="loginSendOtp">📩 دریافت کد ورود</button>
+        </div>
+        <div class="otp-area" id="loginOtpArea">
+            <input id="loginOtpInput" type="text" maxlength="6" inputmode="numeric" placeholder="کد ۶ رقمی">
+            <button class="btn-verify" id="loginVerifyOtp">🔐 تأیید و ورود</button>
+            <button class="back-email" id="loginBackEmail">← تغییر ایمیل</button>
+        </div>
+        <div class="login-message" id="loginMessage"></div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-icon">✅</div>
+        <div class="modal-title">تأیید خرید</div>
+        <div class="modal-desc" id="modalDesc">
+            آیا از تأیید خرید <span class="highlight" id="modalFlames">۰</span> شعله 
+            برای <span class="highlight" id="modalEmail">---</span> 
+            به مبلغ <span class="highlight" id="modalAmount">۰</span> تومان مطمئن هستید؟
+        </div>
+        <div class="modal-actions">
+            <button class="btn-confirm-modal" id="modalConfirmBtn">✅ تأیید</button>
+            <button class="btn-cancel-modal" id="modalCancelBtn">❌ انصراف</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="container" id="adminPanel" style="display:none;">
+    <div class="header">
+        <div class="title">🔥 پنل مدیریت خرید شعله</div>
+        <div class="admin-info">
+            <span class="email" id="adminEmail">---</span>
+            <button class="logout-btn" id="logoutBtn">🚪 خروج</button>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card"><div class="stat-number" id="totalCount">۰</div><div class="stat-label">مجموع</div></div>
+        <div class="stat-card pending"><div class="stat-number" id="pendingCount">۰</div><div class="stat-label">⏳ در انتظار</div></div>
+        <div class="stat-card confirmed"><div class="stat-number" id="confirmedCount">۰</div><div class="stat-label">✅ تأیید شده</div></div>
+        <div class="stat-card"><div class="stat-number" id="totalFlamesCount">۰</div><div class="stat-label">🔥 کل شعله‌ها</div></div>
+    </div>
+
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">📋 همه</button>
+        <button class="filter-btn" data-filter="pending">⏳ در انتظار</button>
+        <button class="filter-btn" data-filter="confirmed">✅ تأیید شده</button>
+    </div>
+
+    <div class="table-container">
+        <div class="table-header">
+            <span>#</span><span>ایمیل</span><span>شعله</span>
+            <span>مبلغ</span><span>وضعیت</span><span>تاریخ</span><span>عملیات</span>
+        </div>
+        <div id="requestsList"></div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = "https://vkqmlfumodqmmylchgdx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let currentUser = null;
+let isAdmin = false;
+let currentFilter = 'all';
+let allRequests = [];
+let selectedRequestId = null;
+
+// DOM
+const adminPanel = document.getElementById('adminPanel');
+const adminEmail = document.getElementById('adminEmail');
+const logoutBtn = document.getElementById('logoutBtn');
+const requestsList = document.getElementById('requestsList');
+const totalCount = document.getElementById('totalCount');
+const pendingCount = document.getElementById('pendingCount');
+const confirmedCount = document.getElementById('confirmedCount');
+const totalFlamesCount = document.getElementById('totalFlamesCount');
+
+const loginOverlay = document.getElementById('loginOverlay');
+const loginEmailInput = document.getElementById('loginEmailInput');
+const loginSendOtp = document.getElementById('loginSendOtp');
+const loginOtpArea = document.getElementById('loginOtpArea');
+const loginOtpInput = document.getElementById('loginOtpInput');
+const loginVerifyOtp = document.getElementById('loginVerifyOtp');
+const loginBackEmail = document.getElementById('loginBackEmail');
+const loginMessage = document.getElementById('loginMessage');
+const loginEmailArea = document.getElementById('loginEmailArea');
+
+const confirmModal = document.getElementById('confirmModal');
+const modalFlames = document.getElementById('modalFlames');
+const modalEmail = document.getElementById('modalEmail');
+const modalAmount = document.getElementById('modalAmount');
+const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+const modalCancelBtn = document.getElementById('modalCancelBtn');
+
+const toast = document.getElementById('toast');
+let toastTimeout = null;
+let loginEmail = '';
+
+function showToast(text, type = 'info') {
+    toast.className = 'toast ' + type;
+    toast.textContent = text;
+    toast.style.display = 'block';
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 4000);
+}
+
+// =====================================================
+// CHECK ADMIN
+// =====================================================
+
+async function checkIsAdmin(email) {
+    try {
+        const { data, error } = await supabaseClient
+            .from('admins')
+            .select('email')
+            .eq('email', email)
+            .single();
+        return data !== null;
+    } catch { return false; }
+}
+
+// =====================================================
+// FETCH REQUESTS
+// =====================================================
+
+async function fetchRequests() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('purchase_requests')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        allRequests = data || [];
+        renderRequests();
+        updateStats();
+    } catch (error) {
+        showToast('❌ خطا در دریافت درخواست‌ها', 'error');
+    }
+}
+
+// =====================================================
+// RENDER
+// =====================================================
+
+function renderRequests() {
+    let filtered = allRequests;
+    if (currentFilter === 'pending') filtered = allRequests.filter(r => r.status === 'pending');
+    else if (currentFilter === 'confirmed') filtered = allRequests.filter(r => r.status === 'confirmed');
+    
+    if (filtered.length === 0) {
+        requestsList.innerHTML = `<div class="empty-state"><div class="icon">📭</div><div class="text">هیچ درخواستی یافت نشد</div></div>`;
+        return;
+    }
+    
+    requestsList.innerHTML = filtered.map((req, index) => {
+        const statusClass = req.status === 'pending' ? 'pending' : 'confirmed';
+        const statusText = req.status === 'pending' ? '⏳ در انتظار' : '✅ تأیید شده';
+        const date = new Date(req.created_at).toLocaleDateString('fa-IR');
+        
+        let actions = '';
+        if (req.status === 'pending') {
+            actions = `<button class="btn-confirm" onclick="openConfirmModal('${req.id}')">✅ تأیید</button>`;
+        } else {
+            actions = `<button class="btn-done">✔️ انجام شد</button>`;
+        }
+        
+        return `
+            <div class="request-row">
+                <span><span class="field-label">#</span>${index + 1}</span>
+                <span class="email-cell"><span class="field-label">ایمیل:</span>${req.email}</span>
+                <span><span class="field-label">شعله:</span>${req.flames.toLocaleString()}</span>
+                <span><span class="field-label">مبلغ:</span>${req.amount.toLocaleString()} تومان</span>
+                <span><span class="status-badge ${statusClass}">${statusText}</span></span>
+                <span><span class="field-label">تاریخ:</span>${date}</span>
+                <span class="actions">${actions}</span>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateStats() {
+    const total = allRequests.length;
+    const pending = allRequests.filter(r => r.status === 'pending').length;
+    const confirmed = allRequests.filter(r => r.status === 'confirmed').length;
+    const totalFlames = allRequests.filter(r => r.status === 'confirmed').reduce((sum, r) => sum + r.flames, 0);
+    totalCount.textContent = total.toLocaleString();
+    pendingCount.textContent = pending.toLocaleString();
+    confirmedCount.textContent = confirmed.toLocaleString();
+    totalFlamesCount.textContent = totalFlames.toLocaleString();
+}
+
+// =====================================================
+// CONFIRM
+// =====================================================
+
+function openConfirmModal(requestId) {
+    const req = allRequests.find(r => r.id === requestId);
+    if (!req) return;
+    selectedRequestId = requestId;
+    modalFlames.textContent = req.flames.toLocaleString();
+    modalEmail.textContent = req.email;
+    modalAmount.textContent = req.amount.toLocaleString();
+    confirmModal.classList.add('show');
+}
+
+modalCancelBtn.addEventListener('click', () => { confirmModal.classList.remove('show'); selectedRequestId = null; });
+
+modalConfirmBtn.addEventListener('click', async function() {
+    if (!selectedRequestId) return;
+    const result = await confirmPurchase(selectedRequestId);
+    confirmModal.classList.remove('show');
+    if (result.success) {
+        showToast('✅ خرید تأیید شد و شعله‌ها اضافه شدند.', 'success');
+        await fetchRequests();
+    } else {
+        showToast('❌ ' + result.error, 'error');
+    }
+    selectedRequestId = null;
+});
+
+async function confirmPurchase(requestId) {
+    try {
+        const { data: reqData, error: reqError } = await supabaseClient
+            .from('purchase_requests')
+            .select('*')
+            .eq('id', requestId)
+            .single();
+        if (reqError) throw reqError;
+        if (reqData.status !== 'pending') throw new Error('این درخواست قبلاً تأیید شده است.');
+        
+        // افزودن شعله
+        let { data: userData, error: userError } = await supabaseClient
+            .from('user_flames')
+            .select('flames')
+            .eq('email', reqData.email)
+            .single();
+        
+        if (userError && userError.code !== 'PGRST116') throw userError;
+        
+        const newFlames = (userData ? userData.flames : 0) + reqData.flames;
+        
+        if (userData) {
+            await supabaseClient.from('user_flames').update({ flames: newFlames }).eq('email', reqData.email);
+        } else {
+            await supabaseClient.from('user_flames').insert({ email: reqData.email, flames: reqData.flames });
+        }
+        
+        await supabaseClient.from('purchase_requests').update({ status: 'confirmed' }).eq('id', requestId);
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// =====================================================
+// FILTERS
+// =====================================================
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentFilter = this.dataset.filter;
+        renderRequests();
+    });
+});
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+logoutBtn.addEventListener('click', async function() {
+    await supabaseClient.auth.signOut();
+    showToast('🚪 خروج موفق', 'info');
+});
+
+// =====================================================
+// LOGIN
+// =====================================================
+
+async function sendLoginOTP() {
+    const email = loginEmailInput.value.trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+        loginMessage.textContent = 'لطفاً ایمیل معتبر وارد کنید.';
+        return;
+    }
+    loginEmail = email;
+    loginSendOtp.disabled = true;
+    loginSendOtp.textContent = 'در حال ارسال...';
+    try {
+        const { error } = await supabaseClient.auth.signInWithOtp({
+            email: email,
+            options: { shouldCreateUser: true }
+        });
+        if (error) throw error;
+        loginEmailArea.style.display = 'none';
+        loginOtpArea.style.display = 'block';
+        loginMessage.textContent = '✅ کد ورود ارسال شد.';
+        loginOtpInput.focus();
+    } catch (error) {
+        loginMessage.textContent = '❌ ' + error.message;
+    }
+    loginSendOtp.disabled = false;
+    loginSendOtp.textContent = '📩 دریافت کد ورود';
+}
+
+async function verifyLoginOTP() {
+    const token = loginOtpInput.value.replace(/[^0-9]/g, '');
+    if (token.length !== 6) {
+        loginMessage.textContent = '❌ کد باید ۶ رقمی باشد.';
+        return;
+    }
+    loginVerifyOtp.disabled = true;
+    loginVerifyOtp.textContent = 'در حال بررسی...';
+    try {
+        const { data, error } = await supabaseClient.auth.verifyOtp({
+            email: loginEmail,
+            token: token,
+            type: 'email'
+        });
+        if (error) throw error;
+        if (data.session) {
+            currentUser = data.session.user;
+            const isAdminUser = await checkIsAdmin(currentUser.email);
+            if (isAdminUser) {
+                isAdmin = true;
+                loginOverlay.classList.remove('show');
+                adminPanel.style.display = 'block';
+                adminEmail.textContent = currentUser.email;
+                loginOtpArea.style.display = 'none';
+                loginEmailArea.style.display = 'block';
+                loginOtpInput.value = '';
+                loginMessage.textContent = '';
+                await fetchRequests();
+                showToast('✅ ورود موفق به پنل ادمین', 'success');
+            } else {
+                await supabaseClient.auth.signOut();
+                loginMessage.textContent = '❌ شما دسترسی ادمین ندارید.';
+                loginVerifyOtp.disabled = false;
+                loginVerifyOtp.textContent = '🔐 تأیید و ورود';
+            }
+        }
+    } catch (error) {
+        loginMessage.textContent = '❌ ' + (error.message || 'خطا در تأیید کد');
+    }
+    loginVerifyOtp.disabled = false;
+    loginVerifyOtp.textContent = '🔐 تأیید و ورود';
+}
+
+function backToEmail() {
+    loginOtpArea.style.display = 'none';
+    loginEmailArea.style.display = 'block';
+    loginOtpInput.value = '';
+    loginMessage.textContent = '';
+}
+
+loginSendOtp.addEventListener('click', sendLoginOTP);
+loginVerifyOtp.addEventListener('click', verifyLoginOTP);
+loginBackEmail.addEventListener('click', backToEmail);
+
+loginOtpInput.addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+});
+loginOtpInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') verifyLoginOTP(); });
+loginEmailInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') sendLoginOTP(); });
+
+// =====================================================
+// SESSION
+// =====================================================
+
+async function checkSession() {
+    try {
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+        if (data.session) {
+            currentUser = data.session.user;
+            const isAdminUser = await checkIsAdmin(currentUser.email);
+            if (isAdminUser) {
+                isAdmin = true;
+                loginOverlay.classList.remove('show');
+                adminPanel.style.display = 'block';
+                adminEmail.textContent = currentUser.email;
+                await fetchRequests();
+            } else {
+                await supabaseClient.auth.signOut();
+                loginOverlay.classList.add('show');
+            }
+        } else {
+            loginOverlay.classList.add('show');
+        }
+    } catch { loginOverlay.classList.add('show'); }
+}
+
+supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    if (session) {
+        currentUser = session.user;
+        const isAdminUser = await checkIsAdmin(currentUser.email);
+        if (isAdminUser) {
+            isAdmin = true;
+            loginOverlay.classList.remove('show');
+            adminPanel.style.display = 'block';
+            adminEmail.textContent = currentUser.email;
+            await fetchRequests();
+        } else {
+            await supabaseClient.auth.signOut();
+            loginOverlay.classList.add('show');
+            loginMessage.textContent = '❌ شما دسترسی ادمین ندارید.';
+        }
+    } else {
+        isAdmin = false;
+        currentUser = null;
+        loginOverlay.classList.add('show');
+        adminPanel.style.display = 'none';
+    }
+});
+
+// Realtime
+supabaseClient.channel('purchase_requests_changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'purchase_requests' }, () => fetchRequests())
+    .subscribe();
+
+checkSession();
+</script>
+</body>
+</html>
