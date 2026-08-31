@@ -7,6 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+/* === تمام استایل‌های قبلی === */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
     font-family: Arial, Tahoma, sans-serif;
@@ -48,11 +49,7 @@ body {
     margin-bottom: 18px;
     text-align: center;
 }
-.card-info .card-label {
-    color: #9da8c5;
-    font-size: 12px;
-    margin-bottom: 6px;
-}
+.card-info .card-label { color: #9da8c5; font-size: 12px; margin-bottom: 6px; }
 .card-info .card-number {
     font-size: 22px;
     font-weight: bold;
@@ -65,11 +62,7 @@ body {
     display: inline-block;
     background: #00000033;
 }
-.card-info .card-name {
-    color: #66aaff;
-    font-size: 14px;
-    margin-top: 6px;
-}
+.card-info .card-name { color: #66aaff; font-size: 14px; margin-top: 6px; }
 .card-info .card-time {
     color: #888;
     font-size: 11px;
@@ -578,31 +571,35 @@ const loginEmailArea = document.getElementById('loginEmailArea');
 let loginEmail = '';
 
 // =====================================================
-// محاسبه زمان پیش‌بینی (بدون محدودیت ساعت)
+// محاسبه زمان پیش‌بینی - با فرمت استاندارد برای دیتابیس
 // =====================================================
 
 function calculateEstimatedTime() {
     const now = new Date();
-    // 45 دقیقه به زمان فعلی اضافه می‌شود
     const estDate = new Date(now.getTime() + 45 * 60000);
     
     const hours = String(estDate.getHours()).padStart(2, '0');
     const minutes = String(estDate.getMinutes()).padStart(2, '0');
-    const weekdays = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
-    const dayName = weekdays[estDate.getDay()];
+    
+    // فرمت استاندارد برای دیتابیس: YYYY-MM-DD
     const year = estDate.getFullYear();
     const month = String(estDate.getMonth() + 1).padStart(2, '0');
     const day = String(estDate.getDate()).padStart(2, '0');
+    const dbDate = `${year}-${month}-${day}`;
+    
+    // فرمت نمایشی برای کاربر
+    const weekdays = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+    const dayName = weekdays[estDate.getDay()];
+    const displayDate = `${dayName} ${year}/${month}/${day}`;
     
     return {
         time: `${hours}:${minutes}`,
-        date: `${dayName} ${year}/${month}/${day}`,
-        note: '⏱️ ۴۵ دقیقه پس از خرید',
-        fullDate: `${year}/${month}/${day}`
+        date: displayDate,
+        dbDate: dbDate,
+        note: '⏱️ ۴۵ دقیقه پس از خرید'
     };
 }
 
-// به‌روزرسانی نمایش زمان
 function updateEstimatedDisplay() {
     const est = calculateEstimatedTime();
     estTimeDisplay.textContent = est.time;
@@ -610,7 +607,6 @@ function updateEstimatedDisplay() {
     estNoteDisplay.textContent = est.note;
 }
 
-// هر ۳۰ ثانیه به‌روزرسانی
 updateEstimatedDisplay();
 setInterval(updateEstimatedDisplay, 30000);
 
@@ -649,7 +645,7 @@ async function fetchUserFlames(email) {
 }
 
 // =====================================================
-// SAVE PURCHASE REQUEST
+// SAVE PURCHASE REQUEST - با فرمت استاندارد تاریخ
 // =====================================================
 
 async function savePurchaseRequest(email, flames, amount, estTime, estDate) {
@@ -662,7 +658,7 @@ async function savePurchaseRequest(email, flames, amount, estTime, estDate) {
                 amount: amount,
                 status: 'pending',
                 estimated_time: estTime,
-                estimated_date: estDate
+                estimated_date: estDate  // فرمت YYYY-MM-DD
             })
             .select();
         
@@ -692,7 +688,7 @@ function openConfirmModal() {
         amount: totalPrice,
         email: currentUser.email,
         estTime: est.time,
-        estDate: est.date
+        estDate: est.dbDate  // استفاده از فرمت استاندارد
     };
     
     confirmModal.classList.add('show');
@@ -733,7 +729,7 @@ async function confirmPurchase() {
 }
 
 // =====================================================
-// BUY - بدون محدودیت ساعت
+// BUY
 // =====================================================
 
 function handleBuy() {
@@ -742,8 +738,6 @@ function handleBuy() {
         loginOverlay.classList.add('show');
         return;
     }
-    
-    // محدودیت ساعت حذف شده - خرید در تمام ساعات فعال است
     
     const count = parseInt(flameCountInput.value) || 0;
     if (count < 1) { 
@@ -775,7 +769,6 @@ closeStatusBtn.addEventListener('click', function() {
     statusOverlay.classList.remove('show');
 });
 
-// بستن مودال با کلیک خارج از آن
 confirmModal.addEventListener('click', function(e) {
     if (e.target === this) {
         this.classList.remove('show');
