@@ -766,6 +766,10 @@
         const SUPABASE_ANON_KEY =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
 
+        // آدرس جدید Edge Function برای چت
+        const OPENROUTER_CHAT_URL =
+            "https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
+
         const supabaseClient =
             window.supabase.createClient(
                 SUPABASE_URL,
@@ -1904,25 +1908,22 @@
 
 
         /* =====================================================
-           OPENROUTER CHAT (Free)
+           OPENROUTER CHAT (Free) - با آدرس جدید
         ===================================================== */
 
         async function openrouterChat(message) {
             try {
-                const response = await fetch(
-                    "https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/openrouter-free",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-                        },
-                        body: JSON.stringify({
-                            message: message,
-                            character: "Ahoora AI"
-                        })
-                    }
-                );
+                const response = await fetch(OPENROUTER_CHAT_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        character: "Ahoora AI"
+                    })
+                });
 
                 const data = await response.json();
 
@@ -1941,25 +1942,22 @@
 
 
         /* =====================================================
-           OPENROUTER TTS
+           OPENROUTER TTS - با آدرس جدید
         ===================================================== */
 
         async function openrouterTTS(text) {
             try {
-                const response = await fetch(
-                    "https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/openrouter-free",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-                        },
-                        body: JSON.stringify({
-                            action: "tts",
-                            text: text
-                        })
-                    }
-                );
+                const response = await fetch(OPENROUTER_CHAT_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+                    },
+                    body: JSON.stringify({
+                        action: "tts",
+                        text: text
+                    })
+                });
 
                 if (!response.ok) {
                     console.error("TTS Error:", response.status);
@@ -2447,6 +2445,7 @@
         console.log("🔥 Flame cost per successful command: " + FLAME_COST_AHOORA);
         console.log("🤖 When command not recognized, it will be sent to OpenRouter free model.");
         console.log("🔊 TTS will be played automatically for AI responses.");
+        console.log("📍 Edge Function URL: " + OPENROUTER_CHAT_URL);
     </script>
 
 </body>
