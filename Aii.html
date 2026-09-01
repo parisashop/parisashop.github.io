@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title>Ahoora AI</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -63,7 +63,6 @@
             color: #9da8c5;
         }
 
-        /* FLAME DISPLAY */
         .flameContainer {
             display: flex;
             align-items: center;
@@ -82,11 +81,13 @@
         .flameContainer .flame-icon {
             font-size: 15px;
         }
+
         .flameContainer .flame-count {
             font-weight: bold;
             min-width: 18px;
             text-align: center;
         }
+
         .flameContainer .flame-email {
             font-size: 9px;
             color: #666;
@@ -95,11 +96,13 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
         .flameContainer.low {
             border-color: #ff4444;
             color: #ff4444;
             animation: flamePulse 1s infinite;
         }
+
         .flameContainer .flame-tooltip {
             display: none;
             position: absolute;
@@ -115,6 +118,7 @@
             white-space: nowrap;
             z-index: 100;
         }
+
         .flameContainer:hover .flame-tooltip {
             display: block;
         }
@@ -129,7 +133,7 @@
             }
         }
 
-        /* AHOORA AI ONLY */
+        /* فقط Ahoora AI */
         .aiSwitcher {
             width: 100%;
             display: flex;
@@ -159,9 +163,11 @@
             background: linear-gradient(135deg, #0066ff22, #7200ff22, #ff6fd822);
             box-shadow: 0 0 25px #0066ff22;
         }
+
         .aiCard:active {
             transform: scale(.94);
         }
+
         .aiCard::before {
             content: "";
             position: absolute;
@@ -170,6 +176,7 @@
             transform: translateX(-100%);
             transition: transform .5s ease;
         }
+
         .aiCard:hover::before {
             transform: translateX(100%);
         }
@@ -179,6 +186,7 @@
             font-size: 22px;
             margin-bottom: 3px;
         }
+
         .aiName {
             display: block;
         }
@@ -239,6 +247,7 @@
                 transform: scale(1.05);
             }
         }
+
         @keyframes listen {
             0%,
             100% {
@@ -248,6 +257,7 @@
                 transform: scale(1.1);
             }
         }
+
         @keyframes process {
             0%,
             100% {
@@ -475,6 +485,7 @@
         .commandCard b {
             color: #00d4ff;
         }
+
         .commandIcon {
             font-size: 25px;
             margin-left: 8px;
@@ -569,116 +580,14 @@
             color: #ff6688;
         }
 
-        /* STORE TRANSITION - kept for compatibility but not used */
+        /* پنهان کردن Chaty و Store */
+        #chatyAiCard,
+        #chatyTransition,
+        .storeBtn,
         #storeTransition {
-            position: fixed;
-            inset: 0;
-            z-index: 20000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: radial-gradient(circle at center, #24105c, #080812 65%);
-            overflow: hidden;
-        }
-
-        .storeTransitionContent {
-            text-align: center;
-            animation: storeEnter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-        }
-
-        .storeLogo {
-            width: 125px;
-            height: 125px;
-            margin: auto;
-            border-radius: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 58px;
-            background: linear-gradient(135deg, #ff6fd8, #7b2ffc, #00d4ff);
-            box-shadow: 0 0 50px #ff6fd888, 0 0 110px #7b2ffc55;
-            animation: storeLogoPulse 0.8s ease-in-out infinite alternate;
-        }
-
-        .storeText {
-            margin-top: 22px;
-            font-size: 34px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00d4ff, #7b2ffc, #ff6fd8);
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        .storeLoading {
-            margin-top: 12px;
-            color: #9da8c5;
-            font-size: 14px;
-        }
-
-        .storeLoading::after {
-            content: "";
-            animation: storeDots 1.2s infinite;
-        }
-
-        @keyframes storeEnter {
-            0% {
-                opacity: 0;
-                transform: scale(0.35) translateY(40px);
-                filter: blur(15px);
-            }
-            60% {
-                opacity: 1;
-                transform: scale(1.08) translateY(0);
-                filter: blur(0);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes storeLogoPulse {
-            from {
-                transform: scale(1);
-                box-shadow: 0 0 50px #ff6fd888, 0 0 110px #7b2ffc55;
-            }
-            to {
-                transform: scale(1.08);
-                box-shadow: 0 0 80px #00d4ffbb, 0 0 150px #ff4fd866;
-            }
-        }
-
-        @keyframes storeDots {
-            0% {
-                content: "";
-            }
-            33% {
-                content: ".";
-            }
-            66% {
-                content: "..";
-            }
-            100% {
-                content: "...";
-            }
-        }
-
-        /* دکمه فروشگاه - حذف شده */
-        .storeBtn {
-            display: none;
-        }
-
-        /* no chaty transition */
-        #chatyTransition {
             display: none !important;
         }
 
-        /* chaty card hidden */
-        #chatyAiCard {
-            display: none !important;
-        }
-
-        /* Only Ahoora AI card visible */
         .aiSwitcher {
             justify-content: center;
         }
@@ -698,7 +607,6 @@
         .aiCard:active {
             transform: none;
         }
-
     </style>
 </head>
 
@@ -709,37 +617,29 @@
     ========================================= -->
 
     <div id="loginScreen">
-
         <div class="loginBox">
-
-            <div class="loginLogo">
-                ✦ Ahoora AI
-            </div>
-
+            <div class="loginLogo">✦ Ahoora AI</div>
             <div class="loginDescription">
                 برای استفاده از قابلیت‌های Ahoora AI
                 ابتدا وارد حساب خود شوید.
             </div>
 
-            <!-- EMAIL -->
             <div id="emailArea">
                 <input class="loginInput" id="emailInput" type="email" autocomplete="email" placeholder="ایمیل شما">
                 <button class="loginButton" id="sendOtpButton">📩 دریافت کد ورود</button>
             </div>
 
-            <!-- OTP -->
             <div id="otpArea">
                 <div>کد ارسال شده به:</div>
                 <div class="userEmail" id="loginEmail"></div>
-                <input class="loginInput" id="otpInput" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="کد ۶ رقمی">
+                <input class="loginInput" id="otpInput" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+                    placeholder="کد ۶ رقمی">
                 <button class="loginButton" id="verifyOtpButton">🔐 ورود به Ahoora AI</button>
                 <button class="close" id="backEmailButton">تغییر ایمیل</button>
             </div>
 
             <div class="loginMessage" id="loginMessage"></div>
-
         </div>
-
     </div>
 
 
@@ -748,9 +648,7 @@
     ========================================= -->
 
     <div class="app">
-
         <div class="mainPage">
-
             <div class="header">
                 <div class="title">✦ Ahoora AI</div>
                 <div style="display:flex;align-items:center;gap:8px;">
@@ -787,20 +685,15 @@
             <button class="mic" id="mic">🎙️</button>
 
             <div class="status" id="status">آماده</div>
-
             <div class="user" id="user">منتظر فرمان صوتی...</div>
-
             <div class="response" id="response">
                 سلام! من اهورا هستم.
                 <br>
                 برای استفاده از دستیار صوتی
                 می‌توانی فرمان بدهی.
             </div>
-
             <div class="small">Ahoora AI</div>
-
         </div>
-
     </div>
 
 
@@ -843,14 +736,17 @@
     <div class="commandsPanel" id="commandsPanel">
         <div class="commandsBox">
             <div class="commandsTitle">🎙️ دستورات Ahoora AI</div>
-            <div class="commandCard">📱 <b>برنامه‌ها</b><br>«واتساپ رو باز کن»<br>«تلگرام رو باز کن»<br>«کروم رو باز کن»</div>
+            <div class="commandCard">📱 <b>برنامه‌ها</b><br>«واتساپ رو باز کن»<br>«تلگرام رو باز کن»<br>«کروم رو باز کن»
+            </div>
             <div class="commandCard">📞 <b>تماس</b><br>«با پدرم تماس بگیر»<br>«به دایی زنگ بزن»</div>
             <div class="commandCard">✉️ <b>پیام</b><br>«به پدرم پیام بده سلام»</div>
             <div class="commandCard">🔦 <b>چراغ قوه</b><br>«چراغ قوه رو روشن کن»<br>«چراغ قوه رو خاموش کن»</div>
-            <div class="commandCard">📶 <b>اتصالات</b><br>«وای فای رو باز کن»<br>«بلوتوث رو باز کن»<br>«اینترنت همراه رو باز کن»<br>«هات اسپات رو باز کن»<br>«مکان رو باز کن»</div>
+            <div class="commandCard">📶 <b>اتصالات</b><br>«وای فای رو باز کن»<br>«بلوتوث رو باز کن»<br>«اینترنت همراه رو باز کن»<br>«هات اسپات رو باز کن»<br>«مکان رو باز کن»
+            </div>
             <div class="commandCard">🔊 <b>صدا</b><br>«صدا رو زیاد کن»<br>«صدا رو کم کن»</div>
             <div class="commandCard">☀️ <b>روشنایی صفحه</b><br>«نور رو زیاد کن»<br>«نور رو کم کن»</div>
-            <div class="commandCard">🎵 <b>موسیقی</b><br>«موزیک رو پخش کن»<br>«موزیک رو متوقف کن»<br>«آهنگ بعدی»<br>«آهنگ قبلی»</div>
+            <div class="commandCard">🎵 <b>موسیقی</b><br>«موزیک رو پخش کن»<br>«موزیک رو متوقف کن»<br>«آهنگ بعدی»<br>«آهنگ قبلی»
+            </div>
             <div class="commandCard">📷 <b>دوربین و گالری</b><br>«دوربین رو باز کن»<br>«گالری رو باز کن»</div>
             <div class="commandCard">🔎 <b>جستجو</b><br>«در گوگل آب و هوا رو جستجو کن»</div>
             <div class="commandCard">🕐 <b>ساعت</b><br>«ساعت چنده؟»</div>
@@ -1382,16 +1278,11 @@
 
 
         /* =====================================================
-           ANSWER - با مصرف شعله فقط در صورت پاسخ موفق
+           ANSWER - بدون مصرف شعله (فقط نمایش)
         ===================================================== */
 
         async function answer(text, voice) {
             responseBox.innerHTML = text;
-
-            if (isLoggedIn && text && text.trim() !== '') {
-                await useFlames(FLAME_COST_AHOORA);
-            }
-
             if (voice) {
                 voice();
             }
@@ -2552,52 +2443,10 @@
         renderContacts();
         checkSession();
 
-        // Override answer to not use flames for simple responses
-        // but keep the original behavior
-        const originalAnswer = answer;
-        answer = async function(text, voice) {
-            responseBox.innerHTML = text;
-
-            // فقط برای پاسخ‌هایی که خالی نباشند و درخواست کاربر نباشند
-            // برای جواب‌های ساده مثل "باشه" شعله مصرف نشود
-            // ولی برای پاسخ‌های اصلی که از فرمان‌ها میان، شعله مصرف شود
-            // از طریق processSpeech مدیریت می‌شود
-
-            if (voice) {
-                voice();
-            }
-        };
-
-        // Fix the answer function for commands
-        // We'll keep the flame consumption inside processSpeech only
-
-        // Patch the original answer to not consume flames
-        const originalAnswer2 = window.answer;
-        window.answer = async function(text, voice) {
-            responseBox.innerHTML = text;
-            if (voice) {
-                voice();
-            }
-        };
-
-        // Also patch the answer function used in the code
-        // Since we're using a local variable, we need to override it
-        // The answer function is used in many places, we'll keep the flame consumption only in processSpeech
-
-        // Override the global answer
-        window.answer = async function(text, voice) {
-            responseBox.innerHTML = text;
-            if (voice) {
-                voice();
-            }
-        };
-
-        // For the answer function used inside the code, we'll use a different approach
-        // We'll keep the original answer function but modify it to not consume flames
-        // The flame consumption will be handled in processSpeech only
-
         console.log("Ahoora AI with OpenRouter support loaded.");
         console.log("🔥 Flame cost per successful command: " + FLAME_COST_AHOORA);
+        console.log("🤖 When command not recognized, it will be sent to OpenRouter free model.");
+        console.log("🔊 TTS will be played automatically for AI responses.");
     </script>
 
 </body>
