@@ -81,13 +81,11 @@
         .flameContainer .flame-icon {
             font-size: 15px;
         }
-
         .flameContainer .flame-count {
             font-weight: bold;
             min-width: 18px;
             text-align: center;
         }
-
         .flameContainer .flame-email {
             font-size: 9px;
             color: #666;
@@ -96,13 +94,11 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-
         .flameContainer.low {
             border-color: #ff4444;
             color: #ff4444;
             animation: flamePulse 1s infinite;
         }
-
         .flameContainer .flame-tooltip {
             display: none;
             position: absolute;
@@ -118,7 +114,6 @@
             white-space: nowrap;
             z-index: 100;
         }
-
         .flameContainer:hover .flame-tooltip {
             display: block;
         }
@@ -186,7 +181,6 @@
             font-size: 22px;
             margin-bottom: 3px;
         }
-
         .aiName {
             display: block;
         }
@@ -247,7 +241,6 @@
                 transform: scale(1.05);
             }
         }
-
         @keyframes listen {
             0%,
             100% {
@@ -257,7 +250,6 @@
                 transform: scale(1.1);
             }
         }
-
         @keyframes process {
             0%,
             100% {
@@ -485,7 +477,6 @@
         .commandCard b {
             color: #00d4ff;
         }
-
         .commandIcon {
             font-size: 25px;
             margin-left: 8px;
@@ -612,10 +603,7 @@
 
 <body>
 
-    <!-- =========================================
-         LOGIN
-    ========================================= -->
-
+    <!-- LOGIN -->
     <div id="loginScreen">
         <div class="loginBox">
             <div class="loginLogo">✦ Ahoora AI</div>
@@ -623,30 +611,22 @@
                 برای استفاده از قابلیت‌های Ahoora AI
                 ابتدا وارد حساب خود شوید.
             </div>
-
             <div id="emailArea">
                 <input class="loginInput" id="emailInput" type="email" autocomplete="email" placeholder="ایمیل شما">
                 <button class="loginButton" id="sendOtpButton">📩 دریافت کد ورود</button>
             </div>
-
             <div id="otpArea">
                 <div>کد ارسال شده به:</div>
                 <div class="userEmail" id="loginEmail"></div>
-                <input class="loginInput" id="otpInput" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
-                    placeholder="کد ۶ رقمی">
+                <input class="loginInput" id="otpInput" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="کد ۶ رقمی">
                 <button class="loginButton" id="verifyOtpButton">🔐 ورود به Ahoora AI</button>
                 <button class="close" id="backEmailButton">تغییر ایمیل</button>
             </div>
-
             <div class="loginMessage" id="loginMessage"></div>
         </div>
     </div>
 
-
-    <!-- =========================================
-         APP
-    ========================================= -->
-
+    <!-- APP -->
     <div class="app">
         <div class="mainPage">
             <div class="header">
@@ -664,10 +644,6 @@
                     <div class="time" id="time">--:--</div>
                 </div>
             </div>
-
-            <!-- =========================================
-                 AHOORA AI ONLY
-            ========================================= -->
 
             <div class="aiSwitcher">
                 <div class="aiCard active" id="ahooraAiCard">
@@ -696,25 +672,13 @@
         </div>
     </div>
 
-
-    <!-- =========================================
-         SETTINGS
-    ========================================= -->
-
+    <!-- SETTINGS -->
     <button class="settingsBtn" id="settingsBtn">⚙</button>
 
-
-    <!-- =========================================
-         COMMANDS
-    ========================================= -->
-
+    <!-- COMMANDS -->
     <button class="commandsBtn" id="commandsBtn">❔</button>
 
-
-    <!-- =========================================
-         CONTACT PANEL
-    ========================================= -->
-
+    <!-- CONTACT PANEL -->
     <div class="panel" id="panel">
         <div class="panelBox">
             <div class="panelTitle">👤 مخاطبین Ahoora AI</div>
@@ -728,32 +692,24 @@
         </div>
     </div>
 
-
-    <!-- =========================================
-         COMMANDS PANEL
-    ========================================= -->
-
+    <!-- COMMANDS PANEL -->
     <div class="commandsPanel" id="commandsPanel">
         <div class="commandsBox">
             <div class="commandsTitle">🎙️ دستورات Ahoora AI</div>
-            <div class="commandCard">📱 <b>برنامه‌ها</b><br>«واتساپ رو باز کن»<br>«تلگرام رو باز کن»<br>«کروم رو باز کن»
-            </div>
+            <div class="commandCard">📱 <b>برنامه‌ها</b><br>«واتساپ رو باز کن»<br>«تلگرام رو باز کن»<br>«کروم رو باز کن»</div>
             <div class="commandCard">📞 <b>تماس</b><br>«با پدرم تماس بگیر»<br>«به دایی زنگ بزن»</div>
             <div class="commandCard">✉️ <b>پیام</b><br>«به پدرم پیام بده سلام»</div>
             <div class="commandCard">🔦 <b>چراغ قوه</b><br>«چراغ قوه رو روشن کن»<br>«چراغ قوه رو خاموش کن»</div>
-            <div class="commandCard">📶 <b>اتصالات</b><br>«وای فای رو باز کن»<br>«بلوتوث رو باز کن»<br>«اینترنت همراه رو باز کن»<br>«هات اسپات رو باز کن»<br>«مکان رو باز کن»
-            </div>
+            <div class="commandCard">📶 <b>اتصالات</b><br>«وای فای رو باز کن»<br>«بلوتوث رو باز کن»<br>«اینترنت همراه رو باز کن»<br>«هات اسپات رو باز کن»<br>«مکان رو باز کن»</div>
             <div class="commandCard">🔊 <b>صدا</b><br>«صدا رو زیاد کن»<br>«صدا رو کم کن»</div>
             <div class="commandCard">☀️ <b>روشنایی صفحه</b><br>«نور رو زیاد کن»<br>«نور رو کم کن»</div>
-            <div class="commandCard">🎵 <b>موسیقی</b><br>«موزیک رو پخش کن»<br>«موزیک رو متوقف کن»<br>«آهنگ بعدی»<br>«آهنگ قبلی»
-            </div>
+            <div class="commandCard">🎵 <b>موسیقی</b><br>«موزیک رو پخش کن»<br>«موزیک رو متوقف کن»<br>«آهنگ بعدی»<br>«آهنگ قبلی»</div>
             <div class="commandCard">📷 <b>دوربین و گالری</b><br>«دوربین رو باز کن»<br>«گالری رو باز کن»</div>
             <div class="commandCard">🔎 <b>جستجو</b><br>«در گوگل آب و هوا رو جستجو کن»</div>
             <div class="commandCard">🕐 <b>ساعت</b><br>«ساعت چنده؟»</div>
             <button class="close" id="closeCommands">بستن</button>
         </div>
     </div>
-
 
     <script>
         /* =====================================================
@@ -766,8 +722,8 @@
         const SUPABASE_ANON_KEY =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZrcW1sZnVtb2RxbW15bGNoZ2R4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4MzY1MTgsImV4cCI6MjEwMzQxMjUxOH0.nmpfSMDR44_1BB7EdRtgvsde-D2d-uh_QgaSk5fCJ48";
 
-        // آدرس جدید Edge Function برای چت
-        const OPENROUTER_CHAT_URL =
+        // آدرس Edge Function جدید برای چت و TTS
+        const EDGE_FUNCTION_URL =
             "https://vkqmlfumodqmmylchgdx.supabase.co/functions/v1/bright-endpoint";
 
         const supabaseClient =
@@ -847,7 +803,7 @@
                 return currentFlames;
 
             } catch (error) {
-                console.error('Error fetching flames (Ahoora):', error);
+                console.error('Error fetching flames:', error);
                 return null;
             }
         }
@@ -883,7 +839,7 @@
                 return true;
 
             } catch (error) {
-                console.error('Error using flames (Ahoora):', error);
+                console.error('Error using flames:', error);
                 return false;
             }
         }
@@ -1267,17 +1223,11 @@
         }
 
         function voiceA() { playVoice("a.mp3"); }
-
         function voiceB() { playVoice("b.mp3"); }
-
         function voiceC() { playVoice("c.mp3"); }
-
         function voiceD() { playVoice("d.mp3"); }
-
         function voiceE() { playVoice("e.mp3"); }
-
         function voiceF() { playVoice("f.mp3"); }
-
         function voiceG() { playVoice("g.mp3"); }
 
 
@@ -1913,7 +1863,7 @@
 
         async function openrouterChat(message) {
             try {
-                const response = await fetch(OPENROUTER_CHAT_URL, {
+                const response = await fetch(EDGE_FUNCTION_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -1921,7 +1871,8 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        character: "Ahoora AI"
+                        character: "Ahoora AI",
+                        action: "chat"
                     })
                 });
 
@@ -1947,7 +1898,7 @@
 
         async function openrouterTTS(text) {
             try {
-                const response = await fetch(OPENROUTER_CHAT_URL, {
+                const response = await fetch(EDGE_FUNCTION_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -2232,7 +2183,7 @@
                 // مصرف شعله
                 await useFlames(FLAME_COST_AHOORA);
 
-                // TTS
+                // TTS - پخش خودکار
                 const ttsUrl = await openrouterTTS(reply);
                 if (ttsUrl) {
                     playTTS(ttsUrl);
@@ -2445,7 +2396,7 @@
         console.log("🔥 Flame cost per successful command: " + FLAME_COST_AHOORA);
         console.log("🤖 When command not recognized, it will be sent to OpenRouter free model.");
         console.log("🔊 TTS will be played automatically for AI responses.");
-        console.log("📍 Edge Function URL: " + OPENROUTER_CHAT_URL);
+        console.log("📍 Edge Function URL: " + EDGE_FUNCTION_URL);
     </script>
 
 </body>
