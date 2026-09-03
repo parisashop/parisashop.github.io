@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>امداد خودرو تهران | خدمات فوری</title>
+    <meta name="description" content="امداد خودرو در تهران و غرب تهران با خدمات یدک‌کش، باتری به باتری، مکانیک سیار، سوخت‌رسانی و پنچرگیری سیار. شماره تماس: ۰۹۱۹۷۵۲۱۰۹۵">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root { --primary-red: #dc2626; --dark-red: #991b1b; --light-red: #fef2f2; }
+        body { font-family: 'Tahoma', 'Vazir', sans-serif; background: #f8f9fa; }
+        .btn-red { background: var(--primary-red); color: white; transition: all 0.3s; border: none; }
+        .btn-red:hover { background: var(--dark-red); color: white; transform: scale(1.02); }
+        .btn-outline-red { border: 2px solid var(--primary-red); color: var(--primary-red); background: transparent; }
+        .btn-outline-red:hover { background: var(--primary-red); color: white; }
+        .emergency-box { background: linear-gradient(135deg, #fee2e2, #fecaca); border-radius: 24px; padding: 30px; }
+        .service-card { background: white; border: 1px solid #fca5a5; border-radius: 16px; padding: 20px 10px; transition: all 0.3s; cursor: pointer; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2); border-color: var(--primary-red); }
+        .service-card.active { border-color: var(--primary-red); background: var(--light-red); }
+        .gps-badge { background: var(--light-red); border: 1px solid #fca5a5; border-radius: 12px; padding: 12px; }
+        .whatsapp-float { position: fixed; bottom: 20px; left: 20px; background: #25d366; color: white; padding: 14px 20px; border-radius: 50px; z-index: 999; text-decoration: none; font-weight: bold; box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+        .whatsapp-float:hover { background: #128c7e; color: white; }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+        .pulse-animation { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
+        .loading-spinner { display: none; }
+        .loading-spinner.show { display: inline-block; }
+    </style>
+</head>
+<body>
+
+<div class="toast-container">
+    <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage">✅ درخواست شما با موفقیت ثبت شد!</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4" style="max-width: 1200px;">
+
+    <div class="emergency-box text-center mb-4">
+        <span class="badge bg-danger fs-6 p-3 pulse-animation"><i class="fas fa-triangle-exclamation"></i> درخواست امداد فوری</span>
+        <h2 class="mt-3 text-danger"><i class="fas fa-phone-volume"></i> ۰۹۱۹۷۵۲۱۰۹۵</h2>
+        <p class="fw-bold">۲۴ ساعته، ۷ روز هفته</p>
+        <a href="tel:09197521095" class="btn btn-red btn-lg px-5 py-3 rounded-pill shadow"><i class="fas fa-phone"></i> تماس فوری</a>
+    </div>
+
+    <div class="gps-badge mb-4">
+        <h5 class="text-danger"><i class="fas fa-location-dot"></i> موقعیت GPS شما</h5>
+        <div id="gpsStatus" class="text-muted"><i class="fas fa-spinner fa-spin"></i> در حال دریافت موقعیت...</div>
+        <button id="getLocationBtn" class="btn btn-outline-red btn-sm mt-2"><i class="fas fa-satellite"></i> دریافت موقعیت</button>
+        <small class="d-block mt-1 text-muted">برای ثبت دقیق‌تر، روی دکمه کلیک کنید</small>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4 col-lg-2"><div class="service-card text-center" data-service="یدک‌کش"><i class="fas fa-truck fa-2x text-danger"></i><h6 class="mt-2">🚙 یدک‌کش</h6></div></div>
+        <div class="col-6 col-md-4 col-lg-2"><div class="service-card text-center" data-service="باتری به باتری"><i class="fas fa-car-battery fa-2x text-danger"></i><h6 class="mt-2">🔋 باتری به باتری</h6></div></div>
+        <div class="col-6 col-md-4 col-lg-2"><div class="service-card text-center" data-service="مکانیک سیار"><i class="fas fa-wrench fa-2x text-danger"></i><h6 class="mt-2">🔧 مکانیک سیار</h6></div></div>
+        <div class="col-6 col-md-4 col-lg-2"><div class="service-card text-center" data-service="سوخت‌رسانی"><i class="fas fa-gas-pump fa-2x text-danger"></i><h6 class="mt-2">⛽ سوخت‌رسانی</h6></div></div>
+        <div class="col-6 col-md-4 col-lg-2"><div class="service-card text-center" data-service="پنچرگیری"><i class="fas fa-circle-exclamation fa-2x text-danger"></i><h6 class="mt-2">🛞 پنچرگیری</h6></div></div>
+    </div>
+
+    <div class="bg-danger bg-opacity-10 p-4 rounded-4 mb-4" style="border-right: 5px solid var(--primary-red);">
+        <h5 class="text-danger"><i class="fas fa-map-pin"></i> مناطق تحت پوشش</h5>
+        <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-danger">تهران</span>
+            <span class="badge bg-danger">غرب تهران</span>
+            <span class="badge bg-danger bg-opacity-75">شهرک غرب</span>
+            <span class="badge bg-danger bg-opacity-75">صادقیه</span>
+            <span class="badge bg-danger bg-opacity-75">آریاشهر</span>
+            <span class="badge bg-danger bg-opacity-75">پونک</span>
+            <span class="badge bg-danger bg-opacity-75">سعادت‌آباد</span>
+        </div>
+        <p class="mt-2 text-muted small"><i class="fas fa-clock"></i> زمان رسیدن: ۲۰ تا ۴۵ دقیقه</p>
+    </div>
+
+    <div class="card border-danger shadow-sm mb-4">
+        <div class="card-header bg-danger text-white"><h5 class="mb-0"><i class="fas fa-pen-to-square"></i> ثبت درخواست امداد</h5></div>
+        <div class="card-body">
+            <form id="requestForm">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">نام و نام خانوادگی *</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="مثال: علی کریمی" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">شماره تماس *</label>
+                        <input type="tel" id="phone" class="form-control" value="09197521095" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold">نوع خدمات *</label>
+                        <select id="serviceType" class="form-select" required>
+                            <option value="">انتخاب کنید...</option>
+                            <option value="یدک‌کش">🚙 یدک‌کش</option>
+                            <option value="باتری به باتری">🔋 باتری به باتری</option>
+                            <option value="مکانیک سیار">🔧 مکانیک سیار</option>
+                            <option value="سوخت‌رسانی">⛽ سوخت‌رسانی</option>
+                            <option value="پنچرگیری">🛞 پنچرگیری</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold"><i class="fas fa-satellite-dish text-danger"></i> موقعیت GPS</label>
+                        <input type="text" id="gpsCoords" class="form-control bg-light" placeholder="در حال دریافت..." readonly>
+                        <small class="text-muted">موقعیت شما به‌طور خودکار ثبت می‌شود</small>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" id="submitBtn" class="btn btn-red w-100 py-3">
+                            <span class="spinner-border spinner-border-sm loading-spinner" id="submitSpinner"></span>
+                            <i class="fas fa-paper-plane"></i> ثبت درخواست و ارسال GPS
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <h5 class="text-danger border-end border-danger border-4 pe-3"><i class="fas fa-star"></i> نظرات مشتریان</h5>
+        <div class="row g-3 mt-2">
+            <div class="col-md-6"><div class="p-3 bg-light rounded-4" style="border-right: 4px solid var(--primary-red);"><div><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i></div><p class="mt-1">“امداد عالی، در کمتر از ۳۰ دقیقه رسیدند. ممنون از تیم حرفه‌ای.”</p><small class="text-muted">– رضا محمدی</small></div></div>
+            <div class="col-md-6"><div class="p-3 bg-light rounded-4" style="border-right: 4px solid var(--primary-red);"><div><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i></div><p class="mt-1">“پنچرگیری سیار عالی بود، سریع و قیمت منصفانه.”</p><small class="text-muted">– سارا احمدی</small></div></div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/989197521095" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i> پیام در واتساپ</a>
+</div>
+
+<script>
+    // ============================================
+    // 🔧 CONFIGURATION - Supabase (Your Credentials)
+    // ============================================
+    const SUPABASE_URL = 'https://xunkrqqfjaaopprgzwqf.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bmtycXFmamFhb3Bwcmd6d3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MjM0NTAsImV4cCI6MjEwMzk5OTQ1MH0.UmIJ3hg101fBbw0LD9Q1isTiTLIO_T93O97B41iByuI';
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ============================================
+    // 📍 GPS Location
+    // ============================================
+    let userLat = null, userLng = null;
+    function getLocation() {
+        const statusDiv = document.getElementById('gpsStatus');
+        const coordsInput = document.getElementById('gpsCoords');
+        if (!navigator.geolocation) {
+            statusDiv.innerHTML = '❌ مرورگر شما از GPS پشتیبانی نمی‌کند';
+            return;
+        }
+        statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال دریافت موقعیت...';
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                userLat = position.coords.latitude;
+                userLng = position.coords.longitude;
+                coordsInput.value = `${userLat}, ${userLng}`;
+                statusDiv.innerHTML = `✅ موقعیت دریافت شد (دقت: ${Math.round(position.coords.accuracy)} متر)`;
+                showToast('📍 موقعیت GPS با موفقیت دریافت شد', 'success');
+            },
+            (error) => {
+                console.error('GPS Error:', error);
+                statusDiv.innerHTML = '❌ خطا در دریافت موقعیت. لطفاً دستی وارد کنید.';
+                coordsInput.placeholder = 'مثلاً: 35.715, 51.404';
+                showToast('⚠️ لطفاً موقعیت خود را دستی وارد کنید', 'warning');
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    }
+    window.addEventListener('load', () => setTimeout(getLocation, 500));
+    document.getElementById('getLocationBtn').addEventListener('click', getLocation);
+
+    // ============================================
+    // 🎯 Select Service Card
+    // ============================================
+    document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById('serviceType').value = this.dataset.service;
+            showToast(`🔧 خدمات ${this.dataset.service} انتخاب شد`, 'info');
+        });
+    });
+
+    // ============================================
+    // 📝 Submit Form to Supabase
+    // ============================================
+    document.getElementById('requestForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const serviceType = document.getElementById('serviceType').value;
+        const gpsCoords = document.getElementById('gpsCoords').value;
+
+        if (!fullName || !phone || !serviceType) {
+            showToast('⚠️ لطفاً تمام فیلدهای ضروری را پر کنید', 'warning');
+            return;
+        }
+
+        let lat = null, lng = null;
+        if (gpsCoords && gpsCoords.includes(',')) {
+            const parts = gpsCoords.split(',').map(s => parseFloat(s.trim()));
+            if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                lat = parts[0];
+                lng = parts[1];
+            }
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('submitSpinner');
+        submitBtn.disabled = true;
+        spinner.classList.add('show');
+
+        try {
+            const { data, error } = await supabase
+                .from('requests')
+                .insert([{
+                    full_name: fullName,
+                    phone: phone,
+                    service_type: serviceType,
+                    latitude: lat,
+                    longitude: lng,
+                    address: gpsCoords || null,
+                    status: 'جدید'
+                }])
+                .select();
+
+            if (error) throw error;
+            showToast('✅ درخواست شما با موفقیت ثبت شد!', 'success');
+            document.getElementById('requestForm').reset();
+            document.getElementById('gpsCoords').value = gpsCoords;
+            document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
+            setTimeout(() => getLocation(), 2000);
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('❌ خطا در ثبت درخواست. لطفاً دوباره تلاش کنید.', 'danger');
+        } finally {
+            submitBtn.disabled = false;
+            spinner.classList.remove('show');
+        }
+    });
+
+    // ============================================
+    // 🍞 Toast
+    // ============================================
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('liveToast');
+        const toastBody = document.getElementById('toastMessage');
+        toastBody.textContent = message;
+        toast.className = 'toast align-items-center text-white border-0';
+        if (type === 'success') toast.classList.add('bg-success');
+        else if (type === 'warning') toast.classList.add('bg-warning', 'text-dark');
+        else if (type === 'danger') toast.classList.add('bg-danger');
+        else toast.classList.add('bg-info');
+        const bsToast = new bootstrap.Toast(toast, { delay: 4000 });
+        bsToast.show();
+    }
+
+    // Auto-refresh GPS
+    setInterval(() => { if (!document.getElementById('gpsCoords').value) getLocation(); }, 30000);
+    console.log('🚀 سیستم امداد خودرو با Supabase راه‌اندازی شد!');
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
