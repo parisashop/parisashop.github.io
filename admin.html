@@ -1,1325 +1,208 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>پنل مدیریت | الیگودرز کالا</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Tahoma,Arial,sans-serif;
-}
-
-body{
-    background:#f4f6f9;
-    color:#1e2a41;
-}
-
-header{
-    background:#fff;
-    padding:18px 20px;
-    box-shadow:0 3px 15px rgba(0,0,0,.07);
-    position:sticky;
-    top:0;
-    z-index:20;
-}
-
-.header-inner{
-    max-width:1400px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-}
-
-.logo{
-    font-size:22px;
-    font-weight:bold;
-}
-
-.logo span{
-    color:#e63946;
-}
-
-.refresh-btn{
-    border:0;
-    background:#1e2a41;
-    color:white;
-    padding:10px 18px;
-    border-radius:30px;
-    cursor:pointer;
-}
-
-.container{
-    max-width:1400px;
-    margin:auto;
-    padding:25px 15px;
-}
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-    gap:15px;
-    margin-bottom:25px;
-}
-
-.stat{
-    background:#fff;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0 3px 12px rgba(0,0,0,.04);
-}
-
-.stat-title{
-    color:#777;
-    font-size:14px;
-}
-
-.stat-number{
-    font-size:28px;
-    font-weight:bold;
-    margin-top:8px;
-}
-
-.orders{
-    display:grid;
-    gap:18px;
-}
-
-.order{
-    background:#fff;
-    border-radius:22px;
-    padding:20px;
-    box-shadow:0 4px 18px rgba(0,0,0,.05);
-    border:1px solid #edf0f4;
-}
-
-.order-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-    padding-bottom:15px;
-    border-bottom:1px solid #eee;
-}
-
-.tracking{
-    font-weight:bold;
-    font-size:18px;
-}
-
-.date{
-    color:#777;
-    font-size:13px;
-}
-
-.status{
-    padding:7px 13px;
-    border-radius:30px;
-    font-size:13px;
-    font-weight:bold;
-}
-
-.status.pending{
-    background:#fff3cd;
-    color:#856404;
-}
-
-.status.confirmed{
-    background:#dbeafe;
-    color:#1d4ed8;
-}
-
-.status.preparing{
-    background:#e0e7ff;
-    color:#4338ca;
-}
-
-.status.ready{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.status.delivered{
-    background:#d1fae5;
-    color:#065f46;
-}
-
-.status.rejected{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.info-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:15px;
-    margin:18px 0;
-}
-
-.info{
-    background:#f8fafc;
-    border-radius:14px;
-    padding:14px;
-}
-
-.info-title{
-    color:#777;
-    font-size:12px;
-    margin-bottom:6px;
-}
-
-.info-value{
-    font-weight:bold;
-    line-height:1.8;
-}
-
-.items{
-    background:#fafafa;
-    border-radius:15px;
-    padding:15px;
-    margin-top:10px;
-}
-
-.item{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    padding:9px 0;
-    border-bottom:1px solid #eee;
-}
-
-.item:last-child{
-    border-bottom:0;
-}
-
-.total{
-    display:flex;
-    justify-content:space-between;
-    margin-top:15px;
-    padding-top:15px;
-    border-top:2px solid #eee;
-    font-size:18px;
-    font-weight:bold;
-}
-
-.progress{
-    margin:20px 0;
-}
-
-.progress-line{
-    height:8px;
-    background:#e5e7eb;
-    border-radius:20px;
-    overflow:hidden;
-}
-
-.progress-fill{
-    height:100%;
-    border-radius:20px;
-    transition:.4s;
-}
-
-.progress-labels{
-    display:flex;
-    justify-content:space-between;
-    margin-top:8px;
-    font-size:11px;
-    color:#777;
-}
-
-.actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:9px;
-    margin-top:20px;
-}
-
-.btn{
-    border:0;
-    padding:11px 17px;
-    border-radius:30px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.btn-confirm{
-    background:#2563eb;
-    color:#fff;
-}
-
-.btn-preparing{
-    background:#6366f1;
-    color:#fff;
-}
-
-.btn-ready{
-    background:#16a34a;
-    color:#fff;
-}
-
-.btn-delivered{
-    background:#059669;
-    color:#fff;
-}
-
-.btn-reject{
-    background:#dc2626;
-    color:#fff;
-}
-
-.btn:hover{
-    opacity:.85;
-}
-
-.empty{
-    text-align:center;
-    background:#fff;
-    border-radius:20px;
-    padding:50px;
-    color:#777;
-}
-
-.loading{
-    text-align:center;
-    padding:40px;
-}
-
-.error{
-    background:#fee2e2;
-    color:#991b1b;
-    padding:18px;
-    border-radius:15px;
-    margin-bottom:20px;
-    display:none;
-    white-space:pre-wrap;
-}
-
-.search-box{
-    background:#fff;
-    border-radius:18px;
-    padding:15px;
-    margin-bottom:20px;
-    display:flex;
-    gap:10px;
-}
-
-.search-box input,
-.search-box select{
-    border:2px solid #eee;
-    border-radius:12px;
-    padding:12px;
-    outline:none;
-    flex:1;
-}
-
-.search-box input:focus,
-.search-box select:focus{
-    border-color:#e63946;
-}
-
-@media(max-width:600px){
-    .header-inner{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .order{
-        padding:15px;
-    }
-
-    .actions .btn{
-        flex:1;
-        min-width:130px;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین - درخواست‌های امداد</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .status-badge { padding: 5px 15px; border-radius: 20px; font-size: 12px; }
+        .status-new { background: #fef3c7; color: #92400e; }
+        .status-progress { background: #dbeafe; color: #1e40af; }
+        .status-done { background: #d1fae5; color: #065f46; }
+        .status-cancel { background: #fee2e2; color: #991b1b; }
+        .comment-box { border-right: 4px solid #dc2626; background: #f8f9fa; padding: 10px; border-radius: 8px; }
+        .admin-card { transition: all 0.3s; }
+        .admin-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    </style>
 </head>
-
 <body>
-
-<header>
-<div class="header-inner">
-
-<div class="logo">
-پنل مدیریت <span>الیگودرز کالا</span>
-</div>
-
-<button class="refresh-btn" onclick="loadOrders()">
-<i>↻</i> بروزرسانی
-</button>
-
-</div>
-</header>
-
-
-<main class="container">
-
-<div id="errorBox" class="error"></div>
-
-<div class="stats">
-
-<div class="stat">
-<div class="stat-title">کل سفارش‌ها</div>
-<div class="stat-number" id="totalOrders">۰</div>
-</div>
-
-<div class="stat">
-<div class="stat-title">در انتظار تأیید</div>
-<div class="stat-number" id="pendingOrders">۰</div>
-</div>
-
-<div class="stat">
-<div class="stat-title">در حال آماده‌سازی</div>
-<div class="stat-number" id="preparingOrders">۰</div>
-</div>
-
-<div class="stat">
-<div class="stat-title">تحویل داده شده</div>
-<div class="stat-number" id="deliveredOrders">۰</div>
-</div>
-
-</div>
-
-
-<div class="search-box">
-
-<input
-type="text"
-id="searchInput"
-placeholder="جستجوی کد پیگیری، شماره تلفن..."
-oninput="renderOrders()"
->
-
-<select id="statusFilter" onchange="renderOrders()">
-
-<option value="all">همه سفارش‌ها</option>
-<option value="pending">در انتظار تأیید</option>
-<option value="confirmed">تأیید شده</option>
-<option value="preparing">در حال آماده‌سازی</option>
-<option value="ready">آماده ارسال</option>
-<option value="delivered">تحویل داده شده</option>
-<option value="rejected">رد شده</option>
-
-</select>
-
-</div>
-
-
-<div id="ordersContainer">
-
-<div class="loading">
-در حال دریافت سفارش‌ها...
-</div>
-
-</div>
-
-</main>
-
-
-<script>
-
-/* =========================================================
-   SUPABASE
-========================================================= */
-
-const SUPABASE_URL =
-'https://mqohsmxpvqwqgmwubfyr.supabase.co';
-
-/*
-   ANON / PUBLISHABLE KEY
-*/
-
-const SUPABASE_ANON_KEY =
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1xb2hzbXhwdnF3cWdtd3ViZnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzE1OTMsImV4cCI6MjA5NzAwNzU5M30.6a_Bdvhb-ZbDDkxDNuIPxTHS4JvBjxkqOiHfNSgBUC4';
-
-
-/*
-   مهم:
-   از window.supabase استفاده شده تا با نام متغیر
-   تداخل ایجاد نشود.
-*/
-
-const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let orders = [];
-
-
-/* =========================================================
-   نمایش خطا
-========================================================= */
-
-function showError(message){
-
-    const box = document.getElementById('errorBox');
-
-    box.style.display = 'block';
-
-    box.textContent =
-        'خطا:\n' + message;
-
-}
-
-function hideError(){
-
-    document.getElementById('errorBox').style.display = 'none';
-
-}
-
-
-/* =========================================================
-   وضعیت فارسی
-========================================================= */
-
-function statusText(status){
-
-    const map = {
-
-        pending:
-        'در انتظار تأیید',
-
-        confirmed:
-        'تأیید شده',
-
-        preparing:
-        'در حال آماده‌سازی',
-
-        ready:
-        'آماده ارسال',
-
-        delivered:
-        'تحویل داده شده',
-
-        rejected:
-        'رد شده'
-
-    };
-
-    return map[status] || status;
-
-}
-
-
-/* =========================================================
-   درصد پیشرفت
-========================================================= */
-
-function getProgress(status){
-
-    switch(status){
-
-        case 'pending':
-            return 15;
-
-        case 'confirmed':
-            return 35;
-
-        case 'preparing':
-            return 60;
-
-        case 'ready':
-            return 80;
-
-        case 'delivered':
-            return 100;
-
-        case 'rejected':
-            return 0;
-
-        default:
-            return 10;
-    }
-
-}
-
-
-/* =========================================================
-   تاریخ
-========================================================= */
-
-function formatDate(date){
-
-    if(!date) return '-';
-
-    try{
-
-        return new Date(date).toLocaleString(
-            'fa-IR',
-            {
-                dateStyle:'short',
-                timeStyle:'short'
-            }
-        );
-
-    }catch(e){
-
-        return date;
-
-    }
-
-}
-
-
-/* =========================================================
-   دریافت سفارش‌ها
-========================================================= */
-
-async function loadOrders(){
-
-    hideError();
-
-    document.getElementById('ordersContainer').innerHTML =
-        '<div class="loading">در حال دریافت سفارش‌ها...</div>';
-
-    try{
-
-        /*
-           سفارش‌ها را می‌گیریم
-        */
-
-        const {
-            data,
-            error
-        } = await db
-            .from('orders')
-            .select('*')
-            .order('created_at',{
-                ascending:false
-            });
-
-
-        if(error){
-
-            console.error(error);
-
-            throw new Error(
-                error.message +
-                '\nکد خطا: ' +
-                error.code
-            );
-
-        }
-
-
-        orders = data || [];
-
-
-        /*
-           گرفتن کاربران
-        */
-
-        if(orders.length > 0){
-
-            const userIds = [
-                ...new Set(
-                    orders
-                    .map(o => o.user_id)
-                    .filter(Boolean)
-                )
-            ];
-
-
-            if(userIds.length > 0){
-
-                const {
-                    data: users,
-                    error: userError
-                } = await db
-                    .from('users')
-                    .select(
-                        'id,phone,street,alley,plaque'
-                    )
-                    .in('id',userIds);
-
-
-                if(!userError && users){
-
-                    orders = orders.map(order => {
-
-                        order.user =
-                            users.find(
-                                u => String(u.id) === String(order.user_id)
-                            ) || null;
-
-                        return order;
-
-                    });
-
-                }
-
-            }
-
-        }
-
-
-        updateStats();
-
-        renderOrders();
-
-    }catch(error){
-
-        console.error(error);
-
-        showError(error.message);
-
-        document.getElementById('ordersContainer').innerHTML =
-            '<div class="empty">دریافت سفارش‌ها ناموفق بود.</div>';
-
-    }
-
-}
-
-
-/* =========================================================
-   آمار
-========================================================= */
-
-function updateStats(){
-
-    document.getElementById('totalOrders').textContent =
-        orders.length.toLocaleString('fa-IR');
-
-
-    document.getElementById('pendingOrders').textContent =
-        orders.filter(
-            o => o.status === 'pending'
-        ).length.toLocaleString('fa-IR');
-
-
-    document.getElementById('preparingOrders').textContent =
-        orders.filter(
-            o =>
-                o.status === 'confirmed' ||
-                o.status === 'preparing'
-        ).length.toLocaleString('fa-IR');
-
-
-    document.getElementById('deliveredOrders').textContent =
-        orders.filter(
-            o => o.status === 'delivered'
-        ).length.toLocaleString('fa-IR');
-
-}
-
-
-/* =========================================================
-   نمایش سفارش‌ها
-========================================================= */
-
-function renderOrders(){
-
-    const container =
-        document.getElementById('ordersContainer');
-
-    const search =
-        document
-        .getElementById('searchInput')
-        .value
-        .trim()
-        .toLowerCase();
-
-
-    const status =
-        document
-        .getElementById('statusFilter')
-        .value;
-
-
-    let filtered = orders.filter(order => {
-
-        const user = order.user;
-
-        const tracking =
-            String(order.tracking_code || '')
-            .toLowerCase();
-
-        const phone =
-            String(user?.phone || '')
-            .toLowerCase();
-
-        const matchesSearch =
-            !search ||
-            tracking.includes(search) ||
-            phone.includes(search);
-
-
-        const matchesStatus =
-            status === 'all' ||
-            order.status === status;
-
-
-        return matchesSearch && matchesStatus;
-
-    });
-
-
-    if(filtered.length === 0){
-
-        container.innerHTML =
-            '<div class="empty">سفارشی پیدا نشد.</div>';
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        filtered.map(order => createOrderHTML(order)).join('');
-
-}
-
-
-/* =========================================================
-   ساخت HTML سفارش
-========================================================= */
-
-function createOrderHTML(order){
-
-    const user = order.user || {};
-
-    const progress =
-        getProgress(order.status);
-
-
-    let items = [];
-
-    try{
-
-        if(Array.isArray(order.items)){
-
-            items = order.items;
-
-        }else if(typeof order.items === 'string'){
-
-            items = JSON.parse(order.items);
-
-        }
-
-    }catch(e){
-
-        items = [];
-
-    }
-
-
-    const itemsHTML =
-        items.length
-        ?
-        items.map(item => `
-
-            <div class="item">
-
-                <span>
-                    ${escapeHTML(item.name || 'محصول')}
-                    × ${item.qty || 1}
-                </span>
-
-                <strong>
-                    ${Number(
-                        (item.price || 0) *
-                        (item.qty || 1)
-                    ).toLocaleString('fa-IR')}
-                    تومان
-                </strong>
-
-            </div>
-
-        `).join('')
-        :
-        '<div>اطلاعات محصولات موجود نیست</div>';
-
-
-    const address = [
-
-        user.street,
-        user.alley
-            ? 'کوچه ' + user.alley
-            : '',
-        user.plaque
-            ? 'پلاک ' + user.plaque
-            : ''
-
-    ]
-    .filter(Boolean)
-    .join('، ');
-
-
-    return `
-
-    <div class="order">
-
-        <div class="order-top">
-
-            <div>
-
-                <div class="tracking">
-
-                    کد پیگیری:
-                    ${escapeHTML(
-                        order.tracking_code || order.id || '-'
-                    )}
-
-                </div>
-
-                <div class="date">
-
-                    ثبت:
-                    ${formatDate(order.created_at)}
-
-                </div>
-
-            </div>
-
-
-            <span class="status ${escapeHTML(order.status)}">
-
-                ${statusText(order.status)}
-
-            </span>
-
-        </div>
-
-
-        <div class="info-grid">
-
-            <div class="info">
-
-                <div class="info-title">
-                    مشتری
-                </div>
-
-                <div class="info-value">
-                    ${escapeHTML(user.phone || 'نامشخص')}
-                </div>
-
-            </div>
-
-
-            <div class="info">
-
-                <div class="info-title">
-                    آدرس
-                </div>
-
-                <div class="info-value">
-                    ${escapeHTML(address || 'ثبت نشده')}
-                </div>
-
-            </div>
-
-
-            <div class="info">
-
-                <div class="info-title">
-                    وضعیت
-                </div>
-
-                <div class="info-value">
-
-                    ${statusText(order.status)}
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="items">
-
-            <strong>
-                محصولات سفارش
-            </strong>
-
-            <div style="margin-top:10px">
-
-                ${itemsHTML}
-
-            </div>
-
-        </div>
-
-
-        <div class="total">
-
-            <span>
-                مبلغ سفارش
-            </span>
-
-            <span>
-                ${Number(
-                    order.total || 0
-                ).toLocaleString('fa-IR')}
-                تومان
-            </span>
-
-        </div>
-
-
-        ${
-            order.status !== 'rejected'
-            ?
-            `
-
-            <div class="progress">
-
-                <div class="progress-line">
-
-                    <div
-                        class="progress-fill"
-                        style="
-                            width:${progress}%;
-                            background:#e63946;
-                        "
-                    ></div>
-
-                </div>
-
-
-                <div class="progress-labels">
-
-                    <span>ثبت</span>
-                    <span>تأیید</span>
-                    <span>آماده‌سازی</span>
-                    <span>ارسال</span>
-                    <span>تحویل</span>
-
-                </div>
-
-            </div>
-
-            `
-            :
-            ''
-        }
-
-
-        <div class="actions">
-
-            ${
-                order.status === 'pending'
-                ?
-                `
-                <button
-                    class="btn btn-confirm"
-                    onclick="changeStatus('${order.id}','confirmed')"
-                >
-                    ✓ تأیید سفارش
-                </button>
-
-                <button
-                    class="btn btn-reject"
-                    onclick="changeStatus('${order.id}','rejected')"
-                >
-                    ✕ رد سفارش
-                </button>
-                `
-                :
-                ''
-            }
-
-
-            ${
-                order.status === 'confirmed'
-                ?
-                `
-                <button
-                    class="btn btn-preparing"
-                    onclick="changeStatus('${order.id}','preparing')"
-                >
-                    🔧 شروع آماده‌سازی
-                </button>
-                `
-                :
-                ''
-            }
-
-
-            ${
-                order.status === 'preparing'
-                ?
-                `
-                <button
-                    class="btn btn-ready"
-                    onclick="changeStatus('${order.id}','ready')"
-                >
-                    ✓ آماده ارسال
-                </button>
-                `
-                :
-                ''
-            }
-
-
-            ${
-                order.status === 'ready'
-                ?
-                `
-                <button
-                    class="btn btn-delivered"
-                    onclick="changeStatus('${order.id}','delivered')"
-                >
-                    🚚 تحویل داده شد
-                </button>
-                `
-                :
-                ''
-            }
-
-
-            ${
-                order.status === 'rejected'
-                ?
-                `
-                <button
-                    class="btn btn-confirm"
-                    onclick="changeStatus('${order.id}','confirmed')"
-                >
-                    ↻ تأیید مجدد
-                </button>
-                `
-                :
-                ''
-            }
-
-        </div>
-
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-danger"><i class="fas fa-user-shield"></i> پنل مدیریت درخواست‌ها</h2>
+        <button class="btn btn-danger" onclick="refreshData()"><i class="fas fa-sync"></i> بروزرسانی</button>
     </div>
 
-    `;
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <select id="statusFilter" class="form-select" onchange="filterRequests()">
+                <option value="all">همه وضعیت‌ها</option>
+                <option value="جدید">جدید</option>
+                <option value="در حال انجام">در حال انجام</option>
+                <option value="انجام شده">انجام شده</option>
+                <option value="لغو شده">لغو شده</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="جستجو در نام یا شماره..." onkeyup="filterRequests()">
+        </div>
+        <div class="col-md-4">
+            <span class="badge bg-danger fs-6 p-2" id="totalCount">۰ درخواست</span>
+        </div>
+    </div>
 
-}
+    <div id="requestsList"></div>
+</div>
 
+<!-- Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fas fa-comment"></i> افزودن کامنت</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="commentRequestId">
+                <div class="mb-3">
+                    <label class="form-label">وضعیت درخواست</label>
+                    <select id="modalStatus" class="form-select">
+                        <option value="جدید">جدید</option>
+                        <option value="در حال انجام">در حال انجام</option>
+                        <option value="انجام شده">انجام شده</option>
+                        <option value="لغو شده">لغو شده</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">کامنت ادمین</label>
+                    <textarea id="modalComment" class="form-control" rows="3" placeholder="توضیحات تکمیلی..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
+                <button class="btn btn-danger" onclick="saveComment()"><i class="fas fa-save"></i> ذخیره</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-/* =========================================================
-   تغییر وضعیت سفارش
-========================================================= */
+<script>
+    // ============================================
+    // 🔧 CONFIGURATION - Supabase (Your Credentials)
+    // ============================================
+    const SUPABASE_URL = 'https://xunkrqqfjaaopprgzwqf.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bmtycXFmamFhb3Bwcmd6d3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MjM0NTAsImV4cCI6MjEwMzk5OTQ1MH0.UmIJ3hg101fBbw0LD9Q1isTiTLIO_T93O97B41iByuI';
 
-async function changeStatus(orderId,newStatus){
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let allRequests = [];
 
-    const order =
-        orders.find(
-            o => String(o.id) === String(orderId)
-        );
-
-
-    if(!order) return;
-
-
-    const names = {
-
-        confirmed:'تأیید سفارش',
-        preparing:'شروع آماده‌سازی',
-        ready:'آماده ارسال',
-        delivered:'تحویل داده شد',
-        rejected:'رد سفارش'
-
-    };
-
-
-    const confirmMessage =
-        'آیا مطمئن هستید که سفارش را «' +
-        (names[newStatus] || newStatus) +
-        '» می‌کنید؟';
-
-
-    if(!confirm(confirmMessage)){
-
-        return;
-
+    async function loadRequests() {
+        try {
+            const { data, error } = await supabase
+                .from('requests')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            allRequests = data;
+            document.getElementById('totalCount').textContent = `${data.length} درخواست`;
+            filterRequests();
+        } catch (error) {
+            console.error('Error loading requests:', error);
+            document.getElementById('requestsList').innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> خطا در دریافت درخواست‌ها</div>`;
+        }
     }
 
-
-    hideError();
-
-
-    try{
-
-        const updateData = {
-
-            status:newStatus
-
-        };
-
-
-        /*
-           اگر ستون‌های زمانی در جدول وجود داشته باشند
-           این زمان‌ها هم ثبت می‌شوند.
-        */
-
-        if(newStatus === 'confirmed'){
-
-            updateData.confirmed_at =
-                new Date().toISOString();
-
-        }
-
-
-        if(newStatus === 'delivered'){
-
-            updateData.delivered_at =
-                new Date().toISOString();
-
-        }
-
-
-        const {
-            data,
-            error
-        } = await db
-            .from('orders')
-            .update(updateData)
-            .eq('id',orderId)
-            .select()
-            .single();
-
-
-        if(error){
-
-            console.error(error);
-
-            throw new Error(
-                error.message +
-                '\nکد: ' +
-                error.code
-            );
-
-        }
-
-
-        /*
-           آپدیت محلی
-        */
-
-        order.status = newStatus;
-
-
-        if(newStatus === 'confirmed'){
-
-            order.confirmed_at =
-                updateData.confirmed_at;
-
-        }
-
-
-        if(newStatus === 'delivered'){
-
-            order.delivered_at =
-                updateData.delivered_at;
-
-        }
-
-
-        updateStats();
-
-        renderOrders();
-
-
-        alert(
-            '✅ وضعیت سفارش با موفقیت تغییر کرد.'
-        );
-
-
-    }catch(error){
-
-        console.error(error);
-
-        showError(
-            'تغییر وضعیت انجام نشد:\n' +
-            error.message
-        );
-
+    function filterRequests() {
+        const statusFilter = document.getElementById('statusFilter').value;
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = allRequests;
+        if (statusFilter !== 'all') filtered = filtered.filter(r => r.status === statusFilter);
+        if (searchTerm) filtered = filtered.filter(r => r.full_name.toLowerCase().includes(searchTerm) || r.phone.includes(searchTerm));
+        renderRequests(filtered);
     }
 
-}
-
-
-/* =========================================================
-   جلوگیری از HTML Injection
-========================================================= */
-
-function escapeHTML(value){
-
-    if(value === null || value === undefined){
-
-        return '';
-
-    }
-
-
-    return String(value)
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
-
-}
-
-
-/* =========================================================
-   REALTIME
-========================================================= */
-
-const channel =
-    db
-    .channel('admin-orders')
-    .on(
-        'postgres_changes',
-        {
-            event:'*',
-            schema:'public',
-            table:'orders'
-        },
-        function(){
-
-            loadOrders();
-
+    function renderRequests(requests) {
+        const container = document.getElementById('requestsList');
+        if (requests.length === 0) {
+            container.innerHTML = `<div class="text-center py-5"><i class="fas fa-inbox fa-3x text-muted"></i><p class="mt-3">هیچ درخواستی یافت نشد</p></div>`;
+            return;
         }
-    )
-    .subscribe();
-
-
-/* =========================================================
-   شروع
-========================================================= */
-
-document.addEventListener(
-    'DOMContentLoaded',
-    function(){
-
-        loadOrders();
-
+        let html = '';
+        requests.forEach(req => {
+            const statusClass = `status-${req.status === 'جدید' ? 'new' : req.status === 'در حال انجام' ? 'progress' : req.status === 'انجام شده' ? 'done' : 'cancel'}`;
+            const coords = req.latitude && req.longitude ? `${req.latitude.toFixed(6)}, ${req.longitude.toFixed(6)}` : 'موقعیت نامشخص';
+            const mapLink = req.latitude && req.longitude ? `https://www.google.com/maps?q=${req.latitude},${req.longitude}` : '#';
+            html += `
+                <div class="card admin-card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3"><h6 class="mb-1">${req.full_name}</h6><small class="text-muted"><i class="fas fa-phone"></i> ${req.phone}</small></div>
+                            <div class="col-md-2"><span class="badge ${statusClass}">${req.status || 'جدید'}</span></div>
+                            <div class="col-md-3"><small class="d-block"><i class="fas fa-service"></i> ${req.service_type}</small><small class="text-muted"><i class="fas fa-map-pin"></i> <a href="${mapLink}" target="_blank">${coords}</a></small></div>
+                            <div class="col-md-2"><small class="text-muted"><i class="fas fa-clock"></i> ${new Date(req.created_at).toLocaleString('fa-IR')}</small></div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-sm btn-outline-danger me-1" onclick="openCommentModal(${req.id})"><i class="fas fa-comment"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(${req.id})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        ${req.admin_comment ? `<div class="comment-box mt-2"><small><i class="fas fa-comment-dots text-danger"></i> ${req.admin_comment}</small></div>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
     }
-);
 
+    function openCommentModal(id) {
+        const request = allRequests.find(r => r.id === id);
+        if (!request) return;
+        document.getElementById('commentRequestId').value = id;
+        document.getElementById('modalStatus').value = request.status || 'جدید';
+        document.getElementById('modalComment').value = request.admin_comment || '';
+        new bootstrap.Modal(document.getElementById('commentModal')).show();
+    }
 
-/*
-   هر 30 ثانیه هم سفارش‌ها دوباره بررسی می‌شوند.
-*/
+    async function saveComment() {
+        const id = parseInt(document.getElementById('commentRequestId').value);
+        const status = document.getElementById('modalStatus').value;
+        const comment = document.getElementById('modalComment').value.trim();
+        try {
+            const { error } = await supabase.from('requests').update({ status, admin_comment: comment || null }).eq('id', id);
+            if (error) throw error;
+            const request = allRequests.find(r => r.id === id);
+            if (request) { request.status = status; request.admin_comment = comment || null; }
+            bootstrap.Modal.getInstance(document.getElementById('commentModal')).hide();
+            filterRequests();
+            showAlert('✅ کامنت و وضعیت با موفقیت ذخیره شد', 'success');
+        } catch (error) {
+            console.error('Error saving comment:', error);
+            showAlert('❌ خطا در ذخیره کامنت', 'danger');
+        }
+    }
 
-setInterval(
-    loadOrders,
-    30000
-);
+    async function deleteRequest(id) {
+        if (!confirm('آیا از حذف این درخواست مطمئن هستید؟')) return;
+        try {
+            const { error } = await supabase.from('requests').delete().eq('id', id);
+            if (error) throw error;
+            allRequests = allRequests.filter(r => r.id !== id);
+            filterRequests();
+            showAlert('✅ درخواست با موفقیت حذف شد', 'success');
+        } catch (error) {
+            console.error('Error deleting request:', error);
+            showAlert('❌ خطا در حذف درخواست', 'danger');
+        }
+    }
 
+    function refreshData() {
+        document.getElementById('requestsList').innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+        loadRequests();
+    }
+
+    function showAlert(message, type = 'success') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+        alertDiv.style.zIndex = '9999';
+        alertDiv.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+        document.body.prepend(alertDiv);
+        setTimeout(() => alertDiv.remove(), 4000);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadRequests);
+    setInterval(loadRequests, 30000);
+    console.log('🛠️ پنل ادمین آماده است!');
 </script>
-
 </body>
 </html>
