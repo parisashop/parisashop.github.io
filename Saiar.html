@@ -38,6 +38,24 @@
         .required-star { color: red; font-weight: bold; }
         .btn-submit-wrapper { margin-top: 20px; }
         .btn-submit-wrapper .btn { font-size: 1.2rem; padding: 14px; }
+        /* استایل خطا برای فیلدها */
+        .is-invalid-custom {
+            border: 2px solid #dc3545 !important;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .error-message.show {
+            display: block;
+        }
+        .field-error {
+            border: 2px solid #dc3545 !important;
+            background-color: #fff5f5;
+        }
     </style>
 </head>
 <body>
@@ -108,19 +126,21 @@
     <div class="card border-danger shadow-sm mb-4">
         <div class="card-header bg-danger text-white"><h5 class="mb-0"><i class="fas fa-pen-to-square"></i> فرم درخواست امداد</h5></div>
         <div class="card-body">
-            <form id="requestForm">
+            <form id="requestForm" novalidate>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label fw-bold">نام و نام خانوادگی <span class="required-star">*</span></label>
-                        <input type="text" id="fullName" class="form-control" placeholder="مثال: علی کریمی" required>
+                        <input type="text" id="fullName" class="form-control" placeholder="مثال: علی کریمی">
+                        <div class="error-message" id="fullNameError">لطفاً نام و نام خانوادگی را وارد کنید.</div>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold">شماره تماس <span class="required-star">*</span></label>
-                        <input type="tel" id="phone" class="form-control" value="09197521095" required>
+                        <input type="tel" id="phone" class="form-control" value="09197521095">
+                        <div class="error-message" id="phoneError">لطفاً شماره تماس را وارد کنید.</div>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label fw-bold">نوع خدمات <span class="required-star">*</span></label>
-                        <select id="serviceType" class="form-select" required>
+                        <select id="serviceType" class="form-select">
                             <option value="">انتخاب کنید...</option>
                             <option value="یدک‌کش">🚙 یدک‌کش</option>
                             <option value="باتری به باتری">🔋 باتری به باتری</option>
@@ -128,10 +148,12 @@
                             <option value="سوخت‌رسانی">⛽ سوخت‌رسانی</option>
                             <option value="پنچرگیری">🛞 پنچرگیری</option>
                         </select>
+                        <div class="error-message" id="serviceTypeError">لطفاً نوع خدمات را انتخاب کنید.</div>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label fw-bold"><i class="fas fa-map-pin text-danger"></i> آدرس دقیق <span class="required-star">*</span></label>
-                        <input type="text" id="address" class="form-control" placeholder="مثال: تهران، خیابان ولیعصر، نبش فلکه دوم" required>
+                        <input type="text" id="address" class="form-control" placeholder="مثال: تهران، خیابان ولیعصر، نبش فلکه دوم">
+                        <div class="error-message" id="addressError">لطفاً آدرس دقیق را وارد کنید.</div>
                         <small class="text-muted">آدرس را به صورت کامل و دقیق وارد کنید</small>
                     </div>
                     <div class="col-md-12">
@@ -144,14 +166,14 @@
         </div>
     </div>
 
-    <!-- ✅ دکمه ثبت (همیشه پایین، ابتدا غیرفعال) -->
+    <!-- ✅ دکمه ثبت (همیشه فعال) -->
     <div class="btn-submit-wrapper">
-        <button type="button" id="submitBtn" class="btn btn-red w-100" disabled>
+        <button type="button" id="submitBtn" class="btn btn-red w-100">
             <span class="spinner-border spinner-border-sm loading-spinner" id="submitSpinner"></span>
             <i class="fas fa-paper-plane"></i> ثبت درخواست
         </button>
         <p id="formHelpText" class="text-muted text-center mt-2" style="font-size: 0.9rem;">
-            <i class="fas fa-info-circle"></i> لطفاً تمام فیلدهای الزامی (نام، شماره، خدمات، آدرس) را پر کنید.
+            <i class="fas fa-info-circle"></i> پس از کلیک روی دکمه، فیلدهای خالی مشخص می‌شوند.
         </p>
     </div>
 
@@ -235,7 +257,6 @@
         );
     }
 
-    // دریافت خودکار موقعیت هنگام لود
     window.addEventListener('load', () => {
         setTimeout(getLocation, 500);
     });
@@ -275,68 +296,107 @@
             document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
             this.classList.add('active');
             document.getElementById('serviceType').value = this.dataset.service;
-            checkFormCompletion();
+            // پاک کردن خطا از سرویس
+            clearFieldError('serviceType');
             showToast(`🔧 خدمات ${this.dataset.service} انتخاب شد`, 'info');
         });
     });
 
     // ============================================
-    // ✅ بررسی کامل بودن فرم و فعال/غیرفعال کردن دکمه
+    // 🧹 پاک کردن خطای فیلدها موقع تایپ
     // ============================================
-    function checkFormCompletion() {
+    function clearFieldError(fieldId) {
+        const field = document.getElementById(fieldId);
+        const errorEl = document.getElementById(fieldId + 'Error');
+        if (field) field.classList.remove('field-error');
+        if (errorEl) errorEl.classList.remove('show');
+    }
+
+    document.getElementById('fullName').addEventListener('input', function() {
+        clearFieldError('fullName');
+    });
+    document.getElementById('phone').addEventListener('input', function() {
+        clearFieldError('phone');
+    });
+    document.getElementById('serviceType').addEventListener('change', function() {
+        clearFieldError('serviceType');
+    });
+    document.getElementById('address').addEventListener('input', function() {
+        clearFieldError('address');
+    });
+
+    // ============================================
+    // ✅ اعتبارسنجی فرم هنگام کلیک دکمه
+    // ============================================
+    function validateForm() {
+        let isValid = true;
+        let errorMessages = [];
+
         const fullName = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const serviceType = document.getElementById('serviceType').value;
         const address = document.getElementById('address').value.trim();
-        const submitBtn = document.getElementById('submitBtn');
-        const helpText = document.getElementById('formHelpText');
 
-        // برای دیباگ - می‌توانید در کنسول ببینید
-        console.log('📝 وضعیت فیلدها:', {
-            fullName: fullName || '(خالی)',
-            phone: phone || '(خالی)',
-            serviceType: serviceType || '(خالی)',
-            address: address || '(خالی)'
-        });
-
-        const isComplete = fullName && phone && serviceType && address;
-
-        if (isComplete) {
-            submitBtn.disabled = false;
-            helpText.innerHTML = '<i class="fas fa-check-circle text-success"></i> همه فیلدهای الزامی پر شده‌اند. می‌توانید درخواست را ثبت کنید.';
-            helpText.className = 'text-success text-center mt-2';
-        } else {
-            submitBtn.disabled = true;
-            helpText.innerHTML = '<i class="fas fa-info-circle"></i> لطفاً تمام فیلدهای الزامی (نام، شماره، خدمات، آدرس) را پر کنید.';
-            helpText.className = 'text-muted text-center mt-2';
+        // بررسی نام
+        if (!fullName) {
+            document.getElementById('fullName').classList.add('field-error');
+            document.getElementById('fullNameError').classList.add('show');
+            isValid = false;
+            errorMessages.push('نام و نام خانوادگی');
         }
+
+        // بررسی شماره
+        if (!phone) {
+            document.getElementById('phone').classList.add('field-error');
+            document.getElementById('phoneError').classList.add('show');
+            isValid = false;
+            errorMessages.push('شماره تماس');
+        }
+
+        // بررسی نوع خدمات
+        if (!serviceType) {
+            document.getElementById('serviceType').classList.add('field-error');
+            document.getElementById('serviceTypeError').classList.add('show');
+            isValid = false;
+            errorMessages.push('نوع خدمات');
+        }
+
+        // بررسی آدرس
+        if (!address) {
+            document.getElementById('address').classList.add('field-error');
+            document.getElementById('addressError').classList.add('show');
+            isValid = false;
+            errorMessages.push('آدرس دقیق');
+        }
+
+        if (!isValid) {
+            const message = '⚠️ لطفاً فیلدهای زیر را پر کنید: ' + errorMessages.join('، ');
+            showToast(message, 'warning');
+            // اسکرول به اولین فیلد خطا
+            const firstError = document.querySelector('.field-error');
+            if (firstError) {
+                firstError.focus();
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        return isValid;
     }
-
-    // اتصال رویدادها به فیلدها
-    document.getElementById('fullName').addEventListener('input', checkFormCompletion);
-    document.getElementById('phone').addEventListener('input', checkFormCompletion);
-    document.getElementById('serviceType').addEventListener('change', checkFormCompletion);
-    document.getElementById('address').addEventListener('input', checkFormCompletion);
-
-    // هر ۲ ثانیه یکبار چک کن (برای اطمینان بیشتر)
-    setInterval(checkFormCompletion, 2000);
 
     // ============================================
     // 📝 ثبت درخواست با کلیک روی دکمه
     // ============================================
     document.getElementById('submitBtn').addEventListener('click', async function() {
+        // ۱. اعتبارسنجی
+        if (!validateForm()) {
+            return; // اگر خطا داشت، متوقف کن
+        }
+
         const fullName = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const serviceType = document.getElementById('serviceType').value;
         const address = document.getElementById('address').value.trim();
         const gpsCoords = document.getElementById('gpsCoords').value;
-
-        // اگر به هر دلیلی دکمه فعال شده ولی فیلدها خالی هستند، جلوگیری کن
-        if (!fullName || !phone || !serviceType || !address) {
-            showToast('⚠️ لطفاً تمام فیلدهای الزامی را پر کنید.', 'warning');
-            checkFormCompletion(); // دوباره غیرفعالش کن
-            return;
-        }
 
         const submitBtn = document.getElementById('submitBtn');
         const spinner = document.getElementById('submitSpinner');
@@ -381,8 +441,9 @@
             document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
             gpsReceived = false;
 
-            // دکمه را دوباره غیرفعال کن
-            checkFormCompletion();
+            // پاک کردن کلاس‌های خطا
+            document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
 
             // دوباره GPS دریافت کن
             setTimeout(() => getLocation(), 2000);
@@ -390,9 +451,8 @@
         } catch (error) {
             console.error('Error:', error);
             showToast('❌ خطا در ثبت درخواست. لطفاً دوباره تلاش کنید.', 'danger');
-            // دکمه را دوباره فعال کن (اگر خطا بود)
-            submitBtn.disabled = false;
         } finally {
+            submitBtn.disabled = false;
             spinner.classList.remove('show');
         }
     });
@@ -409,12 +469,9 @@
         else if (type === 'warning') toast.classList.add('bg-warning', 'text-dark');
         else if (type === 'danger') toast.classList.add('bg-danger');
         else toast.classList.add('bg-info');
-        const bsToast = new bootstrap.Toast(toast, { delay: 4000 });
+        const bsToast = new bootstrap.Toast(toast, { delay: 5000 });
         bsToast.show();
     }
-
-    // اجرای اولیه برای غیرفعال بودن دکمه
-    checkFormCompletion();
 
     console.log('🚀 سیستم امداد خودرو با Supabase راه‌اندازی شد!');
 </script>
