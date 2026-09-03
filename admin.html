@@ -3,62 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پنل ادمین - درخواست‌های امداد</title>
+    <title>پنل مدیریت | درخواست‌های امداد خودرو</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
-        .status-badge { padding: 5px 15px; border-radius: 20px; font-size: 12px; }
+        :root { --primary-red: #dc2626; --dark-red: #991b1b; }
+        body { background: #f8f9fa; font-family: 'Tahoma', sans-serif; }
+        .admin-header { background: var(--dark-red); color: white; padding: 20px 0; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .status-badge { padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
         .status-new { background: #fef3c7; color: #92400e; }
         .status-progress { background: #dbeafe; color: #1e40af; }
         .status-done { background: #d1fae5; color: #065f46; }
         .status-cancel { background: #fee2e2; color: #991b1b; }
-        .comment-box { border-right: 4px solid #dc2626; background: #f8f9fa; padding: 10px; border-radius: 8px; }
-        .admin-card { transition: all 0.3s; }
-        .admin-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .request-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.2s; border-right: 4px solid var(--primary-red); }
+        .request-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .comment-box { background: #f8f9fa; border-radius: 8px; padding: 10px; margin-top: 8px; border-right: 3px solid var(--primary-red); }
+        .filter-section { background: white; border-radius: 12px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .btn-sm-custom { padding: 4px 12px; font-size: 13px; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #6c757d; }
+        .empty-state i { font-size: 4rem; color: #dee2e6; margin-bottom: 15px; }
+        .loading-spinner { display: inline-block; }
+        .toast-container { position: fixed; top: 20px; left: 20px; z-index: 9999; }
+        .coords-link { color: #0d6efd; text-decoration: none; font-size: 13px; }
+        .coords-link:hover { text-decoration: underline; }
+        .admin-stats { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .stat-box { background: white; border-radius: 10px; padding: 12px 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); flex: 1; min-width: 120px; text-align: center; }
+        .stat-box .number { font-size: 1.8rem; font-weight: bold; color: var(--primary-red); }
+        .stat-box .label { font-size: 0.8rem; color: #6c757d; }
+        .modal-comment-textarea { resize: vertical; min-height: 80px; }
+        .debug-box { background: #1e1e1e; color: #00ff00; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 11px; max-height: 150px; overflow-y: auto; margin-top: 15px; display: none; }
+        .debug-box.show { display: block; }
     </style>
 </head>
 <body>
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-danger"><i class="fas fa-user-shield"></i> پنل مدیریت درخواست‌ها</h2>
-        <button class="btn btn-danger" onclick="refreshData()"><i class="fas fa-sync"></i> بروزرسانی</button>
-    </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <select id="statusFilter" class="form-select" onchange="filterRequests()">
-                <option value="all">همه وضعیت‌ها</option>
-                <option value="جدید">جدید</option>
-                <option value="در حال انجام">در حال انجام</option>
-                <option value="انجام شده">انجام شده</option>
-                <option value="لغو شده">لغو شده</option>
-            </select>
-        </div>
-        <div class="col-md-4">
-            <input type="text" id="searchInput" class="form-control" placeholder="جستجو در نام یا شماره..." onkeyup="filterRequests()">
-        </div>
-        <div class="col-md-4">
-            <span class="badge bg-danger fs-6 p-2" id="totalCount">۰ درخواست</span>
+<!-- Toast -->
+<div class="toast-container">
+    <div id="liveToast" class="toast align-items-center text-white border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
     </div>
-
-    <div id="requestsList"></div>
 </div>
 
-<!-- Modal -->
+<!-- Header -->
+<div class="admin-header">
+    <div class="container d-flex justify-content-between align-items-center">
+        <h3 class="mb-0"><i class="fas fa-user-shield"></i> پنل مدیریت درخواست‌ها</h3>
+        <div>
+            <button class="btn btn-light btn-sm" onclick="refreshData()"><i class="fas fa-sync"></i> بروزرسانی</button>
+            <button class="btn btn-outline-light btn-sm ms-2" id="toggleDebugBtn"><i class="fas fa-bug"></i> دیباگ</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- آمار -->
+    <div class="admin-stats" id="statsContainer">
+        <div class="stat-box"><div class="number" id="totalCount">۰</div><div class="label">کل درخواست‌ها</div></div>
+        <div class="stat-box"><div class="number" id="newCount">۰</div><div class="label">جدید</div></div>
+        <div class="stat-box"><div class="number" id="progressCount">۰</div><div class="label">در حال انجام</div></div>
+        <div class="stat-box"><div class="number" id="doneCount">۰</div><div class="label">انجام شده</div></div>
+        <div class="stat-box"><div class="number" id="cancelCount">۰</div><div class="label">لغو شده</div></div>
+    </div>
+
+    <!-- فیلتر و جستجو -->
+    <div class="filter-section">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-bold">وضعیت</label>
+                <select id="statusFilter" class="form-select" onchange="applyFilters()">
+                    <option value="all">همه</option>
+                    <option value="جدید">جدید</option>
+                    <option value="در حال انجام">در حال انجام</option>
+                    <option value="انجام شده">انجام شده</option>
+                    <option value="لغو شده">لغو شده</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">جستجو</label>
+                <input type="text" id="searchInput" class="form-control" placeholder="نام، شماره یا آدرس..." oninput="applyFilters()">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">مرتب‌سازی</label>
+                <select id="sortOrder" class="form-select" onchange="applyFilters()">
+                    <option value="newest">جدیدترین</option>
+                    <option value="oldest">قدیمی‌ترین</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-danger w-100" onclick="refreshData()"><i class="fas fa-sync"></i> بروزرسانی</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- لیست درخواست‌ها -->
+    <div id="requestsList">
+        <div class="text-center py-5">
+            <div class="spinner-border text-danger" role="status"></div>
+            <p class="mt-2">در حال بارگذاری...</p>
+        </div>
+    </div>
+
+    <!-- دکمه پایین صفحه -->
+    <div class="text-center mt-3 mb-5">
+        <button class="btn btn-outline-danger btn-sm" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+            <i class="fas fa-arrow-up"></i> بازگشت به بالا
+        </button>
+    </div>
+
+    <!-- باکس دیباگ -->
+    <div id="debugBox" class="debug-box"></div>
+</div>
+
+<!-- مودال ویرایش کامنت و وضعیت -->
 <div class="modal fade" id="commentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title"><i class="fas fa-comment"></i> افزودن کامنت</h5>
+                <h5 class="modal-title"><i class="fas fa-comment"></i> ویرایش درخواست</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="commentRequestId">
+                <input type="hidden" id="editRequestId">
                 <div class="mb-3">
-                    <label class="form-label">وضعیت درخواست</label>
-                    <select id="modalStatus" class="form-select">
+                    <label class="form-label fw-bold">وضعیت</label>
+                    <select id="editStatus" class="form-select">
                         <option value="جدید">جدید</option>
                         <option value="در حال انجام">در حال انجام</option>
                         <option value="انجام شده">انجام شده</option>
@@ -66,9 +140,10 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">کامنت ادمین</label>
-                    <textarea id="modalComment" class="form-control" rows="3" placeholder="توضیحات تکمیلی..."></textarea>
+                    <label class="form-label fw-bold">کامنت ادمین</label>
+                    <textarea id="editComment" class="form-control modal-comment-textarea" placeholder="توضیحات تکمیلی..."></textarea>
                 </div>
+                <div class="text-muted small" id="editMeta"></div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">لغو</button>
@@ -78,131 +153,412 @@
     </div>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- اسکریپت اصلی -->
 <script>
     // ============================================
-    // 🔧 CONFIGURATION - Supabase (Your Credentials)
+    // 🔧 CONFIGURATION - Supabase
     // ============================================
     const SUPABASE_URL = 'https://xunkrqqfjaaopprgzwqf.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1bmtycXFmamFhb3Bwcmd6d3FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0MjM0NTAsImV4cCI6MjEwMzk5OTQ1MH0.UmIJ3hg101fBbw0LD9Q1isTiTLIO_T93O97B41iByuI';
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    let allRequests = [];
+    console.log('🔑 کلیدهای Supabase بارگذاری شدند (ادمین).');
 
+    // ============================================
+    // 📦 راه‌اندازی Supabase
+    // ============================================
+    let supabaseClient;
+    let allRequests = [];
+    let filteredRequests = [];
+
+    try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase کلاینت ساخته شد (ادمین).');
+    } catch (e) {
+        console.error('❌ خطا در ساخت Supabase:', e);
+        showToast('❌ خطا در اتصال به سرور.', 'danger');
+    }
+
+    // ============================================
+    // 🐞 دیباگ
+    // ============================================
+    function debugLog(message, type = 'info') {
+        const box = document.getElementById('debugBox');
+        box.classList.add('show');
+        const time = new Date().toLocaleTimeString('fa-IR');
+        const color = type === 'error' ? '#ff6b6b' : type === 'success' ? '#51cf66' : '#74c0fc';
+        box.innerHTML += `<div style="color: ${color};">[${time}] ${message}</div>`;
+        box.scrollTop = box.scrollHeight;
+        console.log(`[ADMIN][${type}]`, message);
+    }
+
+    document.getElementById('toggleDebugBtn').addEventListener('click', function() {
+        const box = document.getElementById('debugBox');
+        box.classList.toggle('show');
+        this.innerHTML = box.classList.contains('show') ? '<i class="fas fa-bug"></i> بستن دیباگ' : '<i class="fas fa-bug"></i> دیباگ';
+    });
+
+    // ============================================
+    // 📥 بارگذاری درخواست‌ها
+    // ============================================
     async function loadRequests() {
+        if (!supabaseClient) {
+            document.getElementById('requestsList').innerHTML = `
+                <div class="alert alert-danger">❌ کلاینت Supabase ساخته نشده است.</div>
+            `;
+            return;
+        }
+
         try {
-            const { data, error } = await supabase
+            debugLog('📥 در حال بارگذاری درخواست‌ها...', 'info');
+            const { data, error } = await supabaseClient
                 .from('requests')
                 .select('*')
                 .order('created_at', { ascending: false });
-            if (error) throw error;
-            allRequests = data;
-            document.getElementById('totalCount').textContent = `${data.length} درخواست`;
-            filterRequests();
+
+            if (error) {
+                debugLog(`❌ خطا: ${error.message}`, 'error');
+                showToast(`❌ خطا: ${error.message}`, 'danger');
+                throw error;
+            }
+
+            allRequests = data || [];
+            debugLog(`✅ ${allRequests.length} درخواست بارگذاری شد.`, 'success');
+            updateStats();
+            applyFilters();
+
         } catch (error) {
             console.error('Error loading requests:', error);
-            document.getElementById('requestsList').innerHTML = `<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> خطا در دریافت درخواست‌ها</div>`;
+            document.getElementById('requestsList').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> خطا در دریافت درخواست‌ها: ${error.message}
+                </div>
+            `;
         }
     }
 
-    function filterRequests() {
+    // ============================================
+    // 📊 بروزرسانی آمار
+    // ============================================
+    function updateStats() {
+        const total = allRequests.length;
+        const newCount = allRequests.filter(r => r.status === 'جدید').length;
+        const progressCount = allRequests.filter(r => r.status === 'در حال انجام').length;
+        const doneCount = allRequests.filter(r => r.status === 'انجام شده').length;
+        const cancelCount = allRequests.filter(r => r.status === 'لغو شده').length;
+
+        document.getElementById('totalCount').textContent = total;
+        document.getElementById('newCount').textContent = newCount;
+        document.getElementById('progressCount').textContent = progressCount;
+        document.getElementById('doneCount').textContent = doneCount;
+        document.getElementById('cancelCount').textContent = cancelCount;
+    }
+
+    // ============================================
+    // 🔍 فیلتر و جستجو
+    // ============================================
+    function applyFilters() {
         const statusFilter = document.getElementById('statusFilter').value;
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        let filtered = allRequests;
-        if (statusFilter !== 'all') filtered = filtered.filter(r => r.status === statusFilter);
-        if (searchTerm) filtered = filtered.filter(r => r.full_name.toLowerCase().includes(searchTerm) || r.phone.includes(searchTerm));
+        const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        const sortOrder = document.getElementById('sortOrder').value;
+
+        let filtered = [...allRequests];
+
+        // فیلتر وضعیت
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(r => r.status === statusFilter);
+        }
+
+        // جستجو
+        if (searchTerm) {
+            filtered = filtered.filter(r =>
+                (r.full_name && r.full_name.toLowerCase().includes(searchTerm)) ||
+                (r.phone && r.phone.includes(searchTerm)) ||
+                (r.address && r.address.toLowerCase().includes(searchTerm))
+            );
+        }
+
+        // مرتب‌سازی
+        filtered.sort((a, b) => {
+            const dateA = new Date(a.created_at);
+            const dateB = new Date(b.created_at);
+            return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+        });
+
+        filteredRequests = filtered;
         renderRequests(filtered);
     }
 
+    // ============================================
+    // 🖥️ رندر درخواست‌ها
+    // ============================================
     function renderRequests(requests) {
         const container = document.getElementById('requestsList');
-        if (requests.length === 0) {
-            container.innerHTML = `<div class="text-center py-5"><i class="fas fa-inbox fa-3x text-muted"></i><p class="mt-3">هیچ درخواستی یافت نشد</p></div>`;
+
+        if (!requests || requests.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <h5>هیچ درخواستی یافت نشد</h5>
+                    <p class="text-muted">درخواست جدیدی برای نمایش وجود ندارد.</p>
+                </div>
+            `;
             return;
         }
+
         let html = '';
         requests.forEach(req => {
-            const statusClass = `status-${req.status === 'جدید' ? 'new' : req.status === 'در حال انجام' ? 'progress' : req.status === 'انجام شده' ? 'done' : 'cancel'}`;
-            const coords = req.latitude && req.longitude ? `${req.latitude.toFixed(6)}, ${req.longitude.toFixed(6)}` : 'موقعیت نامشخص';
-            const mapLink = req.latitude && req.longitude ? `https://www.google.com/maps?q=${req.latitude},${req.longitude}` : '#';
+            const statusClass = 
+                req.status === 'جدید' ? 'new' :
+                req.status === 'در حال انجام' ? 'progress' :
+                req.status === 'انجام شده' ? 'done' : 'cancel';
+
+            const statusLabel = req.status || 'جدید';
+            const coords = (req.latitude && req.longitude) ? 
+                `${parseFloat(req.latitude).toFixed(6)}, ${parseFloat(req.longitude).toFixed(6)}` : 
+                'موقعیت نامشخص';
+            const mapLink = (req.latitude && req.longitude) ? 
+                `https://www.google.com/maps?q=${req.latitude},${req.longitude}` : '#';
+
+            const dateStr = req.created_at ? 
+                new Date(req.created_at).toLocaleString('fa-IR', { 
+                    year: 'numeric', month: '2-digit', day: '2-digit',
+                    hour: '2-digit', minute: '2-digit'
+                }) : 'نامشخص';
+
             html += `
-                <div class="card admin-card mb-3">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-3"><h6 class="mb-1">${req.full_name}</h6><small class="text-muted"><i class="fas fa-phone"></i> ${req.phone}</small></div>
-                            <div class="col-md-2"><span class="badge ${statusClass}">${req.status || 'جدید'}</span></div>
-                            <div class="col-md-3"><small class="d-block"><i class="fas fa-service"></i> ${req.service_type}</small><small class="text-muted"><i class="fas fa-map-pin"></i> <a href="${mapLink}" target="_blank">${coords}</a></small></div>
-                            <div class="col-md-2"><small class="text-muted"><i class="fas fa-clock"></i> ${new Date(req.created_at).toLocaleString('fa-IR')}</small></div>
-                            <div class="col-md-2 text-end">
-                                <button class="btn btn-sm btn-outline-danger me-1" onclick="openCommentModal(${req.id})"><i class="fas fa-comment"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(${req.id})"><i class="fas fa-trash"></i></button>
-                            </div>
+                <div class="request-card" id="req-${req.id}">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <h6 class="mb-1">${req.full_name || 'نامشخص'}</h6>
+                            <small class="text-muted"><i class="fas fa-phone"></i> ${req.phone || '---'}</small>
+                            <br>
+                            <small class="text-muted"><i class="fas fa-clock"></i> ${dateStr}</small>
                         </div>
-                        ${req.admin_comment ? `<div class="comment-box mt-2"><small><i class="fas fa-comment-dots text-danger"></i> ${req.admin_comment}</small></div>` : ''}
+                        <div class="col-md-2">
+                            <span class="status-badge status-${statusClass}">${statusLabel}</span>
+                            <br>
+                            <small class="text-muted"><i class="fas fa-service"></i> ${req.service_type || '---'}</small>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="d-block"><i class="fas fa-map-pin text-danger"></i> ${req.address || 'آدرس ندارد'}</small>
+                            <small>
+                                <i class="fas fa-satellite"></i>
+                                <a href="${mapLink}" target="_blank" class="coords-link">${coords}</a>
+                            </small>
+                        </div>
+                        <div class="col-md-4 text-md-end mt-2 mt-md-0">
+                            <button class="btn btn-sm btn-outline-danger me-1" onclick="openEditModal(${req.id})">
+                                <i class="fas fa-edit"></i> ویرایش
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteRequest(${req.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary ms-1" onclick="copyRequestInfo(${req.id})">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
                     </div>
+                    ${req.admin_comment ? `
+                        <div class="comment-box mt-2">
+                            <small><i class="fas fa-comment-dots text-danger"></i> <strong>کامنت:</strong> ${req.admin_comment}</small>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         });
+
         container.innerHTML = html;
     }
 
-    function openCommentModal(id) {
-        const request = allRequests.find(r => r.id === id);
-        if (!request) return;
-        document.getElementById('commentRequestId').value = id;
-        document.getElementById('modalStatus').value = request.status || 'جدید';
-        document.getElementById('modalComment').value = request.admin_comment || '';
+    // ============================================
+    // ✏️ باز کردن مودال ویرایش
+    // ============================================
+    function openEditModal(id) {
+        const req = allRequests.find(r => r.id === id);
+        if (!req) {
+            showToast('❌ درخواست یافت نشد.', 'danger');
+            return;
+        }
+
+        document.getElementById('editRequestId').value = id;
+        document.getElementById('editStatus').value = req.status || 'جدید';
+        document.getElementById('editComment').value = req.admin_comment || '';
+        document.getElementById('editMeta').innerHTML = `
+            <i class="fas fa-user"></i> ${req.full_name || 'نامشخص'} &nbsp;|&nbsp;
+            <i class="fas fa-phone"></i> ${req.phone || '---'} &nbsp;|&nbsp;
+            <i class="fas fa-calendar"></i> ${new Date(req.created_at).toLocaleString('fa-IR')}
+        `;
+
         new bootstrap.Modal(document.getElementById('commentModal')).show();
     }
 
+    // ============================================
+    // 💾 ذخیره کامنت و وضعیت
+    // ============================================
     async function saveComment() {
-        const id = parseInt(document.getElementById('commentRequestId').value);
-        const status = document.getElementById('modalStatus').value;
-        const comment = document.getElementById('modalComment').value.trim();
+        const id = parseInt(document.getElementById('editRequestId').value);
+        const status = document.getElementById('editStatus').value;
+        const comment = document.getElementById('editComment').value.trim();
+
+        if (!id) {
+            showToast('❌ شناسه درخواست نامعتبر.', 'danger');
+            return;
+        }
+
         try {
-            const { error } = await supabase.from('requests').update({ status, admin_comment: comment || null }).eq('id', id);
-            if (error) throw error;
-            const request = allRequests.find(r => r.id === id);
-            if (request) { request.status = status; request.admin_comment = comment || null; }
+            debugLog(`💾 ذخیره تغییرات برای درخواست ${id}...`, 'info');
+            const { error } = await supabaseClient
+                .from('requests')
+                .update({
+                    status: status,
+                    admin_comment: comment || null
+                })
+                .eq('id', id);
+
+            if (error) {
+                debugLog(`❌ خطا: ${error.message}`, 'error');
+                showToast(`❌ خطا: ${error.message}`, 'danger');
+                throw error;
+            }
+
+            // بروزرسانی local
+            const req = allRequests.find(r => r.id === id);
+            if (req) {
+                req.status = status;
+                req.admin_comment = comment || null;
+            }
+
             bootstrap.Modal.getInstance(document.getElementById('commentModal')).hide();
-            filterRequests();
-            showAlert('✅ کامنت و وضعیت با موفقیت ذخیره شد', 'success');
+            applyFilters();
+            updateStats();
+            showToast('✅ تغییرات با موفقیت ذخیره شد.', 'success');
+            debugLog('✅ تغییرات ذخیره شد.', 'success');
+
         } catch (error) {
             console.error('Error saving comment:', error);
-            showAlert('❌ خطا در ذخیره کامنت', 'danger');
         }
     }
 
+    // ============================================
+    // 🗑️ حذف درخواست
+    // ============================================
     async function deleteRequest(id) {
         if (!confirm('آیا از حذف این درخواست مطمئن هستید؟')) return;
+
         try {
-            const { error } = await supabase.from('requests').delete().eq('id', id);
-            if (error) throw error;
+            debugLog(`🗑️ حذف درخواست ${id}...`, 'info');
+            const { error } = await supabaseClient
+                .from('requests')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                debugLog(`❌ خطا: ${error.message}`, 'error');
+                showToast(`❌ خطا: ${error.message}`, 'danger');
+                throw error;
+            }
+
             allRequests = allRequests.filter(r => r.id !== id);
-            filterRequests();
-            showAlert('✅ درخواست با موفقیت حذف شد', 'success');
+            applyFilters();
+            updateStats();
+            showToast('✅ درخواست با موفقیت حذف شد.', 'success');
+            debugLog(`✅ درخواست ${id} حذف شد.`, 'success');
+
         } catch (error) {
             console.error('Error deleting request:', error);
-            showAlert('❌ خطا در حذف درخواست', 'danger');
         }
     }
 
+    // ============================================
+    // 📋 کپی اطلاعات
+    // ============================================
+    function copyRequestInfo(id) {
+        const req = allRequests.find(r => r.id === id);
+        if (!req) {
+            showToast('❌ درخواست یافت نشد.', 'danger');
+            return;
+        }
+
+        const text = `
+نام: ${req.full_name || 'نامشخص'}
+شماره: ${req.phone || '---'}
+خدمات: ${req.service_type || '---'}
+آدرس: ${req.address || '---'}
+وضعیت: ${req.status || 'جدید'}
+کامنت: ${req.admin_comment || 'ندارد'}
+`.trim();
+
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('✅ اطلاعات کپی شد.', 'success');
+        }).catch(() => {
+            // Fallback
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            textarea.remove();
+            showToast('✅ اطلاعات کپی شد.', 'success');
+        });
+    }
+
+    // ============================================
+    // 🔄 رفرش
+    // ============================================
     function refreshData() {
-        document.getElementById('requestsList').innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+        document.getElementById('requestsList').innerHTML = `
+            <div class="text-center py-5">
+                <div class="spinner-border text-danger" role="status"></div>
+                <p class="mt-2">در حال بروزرسانی...</p>
+            </div>
+        `;
         loadRequests();
+        showToast('🔄 در حال بروزرسانی...', 'info');
     }
 
-    function showAlert(message, type = 'success') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
-        alertDiv.style.zIndex = '9999';
-        alertDiv.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
-        document.body.prepend(alertDiv);
-        setTimeout(() => alertDiv.remove(), 4000);
+    // ============================================
+    // 🍞 Toast
+    // ============================================
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('liveToast');
+        const body = document.getElementById('toastMessage');
+        body.textContent = message;
+        toast.className = 'toast align-items-center text-white border-0';
+        if (type === 'success') toast.classList.add('bg-success');
+        else if (type === 'warning') toast.classList.add('bg-warning', 'text-dark');
+        else if (type === 'danger') toast.classList.add('bg-danger');
+        else toast.classList.add('bg-info');
+        const bs = new bootstrap.Toast(toast, { delay: 5000 });
+        bs.show();
     }
 
-    document.addEventListener('DOMContentLoaded', loadRequests);
-    setInterval(loadRequests, 30000);
-    console.log('🛠️ پنل ادمین آماده است!');
+    // ============================================
+    // 🚀 بارگذاری اولیه
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+        debugLog('🚀 پنل ادمین راه‌اندازی شد.', 'success');
+        loadRequests();
+
+        // بروزرسانی خودکار هر ۳۰ ثانیه
+        setInterval(() => {
+            debugLog('🔄 بروزرسانی خودکار...', 'info');
+            loadRequests();
+        }, 30000);
+    });
+
+    // برای دسترسی در کنسول
+    window.admin = {
+        refresh: refreshData,
+        load: loadRequests,
+        allRequests: () => allRequests,
+        supabase: supabaseClient
+    };
+
+    console.log('🛠️ پنل ادمین آماده است. برای دسترسی به داده‌ها از admin.allRequests() استفاده کنید.');
 </script>
+
 </body>
 </html>
