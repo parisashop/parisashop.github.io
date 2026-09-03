@@ -6,7 +6,6 @@
     <title>امداد خودرو تهران | خدمات فوری</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root { --primary-red: #dc2626; --dark-red: #991b1b; --light-red: #fef2f2; }
         body { font-family: 'Tahoma', sans-serif; background: #f8f9fa; }
@@ -37,6 +36,11 @@
         .error-summary { background: #fee2e2; border: 1px solid #dc3545; border-radius: 8px; padding: 10px 15px; margin-top: 10px; display: none; color: #991b1b; }
         .error-summary.show { display: block; }
         .error-summary ul { margin: 5px 0 0 0; padding-right: 20px; }
+        .connection-result { border-radius: 8px; padding: 10px 15px; margin-top: 10px; display: none; font-weight: bold; }
+        .connection-result.show { display: block; }
+        .connection-result.success { background: #d1fae5; border: 1px solid #065f46; color: #065f46; }
+        .connection-result.error { background: #fee2e2; border: 1px solid #991b1b; color: #991b1b; }
+        .connection-result.loading { background: #fef3c7; border: 1px solid #92400e; color: #92400e; }
         .debug-box { background: #1e1e1e; color: #00ff00; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto; margin-top: 15px; display: none; }
         .debug-box.show { display: block; }
     </style>
@@ -116,7 +120,7 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold">شماره تماس <span class="required-star">*</span></label>
-                        <input type="tel" id="phone" class="form-control" value="09197521095">
+                        <input type="tel" id="phone" class="form-control" placeholder="مثال: 09121234567" dir="ltr">
                         <div class="error-message" id="phoneError">⚠️ لطفاً شماره تماس را وارد کنید.</div>
                     </div>
                     <div class="col-md-12">
@@ -146,17 +150,20 @@
         </div>
     </div>
 
-    <!-- Submit Button + Error Summary -->
+    <!-- Submit Button + Error Summary + Connection Result -->
     <div class="btn-submit-wrapper">
         <button type="button" id="submitBtn" class="btn btn-red w-100">
             <span class="spinner-border spinner-border-sm loading-spinner" id="submitSpinner"></span>
             <i class="fas fa-paper-plane"></i> ثبت درخواست
         </button>
         
-        <!-- جمع‌بندی خطاها زیر دکمه -->
         <div id="errorSummary" class="error-summary">
             <i class="fas fa-exclamation-triangle"></i> <strong>لطفاً موارد زیر را تکمیل کنید:</strong>
             <ul id="errorList"></ul>
+        </div>
+
+        <div id="connectionResult" class="connection-result">
+            <span id="connectionResultText"></span>
         </div>
 
         <p id="formHelpText" class="text-muted text-center mt-2" style="font-size: 0.9rem;">
@@ -181,6 +188,13 @@
     <a href="https://wa.me/989197521095" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i> پیام در واتساپ</a>
 </div>
 
+<!-- Bootstrap JS (قبل از اسکریپت اصلی) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Font Awesome (برای آیکون‌ها) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
+<!-- اسکریپت اصلی -->
 <script>
     // ============================================
     // 🔧 CONFIGURATION - Supabase
@@ -191,15 +205,16 @@
     console.log('🔑 کلیدهای Supabase بارگذاری شدند.');
 
     // ============================================
-    // 📦 راه‌اندازی Supabase
+    // 📦 راه‌اندازی Supabase با نام supabaseClient
     // ============================================
-    let supabase;
+    let supabaseClient;
     try {
-        supabase = supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY);
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         console.log('✅ Supabase کلاینت ساخته شد.');
     } catch (e) {
         console.error('❌ خطا در ساخت Supabase:', e);
         showToast('❌ خطا در اتصال به سرور. لطفاً صفحه را رفرش کنید.', 'danger');
+        showConnectionResult('error', '❌ خطا در ساخت کلاینت: ' + e.message);
     }
 
     // ============================================
@@ -213,6 +228,20 @@
         box.innerHTML += `<div style="color: ${color};">[${time}] ${message}</div>`;
         box.scrollTop = box.scrollHeight;
         console.log(`[${type}]`, message);
+    }
+
+    // ============================================
+    // 📡 نمایش نتیجه تست اتصال زیر دکمه
+    // ============================================
+    function showConnectionResult(type, message) {
+        const resultDiv = document.getElementById('connectionResult');
+        const textSpan = document.getElementById('connectionResultText');
+        resultDiv.className = 'connection-result show ' + type;
+        textSpan.textContent = message;
+        clearTimeout(window.connectionTimeout);
+        window.connectionTimeout = setTimeout(() => {
+            resultDiv.classList.remove('show');
+        }, 10000);
     }
 
     // ============================================
@@ -301,7 +330,7 @@
             this.classList.add('active');
             document.getElementById('serviceType').value = this.dataset.service;
             clearFieldError('serviceType');
-            hideErrorSummary(); // پنهان کردن جمع‌بندی خطاها
+            hideErrorSummary();
         });
     });
 
@@ -313,7 +342,7 @@
         const err = document.getElementById(id + 'Error');
         if (field) field.classList.remove('field-error');
         if (err) err.classList.remove('show');
-        hideErrorSummary(); // وقتی کاربر تایپ می‌کند، جمع‌بندی خطاها پنهان شود
+        hideErrorSummary();
     }
     ['fullName','phone','serviceType','address'].forEach(id => {
         const el = document.getElementById(id);
@@ -370,11 +399,8 @@
         });
 
         if (!valid) {
-            // نمایش جمع‌بندی خطاها زیر دکمه
             showErrorSummary(errors);
-            // همچنین یک Toast هشدار
             showToast('⚠️ لطفاً فیلدهای مشخص‌شده را پر کنید.', 'warning');
-            // اسکرول به اولین فیلد خطا
             const first = document.querySelector('.field-error');
             if (first) { first.focus(); first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
         } else {
@@ -384,25 +410,46 @@
     }
 
     // ============================================
-    // 🔌 تست اتصال به Supabase
+    // 🔌 تست اتصال به Supabase (با نمایش نتیجه زیر دکمه)
     // ============================================
     document.getElementById('testConnectionBtn').addEventListener('click', async function() {
+        if (!supabaseClient) {
+            showConnectionResult('error', '❌ کلاینت Supabase ساخته نشده است.');
+            return;
+        }
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال تست...';
+        
         debugLog('🔌 در حال تست اتصال به Supabase...', 'info');
+        showConnectionResult('loading', '⏳ در حال بررسی اتصال به سرور...');
+
         try {
-            const { data, error } = await supabase
+            const { data, error, count } = await supabaseClient
                 .from('requests')
-                .select('count', { count: 'exact', head: true });
-            
+                .select('*', { count: 'exact', head: true });
+
             if (error) {
                 debugLog(`❌ خطای اتصال: ${error.message}`, 'error');
+                showConnectionResult('error', `❌ خطا: ${error.message}`);
                 showToast(`❌ خطا: ${error.message}`, 'danger');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
                 return;
             }
-            debugLog('✅ اتصال به Supabase موفق بود!', 'success');
+
+            debugLog(`✅ اتصال به Supabase موفق! تعداد درخواست‌ها: ${count || 0}`, 'success');
+            showConnectionResult('success', `✅ اتصال برقرار است. ${count !== undefined ? 'تعداد درخواست‌ها: ' + count : ''}`);
             showToast('✅ اتصال به سرور برقرار است.', 'success');
+
         } catch (e) {
             debugLog(`❌ خطا: ${e.message}`, 'error');
+            showConnectionResult('error', `❌ خطا: ${e.message}`);
             showToast(`❌ خطا: ${e.message}`, 'danger');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         }
     });
 
@@ -412,7 +459,11 @@
     document.getElementById('submitBtn').addEventListener('click', async function() {
         debugLog('🟢 دکمه ثبت کلیک شد.', 'info');
 
-        // اعتبارسنجی
+        if (!supabaseClient) {
+            showToast('❌ کلاینت Supabase ساخته نشده است.', 'danger');
+            return;
+        }
+
         if (!validateForm()) {
             debugLog('❌ اعتبارسنجی failed.', 'error');
             return;
@@ -452,7 +503,7 @@
 
         try {
             debugLog('📤 ارسال به Supabase...', 'info');
-            const { data, error } = await supabase
+            const { data, error } = await supabaseClient
                 .from('requests')
                 .insert([payload])
                 .select();
@@ -511,7 +562,5 @@
     debugLog(`📡 URL: ${SUPABASE_URL}`, 'info');
     console.log('✅ همه چیز آماده است.');
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
