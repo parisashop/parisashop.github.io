@@ -31,6 +31,7 @@
         .loading-spinner.show { display: inline-block; }
         #submitBtnContainer { display: none; margin-top: 15px; }
         .manual-gps-input { display: none; margin-top: 10px; }
+        .required-star { color: red; }
     </style>
 </head>
 <body>
@@ -55,20 +56,20 @@
 
     <!-- GPS Section -->
     <div class="gps-badge mb-4">
-        <h5 class="text-danger"><i class="fas fa-location-dot"></i> مرحله ۱: ارسال موقعیت GPS</h5>
+        <h5 class="text-danger"><i class="fas fa-location-dot"></i> مرحله ۱: ارسال موقعیت GPS (اختیاری)</h5>
         <div id="gpsStatus" class="text-muted"><i class="fas fa-spinner fa-spin"></i> در حال دریافت موقعیت...</div>
         <button id="getLocationBtn" class="btn btn-outline-red btn-sm mt-2"><i class="fas fa-satellite"></i> دریافت مجدد موقعیت</button>
         <div id="gpsCoordsDisplay" class="mt-2 fw-bold text-success" style="display:none;">
             <i class="fas fa-check-circle"></i> موقعیت دریافت شد: <span id="gpsCoordsText"></span>
         </div>
-        <!-- ورودی دستی -->
+        <!-- ورودی دستی مختصات -->
         <div class="manual-gps-input mt-2" id="manualGpsDiv">
-            <label class="form-label fw-bold text-danger"><i class="fas fa-pencil"></i> یا موقعیت را دستی وارد کنید:</label>
+            <label class="form-label fw-bold text-danger"><i class="fas fa-pencil"></i> یا مختصات را دستی وارد کنید:</label>
             <div class="input-group">
                 <input type="text" id="manualGps" class="form-control" placeholder="مثال: 35.715298, 51.404343" dir="ltr">
-                <button class="btn btn-outline-danger" type="button" id="applyManualGps">اعمال</button>
+                <button class="btn btn-outline-danger" type="button" id="applyManualGps">اعمال مختصات</button>
             </div>
-            <small class="text-muted">مختصات را از Google Maps یا نشانگر خود وارد کنید</small>
+            <small class="text-muted">از Google Maps یا نشانگر خود مختصات را وارد کنید</small>
         </div>
     </div>
 
@@ -103,15 +104,15 @@
             <form id="requestForm">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">نام و نام خانوادگی *</label>
+                        <label class="form-label fw-bold">نام و نام خانوادگی <span class="required-star">*</span></label>
                         <input type="text" id="fullName" class="form-control" placeholder="مثال: علی کریمی" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">شماره تماس *</label>
+                        <label class="form-label fw-bold">شماره تماس <span class="required-star">*</span></label>
                         <input type="tel" id="phone" class="form-control" value="09197521095" required>
                     </div>
                     <div class="col-md-12">
-                        <label class="form-label fw-bold">نوع خدمات *</label>
+                        <label class="form-label fw-bold">نوع خدمات <span class="required-star">*</span></label>
                         <select id="serviceType" class="form-select" required>
                             <option value="">انتخاب کنید...</option>
                             <option value="یدک‌کش">🚙 یدک‌کش</option>
@@ -122,14 +123,19 @@
                         </select>
                     </div>
                     <div class="col-md-12">
-                        <label class="form-label fw-bold"><i class="fas fa-satellite-dish text-danger"></i> موقعیت GPS (دریافت شده)</label>
-                        <input type="text" id="gpsCoords" class="form-control bg-light" placeholder="ابتدا موقعیت خود را دریافت یا وارد کنید" readonly>
-                        <small class="text-muted">پس از دریافت یا وارد کردن موقعیت، این فیلد پر می‌شود</small>
+                        <label class="form-label fw-bold"><i class="fas fa-map-pin text-danger"></i> آدرس دقیق <span class="required-star">*</span></label>
+                        <input type="text" id="address" class="form-control" placeholder="مثال: تهران، خیابان ولیعصر، نبش فلکه دوم" required>
+                        <small class="text-muted">آدرس را به صورت کامل و دقیق وارد کنید</small>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold"><i class="fas fa-satellite-dish text-danger"></i> موقعیت GPS (اختیاری)</label>
+                        <input type="text" id="gpsCoords" class="form-control bg-light" placeholder="به‌طور خودکار دریافت می‌شود یا دستی وارد کنید" readonly>
+                        <small class="text-muted">اگر GPS دریافت نشد، می‌توانید مختصات را از بخش بالا وارد کنید</small>
                     </div>
                     <div class="col-12" id="submitBtnContainer">
                         <button type="submit" id="submitBtn" class="btn btn-red w-100 py-3">
                             <span class="spinner-border spinner-border-sm loading-spinner" id="submitSpinner"></span>
-                            <i class="fas fa-paper-plane"></i> ثبت درخواست و ارسال GPS
+                            <i class="fas fa-paper-plane"></i> ثبت درخواست
                         </button>
                     </div>
                 </div>
@@ -172,7 +178,7 @@
         const manualDiv = document.getElementById('manualGpsDiv');
 
         if (!navigator.geolocation) {
-            statusDiv.innerHTML = '❌ مرورگر شما از GPS پشتیبانی نمی‌کند. لطفاً دستی وارد کنید.';
+            statusDiv.innerHTML = '❌ مرورگر شما از GPS پشتیبانی نمی‌کند. لطفاً مختصات را دستی وارد کنید.';
             manualDiv.style.display = 'block';
             return;
         }
@@ -190,30 +196,28 @@
                 statusDiv.innerHTML = `✅ موقعیت دریافت شد (دقت: ${Math.round(position.coords.accuracy)} متر)`;
                 gpsReceived = true;
                 manualDiv.style.display = 'none';
-                document.getElementById('submitBtnContainer').style.display = 'block';
-                showToast('📍 موقعیت GPS با موفقیت دریافت شد. حالا فرم را پر کنید.', 'success');
+                checkFormCompletion();
+                showToast('📍 موقعیت GPS با موفقیت دریافت شد.', 'success');
             },
             (error) => {
                 console.error('GPS Error:', error);
                 let errorMsg = '❌ خطا در دریافت موقعیت: ';
                 switch(error.code) {
                     case error.PERMISSION_DENIED:
-                        errorMsg += 'شما اجازه دسترسی به موقعیت را ندادید. لطفاً دستی وارد کنید.';
+                        errorMsg += 'شما اجازه دسترسی به موقعیت را ندادید. لطفاً مختصات را دستی وارد کنید.';
                         break;
                     case error.POSITION_UNAVAILABLE:
-                        errorMsg += 'اطلاعات موقعیت در دسترس نیست. لطفاً دستی وارد کنید.';
+                        errorMsg += 'اطلاعات موقعیت در دسترس نیست. لطفاً مختصات را دستی وارد کنید.';
                         break;
                     case error.TIMEOUT:
-                        errorMsg += 'زمان دریافت موقعیت به پایان رسید. لطفاً دستی وارد کنید.';
+                        errorMsg += 'زمان دریافت موقعیت به پایان رسید. لطفاً مختصات را دستی وارد کنید.';
                         break;
                     default:
-                        errorMsg += 'خطای ناشناخته. لطفاً دستی وارد کنید.';
+                        errorMsg += 'خطای ناشناخته. لطفاً مختصات را دستی وارد کنید.';
                 }
                 statusDiv.innerHTML = errorMsg;
                 manualDiv.style.display = 'block';
-                // نمایش دکمه ثبت با ورود دستی
-                document.getElementById('submitBtnContainer').style.display = 'block';
-                showToast('⚠️ لطفاً موقعیت خود را به صورت دستی وارد کنید', 'warning');
+                showToast('⚠️ لطفاً مختصات را به صورت دستی وارد کنید', 'warning');
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
         );
@@ -235,7 +239,6 @@
             showToast('⚠️ لطفاً مختصات را به صورت "lat, lng" وارد کنید.', 'warning');
             return;
         }
-        // اعتبارسنجی ساده
         const parts = manualVal.split(',').map(s => parseFloat(s.trim()));
         if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) {
             showToast('⚠️ فرمت نامعتبر. لطفاً به صورت "35.715, 51.404" وارد کنید.', 'warning');
@@ -247,10 +250,10 @@
         document.getElementById('gpsCoords').value = coords;
         document.getElementById('gpsCoordsText').textContent = coords;
         document.getElementById('gpsCoordsDisplay').style.display = 'block';
-        document.getElementById('gpsStatus').innerHTML = '✅ موقعیت به صورت دستی وارد شد.';
+        document.getElementById('gpsStatus').innerHTML = '✅ مختصات به صورت دستی وارد شد.';
         gpsReceived = true;
-        document.getElementById('submitBtnContainer').style.display = 'block';
-        showToast('📍 موقعیت دستی با موفقیت ثبت شد.', 'success');
+        checkFormCompletion();
+        showToast('📍 مختصات دستی با موفقیت ثبت شد.', 'success');
     });
 
     // ============================================
@@ -261,9 +264,34 @@
             document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
             this.classList.add('active');
             document.getElementById('serviceType').value = this.dataset.service;
+            checkFormCompletion();
             showToast(`🔧 خدمات ${this.dataset.service} انتخاب شد`, 'info');
         });
     });
+
+    // ============================================
+    // ✅ Check if form is complete to show submit button
+    // ============================================
+    function checkFormCompletion() {
+        const fullName = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const serviceType = document.getElementById('serviceType').value;
+        const address = document.getElementById('address').value.trim();
+        const gpsCoords = document.getElementById('gpsCoords').value.trim();
+
+        // برای نمایش دکمه ثبت، نیاز به نام، شماره، نوع سرویس و آدرس داریم (GPS اختیاری)
+        if (fullName && phone && serviceType && address) {
+            document.getElementById('submitBtnContainer').style.display = 'block';
+        } else {
+            document.getElementById('submitBtnContainer').style.display = 'none';
+        }
+    }
+
+    // رویدادهای تغییر برای چک کردن تکمیل فرم
+    document.getElementById('fullName').addEventListener('input', checkFormCompletion);
+    document.getElementById('phone').addEventListener('input', checkFormCompletion);
+    document.getElementById('serviceType').addEventListener('change', checkFormCompletion);
+    document.getElementById('address').addEventListener('input', checkFormCompletion);
 
     // ============================================
     // 📝 Submit Form to Supabase
@@ -271,18 +299,14 @@
     document.getElementById('requestForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        if (!gpsReceived) {
-            showToast('⚠️ لطفاً ابتدا موقعیت GPS خود را دریافت یا به صورت دستی وارد کنید.', 'warning');
-            return;
-        }
-
         const fullName = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const serviceType = document.getElementById('serviceType').value;
+        const address = document.getElementById('address').value.trim();
         const gpsCoords = document.getElementById('gpsCoords').value;
 
-        if (!fullName || !phone || !serviceType) {
-            showToast('⚠️ لطفاً تمام فیلدهای ضروری را پر کنید', 'warning');
+        if (!fullName || !phone || !serviceType || !address) {
+            showToast('⚠️ لطفاً تمام فیلدهای ضروری (نام، شماره، نوع خدمات، آدرس) را پر کنید.', 'warning');
             return;
         }
 
@@ -307,9 +331,9 @@
                     full_name: fullName,
                     phone: phone,
                     service_type: serviceType,
+                    address: address,
                     latitude: lat,
                     longitude: lng,
-                    address: gpsCoords || null,
                     status: 'جدید'
                 }])
                 .select();
