@@ -14,7 +14,8 @@
         :root { --primary-red: #dc2626; --dark-red: #991b1b; --light-red: #fef2f2; }
         body { font-family: 'Tahoma', 'Vazir', sans-serif; background: #f8f9fa; }
         .btn-red { background: var(--primary-red); color: white; transition: all 0.3s; border: none; }
-        .btn-red:hover { background: var(--dark-red); color: white; transform: scale(1.02); }
+        .btn-red:hover:not(:disabled) { background: var(--dark-red); color: white; transform: scale(1.02); }
+        .btn-red:disabled { background: #fca5a5; cursor: not-allowed; opacity: 0.7; }
         .btn-outline-red { border: 2px solid var(--primary-red); color: var(--primary-red); background: transparent; }
         .btn-outline-red:hover { background: var(--primary-red); color: white; }
         .emergency-box { background: linear-gradient(135deg, #fee2e2, #fecaca); border-radius: 24px; padding: 30px; }
@@ -29,9 +30,10 @@
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
         .loading-spinner { display: none; }
         .loading-spinner.show { display: inline-block; }
-        #submitBtnContainer { display: none; margin-top: 15px; }
         .manual-gps-input { display: none; margin-top: 10px; }
-        .required-star { color: red; }
+        .required-star { color: red; font-weight: bold; }
+        .btn-submit-wrapper { margin-top: 20px; }
+        .btn-submit-wrapper .btn { font-size: 1.2rem; padding: 14px; }
     </style>
 </head>
 <body>
@@ -56,13 +58,12 @@
 
     <!-- GPS Section -->
     <div class="gps-badge mb-4">
-        <h5 class="text-danger"><i class="fas fa-location-dot"></i> مرحله ۱: ارسال موقعیت GPS (اختیاری)</h5>
+        <h5 class="text-danger"><i class="fas fa-location-dot"></i> موقعیت GPS (اختیاری)</h5>
         <div id="gpsStatus" class="text-muted"><i class="fas fa-spinner fa-spin"></i> در حال دریافت موقعیت...</div>
         <button id="getLocationBtn" class="btn btn-outline-red btn-sm mt-2"><i class="fas fa-satellite"></i> دریافت مجدد موقعیت</button>
         <div id="gpsCoordsDisplay" class="mt-2 fw-bold text-success" style="display:none;">
             <i class="fas fa-check-circle"></i> موقعیت دریافت شد: <span id="gpsCoordsText"></span>
         </div>
-        <!-- ورودی دستی مختصات -->
         <div class="manual-gps-input mt-2" id="manualGpsDiv">
             <label class="form-label fw-bold text-danger"><i class="fas fa-pencil"></i> یا مختصات را دستی وارد کنید:</label>
             <div class="input-group">
@@ -99,7 +100,7 @@
 
     <!-- Registration Form -->
     <div class="card border-danger shadow-sm mb-4">
-        <div class="card-header bg-danger text-white"><h5 class="mb-0"><i class="fas fa-pen-to-square"></i> مرحله ۲: پر کردن فرم درخواست</h5></div>
+        <div class="card-header bg-danger text-white"><h5 class="mb-0"><i class="fas fa-pen-to-square"></i> فرم درخواست امداد</h5></div>
         <div class="card-body">
             <form id="requestForm">
                 <div class="row g-3">
@@ -132,19 +133,24 @@
                         <input type="text" id="gpsCoords" class="form-control bg-light" placeholder="به‌طور خودکار دریافت می‌شود یا دستی وارد کنید" readonly>
                         <small class="text-muted">اگر GPS دریافت نشد، می‌توانید مختصات را از بخش بالا وارد کنید</small>
                     </div>
-                    <div class="col-12" id="submitBtnContainer">
-                        <button type="submit" id="submitBtn" class="btn btn-red w-100 py-3">
-                            <span class="spinner-border spinner-border-sm loading-spinner" id="submitSpinner"></span>
-                            <i class="fas fa-paper-plane"></i> ثبت درخواست
-                        </button>
-                    </div>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Submit Button (Always visible, disabled initially) -->
+    <div class="btn-submit-wrapper">
+        <button type="submit" id="submitBtn" class="btn btn-red w-100" disabled>
+            <span class="spinner-border spinner-border-sm loading-spinner" id="submitSpinner"></span>
+            <i class="fas fa-paper-plane"></i> ثبت درخواست
+        </button>
+        <p id="formHelpText" class="text-muted text-center mt-2" style="font-size: 0.9rem;">
+            <i class="fas fa-info-circle"></i> لطفاً تمام فیلدهای الزامی (نام، شماره، خدمات، آدرس) را پر کنید.
+        </p>
+    </div>
+
     <!-- Reviews -->
-    <div class="mb-4">
+    <div class="mb-4 mt-5">
         <h5 class="text-danger border-end border-danger border-4 pe-3"><i class="fas fa-star"></i> نظرات مشتریان</h5>
         <div class="row g-3 mt-2">
             <div class="col-md-6"><div class="p-3 bg-light rounded-4" style="border-right: 4px solid var(--primary-red);"><div><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i></div><p class="mt-1">“امداد عالی، در کمتر از ۳۰ دقیقه رسیدند. ممنون از تیم حرفه‌ای.”</p><small class="text-muted">– رضا محمدی</small></div></div>
@@ -196,7 +202,6 @@
                 statusDiv.innerHTML = `✅ موقعیت دریافت شد (دقت: ${Math.round(position.coords.accuracy)} متر)`;
                 gpsReceived = true;
                 manualDiv.style.display = 'none';
-                checkFormCompletion();
                 showToast('📍 موقعیت GPS با موفقیت دریافت شد.', 'success');
             },
             (error) => {
@@ -252,7 +257,6 @@
         document.getElementById('gpsCoordsDisplay').style.display = 'block';
         document.getElementById('gpsStatus').innerHTML = '✅ مختصات به صورت دستی وارد شد.';
         gpsReceived = true;
-        checkFormCompletion();
         showToast('📍 مختصات دستی با موفقیت ثبت شد.', 'success');
     });
 
@@ -270,20 +274,25 @@
     });
 
     // ============================================
-    // ✅ Check if form is complete to show submit button
+    // ✅ Check if form is complete to enable submit button
     // ============================================
     function checkFormCompletion() {
         const fullName = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const serviceType = document.getElementById('serviceType').value;
         const address = document.getElementById('address').value.trim();
-        const gpsCoords = document.getElementById('gpsCoords').value.trim();
+        const submitBtn = document.getElementById('submitBtn');
+        const helpText = document.getElementById('formHelpText');
 
-        // برای نمایش دکمه ثبت، نیاز به نام، شماره، نوع سرویس و آدرس داریم (GPS اختیاری)
+        // همه فیلدهای اجباری باید پر باشند
         if (fullName && phone && serviceType && address) {
-            document.getElementById('submitBtnContainer').style.display = 'block';
+            submitBtn.disabled = false;
+            helpText.innerHTML = '<i class="fas fa-check-circle text-success"></i> همه فیلدهای الزامی پر شده‌اند. می‌توانید درخواست را ثبت کنید.';
+            helpText.className = 'text-success text-center mt-2';
         } else {
-            document.getElementById('submitBtnContainer').style.display = 'none';
+            submitBtn.disabled = true;
+            helpText.innerHTML = '<i class="fas fa-info-circle"></i> لطفاً تمام فیلدهای الزامی (نام، شماره، خدمات، آدرس) را پر کنید.';
+            helpText.className = 'text-muted text-center mt-2';
         }
     }
 
@@ -296,19 +305,21 @@
     // ============================================
     // 📝 Submit Form to Supabase
     // ============================================
-    document.getElementById('requestForm').addEventListener('submit', async (e) => {
+    document.getElementById('submitBtn').addEventListener('click', async function(e) {
         e.preventDefault();
+
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('submitSpinner');
+
+        // غیرفعال کردن دکمه تا از ثبت مجدد جلوگیری شود
+        submitBtn.disabled = true;
+        spinner.classList.add('show');
 
         const fullName = document.getElementById('fullName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const serviceType = document.getElementById('serviceType').value;
         const address = document.getElementById('address').value.trim();
         const gpsCoords = document.getElementById('gpsCoords').value;
-
-        if (!fullName || !phone || !serviceType || !address) {
-            showToast('⚠️ لطفاً تمام فیلدهای ضروری (نام، شماره، نوع خدمات، آدرس) را پر کنید.', 'warning');
-            return;
-        }
 
         let lat = null, lng = null;
         if (gpsCoords && gpsCoords.includes(',')) {
@@ -318,11 +329,6 @@
                 lng = parts[1];
             }
         }
-
-        const submitBtn = document.getElementById('submitBtn');
-        const spinner = document.getElementById('submitSpinner');
-        submitBtn.disabled = true;
-        spinner.classList.add('show');
 
         try {
             const { data, error } = await supabase
@@ -339,15 +345,22 @@
                 .select();
 
             if (error) throw error;
+
             showToast('✅ درخواست شما با موفقیت ثبت شد!', 'success');
+
+            // ریست فرم
             document.getElementById('requestForm').reset();
             document.getElementById('gpsCoords').value = '';
             document.getElementById('gpsCoordsDisplay').style.display = 'none';
-            document.getElementById('submitBtnContainer').style.display = 'none';
             document.querySelectorAll('.service-card').forEach(c => c.classList.remove('active'));
             gpsReceived = false;
+
+            // دکمه را دوباره غیرفعال کن
+            checkFormCompletion();
+
             // دوباره GPS دریافت کن
             setTimeout(() => getLocation(), 2000);
+
         } catch (error) {
             console.error('Error:', error);
             showToast('❌ خطا در ثبت درخواست. لطفاً دوباره تلاش کنید.', 'danger');
@@ -372,6 +385,9 @@
         const bsToast = new bootstrap.Toast(toast, { delay: 4000 });
         bsToast.show();
     }
+
+    // اجرای اولیه برای غیرفعال بودن دکمه
+    checkFormCompletion();
 
     console.log('🚀 سیستم امداد خودرو با Supabase راه‌اندازی شد!');
 </script>
